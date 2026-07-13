@@ -1,0 +1,83 @@
+// =============================================================================
+//  PATCH WEBHOOK — POC POC MAX v2  ->  poc-strat (paper trading)
+// =============================================================================
+//  O que este patch faz:
+//    Faz o alert() enviar um JSON com os NÍVEIS DE POC, para o backend poder
+//    espalhar as entradas pela zona e definir TP1/TP2/TP3 nas próximas zonas.
+//    NÃO altera nenhuma da tua lógica de cálculo — só o conteúdo do alerta.
+//
+//  Como aplicar (2 passos):
+//    (A) Cola as 2 FUNÇÕES AUXILIARES abaixo na secção 2/3 do teu script,
+//        junto às outras funções f_... (antes da secção 8).
+//    (B) SUBSTITUI o bloco dos dois alert() (dentro do "if sniper_long_setup"
+//        e "if sniper_short_setup") pelo BLOCO DE ALERTA lá mais abaixo.
+//
+//  No TradingView: cria 1 alerta por moeda com condition = "Any alert() function
+//  call", e no campo "Webhook URL" mete  https://TEU_DOMINIO/webhook
+//  (Message pode ficar vazio — o corpo já é construído pelo alert()).
+// =============================================================================
+
+
+// -----------------------------------------------------------------------------
+// (A) FUNÇÕES AUXILIARES  — colar junto às outras f_...
+// -----------------------------------------------------------------------------
+// Banda (em %) à volta do preço que define a "zona" de POCs para as entradas.
+zone_band_pct = input.float(1.5, "Webhook: Banda da Zona de Entrada (%)", step=0.1, group="Webhook poc-strat")
+
+// Junta ao acumulador 'acc' os níveis NAKED de um array, filtrados por modo:
+//   "zone" -> dentro de zone_band_pct do preço ; "up" -> acima ; "down" -> abaixo
+f_json_levels(string acc, float[] levels, bool[] tested, float ref, string mode) =>
+    string s = acc
+    if array.size(levels) > 0
+        for i = 0 to array.size(levels) - 1
+            float lvl = array.get(levels, i)
+            if not na(lvl) and not array.get(tested, i)
+                bool ok = mode == "zone" ? (math.abs(lvl - ref) / ref * 100.0 <= zone_band_pct) : mode == "up" ? (lvl > ref) : (lvl < ref)
+                if ok
+                    s := s + (s == "" ? "" : ",") + str.tostring(lvl, format.mintick)
+    s
+
+// Extremo (min/max) dos níveis NAKED dentro da banda da zona — serve de zone_break.
+f_zone_extreme(float cur, float[] levels, bool[] tested, float ref, bool want_min) =>
+    float ext = cur
+    if array.size(levels) > 0
+        for i = 0 to array.size(levels) - 1
+            float lvl = array.get(levels, i)
+            if not na(lvl) and not array.get(tested, i) and math.abs(lvl - ref) / ref * 100.0 <= zone_band_pct
+                ext := na(ext) ? lvl : (want_min ? math.min(ext, lvl) : math.max(ext, lvl))
+    ext
+
+
+// -----------------------------------------------------------------------------
+// (B) BLOCO DE ALERTA  — substitui os dois if sniper_*_setup / alert(...)
+// -----------------------------------------------------------------------------
+if sniper_long_setup or sniper_short_setup
+    string side_str = sniper_long_setup ? "long" : "short"
+
+    // Zona de entrada: POCs naked (1D + 1W) dentro da banda à volta do preço.
+    string zj = ""
+    zj := f_json_levels(zj, a_day_levels,  a_day_tested,  close, "zone")
+    zj := f_json_levels(zj, a_week_levels, a_week_tested, close, "zone")
+
+    // Alvos: POCs naked acima e abaixo (o backend filtra os < 1% e ordena).
+    string up = ""
+    up := f_json_levels(up, a_day_levels,  a_day_tested,  close, "up")
+    up := f_json_levels(up, a_week_levels, a_week_tested, close, "up")
+    string dn = ""
+    dn := f_json_levels(dn, a_day_levels,  a_day_tested,  close, "down")
+    dn := f_json_levels(dn, a_week_levels, a_week_tested, close, "down")
+
+    // zone_break: para long, fundo da zona; para short, topo da zona.
+    float zb = na
+    zb := f_zone_extreme(zb, a_day_levels,  a_day_tested,  close, side_str == "long")
+    zb := f_zone_extreme(zb, a_week_levels, a_week_tested, close, side_str == "long")
+    // Fallback se a zona vier vazia: 1% para lá do preço.
+    if na(zb)
+        zb := side_str == "long" ? close * 0.99 : close * 1.01
+
+    string payload = '{"ticker":"' + syminfo.ticker + '","side":"' + side_str +
+         '","price":' + str.tostring(close, format.mintick) +
+         ',"zone_pocs":[' + zj + '],"targets_up":[' + up + '],"targets_down":[' + dn + ']' +
+         ',"zone_break":' + str.tostring(zb, format.mintick) + '}'
+
+    alert(payload, alert.freq_once_per_bar_close)

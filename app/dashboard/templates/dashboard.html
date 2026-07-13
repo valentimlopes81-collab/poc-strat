@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>POC Strat — Live Paper Backtest</title>
+  <meta http-equiv="refresh" content="20">
+  <style>
+    :root { --bg:#0f0f10; --panel:#1a1a1c; --border:#2a2a2d; --txt:#e6e6e6; --muted:#8a8a8f;
+            --green:#26a69a; --red:#ef5350; --orange:#ff9800; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--txt); font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+    .wrap { max-width:1100px; margin:0 auto; padding:24px 16px; }
+    h1 { font-size:20px; margin:0 0 4px; }
+    .sub { color:var(--muted); margin-bottom:20px; }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:24px; }
+    .card { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .card .k { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+    .card .v { font-size:22px; font-weight:600; margin-top:4px; }
+    table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    th, td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--border); white-space:nowrap; }
+    th { color:var(--muted); font-weight:500; font-size:12px; text-transform:uppercase; text-align:right; }
+    th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align:left; }
+    tr:last-child td { border-bottom:none; }
+    .pos { color:var(--green); } .neg { color:var(--red); }
+    .badge { padding:2px 8px; border-radius:20px; font-size:12px; }
+    .long { background:rgba(38,166,154,.15); color:var(--green); }
+    .short { background:rgba(239,83,80,.15); color:var(--red); }
+    .st-open { color:var(--orange); } .st-pending { color:var(--muted); }
+    .st-closed { color:var(--txt); } .st-cancelled { color:var(--muted); text-decoration:line-through; }
+    .scroll { overflow-x:auto; }
+    .tag { color:var(--muted); font-size:12px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>POC Strat — Live Paper Backtest</h1>
+  <div class="sub">Atualiza a cada 20s · conta inicial ${{ "%.0f"|format(start) }}</div>
+
+  <div class="cards">
+    <div class="card"><div class="k">Equity</div>
+      <div class="v {{ 'pos' if stats.total_pnl>=0 else 'neg' }}">${{ "%.2f"|format(stats.equity) }}</div></div>
+    <div class="card"><div class="k">PnL Total</div>
+      <div class="v {{ 'pos' if stats.total_pnl>=0 else 'neg' }}">{{ "%+.2f"|format(stats.total_pnl) }}</div></div>
+    <div class="card"><div class="k">Win Rate</div>
+      <div class="v">{{ "%.1f"|format(stats.win_rate) }}%</div></div>
+    <div class="card"><div class="k">Fechados</div><div class="v">{{ stats.n_closed }}</div></div>
+    <div class="card"><div class="k">Abertos</div><div class="v st-open">{{ stats.n_open }}</div></div>
+    <div class="card"><div class="k">Pendentes</div><div class="v st-pending">{{ stats.n_pending }}</div></div>
+  </div>
+
+  <div class="scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>Símbolo</th><th>Lado</th><th>Estado</th>
+        <th>Avg Entry</th><th>Qty</th><th>Stop</th><th>PnL</th><th>Motivo</th><th>Criado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in trades %}
+      <tr>
+        <td>{{ t.symbol }}</td>
+        <td><span class="badge {{ t.side }}">{{ t.side|upper }}</span></td>
+        <td class="st-{{ t.status.value }}">{{ t.status.value }}</td>
+        <td>{{ "%.6g"|format(t.avg_entry) if t.avg_entry else "—" }}</td>
+        <td>{{ "%.4g"|format(t.remaining_qty) if t.remaining_qty else ("%.4g"|format(t.filled_qty) if t.filled_qty else "—") }}</td>
+        <td>{{ "%.6g"|format(t.stop) }}</td>
+        <td class="{{ 'pos' if t.realized_pnl>=0 else 'neg' }}">{{ "%+.2f"|format(t.realized_pnl) }}</td>
+        <td class="tag">{{ t.close_reason.value if t.close_reason else "—" }}</td>
+        <td class="tag">{{ t.created_at.strftime("%m-%d %H:%M") }}</td>
+      </tr>
+      {% endfor %}
+      {% if not trades %}
+      <tr><td colspan="9" style="text-align:center;color:var(--muted);padding:30px">
+        Sem trades ainda. À espera de alertas do TradingView…</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+*.db
+poc_strat.db
+.env

@@ -1,0 +1,17 @@
+[Unit]
+Description=POC Strat paper trading + dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/poc-strat
+# Ajusta o segredo do webhook (tem de bater com o "secret" no JSON do alerta).
+Environment=POC_WEBHOOK_SECRET=muda-me
+Environment=POC_DB_URL=sqlite:////opt/poc-strat/poc_strat.db
+ExecStart=/opt/poc-strat/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
