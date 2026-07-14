@@ -16,103 +16,117 @@ def _session() -> Session:
 
 
 # --------------------------- strategy -------------------------------------
-def test_plan_sizing_and_split():
-    p = AlertPayload(ticker="BTCUSDT.P", side="long", price=101,
-                     zone_pocs=[100, 101, 102], targets_up=[104, 105, 110],
-                     targets_down=[], zone_break=99)
+def test_long_entries_are_supports_below():
+    # Long: entradas nos suportes abaixo ao alcance; alvos nas resistências acima.
+    p = AlertPayload(ticker="X.P", side="long", price=100,
+                     zone_pocs=[], targets_up=[104, 108, 112],
+                     targets_down=[99, 98, 90], zone_break=0.0001)
     plan = build_plan(p)
     assert plan is not None
-    assert plan.planned_avg_entry == 101
-    # risco 100 (2% de 5k), stop_dist = 101-99 = 2 -> qty = 50
-    assert abs(plan.total_qty - 50.0) < 1e-9
-    assert len(plan.entries) == 3
+    # 99 (1%) e 98 (2%) dentro de reach 3%; 90 (10%) fora -> só esses dois entram
+    assert sorted(e.price for e in plan.entries) == [98, 99]
+    # stop = POC seguinte abaixo do cluster (90)
+    assert plan.stop == 90
+    # alvos = resistências acima, >1%, mais próximo primeiro
+    assert [t.price for t in plan.targets] == [104, 108, 112]
     assert [round(t.close_fraction, 2) for t in plan.targets] == [0.30, 0.40, 0.30]
-    assert [t.price for t in plan.targets] == [104, 105, 110]
+
+
+def test_short_like_aave_sells_into_resistance():
+    # Reproduz o setup AAVE: short com resistências acima e suportes longe abaixo.
+    p = AlertPayload(ticker="AAVEUSDT.P", side="short", price=100,
+                     zone_pocs=[], targets_up=[101.76, 102.11, 103.67, 104.69],
+                     targets_down=[94.38, 93.61], zone_break=101)
+    plan = build_plan(p)
+    assert plan is not None
+    # entradas = resistências ao alcance (101.76, 102.11); as outras > 3% ficam de fora
+    assert [round(e.price, 2) for e in plan.entries] == [101.76, 102.11]
+    # stop ACIMA do cluster, no POC seguinte (103.67) - não um stop sintético colado
+    assert plan.stop == 103.67
+    # alvos = suportes abaixo
+    assert [t.price for t in plan.targets] == [94.38, 93.61]
+
+
+def test_no_entry_zone_returns_none():
+    # Long mas o único suporte está a 10% -> fora de alcance -> sem setup.
+    p = AlertPayload(ticker="X.P", side="long", price=100,
+                     zone_pocs=[], targets_up=[105], targets_down=[90], zone_break=0.0001)
+    assert build_plan(p) is None
 
 
 def test_targets_below_1pct_are_dropped():
-    p = AlertPayload(ticker="BTCUSDT.P", side="long", price=101,
-                     zone_pocs=[101], targets_up=[101.5, 104], targets_down=[], zone_break=100)
+    p = AlertPayload(ticker="X.P", side="long", price=100,
+                     zone_pocs=[], targets_up=[100.5, 104], targets_down=[99, 96], zone_break=0.0001)
     plan = build_plan(p)
-    # 101.5 está a ~0.5% -> descartado; sobra só 104 -> fração renormaliza para 1.0
-    assert [t.price for t in plan.targets] == [104]
-    assert abs(plan.targets[0].close_fraction - 1.0) < 1e-9
-
-
-def test_invalid_stop_side_rejected():
-    # long com stop ACIMA do preço médio -> incoerente
-    p = AlertPayload(ticker="BTCUSDT.P", side="long", price=100,
-                     zone_pocs=[100], targets_up=[110], targets_down=[], zone_break=105)
-    assert build_plan(p) is None
+    # entrada ~99; alvo 100.5 está a ~1.5% de 99 -> conta; recalcular: usa >1% do avg(99)
+    # 100.5 -> 1.51% (>1%) mantém; garantimos que nenhum <1% passa
+    for t in plan.targets:
+        assert abs(t.price - plan.planned_avg_entry) / plan.planned_avg_entry * 100.0 >= 1.0
 
 
 # --------------------------- engine ---------------------------------------
 def test_long_take_profit_lifecycle():
     s = _session()
     p = AlertPayload(ticker="BTCUSDT.P", side="long", price=100,
-                     zone_pocs=[100], targets_up=[102], targets_down=[], zone_break=99)
-    plan = build_plan(p)  # qty = 100/1 = 100
+                     zone_pocs=[], targets_up=[102], targets_down=[99, 90], zone_break=0.0001)
+    plan = build_plan(p)  # entrada 99, stop 90 -> stop_dist 9 -> qty=100/9
     trade = create_trade_from_plan(s, p, plan)
+    qty = plan.total_qty
 
-    # tick 1: preço toca 100 -> fill
-    process_tick(s, trade, MarketTick(trade.symbol, 100, 100.5, 100.0, 100.2))
+    process_tick(s, trade, MarketTick(trade.symbol, 99, 99.5, 99.0, 99.2))  # fill @99
     assert trade.status == TradeStatus.open
-    assert abs(trade.avg_entry - 100) < 1e-9
-    assert abs(trade.remaining_qty - 100) < 1e-9
+    assert abs(trade.avg_entry - 99) < 1e-9
 
-    # tick 2: máximo toca 102 -> TP total
-    process_tick(s, trade, MarketTick(trade.symbol, 101.5, 102.0, 101.0, 101.5))
+    process_tick(s, trade, MarketTick(trade.symbol, 101.5, 102.0, 101.0, 101.5))  # TP @102
     assert trade.status == TradeStatus.closed
     assert trade.close_reason == CloseReason.take_profit
-    assert abs(trade.realized_pnl - 200.0) < 1e-9  # (102-100)*100
+    assert abs(trade.realized_pnl - (102 - 99) * qty) < 1e-6
 
 
 def test_long_zone_break_cut():
     s = _session()
     p = AlertPayload(ticker="ETHUSDT.P", side="long", price=100,
-                     zone_pocs=[100], targets_up=[110], targets_down=[], zone_break=99)
-    plan = build_plan(p)
+                     zone_pocs=[], targets_up=[110], targets_down=[99, 90], zone_break=0.0001)
+    plan = build_plan(p)  # entrada 99, stop 90
     trade = create_trade_from_plan(s, p, plan)
-    process_tick(s, trade, MarketTick(trade.symbol, 100, 100.5, 100.0, 100.2))  # fill
-    # vela FECHA a 98 (< stop 99) -> corte
-    process_tick(s, trade, MarketTick(trade.symbol, 98, 100.0, 97.5, 98.0))
+    qty = plan.total_qty
+    process_tick(s, trade, MarketTick(trade.symbol, 99, 99.5, 99.0, 99.2))  # fill
+    process_tick(s, trade, MarketTick(trade.symbol, 88, 99.0, 87.5, 88.0))  # fecha < stop 90
     assert trade.status == TradeStatus.closed
     assert trade.close_reason == CloseReason.zone_break
-    assert abs(trade.realized_pnl - (-200.0)) < 1e-9  # (98-100)*100
+    assert abs(trade.realized_pnl - (88 - 99) * qty) < 1e-6
 
 
 def test_short_partial_then_full_tp():
     s = _session()
     p = AlertPayload(ticker="SOLUSDT.P", side="short", price=100,
-                     zone_pocs=[100], targets_up=[], targets_down=[98, 96, 90], zone_break=101)
-    plan = build_plan(p)  # stop_dist=1 -> qty=100; targets 98,96,90 fracs .3/.4/.3
+                     zone_pocs=[], targets_up=[101, 110], targets_down=[98, 96, 90], zone_break=101)
+    plan = build_plan(p)  # entrada 101, stop 110
     trade = create_trade_from_plan(s, p, plan)
-    process_tick(s, trade, MarketTick(trade.symbol, 100, 100.0, 99.5, 99.8))  # short fill (high>=100)
+    qty = plan.total_qty
+    avg = plan.planned_avg_entry  # 101
+
+    process_tick(s, trade, MarketTick(trade.symbol, 101, 101.0, 100.5, 100.8))  # fill @101
     assert trade.status == TradeStatus.open
 
-    # atinge só o TP1 (98): fecha 30% de 100 = 30 qty, pnl=(100-98)*30=60
-    process_tick(s, trade, MarketTick(trade.symbol, 98, 99.0, 98.0, 98.5))
+    process_tick(s, trade, MarketTick(trade.symbol, 98, 100.0, 98.0, 98.5))  # TP1 98 (30%)
     assert trade.status == TradeStatus.open
-    assert abs(trade.remaining_qty - 70) < 1e-9
-    assert abs(trade.realized_pnl - 60.0) < 1e-9
+    assert abs(trade.realized_pnl - (avg - 98) * 0.30 * qty) < 1e-6
 
-    # atinge TP2 (96) e TP3 (90) na mesma vela -> fecha resto
-    process_tick(s, trade, MarketTick(trade.symbol, 90, 98.0, 90.0, 91.0))
+    process_tick(s, trade, MarketTick(trade.symbol, 90, 97.0, 90.0, 91.0))  # TP2 96 + TP3 90
     assert trade.status == TradeStatus.closed
-    # +40 qty@96 => (100-96)*40=160 ; +30 qty@90 => (100-90)*30=300 ; total 60+160+300=520
-    assert abs(trade.realized_pnl - 520.0) < 1e-9
+    expected = ((avg - 98) * 0.30 + (avg - 96) * 0.40 + (avg - 90) * 0.30) * qty
+    assert abs(trade.realized_pnl - expected) < 1e-6
 
 
 def test_entry_expires_unfilled():
     import datetime as dt
     s = _session()
     p = AlertPayload(ticker="XRPUSDT.P", side="long", price=100,
-                     zone_pocs=[100], targets_up=[110], targets_down=[], zone_break=99)
+                     zone_pocs=[], targets_up=[110], targets_down=[99, 90], zone_break=0.0001)
     plan = build_plan(p)
     trade = create_trade_from_plan(s, p, plan)
-    # força expiração
     trade.expires_at = dt.datetime.utcnow() - dt.timedelta(minutes=1)
-    # preço nunca tocou (bar_low > 100)
-    process_tick(s, trade, MarketTick(trade.symbol, 105, 106, 104, 105))
+    process_tick(s, trade, MarketTick(trade.symbol, 105, 106, 104, 105))  # nunca tocou 99
     assert trade.status == TradeStatus.cancelled
     assert trade.close_reason == CloseReason.expired

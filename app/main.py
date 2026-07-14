@@ -102,14 +102,30 @@ async def webhook(req: Request) -> JSONResponse:
 # --------------------------------------------------------------------------
 # Dashboard
 # --------------------------------------------------------------------------
+def _unrealized(trade: Trade) -> float:
+    """PnL a flutuar de uma posição aberta, ao último preço visto."""
+    if trade.status != TradeStatus.open or trade.remaining_qty <= 0 or trade.last_price <= 0:
+        return 0.0
+    diff = (trade.last_price - trade.avg_entry) if trade.side == "long" else (trade.avg_entry - trade.last_price)
+    return diff * trade.remaining_qty
+
+
+def _display_pnl(trade: Trade) -> float:
+    """PnL a mostrar: realizado + não-realizado (o flutuante das abertas)."""
+    return trade.realized_pnl + _unrealized(trade)
+
+
 def _stats(trades: list[Trade]) -> dict:
     closed = [t for t in trades if t.status == TradeStatus.closed]
     wins = [t for t in closed if t.realized_pnl > 0]
-    total_pnl = sum(t.realized_pnl for t in trades)
-    equity = settings.account_start_usd + total_pnl
+    realized = sum(t.realized_pnl for t in trades)
+    unrealized = sum(_unrealized(t) for t in trades)
+    equity = settings.account_start_usd + realized + unrealized
     return {
         "equity": equity,
-        "total_pnl": total_pnl,
+        "total_pnl": realized + unrealized,
+        "realized": realized,
+        "unrealized": unrealized,
         "n_closed": len(closed),
         "n_open": len([t for t in trades if t.status == TradeStatus.open]),
         "n_pending": len([t for t in trades if t.status == TradeStatus.pending]),
@@ -121,10 +137,18 @@ def _stats(trades: list[Trade]) -> dict:
 async def dashboard(request: Request) -> HTMLResponse:
     with get_session() as session:
         trades = list(session.exec(select(Trade).order_by(Trade.created_at.desc())))
+        pnl = {t.id: _display_pnl(t) for t in trades}
+        live = {t.id for t in trades if t.status == TradeStatus.open and t.remaining_qty > 0}
         return templates.TemplateResponse(
             request,
             "dashboard.html",
-            {"trades": trades, "stats": _stats(trades), "start": settings.account_start_usd},
+            {
+                "trades": trades,
+                "pnl": pnl,
+                "live": live,
+                "stats": _stats(trades),
+                "start": settings.account_start_usd,
+            },
         )
 
 

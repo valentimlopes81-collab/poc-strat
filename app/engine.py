@@ -98,6 +98,7 @@ def process_tick(
     if trade.status in (TradeStatus.closed, TradeStatus.cancelled):
         return
 
+    trade.last_price = tick.last  # para o PnL live no dashboard
     expired = trade.expires_at is not None and now >= trade.expires_at
 
     # --- 1. Fills das ordens limite (só antes de expirar) ---

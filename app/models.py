@@ -43,6 +43,7 @@ class Trade(SQLModel, table=True):
     avg_entry: float = 0.0                    # preço médio das entradas preenchidas
     remaining_qty: float = 0.0                # posição ainda aberta
     realized_pnl: float = 0.0
+    last_price: float = 0.0                   # último preço visto (para PnL live)
 
     created_at: datetime = Field(default_factory=utcnow)
     opened_at: datetime | None = None

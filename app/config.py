@@ -23,6 +23,11 @@ class Settings:
     tp_split: tuple[float, float, float] = (0.30, 0.40, 0.30)
     # Quantas ordens limite espalhar pela zona, no máximo (uma por POC da zona).
     max_entry_orders: int = 8
+    # Distância máxima (%) a que um POC do lado da entrada ainda conta como zona.
+    # Long -> suportes abaixo; Short -> resistências acima. Alinhado com o gatilho.
+    entry_reach_pct: float = 3.0
+    # Folga (%) para o stop quando não há um POC seguinte para lá do cluster.
+    stop_buffer_pct: float = 0.5
     # Validade das ordens limite por encher, em minutos. 2 horas.
     entry_ttl_minutes: int = 120
 

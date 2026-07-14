@@ -66,7 +66,7 @@
         <td>{{ "%.6g"|format(t.avg_entry) if t.avg_entry else "—" }}</td>
         <td>{{ "%.4g"|format(t.remaining_qty) if t.remaining_qty else ("%.4g"|format(t.filled_qty) if t.filled_qty else "—") }}</td>
         <td>{{ "%.6g"|format(t.stop) }}</td>
-        <td class="{{ 'pos' if t.realized_pnl>=0 else 'neg' }}">{{ "%+.2f"|format(t.realized_pnl) }}</td>
+        <td class="{{ 'pos' if pnl[t.id]>=0 else 'neg' }}">{{ "%+.2f"|format(pnl[t.id]) }}{% if t.id in live %} <span class="tag">~</span>{% endif %}</td>
         <td class="tag">{{ t.close_reason.value if t.close_reason else "—" }}</td>
         <td class="tag">{{ t.created_at.strftime("%m-%d %H:%M") }}</td>
       </tr>

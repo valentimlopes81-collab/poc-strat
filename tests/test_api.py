@@ -23,14 +23,15 @@ def test_webhook_creates_trade_and_dashboard_renders(tmp_path, monkeypatch):
     with TestClient(app.main.app) as client:
         body = {
             "ticker": "BTCUSDT.P", "side": "long", "price": 61000,
-            "zone_pocs": [60800, 61000, 61200], "targets_up": [62500, 63500],
-            "targets_down": [59000], "zone_break": 60500,
+            "zone_pocs": [], "targets_up": [62500, 63500],
+            "targets_down": [60300, 59000], "zone_break": 60500,
         }
         r = client.post("/webhook", json=body)
         assert r.status_code == 200, r.text
         data = r.json()
         assert data["status"] == "accepted"
-        assert data["entries"] == 3
+        # suporte a 60300 (1.1%) dentro do alcance; 59000 (3.3%) fora -> 1 entrada
+        assert data["entries"] == 1
         assert data["targets"] == [62500, 63500]
 
         # Dashboard renderiza e mostra o símbolo.

@@ -47,25 +47,54 @@ def _mean(xs: list[float]) -> float:
     return sum(xs) / len(xs) if xs else 0.0
 
 
+def _entry_cluster(price: float, levels: list[float], side_up: bool, s: Settings) -> list[float]:
+    """POCs do lado da entrada (resistência acima p/ short, suporte abaixo p/ long)
+    que estão ao alcance (``entry_reach_pct``), ordenados do mais próximo do preço
+    para o mais distante, limitados a ``max_entry_orders``."""
+    out: list[float] = []
+    for lvl in levels:
+        if side_up and lvl > price:
+            dist = (lvl - price) / price * 100.0
+        elif (not side_up) and lvl < price:
+            dist = (price - lvl) / price * 100.0
+        else:
+            continue
+        if dist <= s.entry_reach_pct:
+            out.append(lvl)
+    # Nearest-first: acima -> ascendente; abaixo -> descendente.
+    out.sort(reverse=not side_up)
+    return out[: s.max_entry_orders]
+
+
+def _compute_stop(side: str, entries: list[float], below: list[float], above: list[float], s: Settings) -> float:
+    """Stop = para lá do cluster de entrada (o POC seguinte que 'rompe a zona'),
+    ou uma folga se não houver POC mais além."""
+    if side == "long":
+        low = min(entries)
+        beyond = [l for l in below if l < low]
+        return max(beyond) if beyond else low * (1 - s.stop_buffer_pct / 100.0)
+    high = max(entries)
+    beyond = [l for l in above if l > high]
+    return min(beyond) if beyond else high * (1 + s.stop_buffer_pct / 100.0)
+
+
 def _select_targets(
-    planned_avg: float, candidates: list[float], side: str, s: Settings
+    ref: float, candidates: list[float], side: str, s: Settings
 ) -> list[float]:
-    """Ordena os candidatos na direção do lucro e filtra os que estão a menos
-    de ``min_target_dist_pct`` do preço médio de entrada."""
-    if planned_avg <= 0:
+    """Alvos no lado oposto à entrada, filtrando os que estão a menos de
+    ``min_target_dist_pct`` da entrada média, do mais próximo ao mais distante."""
+    if ref <= 0:
         return []
     valid = []
     for lvl in candidates:
-        dist_pct = abs(lvl - planned_avg) / planned_avg * 100.0
+        dist_pct = abs(lvl - ref) / ref * 100.0
         if dist_pct < s.min_target_dist_pct:
             continue
-        # Só alvos na direção correta (acima p/ long, abaixo p/ short).
-        if side == "long" and lvl <= planned_avg:
+        if side == "long" and lvl <= ref:
             continue
-        if side == "short" and lvl >= planned_avg:
+        if side == "short" and lvl >= ref:
             continue
         valid.append(lvl)
-    # Do mais próximo ao mais distante na direção do lucro.
     valid.sort(reverse=(side == "short"))
     return valid[:3]
 
@@ -81,38 +110,46 @@ def _tp_fractions(n: int, s: Settings) -> list[float]:
 
 
 def build_plan(payload: AlertPayload, s: Settings | None = None) -> TradePlan | None:
-    """Constrói o plano de trade a partir do alerta. Devolve ``None`` se os
-    dados forem incoerentes (ex.: stop do lado errado do preço)."""
-    s = s or default_settings
+    """Constrói o plano de trade a partir do alerta.
 
-    # POCs da zona onde vamos espalhar as entradas. Sem zona, usa o preço.
-    zone = sorted(set(payload.zone_pocs)) or [payload.price]
-    zone = zone[: s.max_entry_orders]
-    planned_avg = _mean(zone)
-    if planned_avg <= 0:
+    Entradas = POCs naked do lado da aproximação (suporte abaixo p/ long,
+    resistência acima p/ short) ao alcance. Alvos = POCs naked do lado oposto.
+    Stop = para lá do cluster de entrada. Devolve ``None`` se não houver uma
+    zona de entrada válida (evita entrar a mercado sem POCs de suporte)."""
+    s = s or default_settings
+    price = payload.price
+    if price <= 0:
         return None
 
-    # O zone_break é o stop efetivo. Tem de estar do lado certo do preço médio.
-    stop = payload.zone_break
+    below = sorted(set(payload.targets_down), reverse=True)
+    above = sorted(set(payload.targets_up))
+
     if payload.side == "long":
-        stop_dist = planned_avg - stop
+        entry_levels = _entry_cluster(price, below, side_up=False, s=s)  # suportes abaixo
+        target_pool = above
     else:
-        stop_dist = stop - planned_avg
+        entry_levels = _entry_cluster(price, above, side_up=True, s=s)   # resistências acima
+        target_pool = below
+
+    if not entry_levels:
+        # Sem POCs do lado da entrada ao alcance -> não há setup real. Salta.
+        return None
+
+    planned_avg = _mean(entry_levels)
+    stop = _compute_stop(payload.side, entry_levels, below, above, s)
+
+    stop_dist = (stop - planned_avg) if payload.side == "short" else (planned_avg - stop)
     if stop_dist <= 0:
-        # Stop do lado errado -> setup inválido, não arriscamos sizing absurdo.
         return None
 
     # Sizing por risco: se o preço fechar além da zona, a perda é ~risk_usd.
     risk_usd = s.account_start_usd * s.risk_pct
     total_qty = risk_usd / stop_dist
 
-    # Distribui a quantidade igualmente pelas ordens limite (uma por POC).
-    per_order = total_qty / len(zone)
-    entries = [EntryOrder(price=p, qty=per_order) for p in zone]
+    per_order = total_qty / len(entry_levels)
+    entries = [EntryOrder(price=p, qty=per_order) for p in entry_levels]
 
-    # Alvos: próximas zonas na direção do lucro, filtradas por distância mínima.
-    raw_targets = payload.targets_up if payload.side == "long" else payload.targets_down
-    tgt_levels = _select_targets(planned_avg, raw_targets, payload.side, s)
+    tgt_levels = _select_targets(planned_avg, target_pool, payload.side, s)
     fracs = _tp_fractions(len(tgt_levels), s)
     targets = [TakeProfit(price=lvl, close_fraction=f) for lvl, f in zip(tgt_levels, fracs)]
 
