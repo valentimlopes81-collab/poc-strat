@@ -68,6 +68,7 @@ volbox_txt   = input.color(color.rgb(220, 220, 220), "Cor do Texto do Volume", g
 group_webhook  = "Webhook poc-strat"
 zone_band_pct  = input.float(1.5, "Banda da Zona de Entrada (%)", step=0.1, group=group_webhook, tooltip="POCs naked dentro desta % à volta do preço formam a zona de entrada enviada no webhook.")
 webhook_secret = input.string("O_TEU_SEGREDO", "Segredo do Webhook", group=group_webhook, tooltip="Tem de ser igual ao POC_WEBHOOK_SECRET do servidor.")
+alert_naked_only = input.bool(false, "Alertar só em POCs Naked", group=group_webhook, tooltip="OFF (padrão) = comportamento do 'sistema nº1': dispara perto de qualquer POC forte, testado ou não. ON = só dispara perto de POCs naked (intactos).")
 
 // ==========================================
 // 3. MOTOR DE VOLUME (MULTI-TICKER EXTREME) - corretoras externas
@@ -643,7 +644,8 @@ if not na(a_week_levels) and array.size(a_week_levels) > 0
     for i = 0 to array.size(a_week_levels) - 1
         float lvl = array.get(a_week_levels, i)
         bool tested_i = array.get(a_week_tested, i)
-        if not na(lvl) and not tested_i
+        // sistema nº1 (padrão): conta qualquer POC; naked-only: só os intactos
+        if not na(lvl) and (not alert_naked_only or not tested_i)
             float dist = math.abs(close - lvl)
             if dist < min_dist_w
                 min_dist_w := dist
@@ -653,9 +655,11 @@ float dist_w_pct = na
 if not na(nearest_w_poc) and close > 0
     dist_w_pct := (min_dist_w / close) * 100.0
 
+// Referência do "POC mais forte": qualquer (nº1) ou só naked, conforme o toggle
+float ref_best_poc = alert_naked_only ? best_naked_poc_lvl : best_poc_lvl
 float dist_best_pct = na
-if not na(best_naked_poc_lvl) and close > 0
-    dist_best_pct := (math.abs(close - best_naked_poc_lvl) / close) * 100.0
+if not na(ref_best_poc) and close > 0
+    dist_best_pct := (math.abs(close - ref_best_poc) / close) * 100.0
 
 bool near_w_poc = not na(dist_w_pct) and dist_w_pct <= 2.0
 bool near_best_poc = not na(dist_best_pct) and dist_best_pct <= 1.5
