@@ -1,0 +1,729 @@
+//@version=6
+indicator("POC POC [Smart Multi-Exchange MAX v2]", shorttitle="POC POC MAX v2", overlay=true, max_lines_count=500, max_labels_count=500, max_bars_back=500)
+
+// ==========================================
+// 1. FILTRO DE ATIVOS
+// ==========================================
+is_index = str.contains(syminfo.ticker, ".D") or syminfo.ticker == "DXY" or syminfo.ticker == "USDT.D" or str.contains(syminfo.ticker, "TOTAL")
+
+if is_index
+    runtime.error("⛔ SCRIPT DESLIGADO: Ativo sem Volume de Troca Real.")
+
+// ==========================================
+// 2. CONFIGURAÇÕES
+// ==========================================
+group_scan   = "Precisão do Scanner"
+scan_res     = input.timeframe("30", "Resolução do Scanner (Corretoras Externas)", options=["5", "15", "30", "60"], group=group_scan)
+poc_src      = input.string("Close", "Fonte de Preço", options=["Close", "HL2", "HLC3"], group=group_scan)
+bins_profile = input.int(24, "Bins do Perfil de Volume (Símbolo Principal)", minval=10, maxval=50, group=group_scan, tooltip="Quanto menor o timeframe do gráfico, mais preciso o histograma. Use 5m/15m para o POC mais fiel.")
+
+group_mem    = "Visuais e Cores (Unificados)"
+show_lines   = input.bool(true,  "Mostrar Linhas Tracejadas", group=group_mem)
+show_dev     = input.bool(true,  "Mostrar POC de HOJE",   group=group_mem)
+show_day     = input.bool(true,  "Guardar Histórico Diário (1D)",        group=group_mem)
+show_week    = input.bool(true,  "Guardar Histórico Semanal (1W)",       group=group_mem)
+show_tested_dim = input.bool(true, "Esmaecer POCs já Testados (Não-Naked)", group=group_mem)
+hide_tested  = input.bool(true, "Mostrar Apenas POCs Naked (Esconder Testados)", group=group_mem, tooltip="Quando ativo, esconde por completo as linhas/labels/tags dos POCs já testados - só ficam visíveis os níveis ainda intactos.")
+
+c_dev_input  = input.color(color.rgb(255, 152, 0),    "Cor POC Hoje (Laranja)", group=group_mem)
+c_day_input  = input.color(color.rgb(158, 158, 158),  "Cor 1D (Cinzento)",      group=group_mem)
+c_week_input = input.color(color.rgb(149, 117, 205),  "Cor 1W (Roxo Claro)",    group=group_mem)
+c_crit_input = input.color(color.rgb(255, 60, 60),    "Cor POC CRÍTICO (Vermelho)", group=group_mem)
+c_tested_input = input.color(color.rgb(70, 70, 70),   "Cor POC Testado/Não-Naked", group=group_mem)
+lbl_offset   = input.int(10, "Empurrar para a Direita", group=group_mem)
+
+group_scale     = "Escala de Preço"
+show_on_scale   = input.bool(true, "Mostrar POCs na Escala de Preço (eixo direito)", group=group_scale)
+n_scale_slots   = input.int(8, "Quantos Níveis Mostrar na Escala", minval=1, maxval=15, group=group_scale, tooltip="Mostra os N níveis (1D+1W) com maior score na escala de preço, como tags de valor.")
+
+group_multi = "Fontes de Volume (Agregação MAX)"
+use_binance  = input.bool(true, "Injetar Volume BINANCE", group=group_multi)
+use_mexc     = input.bool(true, "Injetar Volume MEXC", group=group_multi)
+use_coinbase = input.bool(true, "Injetar Volume COINBASE", group=group_multi)
+use_upbit    = input.bool(true, "Injetar Volume UPBIT", group=group_multi)
+use_okx      = input.bool(true, "Injetar Volume OKX", group=group_multi)
+use_bitget   = input.bool(true, "Injetar Volume BITGET", group=group_multi)
+use_gate     = input.bool(true, "Injetar Volume GATE.IO", group=group_multi)
+use_kucoin   = input.bool(true, "Injetar Volume KUCOIN", group=group_multi)
+
+group_imp = "Sistema de Importância"
+confluence_pct   = input.float(0.3,  "% para Confluência 1D+1W",             group=group_imp, step=0.05)
+proximity_pct    = input.float(0.8,  "% Proximidade ao Preço Atual",        group=group_imp, step=0.05)
+show_stars       = input.bool(false, "Mostrar ★ de Importância", group=group_imp)
+alert_touch_week = input.bool(true,  "Alertar TOQUE no POC Semanal",        group=group_imp)
+
+group_dash = "Configurações do Dashboard"
+show_dash  = input.bool(true, "Mostrar Dashboard Analítico", group=group_dash)
+dash_pos   = input.string("Top Right", "Posição", options=["Top Right", "Top Left", "Bottom Right", "Bottom Left"], group=group_dash)
+tp_pct     = input.float(1.5, "Sinal: Take Profit (%)", step=0.1, group=group_dash) / 100
+sl_pct     = input.float(0.5, "Sinal: Stop Loss (%)", step=0.1, group=group_dash) / 100
+
+group_volbox = "Mini Caixa de Volume & Funding"
+show_volbox  = input.bool(true, "Mostrar Mini Caixa", group=group_volbox)
+volbox_pos   = input.string("Bottom Center", "Posição da Caixa", options=["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Bottom Center"], group=group_volbox)
+volbox_bg    = input.color(color.rgb(15, 15, 15, 20), "Cor de Fundo da Caixa", group=group_volbox)
+volbox_txt   = input.color(color.rgb(220, 220, 220), "Cor do Texto do Volume", group=group_volbox)
+
+// >>> WEBHOOK poc-strat: configurações do envio automático de trades <<<
+group_webhook  = "Webhook poc-strat"
+zone_band_pct  = input.float(1.5, "Banda da Zona de Entrada (%)", step=0.1, group=group_webhook, tooltip="POCs naked dentro desta % à volta do preço formam a zona de entrada enviada no webhook.")
+webhook_secret = input.string("O_TEU_SEGREDO", "Segredo do Webhook", group=group_webhook, tooltip="Tem de ser igual ao POC_WEBHOOK_SECRET do servidor.")
+
+// ==========================================
+// 3. MOTOR DE VOLUME (MULTI-TICKER EXTREME) - corretoras externas
+// ==========================================
+f_get_hvn(tck, res) =>
+    [v, c, h2, h3] = request.security(tck, res, [volume, close, hl2, hlc3], lookahead=barmerge.lookahead_off, ignore_invalid_symbol=true)
+    float p = na
+    if poc_src == "Close"
+        p := c
+    else if poc_src == "HLC3"
+        p := h3
+    else
+        p := h2
+    [v, p]
+
+f_format_vol(v) =>
+    v >= 1000000000 ? str.tostring(v / 1000000000, "#.##") + "B" : v >= 1000000 ? str.tostring(v / 1000000, "#.##") + "M" : v >= 1000 ? str.tostring(v / 1000, "#.##") + "K" : str.tostring(v, "#.##")
+
+// FUNÇÃO NOVA: Perfil de Volume real (histograma) a partir das barras nativas do gráfico.
+f_compute_poc(array<float> px_arr, array<float> vol_arr) =>
+    int n = array.size(px_arr)
+    float poc = na
+    if n > 0
+        float lo = array.min(px_arr)
+        float hi = array.max(px_arr)
+        float rng = hi - lo
+        if rng <= 0
+            poc := array.get(px_arr, 0)
+        else
+            float[] bin_vol = array.new_float(bins_profile, 0.0)
+            float bw = rng / bins_profile
+            for i = 0 to n - 1
+                float px = array.get(px_arr, i)
+                float vl = array.get(vol_arr, i)
+                int idx = math.min(bins_profile - 1, math.max(0, int((px - lo) / bw)))
+                array.set(bin_vol, idx, array.get(bin_vol, idx) + vl)
+            int best_idx = array.indexof(bin_vol, array.max(bin_vol))
+            poc := lo + (best_idx + 0.5) * bw
+    poc
+
+// >>> WEBHOOK poc-strat: helpers para serializar os POCs em JSON <<<
+// Junta ao acumulador 'acc' os níveis NAKED de um array, filtrados por modo:
+//   "zone" -> dentro de zone_band_pct do preço ; "up" -> acima ; "down" -> abaixo
+f_json_levels(string acc, float[] levels, bool[] tested, float ref, string mode) =>
+    string s = acc
+    if array.size(levels) > 0
+        for i = 0 to array.size(levels) - 1
+            float lvl = array.get(levels, i)
+            if not na(lvl) and not array.get(tested, i)
+                bool ok = mode == "zone" ? (math.abs(lvl - ref) / ref * 100.0 <= zone_band_pct) : mode == "up" ? (lvl > ref) : (lvl < ref)
+                if ok
+                    s := s + (s == "" ? "" : ",") + str.tostring(lvl, format.mintick)
+    s
+
+// Extremo (min/max) dos níveis NAKED dentro da banda da zona - serve de zone_break.
+f_zone_extreme(float cur, float[] levels, bool[] tested, float ref, bool want_min) =>
+    float ext = cur
+    if array.size(levels) > 0
+        for i = 0 to array.size(levels) - 1
+            float lvl = array.get(levels, i)
+            if not na(lvl) and not array.get(tested, i) and math.abs(lvl - ref) / ref * 100.0 <= zone_band_pct
+                ext := na(ext) ? lvl : (want_min ? math.min(ext, lvl) : math.max(ext, lvl))
+    ext
+
+// Normalização de Tickers para ir buscar Perpétuos ou Spot corretamente
+base_coin = str.replace_all(syminfo.ticker, ".P", "")
+base_coin := str.replace_all(base_coin, "PERP", "")
+is_perp = str.contains(syminfo.ticker, ".P") or str.contains(syminfo.ticker, "PERP")
+
+tck_binance  = is_perp ? "BINANCE:" + base_coin + "PERP" : "BINANCE:" + base_coin
+tck_mexc     = is_perp ? "MEXC:" + base_coin + "PERP"    : "MEXC:" + base_coin
+tck_coinbase = is_perp ? "COINBASE:" + base_coin + "PERP": "COINBASE:" + base_coin
+tck_upbit    = is_perp ? "UPBIT:" + base_coin + "PERP"   : "UPBIT:" + base_coin
+tck_okx      = is_perp ? "OKX:" + base_coin + "SWAP"     : "OKX:" + base_coin
+tck_bitget   = is_perp ? "BITGET:" + base_coin + "PERP"  : "BITGET:" + base_coin
+tck_gate     = is_perp ? "GATEIO:" + base_coin + "PERP"  : "GATEIO:" + base_coin
+tck_kucoin   = is_perp ? "KUCOIN:" + base_coin + "PERP"  : "KUCOIN:" + base_coin
+
+// ==========================================
+// 4. POC NATIVO DO SÍMBOLO PRINCIPAL (HISTOGRAMA REAL) + "HOJE"
+// ==========================================
+var float[] day_px  = array.new_float(0), var float[] day_vol  = array.new_float(0)
+var float[] week_px = array.new_float(0), var float[] week_vol = array.new_float(0)
+
+var line  l_dev  = na, var label lb_dev = na
+var float main_day_poc  = na, var float main_day_total_vol  = 0.0
+var float main_week_poc = na, var float main_week_total_vol = 0.0
+
+float bar_price = poc_src == "Close" ? close : poc_src == "HLC3" ? hlc3 : hl2
+
+if ta.change(time("D")) != 0
+    main_day_poc := f_compute_poc(day_px, day_vol)
+    main_day_total_vol := array.sum(day_vol)
+    array.clear(day_px), array.clear(day_vol)
+
+if ta.change(time("W")) != 0
+    main_week_poc := f_compute_poc(week_px, week_vol)
+    main_week_total_vol := array.sum(week_vol)
+    array.clear(week_px), array.clear(week_vol)
+
+array.push(day_px, bar_price),  array.push(day_vol, volume)
+array.push(week_px, bar_price), array.push(week_vol, volume)
+
+float live_today_poc = f_compute_poc(day_px, day_vol)
+if show_dev and not na(live_today_poc) and barstate.islast
+    line.delete(l_dev), label.delete(lb_dev)
+    l_dev  := line.new(bar_index - 10, live_today_poc, bar_index + lbl_offset, live_today_poc, color = show_lines ? c_dev_input : na, width=1, style=line.style_dotted)
+    lb_dev := label.new(bar_index + lbl_offset, live_today_poc, text="HOJE " + str.tostring(live_today_poc, format.mintick), color=c_dev_input, textcolor=color.white, style=label.style_label_left, size=size.small)
+
+// ==========================================
+// 5. MEMÓRIA HISTÓRICA AGREGADA
+// ==========================================
+var float[] a_day_levels = array.new_float(0),  var float[] a_day_volumes = array.new_float(0)
+var line[]  a_day_lines  = array.new_line(0),   var label[] a_day_labels  = array.new_label(0)
+var bool[]  a_day_tested = array.new_bool(0),   var bool[]  a_day_confluence = array.new_bool(0)
+
+var float[] a_week_levels = array.new_float(0), var float[] a_week_volumes = array.new_float(0)
+var line[]  a_week_lines  = array.new_line(0),  var label[] a_week_labels  = array.new_label(0)
+var bool[]  a_week_tested = array.new_bool(0),  var bool[]  a_week_confluence = array.new_bool(0)
+
+f_push_day(float lvl, float vol) =>
+    bool conf_new = false
+    if not na(lvl)
+        if array.size(a_week_levels) > 0
+            for j = 0 to array.size(a_week_levels) - 1
+                if math.abs(lvl - array.get(a_week_levels, j)) / lvl * 100.0 <= confluence_pct
+                    conf_new := true
+                    array.set(a_week_confluence, j, true)
+        int sz = array.size(a_day_levels)
+        if sz > 0
+            for k = 0 to sz - 1
+                if math.abs(lvl - array.get(a_day_levels, k)) / lvl * 100.0 <= confluence_pct / 2
+                    conf_new := true
+                    array.set(a_day_confluence, k, true)
+        array.push(a_day_levels, lvl), array.push(a_day_volumes, vol)
+        ln = line.new(bar_index, lvl, bar_index + lbl_offset, lvl, color=na)
+        lb = label.new(bar_index + lbl_offset, lvl, text="", style=label.style_label_left)
+        array.push(a_day_lines, ln), array.push(a_day_labels, lb)
+        array.push(a_day_tested, false), array.push(a_day_confluence, conf_new)
+        if array.size(a_day_lines) > 350
+            array.remove(a_day_levels, 0), array.remove(a_day_volumes, 0), array.remove(a_day_tested, 0), array.remove(a_day_confluence, 0)
+            line.delete(array.remove(a_day_lines, 0)), label.delete(array.remove(a_day_labels, 0))
+
+f_push_week(float lvl, float vol) =>
+    bool conf_new = false
+    if not na(lvl)
+        if array.size(a_day_levels) > 0
+            for j = 0 to array.size(a_day_levels) - 1
+                if math.abs(lvl - array.get(a_day_levels, j)) / lvl * 100.0 <= confluence_pct
+                    conf_new := true
+                    array.set(a_day_confluence, j, true)
+        int sz = array.size(a_week_levels)
+        if sz > 0
+            for k = 0 to sz - 1
+                if math.abs(lvl - array.get(a_week_levels, k)) / lvl * 100.0 <= confluence_pct / 2
+                    conf_new := true
+                    array.set(a_week_confluence, k, true)
+        array.push(a_week_levels, lvl), array.push(a_week_volumes, vol)
+        ln = line.new(bar_index, lvl, bar_index + lbl_offset, lvl, color=na)
+        lb = label.new(bar_index + lbl_offset, lvl, text="", style=label.style_label_left)
+        array.push(a_week_lines, ln), array.push(a_week_labels, lb)
+        array.push(a_week_tested, false), array.push(a_week_confluence, conf_new)
+        if array.size(a_week_lines) > 100
+            array.remove(a_week_levels, 0), array.remove(a_week_volumes, 0), array.remove(a_week_tested, 0), array.remove(a_week_confluence, 0)
+            line.delete(array.remove(a_week_lines, 0)), label.delete(array.remove(a_week_labels, 0))
+
+[v_bin_d, p_bin_d] = f_get_hvn(tck_binance, scan_res),  [v_bin_w, p_bin_w] = f_get_hvn(tck_binance, "240")
+var float t_bin_d_v = 0.0, var float t_bin_d_p = na, var float t_bin_w_v = 0.0, var float t_bin_w_p = na
+
+[v_mex_d, p_mex_d] = f_get_hvn(tck_mexc, scan_res),  [v_mex_w, p_mex_w] = f_get_hvn(tck_mexc, "240")
+var float t_mex_d_v = 0.0, var float t_mex_d_p = na, var float t_mex_w_v = 0.0, var float t_mex_w_p = na
+
+[v_cb_d, p_cb_d] = f_get_hvn(tck_coinbase, scan_res), [v_cb_w, p_cb_w] = f_get_hvn(tck_coinbase, "240")
+var float t_cb_d_v = 0.0, var float t_cb_d_p = na, var float t_cb_w_v = 0.0, var float t_cb_w_p = na
+
+[v_up_d, p_up_d] = f_get_hvn(tck_upbit, scan_res),  [v_up_w, p_up_w] = f_get_hvn(tck_upbit, "240")
+var float t_up_d_v = 0.0, var float t_up_d_p = na, var float t_up_w_v = 0.0, var float t_up_w_p = na
+
+[v_ok_d, p_ok_d] = f_get_hvn(tck_okx, scan_res),    [v_ok_w, p_ok_w] = f_get_hvn(tck_okx, "240")
+var float t_ok_d_v = 0.0, var float t_ok_d_p = na, var float t_ok_w_v = 0.0, var float t_ok_w_p = na
+
+[v_bg_d, p_bg_d] = f_get_hvn(tck_bitget, scan_res), [v_bg_w, p_bg_w] = f_get_hvn(tck_bitget, "240")
+var float t_bg_d_v = 0.0, var float t_bg_d_p = na, var float t_bg_w_v = 0.0, var float t_bg_w_p = na
+
+[v_gt_d, p_gt_d] = f_get_hvn(tck_gate, scan_res),   [v_gt_w, p_gt_w] = f_get_hvn(tck_gate, "240")
+var float t_gt_d_v = 0.0, var float t_gt_d_p = na, var float t_gt_w_v = 0.0, var float t_gt_w_p = na
+
+[v_ku_d, p_ku_d] = f_get_hvn(tck_kucoin, scan_res), [v_ku_w, p_ku_w] = f_get_hvn(tck_kucoin, "240")
+var float t_ku_d_v = 0.0, var float t_ku_d_p = na, var float t_ku_w_v = 0.0, var float t_ku_w_p = na
+
+if ta.change(time("D")) != 0
+    if show_day and not is_index
+        f_push_day(main_day_poc, main_day_total_vol)
+        if use_binance and not na(t_bin_d_p)
+            f_push_day(t_bin_d_p, t_bin_d_v)
+        if use_mexc and not na(t_mex_d_p)
+            f_push_day(t_mex_d_p, t_mex_d_v)
+        if use_coinbase and not na(t_cb_d_p)
+            f_push_day(t_cb_d_p, t_cb_d_v)
+        if use_upbit and not na(t_up_d_p)
+            f_push_day(t_up_d_p, t_up_d_v)
+        if use_okx and not na(t_ok_d_p)
+            f_push_day(t_ok_d_p, t_ok_d_v)
+        if use_bitget and not na(t_bg_d_p)
+            f_push_day(t_bg_d_p, t_bg_d_v)
+        if use_gate and not na(t_gt_d_p)
+            f_push_day(t_gt_d_p, t_gt_d_v)
+        if use_kucoin and not na(t_ku_d_p)
+            f_push_day(t_ku_d_p, t_ku_d_v)
+
+    t_bin_d_v := 0.0, t_bin_d_p := na
+    t_mex_d_v := 0.0, t_mex_d_p := na
+    t_cb_d_v := 0.0, t_cb_d_p := na
+    t_up_d_v := 0.0, t_up_d_p := na
+    t_ok_d_v := 0.0, t_ok_d_p := na
+    t_bg_d_v := 0.0, t_bg_d_p := na
+    t_gt_d_v := 0.0, t_gt_d_p := na
+    t_ku_d_v := 0.0, t_ku_d_p := na
+
+if v_bin_d > t_bin_d_v
+    t_bin_d_v := v_bin_d, t_bin_d_p := p_bin_d
+if v_mex_d > t_mex_d_v
+    t_mex_d_v := v_mex_d, t_mex_d_p := p_mex_d
+if v_cb_d > t_cb_d_v
+    t_cb_d_v := v_cb_d, t_cb_d_p := p_cb_d
+if v_up_d > t_up_d_v
+    t_up_d_v := v_up_d, t_up_d_p := p_up_d
+if v_ok_d > t_ok_d_v
+    t_ok_d_v := v_ok_d, t_ok_d_p := p_ok_d
+if v_bg_d > t_bg_d_v
+    t_bg_d_v := v_bg_d, t_bg_d_p := p_bg_d
+if v_gt_d > t_gt_d_v
+    t_gt_d_v := v_gt_d, t_gt_d_p := p_gt_d
+if v_ku_d > t_ku_d_v
+    t_ku_d_v := v_ku_d, t_ku_d_p := p_ku_d
+
+if ta.change(time("W")) != 0
+    if show_week and not is_index
+        f_push_week(main_week_poc, main_week_total_vol)
+        if use_binance and not na(t_bin_w_p)
+            f_push_week(t_bin_w_p, t_bin_w_v)
+        if use_mexc and not na(t_mex_w_p)
+            f_push_week(t_mex_w_p, t_mex_w_v)
+        if use_coinbase and not na(t_cb_w_p)
+            f_push_week(t_cb_w_p, t_cb_w_v)
+        if use_upbit and not na(t_up_w_p)
+            f_push_week(t_up_w_p, t_up_w_v)
+        if use_okx and not na(t_ok_w_p)
+            f_push_week(t_ok_w_p, t_ok_w_v)
+        if use_bitget and not na(t_bg_w_p)
+            f_push_week(t_bg_w_p, t_bg_w_v)
+        if use_gate and not na(t_gt_w_p)
+            f_push_week(t_gt_w_p, t_gt_w_v)
+        if use_kucoin and not na(t_ku_w_p)
+            f_push_week(t_ku_w_p, t_ku_w_v)
+
+    t_bin_w_v := 0.0, t_bin_w_p := na
+    t_mex_w_v := 0.0, t_mex_w_p := na
+    t_cb_w_v := 0.0, t_cb_w_p := na
+    t_up_w_v := 0.0, t_up_w_p := na
+    t_ok_w_v := 0.0, t_ok_w_p := na
+    t_bg_w_v := 0.0, t_bg_w_p := na
+    t_gt_w_v := 0.0, t_gt_w_p := na
+    t_ku_w_v := 0.0, t_ku_w_p := na
+
+if v_bin_w > t_bin_w_v
+    t_bin_w_v := v_bin_w, t_bin_w_p := p_bin_w
+if v_mex_w > t_mex_w_v
+    t_mex_w_v := v_mex_w, t_mex_w_p := p_mex_w
+if v_cb_w > t_cb_w_v
+    t_cb_w_v := v_cb_w, t_cb_w_p := p_cb_w
+if v_up_w > t_up_w_v
+    t_up_w_v := v_up_w, t_up_w_p := p_up_w
+if v_ok_w > t_ok_w_v
+    t_ok_w_v := v_ok_w, t_ok_w_p := p_ok_w
+if v_bg_w > t_bg_w_v
+    t_bg_w_v := v_bg_w, t_bg_w_p := p_bg_w
+if v_gt_w > t_gt_w_v
+    t_gt_w_v := v_gt_w, t_gt_w_p := p_gt_w
+if v_ku_w > t_ku_w_v
+    t_ku_w_v := v_ku_w, t_ku_w_p := p_ku_w
+
+// ==========================================
+// 5B. ATUALIZAÇÃO DE STATUS NAKED/TESTED
+// ==========================================
+if barstate.isconfirmed
+    float body_lo = math.min(open, close)
+    float body_hi = math.max(open, close)
+
+    if array.size(a_day_levels) > 0
+        for i = 0 to array.size(a_day_levels) - 1
+            if not array.get(a_day_tested, i)
+                float lvl = array.get(a_day_levels, i)
+                if body_hi >= lvl and body_lo <= lvl
+                    array.set(a_day_tested, i, true)
+
+    if array.size(a_week_levels) > 0
+        for i = 0 to array.size(a_week_levels) - 1
+            if not array.get(a_week_tested, i)
+                float lvl = array.get(a_week_levels, i)
+                if body_hi >= lvl and body_lo <= lvl
+                    array.set(a_week_tested, i, true)
+
+// ==========================================
+// 6. GESTOR DE VISUAIS
+// ==========================================
+bool triggered_touch_week = false, bool triggered_touch_crit = false
+float highest_poc_score = 0.0, float best_poc_lvl = na
+float highest_naked_score = 0.0, float best_naked_poc_lvl = na
+
+var float[] scale_lvls = array.new_float(15, na)
+var color[] scale_cols = array.new_color(15, color.gray)
+
+if not is_index and barstate.islast
+    float max_day_vol = array.size(a_day_volumes) > 0 ? array.max(a_day_volumes) : 0.0
+    float max_week_vol = array.size(a_week_volumes) > 0 ? array.max(a_week_volumes) : 0.0
+
+    float[] combo_lvl   = array.new_float(0)
+    float[] combo_score = array.new_float(0)
+    color[] combo_col    = array.new_color(0)
+
+    if show_day and array.size(a_day_lines) > 0
+        int tamanho_array = array.size(a_day_lines)
+        for i = 0 to tamanho_array - 1
+            ln = array.get(a_day_lines, i), lb = array.get(a_day_labels, i)
+            lvl = array.get(a_day_levels, i), vol = array.get(a_day_volumes, i)
+            bool in_confluence = array.get(a_day_confluence, i)
+            bool is_tested = array.get(a_day_tested, i)
+            line.set_x2(ln, bar_index + lbl_offset), label.set_x(lb, bar_index + lbl_offset)
+
+            float vol_score = max_day_vol > 0 ? vol / max_day_vol : 0.0
+            bool is_near = (math.abs(close - lvl) / close * 100.0) <= proximity_pct
+
+            float total_score = vol_score * 0.40 + (in_confluence ? 1.0 : 0.0) * 0.40 + (is_near ? 1.0 : 0.0) * 0.20
+            if total_score > highest_poc_score
+                highest_poc_score := total_score, best_poc_lvl := lvl
+            if not is_tested and total_score > highest_naked_score
+                highest_naked_score := total_score, best_naked_poc_lvl := lvl
+
+            color lc = is_tested ? c_tested_input : (in_confluence ? c_crit_input : c_day_input)
+            if not (hide_tested and is_tested)
+                array.push(combo_lvl, lvl), array.push(combo_score, total_score), array.push(combo_col, lc)
+            int l_width = (not is_tested) and (total_score >= 0.70 or in_confluence) ? 3 : (total_score >= 0.40 ? 2 : 1)
+            int l_transp = is_tested ? (hide_tested ? 100 : (show_tested_dim ? 80 : 0)) : (total_score >= 0.70 or in_confluence ? 0 : (total_score >= 0.40 ? 30 : 70))
+
+            line.set_color(ln, not show_lines ? na : color.new(lc, l_transp))
+            line.set_width(ln, l_width)
+            line.set_style(ln, line.style_dotted)
+
+            string stars = show_stars ? (total_score >= 0.70 ? " ★★★" : total_score >= 0.40 ? " ★★" : " ★") : ""
+            string tag = is_tested ? " [tested]" : " [naked]"
+            label.set_text(lb, hide_tested and is_tested ? "" : "POC:1D " + str.tostring(lvl, format.mintick) + stars + tag)
+            label.set_style(lb, label.style_label_left)
+            label.set_color(lb, hide_tested and is_tested ? color.new(lc, 100) : lc)
+            label.set_textcolor(lb, hide_tested and is_tested ? color.new(color.white, 100) : color.white)
+
+            if not is_tested and total_score >= 0.70 and high >= lvl and low <= lvl
+                triggered_touch_crit := true
+
+    if show_week and array.size(a_week_lines) > 0
+        for i = 0 to array.size(a_week_lines) - 1
+            ln = array.get(a_week_lines, i), lb = array.get(a_week_labels, i)
+            lvl = array.get(a_week_levels, i), vol = array.get(a_week_volumes, i)
+            bool in_conf_w = array.get(a_week_confluence, i)
+            bool is_tested_w = array.get(a_week_tested, i)
+            line.set_x2(ln, bar_index + lbl_offset), label.set_x(lb, bar_index + lbl_offset)
+
+            if alert_touch_week and not is_tested_w and high >= lvl and low <= lvl
+                triggered_touch_week := true
+
+            float vol_score_w = max_week_vol > 0 ? vol / max_week_vol : 0.0
+            bool is_near_w = (math.abs(close - lvl) / close * 100.0) <= proximity_pct
+
+            float total_w = vol_score_w * 0.40 + (in_conf_w ? 1.0 : 0.0) * 0.40 + (is_near_w ? 1.0 : 0.0) * 0.20
+            if total_w > highest_poc_score
+                highest_poc_score := total_w, best_poc_lvl := lvl
+            if not is_tested_w and total_w > highest_naked_score
+                highest_naked_score := total_w, best_naked_poc_lvl := lvl
+
+            color lc_w = is_tested_w ? c_tested_input : (in_conf_w ? c_crit_input : c_week_input)
+            if not (hide_tested and is_tested_w)
+                array.push(combo_lvl, lvl), array.push(combo_score, total_w), array.push(combo_col, lc_w)
+            int lw_width = (not is_tested_w) and (total_w >= 0.70 or in_conf_w) ? 3 : (total_w >= 0.40 ? 2 : 1)
+            int lw_transp = is_tested_w ? (hide_tested ? 100 : (show_tested_dim ? 80 : 0)) : (total_w >= 0.70 or in_conf_w ? 0 : (total_w >= 0.40 ? 30 : 70))
+
+            line.set_color(ln, not show_lines ? na : color.new(lc_w, lw_transp))
+            line.set_width(ln, lw_width)
+            line.set_style(ln, line.style_dashed)
+
+            string stars_w = show_stars ? (total_w >= 0.70 ? " ★★★" : total_w >= 0.40 ? " ★★" : " ★") : ""
+            string tag_w = is_tested_w ? " [tested]" : " [naked]"
+            label.set_text(lb, hide_tested and is_tested_w ? "" : "POC:1W " + str.tostring(lvl, format.mintick) + stars_w + tag_w)
+            label.set_style(lb, label.style_label_left)
+            label.set_color(lb, hide_tested and is_tested_w ? color.new(lc_w, 100) : lc_w)
+            label.set_textcolor(lb, hide_tested and is_tested_w ? color.new(color.white, 100) : color.white)
+
+    float[] combo_score_work = array.copy(combo_score)
+    int total_candidates = array.size(combo_score_work)
+    int filled = 0
+    if total_candidates > 0
+        for c = 0 to total_candidates - 1
+            if filled >= n_scale_slots
+                break
+            float mx = array.max(combo_score_work)
+            if mx < 0
+                break
+            int idx = array.indexof(combo_score_work, mx)
+            float cand_lvl = array.get(combo_lvl, idx)
+            array.set(combo_score_work, idx, -1.0)
+            bool dup = false
+            if filled > 0
+                for d = 0 to filled - 1
+                    if math.abs(cand_lvl - array.get(scale_lvls, d)) / cand_lvl * 100.0 <= confluence_pct
+                        dup := true
+            if not dup
+                array.set(scale_lvls, filled, cand_lvl)
+                array.set(scale_cols, filled, array.get(combo_col, idx))
+                filled += 1
+    if filled < 15
+        for s = filled to 14
+            array.set(scale_lvls, s, na)
+            array.set(scale_cols, s, color.gray)
+
+// ==========================================
+// 6B. TAGS DOS POCs NA ESCALA DE PREÇO
+// ==========================================
+plot(array.get(scale_lvls, 0),  title="POC Escala #1",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 0))
+plot(array.get(scale_lvls, 1),  title="POC Escala #2",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 1))
+plot(array.get(scale_lvls, 2),  title="POC Escala #3",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 2))
+plot(array.get(scale_lvls, 3),  title="POC Escala #4",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 3))
+plot(array.get(scale_lvls, 4),  title="POC Escala #5",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 4))
+plot(array.get(scale_lvls, 5),  title="POC Escala #6",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 5))
+plot(array.get(scale_lvls, 6),  title="POC Escala #7",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 6))
+plot(array.get(scale_lvls, 7),  title="POC Escala #8",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 7))
+plot(array.get(scale_lvls, 8),  title="POC Escala #9",  display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 8))
+plot(array.get(scale_lvls, 9),  title="POC Escala #10", display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 9))
+plot(array.get(scale_lvls, 10), title="POC Escala #11", display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 10))
+plot(array.get(scale_lvls, 11), title="POC Escala #12", display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 11))
+plot(array.get(scale_lvls, 12), title="POC Escala #13", display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 12))
+plot(array.get(scale_lvls, 13), title="POC Escala #14", display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 13))
+plot(array.get(scale_lvls, 14), title="POC Escala #15", display = show_on_scale ? display.price_scale : display.none, color=array.get(scale_cols, 14))
+
+// ==========================================
+// 7. SMART DASHBOARD (SMC)
+// ==========================================
+rsi_val = ta.rsi(close, 14)
+
+foi_sobrevendido = ta.lowest(rsi_val, 15) <= 35
+foi_sobrecomprado = ta.highest(rsi_val, 15) >= 65
+
+pl_piv = ta.pivotlow(low, 5, 2)
+ph_piv = ta.pivothigh(high, 5, 2)
+
+var float last_pl_price = na, var float prev_pl_price = na, var float last_pl_rsi = na, var float prev_pl_rsi = na
+var float last_ph_price = na, var float prev_ph_price = na, var float last_ph_rsi = na, var float prev_ph_rsi = na
+
+if not na(pl_piv)
+    prev_pl_price := last_pl_price, prev_pl_rsi := last_pl_rsi
+    last_pl_price := pl_piv, last_pl_rsi := rsi_val[2]
+
+if not na(ph_piv)
+    prev_ph_price := last_ph_price, prev_ph_rsi := last_ph_rsi
+    last_ph_price := ph_piv, last_ph_rsi := rsi_val[2]
+
+rsi_bull_div = not na(pl_piv) and not na(prev_pl_price) and last_pl_price < prev_pl_price and last_pl_rsi > prev_pl_rsi and foi_sobrevendido
+rsi_bear_div = not na(ph_piv) and not na(prev_ph_price) and last_ph_price > prev_ph_price and last_ph_rsi < prev_ph_rsi and foi_sobrecomprado
+
+hl_range = high - low == 0 ? syminfo.mintick : high - low
+cvd = ta.cum(volume * ((close - open) / hl_range))
+cvd_bull_div = low < ta.lowest(low, 15)[1] and cvd > ta.lowest(cvd, 15)[1]
+cvd_bear_div = high > ta.highest(high, 15)[1] and cvd < ta.highest(cvd, 15)[1]
+
+ph = ta.pivothigh(high, 10, 5), pl = ta.pivotlow(low, 10, 5)
+var float swing_start = na, var float swing_end = na
+if not na(ph)
+    if na(swing_start) or close[5] < swing_start
+        swing_start := ta.lowest(low, 30), swing_end := ph
+if not na(pl)
+    if na(swing_start) or close[5] > swing_start
+        swing_start := ta.highest(high, 30), swing_end := pl
+
+float diff = swing_end - swing_start
+float gp_top = math.max(swing_end - (diff * 0.618), swing_end - (diff * 0.65))
+float gp_btm = math.min(swing_end - (diff * 0.618), swing_end - (diff * 0.65))
+
+bool in_gp = close <= gp_top and close >= gp_btm
+bool has_bull_div = rsi_bull_div or cvd_bull_div
+bool has_bear_div = rsi_bear_div or cvd_bear_div
+bool has_div = has_bull_div or has_bear_div
+float vol_total_usd = volume * close
+bool has_10m_vol = vol_total_usd >= 10000000
+bool in_strong_poc = not na(best_naked_poc_lvl) and (math.abs(close - best_naked_poc_lvl) / close * 100.0 <= proximity_pct)
+
+bool bias_bull = not na(best_poc_lvl) and close > best_poc_lvl
+bool bias_bear = not na(best_poc_lvl) and close < best_poc_lvl
+
+int conf_score = 0
+if in_gp
+    conf_score += 25
+if in_strong_poc
+    conf_score += 25
+if has_div
+    conf_score += 25
+if has_10m_vol
+    conf_score += 25
+
+string rating_txt = conf_score == 100 ? "A" : conf_score == 75 ? "B" : conf_score == 50 ? "C" : "D"
+color  rating_col = conf_score >= 75 ? color.rgb(255, 152, 0) : color.gray
+
+string signal_txt = "AGUARDAR"
+color  signal_col = color.gray
+if conf_score == 100
+    signal_txt := has_bull_div ? "LONG" : "SHORT"
+    signal_col := has_bull_div ? color.rgb(38, 166, 154) : color.rgb(239, 83, 80)
+else if has_bull_div and bias_bull
+    signal_txt := "POTENCIAL LONG"
+    signal_col := color.rgb(38, 166, 154)
+else if has_bear_div and bias_bear
+    signal_txt := "POTENCIAL SHORT"
+    signal_col := color.rgb(239, 83, 80)
+
+int exch_ok = 0
+exch_ok += na(v_bin_d) ? 0 : 1
+exch_ok += na(v_mex_d) ? 0 : 1
+exch_ok += na(v_cb_d)  ? 0 : 1
+exch_ok += na(v_up_d)  ? 0 : 1
+exch_ok += na(v_ok_d)  ? 0 : 1
+exch_ok += na(v_bg_d)  ? 0 : 1
+exch_ok += na(v_gt_d)  ? 0 : 1
+exch_ok += na(v_ku_d)  ? 0 : 1
+
+if show_dash and barstate.islast
+    string pos = dash_pos == "Top Right" ? position.top_right : dash_pos == "Top Left" ? position.top_left : dash_pos == "Bottom Right" ? position.bottom_right : position.bottom_left
+
+    color bg_dark   = color.rgb(45, 45, 45)
+    color bg_head1  = color.rgb(35, 35, 35)
+    color bg_head2  = color.rgb(40, 40, 40)
+    color border_c  = color.rgb(80, 80, 80)
+    color col_green = color.rgb(38, 166, 154)
+    string check_ic = "✓"
+    string wait_ic  = "○"
+
+    var table tb = table.new(pos, 2, 10, bgcolor=bg_dark, border_width=1, border_color=border_c)
+    table.merge_cells(tb, 0, 0, 1, 0), table.merge_cells(tb, 0, 1, 1, 1), table.merge_cells(tb, 0, 2, 1, 2)
+
+    table.cell(tb, 0, 0, "Rating: " + rating_txt, text_color=rating_col, text_size=size.large, text_halign=text.align_center, bgcolor=bg_head1)
+    table.cell(tb, 0, 1, "Signal: " + signal_txt, text_color=signal_col, text_size=size.normal, text_halign=text.align_center, bgcolor=bg_head2)
+    table.cell(tb, 0, 2, "Confidence: " + str.tostring(conf_score) + "%", text_color=color.white, text_size=size.small, text_halign=text.align_center, bgcolor=bg_dark)
+    table.cell(tb, 0, 3, in_strong_poc ? check_ic : wait_ic, text_color=in_strong_poc ? col_green : color.gray, text_halign=text.align_center)
+    table.cell(tb, 1, 3, "Zona POC Forte (Naked)", text_color=color.white, text_halign=text.align_left)
+    table.cell(tb, 0, 4, in_gp ? check_ic : wait_ic, text_color=in_gp ? col_green : color.gray, text_halign=text.align_center)
+    table.cell(tb, 1, 4, "Golden Pocket", text_color=color.white, text_halign=text.align_left)
+    table.cell(tb, 0, 5, has_div ? check_ic : wait_ic, text_color=has_div ? col_green : color.gray, text_halign=text.align_center)
+    table.cell(tb, 1, 5, "Divergência (RSI/CVD)", text_color=color.white, text_halign=text.align_left)
+    table.cell(tb, 0, 6, has_10m_vol ? check_ic : wait_ic, text_color=has_10m_vol ? col_green : color.gray, text_halign=text.align_center)
+    table.cell(tb, 1, 6, "Volume > 10M", text_color=color.white, text_halign=text.align_left)
+    table.cell(tb, 0, 7, check_ic, text_color=col_green, text_halign=text.align_center)
+    table.cell(tb, 1, 7, "HTF Bias: " + (bias_bull ? "BULLISH" : bias_bear ? "BEARISH" : "NEUTRAL"), text_color=color.white, text_halign=text.align_left)
+    table.cell(tb, 0, 8, str.tostring(exch_ok), text_color=exch_ok >= 4 ? col_green : color.orange, text_halign=text.align_center)
+    table.cell(tb, 1, 8, "Corretoras OK (/8)", text_color=color.white, text_halign=text.align_left)
+
+    table.merge_cells(tb, 0, 9, 1, 9)
+    string alvos = conf_score == 100 ? (signal_txt + " @ " + str.tostring(close, format.mintick) + "\nTP: " + str.tostring(signal_txt=="LONG" ? close*(1+tp_pct) : close*(1-tp_pct), format.mintick) + " | SL: " + str.tostring(signal_txt=="LONG" ? close*(1-sl_pct) : close*(1+sl_pct), format.mintick)) : "Aguardar fecho/confirmação..."
+    table.cell(tb, 0, 9, alvos, text_color=conf_score==100 ? color.white : color.gray, text_size=size.small, text_halign=text.align_center)
+
+// ==========================================
+// 8. ALERTAS E GATILHOS (com envio de POCs em JSON para o poc-strat)
+// ==========================================
+float nearest_w_poc = na
+float min_dist_w = 999999.0
+
+if not na(a_week_levels) and array.size(a_week_levels) > 0
+    for i = 0 to array.size(a_week_levels) - 1
+        float lvl = array.get(a_week_levels, i)
+        bool tested_i = array.get(a_week_tested, i)
+        if not na(lvl) and not tested_i
+            float dist = math.abs(close - lvl)
+            if dist < min_dist_w
+                min_dist_w := dist
+                nearest_w_poc := lvl
+
+float dist_w_pct = na
+if not na(nearest_w_poc) and close > 0
+    dist_w_pct := (min_dist_w / close) * 100.0
+
+float dist_best_pct = na
+if not na(best_naked_poc_lvl) and close > 0
+    dist_best_pct := (math.abs(close - best_naked_poc_lvl) / close) * 100.0
+
+bool near_w_poc = not na(dist_w_pct) and dist_w_pct <= 2.0
+bool near_best_poc = not na(dist_best_pct) and dist_best_pct <= 1.5
+
+bool valid_strong_zone = near_w_poc or near_best_poc
+
+bool sniper_long_setup  = rsi_bull_div and valid_strong_zone
+bool sniper_short_setup = rsi_bear_div and valid_strong_zone
+
+// >>> WEBHOOK poc-strat: constrói e envia o JSON com os níveis de POC <<<
+if sniper_long_setup or sniper_short_setup
+    string side_str = sniper_long_setup ? "long" : "short"
+
+    string zj = ""
+    zj := f_json_levels(zj, a_day_levels,  a_day_tested,  close, "zone")
+    zj := f_json_levels(zj, a_week_levels, a_week_tested, close, "zone")
+
+    string up = ""
+    up := f_json_levels(up, a_day_levels,  a_day_tested,  close, "up")
+    up := f_json_levels(up, a_week_levels, a_week_tested, close, "up")
+    string dn = ""
+    dn := f_json_levels(dn, a_day_levels,  a_day_tested,  close, "down")
+    dn := f_json_levels(dn, a_week_levels, a_week_tested, close, "down")
+
+    float zb = na
+    zb := f_zone_extreme(zb, a_day_levels,  a_day_tested,  close, side_str == "long")
+    zb := f_zone_extreme(zb, a_week_levels, a_week_tested, close, side_str == "long")
+    if na(zb)
+        zb := side_str == "long" ? close * 0.99 : close * 1.01
+
+    string payload = '{"ticker":"' + syminfo.ticker + '","side":"' + side_str + '","price":' + str.tostring(close, format.mintick) + ',"zone_pocs":[' + zj + '],"targets_up":[' + up + '],"targets_down":[' + dn + '],"zone_break":' + str.tostring(zb, format.mintick) + ',"secret":"' + webhook_secret + '"}'
+
+    alert(payload, alert.freq_once_per_bar_close)
+
+// Condições selecionáveis no diálogo "Add Alert" (opcional, para uso manual)
+alertcondition(sniper_long_setup,  title="🎯 Sniper LONG Setup",  message="{{ticker}} 30m: Exaustão Bullish em Zona Forte de Liquidez (POC Naked).")
+alertcondition(sniper_short_setup, title="🎯 Sniper SHORT Setup", message="{{ticker}} 30m: Exaustão Bearish em Zona Forte de Liquidez (POC Naked).")
+alertcondition(triggered_touch_week, title="📍 Toque em POC Semanal (Naked)", message="{{ticker}}: Preço tocou um POC Semanal (1W) ainda não testado.")
+alertcondition(triggered_touch_crit, title="🔴 Toque em POC Crítico (Confluência ★★★)", message="{{ticker}}: Preço tocou um POC de confluência crítica (1D+1W).")
+
+// ==========================================
+// 9. MINI CAIXA DE VOLUME & FUNDING RATE
+// ==========================================
+if show_volbox and barstate.islast
+    string v_pos = volbox_pos == "Top Right" ? position.top_right : volbox_pos == "Top Left" ? position.top_left : volbox_pos == "Bottom Right" ? position.bottom_right : volbox_pos == "Bottom Center" ? position.bottom_center : position.bottom_left
+
+    var table v_tb = table.new(v_pos, 3, 2, bgcolor=volbox_bg)
+
+    string auto_fund_ticker = "BINANCE:" + base_coin + "_PREMIUM"
+
+    float vol_vela_usd = volume * close
+    float chg_vela_pct = ((close - open) / open) * 100
+    color col_vela_pct = chg_vela_pct >= 0 ? color.rgb(38, 166, 154) : color.rgb(239, 83, 80)
+
+    float vol_24h_usd = request.security(syminfo.tickerid, "D", volume * close)
+    float fund_val = request.security(auto_fund_ticker, "D", close, ignore_invalid_symbol=true)
+    color col_fund_pct = fund_val >= 0 ? color.rgb(38, 166, 154) : color.rgb(239, 83, 80)
+
+    table.cell(v_tb, 0, 0, f_format_vol(vol_vela_usd), text_color=volbox_txt, text_size=size.normal, text_halign=text.align_right)
+    table.cell(v_tb, 1, 0, " · ", text_color=volbox_txt, text_size=size.normal, text_halign=text.align_center)
+    table.cell(v_tb, 2, 0, str.tostring(chg_vela_pct, "#.####") + "%", text_color=col_vela_pct, text_size=size.normal, text_halign=text.align_left)
+
+    table.cell(v_tb, 0, 1, f_format_vol(vol_24h_usd), text_color=volbox_txt, text_size=size.normal, text_halign=text.align_right)
+    table.cell(v_tb, 1, 1, " · ", text_color=volbox_txt, text_size=size.normal, text_halign=text.align_center)
+    table.cell(v_tb, 2, 1, na(fund_val) ? "N/A" : str.tostring(fund_val, "#.####") + "%", text_color=col_fund_pct, text_size=size.normal, text_halign=text.align_left)
+
+// ==========================================
+// 10. MARCAÇÃO VISUAL DE DIVERGÊNCIAS
+// ==========================================
+plotshape(rsi_bull_div, title="Bullish Div Arrow", style=shape.triangleup, location=location.belowbar, color=#7E57C2, size=size.tiny)
+plotshape(rsi_bear_div, title="Bearish Div Arrow", style=shape.triangledown, location=location.abovebar, color=#7E57C2, size=size.tiny)
