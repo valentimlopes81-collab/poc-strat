@@ -67,15 +67,19 @@ def _entry_cluster(price: float, levels: list[float], side_up: bool, s: Settings
 
 
 def _compute_stop(side: str, entries: list[float], below: list[float], above: list[float], s: Settings) -> float:
-    """Stop = para lá do cluster de entrada (o POC seguinte que 'rompe a zona'),
-    ou uma folga se não houver POC mais além."""
+    """Stop = logo para lá do cluster de entrada ('rompeu a zona'), encaixando
+    no POC seguinte se ele estiver dentro de ``max_stop_pct``; caso contrário
+    corta nesse limite, para o risco não ficar excessivo com POCs espaçados."""
     if side == "long":
         low = min(entries)
-        beyond = [l for l in below if l < low]
-        return max(beyond) if beyond else low * (1 - s.stop_buffer_pct / 100.0)
+        cap = low * (1 - s.max_stop_pct / 100.0)
+        # POC de suporte logo abaixo do cluster, mas não mais longe que o limite
+        near = [l for l in below if cap <= l < low]
+        return max(near) if near else cap
     high = max(entries)
-    beyond = [l for l in above if l > high]
-    return min(beyond) if beyond else high * (1 + s.stop_buffer_pct / 100.0)
+    cap = high * (1 + s.max_stop_pct / 100.0)
+    near = [l for l in above if high < l <= cap]
+    return min(near) if near else cap
 
 
 def _select_targets(

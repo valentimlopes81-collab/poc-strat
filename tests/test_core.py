@@ -25,8 +25,8 @@ def test_long_entries_are_supports_below():
     assert plan is not None
     # 99 (1%) e 98 (2%) dentro de reach 3%; 90 (10%) fora -> só esses dois entram
     assert sorted(e.price for e in plan.entries) == [98, 99]
-    # stop = POC seguinte abaixo do cluster (90)
-    assert plan.stop == 90
+    # POC seguinte (90) está a >max_stop_pct -> stop corta no limite (1.5% abaixo do 98)
+    assert abs(plan.stop - 98 * (1 - 0.015)) < 1e-6
     # alvos = resistências acima, >1%, mais próximo primeiro
     assert [t.price for t in plan.targets] == [104, 108, 112]
     assert [round(t.close_fraction, 2) for t in plan.targets] == [0.30, 0.40, 0.30]
@@ -41,8 +41,8 @@ def test_short_like_aave_sells_into_resistance():
     assert plan is not None
     # entradas = resistências ao alcance (101.76, 102.11); as outras > 3% ficam de fora
     assert [round(e.price, 2) for e in plan.entries] == [101.76, 102.11]
-    # stop ACIMA do cluster, no POC seguinte (103.67) - não um stop sintético colado
-    assert plan.stop == 103.67
+    # 103.67 está logo além do limite de 1.5% -> stop corta no limite (risco controlado)
+    assert abs(plan.stop - 102.11 * 1.015) < 1e-6
     # alvos = suportes abaixo
     assert [t.price for t in plan.targets] == [94.38, 93.61]
 

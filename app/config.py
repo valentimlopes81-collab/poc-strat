@@ -26,8 +26,10 @@ class Settings:
     # Distância máxima (%) a que um POC do lado da entrada ainda conta como zona.
     # Long -> suportes abaixo; Short -> resistências acima. Alinhado com o gatilho.
     entry_reach_pct: float = 3.0
-    # Folga (%) para o stop quando não há um POC seguinte para lá do cluster.
-    stop_buffer_pct: float = 0.5
+    # Distância máxima (%) do stop à borda do cluster de entrada. O stop encaixa
+    # no POC seguinte se ele estiver dentro deste limite; senão corta aqui, para
+    # o risco/recompensa não ficar mau quando os POCs estão muito espaçados.
+    max_stop_pct: float = 1.5
     # Validade das ordens limite por encher, em minutos. 2 horas.
     entry_ttl_minutes: int = 120
 
