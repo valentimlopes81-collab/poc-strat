@@ -1,5 +1,5 @@
 //@version=6
-indicator(title="Relative Strength Index", shorttitle="RSI", format=format.price, precision=2, timeframe="", timeframe_gaps=true, max_lines_count=200, max_labels_count=200)
+indicator(title="Relative Strength Index", shorttitle="RSI", format=format.price, precision=2, max_lines_count=200, max_labels_count=200)
 
 rsiLengthInput = input.int(14, minval=1, title="RSI Length", group="RSI Settings")
 rsiSourceInput = input.source(close, "Source", group="RSI Settings")
