@@ -236,7 +236,7 @@ f_push_day(float lvl, float vol) =>
                     conf_new := true
                     array.set(a_day_confluence, k, true)
         array.push(a_day_levels, lvl), array.push(a_day_volumes, vol)
-        ln = line.new(bar_index, lvl, bar_index + lbl_offset, lvl, color=na)
+        ln = line.new(bar_index, lvl, bar_index + lbl_offset, lvl, color=na, extend=extend.right)
         lb = label.new(bar_index + lbl_offset, lvl, text="", style=label.style_label_left)
         array.push(a_day_lines, ln), array.push(a_day_labels, lb)
         array.push(a_day_tested, false), array.push(a_day_confluence, conf_new)
@@ -259,7 +259,7 @@ f_push_week(float lvl, float vol) =>
                     conf_new := true
                     array.set(a_week_confluence, k, true)
         array.push(a_week_levels, lvl), array.push(a_week_volumes, vol)
-        ln = line.new(bar_index, lvl, bar_index + lbl_offset, lvl, color=na)
+        ln = line.new(bar_index, lvl, bar_index + lbl_offset, lvl, color=na, extend=extend.right)
         lb = label.new(bar_index + lbl_offset, lvl, text="", style=label.style_label_left)
         array.push(a_week_lines, ln), array.push(a_week_labels, lb)
         array.push(a_week_tested, false), array.push(a_week_confluence, conf_new)
@@ -272,7 +272,7 @@ f_push_x(float lvl, float vol, string tf) =>
     if not na(lvl)
         array.push(x_levels, lvl), array.push(x_vol, vol), array.push(x_tf, tf)
         array.push(x_tested, false)
-        ln = line.new(bar_index, lvl, bar_index + lbl_offset, lvl, color=na)
+        ln = line.new(bar_index, lvl, bar_index + lbl_offset, lvl, color=na, extend=extend.right)
         lb = label.new(bar_index + lbl_offset, lvl, text="", style=label.style_label_left)
         array.push(x_lines, ln), array.push(x_labels, lb)
         if array.size(x_lines) > 120
