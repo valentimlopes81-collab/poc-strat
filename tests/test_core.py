@@ -119,14 +119,38 @@ def test_short_partial_then_full_tp():
     assert abs(trade.realized_pnl - expected) < 1e-6
 
 
-def test_entry_expires_unfilled():
-    import datetime as dt
+def test_long_cancels_on_runaway_up():
+    # Long: preço foge 2%+ para cima (front-run) sem encher os limits abaixo -> cancela.
     s = _session()
     p = AlertPayload(ticker="XRPUSDT.P", side="long", price=100,
                      zone_pocs=[], targets_up=[110], targets_down=[99, 90], zone_break=0.0001)
     plan = build_plan(p)
     trade = create_trade_from_plan(s, p, plan)
-    trade.expires_at = dt.datetime.utcnow() - dt.timedelta(minutes=1)
-    process_tick(s, trade, MarketTick(trade.symbol, 105, 106, 104, 105))  # nunca tocou 99
+    # bar sobe a 102.5 (>2% acima de 100) sem tocar no limit (99) -> runaway
+    process_tick(s, trade, MarketTick(trade.symbol, 102.5, 102.5, 101.5, 102.0))
     assert trade.status == TradeStatus.cancelled
-    assert trade.close_reason == CloseReason.expired
+    assert trade.close_reason == CloseReason.runaway
+
+
+def test_long_fill_beats_runaway_same_bar():
+    # Se na mesma vela o preço enche o limit E dispara para cima, o fill ganha.
+    s = _session()
+    p = AlertPayload(ticker="XRPUSDT.P", side="long", price=100,
+                     zone_pocs=[], targets_up=[110], targets_down=[99, 90], zone_break=0.0001)
+    plan = build_plan(p)
+    trade = create_trade_from_plan(s, p, plan)
+    # bar_low toca 99 (fill) e bar_high 103 (>2%): o fill tem prioridade
+    process_tick(s, trade, MarketTick(trade.symbol, 102, 103.0, 98.5, 102.0))
+    assert trade.status == TradeStatus.open
+
+
+def test_short_cancels_on_runaway_down():
+    s = _session()
+    p = AlertPayload(ticker="SOLUSDT.P", side="short", price=100,
+                     zone_pocs=[], targets_up=[101, 110], targets_down=[95, 90], zone_break=101)
+    plan = build_plan(p)  # entrada resistência ~101
+    trade = create_trade_from_plan(s, p, plan)
+    # preço cai a 97.5 (>2% abaixo de 100) sem subir a encher o limit (101) -> runaway
+    process_tick(s, trade, MarketTick(trade.symbol, 97.5, 98.5, 97.5, 98.0))
+    assert trade.status == TradeStatus.cancelled
+    assert trade.close_reason == CloseReason.runaway

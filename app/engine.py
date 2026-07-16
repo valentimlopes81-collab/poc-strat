@@ -7,7 +7,6 @@ quando uma vela do timeframe de referência FECHA para lá do nível.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import timedelta
 
 from sqlmodel import Session, select
 
@@ -47,7 +46,7 @@ def create_trade_from_plan(
         risk_usd=plan.risk_usd,
         total_qty=plan.total_qty,
         remaining_qty=0.0,
-        expires_at=now + timedelta(minutes=s.entry_ttl_minutes),
+        signal_price=payload.price,
     )
     session.add(trade)
     session.commit()
@@ -99,33 +98,37 @@ def process_tick(
         return
 
     trade.last_price = tick.last  # para o PnL live no dashboard
-    expired = trade.expires_at is not None and now >= trade.expires_at
 
-    # --- 1. Fills das ordens limite (só antes de expirar) ---
-    if not expired:
-        for e in _entries(session, trade):
-            if e.filled:
-                continue
-            hit = (trade.side == "long" and tick.bar_low <= e.price) or (
-                trade.side == "short" and tick.bar_high >= e.price
-            )
-            if hit:
-                e.filled = True
-                e.filled_at = now
-                session.add(e)
-        _recompute_entry(session, trade)
-        if trade.filled_qty > 0 and trade.status == TradeStatus.pending:
-            trade.status = TradeStatus.open
-            trade.opened_at = now
+    # --- 1. Fills das ordens limite (um fill tem prioridade sobre o cancelamento) ---
+    for e in _entries(session, trade):
+        if e.filled:
+            continue
+        hit = (trade.side == "long" and tick.bar_low <= e.price) or (
+            trade.side == "short" and tick.bar_high >= e.price
+        )
+        if hit:
+            e.filled = True
+            e.filled_at = now
+            session.add(e)
+    _recompute_entry(session, trade)
+    if trade.filled_qty > 0 and trade.status == TradeStatus.pending:
+        trade.status = TradeStatus.open
+        trade.opened_at = now
 
-    # --- 2. Se expirou sem nada preenchido, cancela ---
-    if expired and trade.status == TradeStatus.pending:
-        trade.status = TradeStatus.cancelled
-        trade.close_reason = CloseReason.expired
-        trade.closed_at = now
-        session.add(trade)
-        session.commit()
-        return
+    # --- 2. Cancelamento por FRONT-RUN: o preço fugiu da zona na direção do
+    # lucro (sem encher) mais do que cancel_move_pct, medido do preço do alerta.
+    if trade.status == TradeStatus.pending and trade.signal_price > 0:
+        thr = s.cancel_move_pct / 100.0
+        ran_away = (trade.side == "long" and tick.bar_high >= trade.signal_price * (1 + thr)) or (
+            trade.side == "short" and tick.bar_low <= trade.signal_price * (1 - thr)
+        )
+        if ran_away:
+            trade.status = TradeStatus.cancelled
+            trade.close_reason = CloseReason.runaway
+            trade.closed_at = now
+            session.add(trade)
+            session.commit()
+            return
 
     # A partir daqui só interessa se há posição aberta.
     if trade.status != TradeStatus.open or trade.remaining_qty <= 0:

@@ -25,6 +25,7 @@ class CloseReason(str, Enum):
     zone_break = "zone_break"
     manual = "manual"
     expired = "expired"
+    runaway = "runaway"  # preço fugiu da zona (front-run) sem encher
 
 
 class Trade(SQLModel, table=True):
@@ -38,6 +39,7 @@ class Trade(SQLModel, table=True):
     stop: float
     risk_usd: float
     total_qty: float                         # quantidade planeada (todos os limits)
+    signal_price: float = 0.0                # preço no momento do alerta (ref. do front-run)
 
     filled_qty: float = 0.0
     avg_entry: float = 0.0                    # preço médio das entradas preenchidas

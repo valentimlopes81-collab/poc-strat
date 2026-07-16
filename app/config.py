@@ -30,8 +30,10 @@ class Settings:
     # no POC seguinte se ele estiver dentro deste limite; senão corta aqui, para
     # o risco/recompensa não ficar mau quando os POCs estão muito espaçados.
     max_stop_pct: float = 1.5
-    # Validade das ordens limite por encher, em minutos. 2 horas.
-    entry_ttl_minutes: int = 120
+    # Cancelamento das ordens limite por encher: quando o preço se afasta da
+    # zona na direção do lucro (front-run) em pelo menos esta %, medida a partir
+    # do preço no momento do alerta. Substitui o antigo cancelamento por tempo.
+    cancel_move_pct: float = 2.0
 
     # --- Mercado / feed ---
     exchange_id: str = "bybit"
