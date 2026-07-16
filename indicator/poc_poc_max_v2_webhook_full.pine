@@ -44,6 +44,7 @@ c_multi_input = input.color(color.rgb(120, 144, 156), "Cor POCs Multi-TF (Azul-c
 group_scale     = "Escala de Preço"
 show_on_scale   = input.bool(true, "Mostrar POCs na Escala de Preço (eixo direito)", group=group_scale)
 n_scale_slots   = input.int(30, "Quantos Níveis Mostrar na Escala", minval=1, maxval=40, group=group_scale, tooltip="Mostra os N níveis (todos os timeframes) com maior score na escala de preço, como tags de valor.")
+show_chart_pocs = input.bool(true, "Mostrar POCs no gráfico (linhas+labels)", group=group_scale, tooltip="Desliga para deixares só os níveis no eixo do preço (gráfico limpo).")
 
 group_multi = "Fontes de Volume (Agregação MAX)"
 use_binance  = input.bool(true, "Injetar Volume BINANCE", group=group_multi)
@@ -503,16 +504,16 @@ if not is_index and barstate.islast
             int l_width = (not is_tested) and (total_score >= 0.70 or in_confluence) ? 3 : (total_score >= 0.40 ? 2 : 1)
             int l_transp = is_tested ? (hide_tested ? 100 : (show_tested_dim ? 80 : 0)) : (total_score >= 0.70 or in_confluence ? 0 : (total_score >= 0.40 ? 30 : 70))
 
-            line.set_color(ln, not show_lines ? na : color.new(lc, l_transp))
+            line.set_color(ln, (not show_lines or not show_chart_pocs) ? na : color.new(lc, l_transp))
             line.set_width(ln, l_width)
             line.set_style(ln, line.style_dotted)
 
             string stars = show_stars ? (total_score >= 0.70 ? " ★★★" : total_score >= 0.40 ? " ★★" : " ★") : ""
             string tag = is_tested ? " [tested]" : " [naked]"
-            label.set_text(lb, hide_tested and is_tested ? "" : "POC:1D " + str.tostring(lvl, format.mintick) + stars + tag)
+            label.set_text(lb, hide_tested and is_tested or not show_chart_pocs ? "" : "POC:1D " + str.tostring(lvl, format.mintick) + stars + tag)
             label.set_style(lb, label.style_label_left)
-            label.set_color(lb, hide_tested and is_tested ? color.new(lc, 100) : lc)
-            label.set_textcolor(lb, hide_tested and is_tested ? color.new(color.white, 100) : color.white)
+            label.set_color(lb, hide_tested and is_tested or not show_chart_pocs ? color.new(lc, 100) : lc)
+            label.set_textcolor(lb, hide_tested and is_tested or not show_chart_pocs ? color.new(color.white, 100) : color.white)
 
             if not is_tested and total_score >= 0.70 and high >= lvl and low <= lvl
                 triggered_touch_crit := true
@@ -543,16 +544,16 @@ if not is_index and barstate.islast
             int lw_width = (not is_tested_w) and (total_w >= 0.70 or in_conf_w) ? 3 : (total_w >= 0.40 ? 2 : 1)
             int lw_transp = is_tested_w ? (hide_tested ? 100 : (show_tested_dim ? 80 : 0)) : (total_w >= 0.70 or in_conf_w ? 0 : (total_w >= 0.40 ? 30 : 70))
 
-            line.set_color(ln, not show_lines ? na : color.new(lc_w, lw_transp))
+            line.set_color(ln, (not show_lines or not show_chart_pocs) ? na : color.new(lc_w, lw_transp))
             line.set_width(ln, lw_width)
             line.set_style(ln, line.style_dashed)
 
             string stars_w = show_stars ? (total_w >= 0.70 ? " ★★★" : total_w >= 0.40 ? " ★★" : " ★") : ""
             string tag_w = is_tested_w ? " [tested]" : " [naked]"
-            label.set_text(lb, hide_tested and is_tested_w ? "" : "POC:1W " + str.tostring(lvl, format.mintick) + stars_w + tag_w)
+            label.set_text(lb, hide_tested and is_tested_w or not show_chart_pocs ? "" : "POC:1W " + str.tostring(lvl, format.mintick) + stars_w + tag_w)
             label.set_style(lb, label.style_label_left)
-            label.set_color(lb, hide_tested and is_tested_w ? color.new(lc_w, 100) : lc_w)
-            label.set_textcolor(lb, hide_tested and is_tested_w ? color.new(color.white, 100) : color.white)
+            label.set_color(lb, hide_tested and is_tested_w or not show_chart_pocs ? color.new(lc_w, 100) : lc_w)
+            label.set_textcolor(lb, hide_tested and is_tested_w or not show_chart_pocs ? color.new(color.white, 100) : color.white)
 
     // ---- MULTI-TIMEFRAME (2D/3D/5D/2W/1M) ----
     if array.size(x_lines) > 0
@@ -576,14 +577,14 @@ if not is_index and barstate.islast
                 array.push(combo_lvl, lvl), array.push(combo_score, sc), array.push(combo_col, lcx)
             int wx = (not is_tx) and sc >= 0.60 ? 2 : 1
             int trx = is_tx ? (hide_tested ? 100 : (show_tested_dim ? 80 : 0)) : (sc >= 0.60 ? 0 : 40)
-            line.set_color(ln, not show_lines ? na : color.new(lcx, trx))
+            line.set_color(ln, (not show_lines or not show_chart_pocs) ? na : color.new(lcx, trx))
             line.set_width(ln, wx)
             line.set_style(ln, line.style_dotted)
 
-            label.set_text(lb, hide_tested and is_tx ? "" : "POC:" + tfx + " " + str.tostring(lvl, format.mintick) + (is_tx ? " [tested]" : " [naked]"))
+            label.set_text(lb, hide_tested and is_tx or not show_chart_pocs ? "" : "POC:" + tfx + " " + str.tostring(lvl, format.mintick) + (is_tx ? " [tested]" : " [naked]"))
             label.set_style(lb, label.style_label_left)
-            label.set_color(lb, hide_tested and is_tx ? color.new(lcx, 100) : lcx)
-            label.set_textcolor(lb, hide_tested and is_tx ? color.new(color.white, 100) : color.white)
+            label.set_color(lb, hide_tested and is_tx or not show_chart_pocs ? color.new(lcx, 100) : lcx)
+            label.set_textcolor(lb, hide_tested and is_tx or not show_chart_pocs ? color.new(color.white, 100) : color.white)
 
     float[] combo_score_work = array.copy(combo_score)
     int total_candidates = array.size(combo_score_work)
