@@ -1,0 +1,144 @@
+//@version=6
+indicator(title="Relative Strength Index", shorttitle="RSI", format=format.price, precision=2, timeframe="", timeframe_gaps=true, max_lines_count=200, max_labels_count=200)
+
+rsiLengthInput = input.int(14, minval=1, title="RSI Length", group="RSI Settings")
+rsiSourceInput = input.source(close, "Source", group="RSI Settings")
+calculateDivergence = input.bool(false, title="Calculate Divergence", group="RSI Settings", display = display.none, tooltip = "Calculating divergences is needed in order for divergence alerts to fire.")
+
+change = ta.change(rsiSourceInput)
+up = ta.rma(math.max(change, 0), rsiLengthInput)
+down = ta.rma(-math.min(change, 0), rsiLengthInput)
+rsi = down == 0 ? 100 : up == 0 ? 0 : 100 - (100 / (1 + up / down))
+
+rsiPlot = plot(rsi, "RSI", color=#7E57C2)
+rsiUpperBand = hline(70, "RSI Upper Band", color=#787B86)
+midline = hline(50, "RSI Middle Band", color=color.new(#787B86, 50))
+rsiLowerBand = hline(30, "RSI Lower Band", color=#787B86)
+fill(rsiUpperBand, rsiLowerBand, color=color.rgb(126, 87, 194, 90), title="RSI Background Fill")
+midLinePlot = plot(50, color = na, editable = false, display = display.none)
+fill(rsiPlot, midLinePlot, 100, 70, top_color = color.new(color.green, 0), bottom_color = color.new(color.green, 100),  title = "Overbought Gradient Fill")
+fill(rsiPlot, midLinePlot, 30,  0,  top_color = color.new(color.red, 100), bottom_color = color.new(color.red, 0),      title = "Oversold Gradient Fill")
+
+// Smoothing MA inputs
+GRP = "Smoothing"
+TT_BB = "Only applies when 'SMA + Bollinger Bands' is selected. Determines the distance between the SMA and the bands."
+maTypeInput = input.string("SMA", "Type", options = ["None", "SMA", "SMA + Bollinger Bands", "EMA", "SMMA (RMA)", "WMA", "VWMA"], group = GRP, display = display.none)
+var isBB = maTypeInput == "SMA + Bollinger Bands"
+maLengthInput = input.int(14, "Length", group = GRP, display = display.none, active = maTypeInput != "None")
+bbMultInput = input.float(2.0, "BB StdDev", minval = 0.001, maxval = 50, step = 0.5, tooltip = TT_BB, group = GRP, display = display.none, active = isBB)
+var enableMA = maTypeInput != "None"
+
+// Smoothing MA Calculation
+ma(source, length, MAtype) =>
+	switch MAtype
+		"SMA"                   => ta.sma(source, length)
+		"SMA + Bollinger Bands" => ta.sma(source, length)
+		"EMA"                   => ta.ema(source, length)
+		"SMMA (RMA)"            => ta.rma(source, length)
+		"WMA"                   => ta.wma(source, length)
+		"VWMA"                  => ta.vwma(source, length)
+
+// Smoothing MA plots
+smoothingMA = enableMA ? ma(rsi, maLengthInput, maTypeInput) : na
+smoothingStDev = isBB ? ta.stdev(rsi, maLengthInput) * bbMultInput : na
+plot(smoothingMA, "RSI-based MA", color=color.yellow, display = enableMA ? display.all : display.none, editable = enableMA)
+bbUpperBand = plot(smoothingMA + smoothingStDev, title = "Upper Bollinger Band", color=color.green, display = isBB ? display.all : display.none, editable = isBB)
+bbLowerBand = plot(smoothingMA - smoothingStDev, title = "Lower Bollinger Band", color=color.green, display = isBB ? display.all : display.none, editable = isBB)
+fill(bbUpperBand, bbLowerBand, color= isBB ? color.new(color.green, 90) : na, title="Bollinger Bands Background Fill", display = isBB ? display.all : display.none, editable = isBB)
+
+// Divergence (built-in TradingView - mantido intacto)
+lookbackRight = 5
+lookbackLeft = 5
+rangeUpper = 60
+rangeLower = 5
+bearColor = color.red
+bullColor = color.green
+textColor = color.white
+noneColor = color.new(color.white, 100)
+
+_inRange(bool cond) =>
+    bars = ta.barssince(cond)
+    rangeLower <= bars and bars <= rangeUpper
+
+plFound = false
+phFound = false
+
+bullCond = false
+bearCond = false
+
+rsiLBR = rsi[lookbackRight]
+
+if calculateDivergence
+    plFound := not na(ta.pivotlow(rsi, lookbackLeft, lookbackRight))
+    rsiHL = rsiLBR > ta.valuewhen(plFound, rsiLBR, 1) and _inRange(plFound[1])
+    lowLBR = low[lookbackRight]
+    priceLL = lowLBR < ta.valuewhen(plFound, lowLBR, 1)
+    bullCond := priceLL and rsiHL and plFound
+
+    phFound := not na(ta.pivothigh(rsi, lookbackLeft, lookbackRight))
+    rsiLH = rsiLBR < ta.valuewhen(phFound, rsiLBR, 1) and _inRange(phFound[1])
+    highLBR = high[lookbackRight]
+    priceHH = highLBR > ta.valuewhen(phFound, highLBR, 1)
+    bearCond := priceHH and rsiLH and phFound
+
+plot(plFound ? rsiLBR : na, offset=-lookbackRight, title="Regular Bullish", linewidth=2, color=(bullCond ? bullColor : noneColor), display=display.pane, editable=calculateDivergence)
+plotshape(bullCond ? rsiLBR : na, offset=-lookbackRight, title="Regular Bullish Label", text=" Bull ", style=shape.labelup, location=location.absolute, color=bullColor, textcolor=textColor, display=display.pane, editable=calculateDivergence)
+plot(phFound ? rsiLBR : na, offset=-lookbackRight, title="Regular Bearish", linewidth=2, color=(bearCond ? bearColor : noneColor), display=display.pane, editable=calculateDivergence)
+plotshape(bearCond ? rsiLBR : na, offset=-lookbackRight, title="Regular Bearish Label", text=" Bear ", style=shape.labeldown, location=location.absolute, color=bearColor, textcolor=textColor, display=display.pane, editable=calculateDivergence)
+
+alertcondition(bullCond, title='Regular Bullish Divergence', message="Found a new Regular Bullish Divergence, `Pivot Lookback Right` number of bars to the left of the current bar.")
+alertcondition(bearCond, title='Regular Bearish Divergence', message='Found a new Regular Bearish Divergence, `Pivot Lookback Right` number of bars to the left of the current bar.')
+
+// ==========================================================================
+// DIVERGÊNCIA "POC POC MAX" — MESMA LÓGICA QUE DISPARA OS ALERTAS/WEBHOOK
+// (pivôs pivotlow(low,5,2) / pivothigh(high,5,2) + RSI no pivô)
+// Desenha a LINHA a ligar os dois pivôs do RSI + o marcador, sincronizados
+// com a setinha no gráfico de preço e com o alerta que executa a trade.
+// ==========================================================================
+grp_div = "Divergência POC POC MAX"
+show_div_line   = input.bool(true,  "Desenhar linha de divergência no RSI", group=grp_div)
+show_div_shape  = input.bool(true,  "Mostrar marcador (triângulo)",         group=grp_div)
+c_bull_div      = input.color(color.rgb(38, 166, 154), "Cor Bullish", group=grp_div)
+c_bear_div      = input.color(color.rgb(239, 83, 80),  "Cor Bearish", group=grp_div)
+
+div_left  = 5
+div_right = 2
+
+pl_piv = ta.pivotlow(low, div_left, div_right)
+ph_piv = ta.pivothigh(high, div_left, div_right)
+oversold_15   = ta.lowest(rsi, 15) <= 35
+overbought_15 = ta.highest(rsi, 15) >= 65
+
+var float last_pl_price = na, var float prev_pl_price = na
+var float last_pl_rsi   = na, var float prev_pl_rsi   = na
+var int   last_pl_bar   = na, var int   prev_pl_bar   = na
+var float last_ph_price = na, var float prev_ph_price = na
+var float last_ph_rsi   = na, var float prev_ph_rsi   = na
+var int   last_ph_bar   = na, var int   prev_ph_bar   = na
+
+if not na(pl_piv)
+    prev_pl_price := last_pl_price, prev_pl_rsi := last_pl_rsi, prev_pl_bar := last_pl_bar
+    last_pl_price := pl_piv, last_pl_rsi := rsi[div_right], last_pl_bar := bar_index - div_right
+
+if not na(ph_piv)
+    prev_ph_price := last_ph_price, prev_ph_rsi := last_ph_rsi, prev_ph_bar := last_ph_bar
+    last_ph_price := ph_piv, last_ph_rsi := rsi[div_right], last_ph_bar := bar_index - div_right
+
+bull_div = not na(pl_piv) and not na(prev_pl_price) and last_pl_price < prev_pl_price and last_pl_rsi > prev_pl_rsi and oversold_15
+bear_div = not na(ph_piv) and not na(prev_ph_price) and last_ph_price > prev_ph_price and last_ph_rsi < prev_ph_rsi and overbought_15
+
+if bull_div
+    if show_div_line
+        line.new(prev_pl_bar, prev_pl_rsi, last_pl_bar, last_pl_rsi, color=c_bull_div, width=2)
+    if show_div_shape
+        label.new(last_pl_bar, last_pl_rsi, "Bull", style=label.style_label_up, color=color.new(c_bull_div, 10), textcolor=color.white, size=size.small, yloc=yloc.price)
+
+if bear_div
+    if show_div_line
+        line.new(prev_ph_bar, prev_ph_rsi, last_ph_bar, last_ph_rsi, color=c_bear_div, width=2)
+    if show_div_shape
+        label.new(last_ph_bar, last_ph_rsi, "Bear", style=label.style_label_down, color=color.new(c_bear_div, 10), textcolor=color.white, size=size.small, yloc=yloc.price)
+
+// Alertas próprios (opcional) - mesma condição que o webhook do POC POC MAX
+alertcondition(bull_div, title="POC: Divergência Bullish (RSI)", message="{{ticker}}: Divergência Bullish confirmada no RSI (pivôs).")
+alertcondition(bear_div, title="POC: Divergência Bearish (RSI)", message="{{ticker}}: Divergência Bearish confirmada no RSI (pivôs).")
