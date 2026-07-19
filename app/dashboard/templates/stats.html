@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>POC Strat — Estatísticas</title>
+  <style>
+    :root { --bg:#0f0f10; --panel:#1a1a1c; --border:#2a2a2d; --txt:#e6e6e6; --muted:#8a8a8f;
+            --green:#26a69a; --red:#ef5350; --orange:#ff9800; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--txt); font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+    .wrap { max-width:1000px; margin:0 auto; padding:24px 16px; }
+    h1 { font-size:20px; margin:0 0 4px; }
+    .sub { color:var(--muted); margin-bottom:16px; }
+    .nav { display:flex; gap:8px; margin-bottom:16px; }
+    .nav a { padding:6px 14px; border-radius:8px; text-decoration:none; color:var(--muted);
+             border:1px solid var(--border); background:var(--panel); font-size:13px; }
+    .nav a.on { color:var(--txt); border-color:var(--orange); }
+    .filters { display:flex; gap:6px; margin-bottom:20px; }
+    .filters a { padding:5px 12px; border-radius:20px; text-decoration:none; color:var(--muted);
+                 border:1px solid var(--border); font-size:12px; }
+    .filters a.on { color:var(--bg); background:var(--orange); border-color:var(--orange); font-weight:600; }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:22px; }
+    .card { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .card .k { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+    .card .v { font-size:20px; font-weight:600; margin-top:4px; }
+    .pos { color:var(--green); } .neg { color:var(--red); } .mut { color:var(--muted); }
+    h2 { font-size:13px; text-transform:uppercase; color:var(--muted); letter-spacing:.05em; margin:24px 0 10px; }
+    .panel { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--border); white-space:nowrap; }
+    th { color:var(--muted); font-weight:500; font-size:12px; text-transform:uppercase; }
+    th:first-child, td:first-child { text-align:left; }
+    tr:last-child td { border-bottom:none; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media (max-width:640px){ .grid2 { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>POC Strat — Estatísticas</h1>
+  <div class="sub">{{ stats.n }} trades fechadas · conta inicial ${{ "%.0f"|format(start) }}</div>
+  <div class="nav"><a href="/">Trades</a><a href="/stats" class="on">Estatísticas</a></div>
+
+  <div class="filters">
+    <a href="/stats?period=today" class="{{ 'on' if period=='today' }}">Hoje</a>
+    <a href="/stats?period=7d" class="{{ 'on' if period=='7d' }}">7 dias</a>
+    <a href="/stats?period=30d" class="{{ 'on' if period=='30d' }}">30 dias</a>
+    <a href="/stats?period=all" class="{{ 'on' if period=='all' }}">Tudo</a>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="k">PnL Total</div>
+      <div class="v {{ 'pos' if stats.total_pnl>=0 else 'neg' }}">{{ "%+.2f"|format(stats.total_pnl) }}</div></div>
+    <div class="card"><div class="k">Win Rate</div><div class="v">{{ "%.1f"|format(stats.win_rate) }}%</div>
+      <div class="mut" style="font-size:12px">{{ stats.wins }}W / {{ stats.losses }}L</div></div>
+    <div class="card"><div class="k">Profit Factor</div>
+      <div class="v">{% if stats.profit_factor is not none %}{{ "%.2f"|format(stats.profit_factor) }}{% elif stats.wins>0 %}∞{% else %}—{% endif %}</div></div>
+    <div class="card"><div class="k">R médio</div>
+      <div class="v {{ 'pos' if stats.avg_r>=0 else 'neg' }}">{{ "%+.2f"|format(stats.avg_r) }}R</div></div>
+    <div class="card"><div class="k">Trades</div><div class="v">{{ stats.n }}</div></div>
+    <div class="card"><div class="k">Ganho médio</div><div class="v pos">{{ "%+.2f"|format(stats.avg_win) }}</div></div>
+    <div class="card"><div class="k">Perda média</div><div class="v neg">{{ "%+.2f"|format(stats.avg_loss) }}</div></div>
+    <div class="card"><div class="k">Melhor / Pior</div>
+      <div class="v" style="font-size:15px"><span class="pos">{{ "%+.0f"|format(stats.best) }}</span> / <span class="neg">{{ "%+.0f"|format(stats.worst) }}</span></div></div>
+  </div>
+
+  <h2>Curva de Equity (PnL cumulativo)</h2>
+  <div class="panel">
+    {% set curve = stats.curve %}
+    {% if curve|length > 1 %}
+      {% set cmin = [curve|min, 0]|min %}
+      {% set cmax = [curve|max, 0]|max %}
+      {% set span = (cmax - cmin) or 1 %}
+      {% set zero_y = 160 - (0 - cmin)/span*160 %}
+      <svg viewBox="0 0 800 160" preserveAspectRatio="none" style="width:100%;height:160px">
+        <line x1="0" y1="{{ zero_y }}" x2="800" y2="{{ zero_y }}" stroke="#2a2a2d" stroke-width="1"/>
+        <polyline fill="none" stroke="{{ '#26a69a' if curve[-1]>=0 else '#ef5350' }}" stroke-width="2"
+          points="{% for v in curve %}{{ '%.1f'|format(loop.index0 * 800 / (curve|length - 1)) }},{{ '%.1f'|format(160 - (v - cmin)/span*160) }} {% endfor %}"/>
+      </svg>
+    {% else %}
+      <div class="mut">Ainda não há trades fechadas suficientes neste período.</div>
+    {% endif %}
+  </div>
+
+  <div class="grid2" style="margin-top:24px">
+    <div>
+      <h2>Long vs Short</h2>
+      <div class="panel"><table>
+        <tr><th>Lado</th><th>Trades</th><th>Win Rate</th></tr>
+        <tr><td><span style="color:var(--green)">LONG</span></td><td>{{ stats.n_long }}</td><td>{{ "%.0f"|format(stats.wr_long) }}%</td></tr>
+        <tr><td><span style="color:var(--red)">SHORT</span></td><td>{{ stats.n_short }}</td><td>{{ "%.0f"|format(stats.wr_short) }}%</td></tr>
+      </table></div>
+      <h2>Por motivo de fecho</h2>
+      <div class="panel"><table>
+        {% for reason, cnt in stats.by_reason.items() %}
+        <tr><td>{{ reason }}</td><td>{{ cnt }}</td></tr>
+        {% endfor %}
+        {% if not stats.by_reason %}<tr><td class="mut">—</td></tr>{% endif %}
+      </table></div>
+    </div>
+    <div>
+      <h2>Por moeda</h2>
+      <div class="panel"><table>
+        <tr><th>Símbolo</th><th>Trades</th><th>Win%</th><th>PnL</th></tr>
+        {% for sym, d in stats.by_symbol.items() %}
+        <tr><td>{{ sym }}</td><td>{{ d.n }}</td><td>{{ "%.0f"|format(d.wins/d.n*100) }}%</td>
+          <td class="{{ 'pos' if d.pnl>=0 else 'neg' }}">{{ "%+.2f"|format(d.pnl) }}</td></tr>
+        {% endfor %}
+        {% if not stats.by_symbol %}<tr><td colspan="4" class="mut">—</td></tr>{% endif %}
+      </table></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

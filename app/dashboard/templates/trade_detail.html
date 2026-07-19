@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trade #{{ t.id }} — {{ t.symbol }}</title>
+  <style>
+    :root { --bg:#0f0f10; --panel:#1a1a1c; --border:#2a2a2d; --txt:#e6e6e6; --muted:#8a8a8f;
+            --green:#26a69a; --red:#ef5350; --orange:#ff9800; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--txt); font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+    .wrap { max-width:900px; margin:0 auto; padding:24px 16px; }
+    a.back { color:var(--muted); text-decoration:none; font-size:13px; }
+    h1 { font-size:20px; margin:10px 0 2px; display:flex; align-items:center; gap:10px; }
+    .sub { color:var(--muted); margin-bottom:20px; }
+    .badge { padding:2px 10px; border-radius:20px; font-size:13px; }
+    .long { background:rgba(38,166,154,.15); color:var(--green); }
+    .short { background:rgba(239,83,80,.15); color:var(--red); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:22px; }
+    .card { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .card .k { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+    .card .v { font-size:20px; font-weight:600; margin-top:4px; }
+    .pos { color:var(--green); } .neg { color:var(--red); } .mut { color:var(--muted); }
+    h2 { font-size:13px; text-transform:uppercase; color:var(--muted); letter-spacing:.05em; margin:24px 0 10px; }
+    table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    th, td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--border); white-space:nowrap; }
+    th { color:var(--muted); font-weight:500; font-size:12px; text-transform:uppercase; }
+    th:first-child, td:first-child { text-align:left; }
+    tr:last-child td { border-bottom:none; }
+    .ok { color:var(--green); } .no { color:var(--muted); }
+    .meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px 24px; background:var(--panel);
+            border:1px solid var(--border); border-radius:10px; padding:16px; }
+    .meta div { display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid var(--border); padding:6px 0; }
+    .meta div:last-child, .meta div:nth-last-child(2) { border-bottom:none; }
+    .meta .lbl { color:var(--muted); }
+    .scroll { overflow-x:auto; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/">← voltar</a>
+  <h1>{{ t.symbol }}
+    <span class="badge {{ t.side }}">{{ t.side|upper }}</span>
+    <span class="mut" style="font-size:14px">#{{ t.id }} · {{ t.status.value }}</span>
+  </h1>
+  <div class="sub">criada {{ t.created_at.strftime("%Y-%m-%d %H:%M") }} UTC</div>
+
+  <div class="cards">
+    <div class="card"><div class="k">PnL</div>
+      <div class="v {{ 'pos' if display_pnl>=0 else 'neg' }}">{{ "%+.2f"|format(display_pnl) }}
+        {% if unrealized != 0 %}<span class="mut" style="font-size:12px">~</span>{% endif %}</div></div>
+    <div class="card"><div class="k">R múltiplo</div>
+      <div class="v {{ 'pos' if (r_mult or 0)>=0 else 'neg' }}">{{ "%+.2f"|format(r_mult) if r_mult is not none else "—" }}R</div></div>
+    <div class="card"><div class="k">Risco</div><div class="v">${{ "%.0f"|format(t.risk_usd) }}</div></div>
+    <div class="card"><div class="k">Entrada média</div><div class="v">{{ "%.6g"|format(t.avg_entry) if t.avg_entry else "—" }}</div></div>
+    <div class="card"><div class="k">Stop {% if t.moved_to_be %}<span class="ok">(BE)</span>{% endif %}</div>
+      <div class="v">{{ "%.6g"|format(t.stop) }}</div></div>
+  </div>
+
+  <h2>Entradas ({{ entries|selectattr("filled")|list|length }}/{{ entries|length }} preenchidas)</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Ordem limite</th><th>Preço</th><th>Qty</th><th>Estado</th><th>Preenchida em</th></tr></thead>
+    <tbody>
+      {% for e in entries %}
+      <tr>
+        <td>#{{ loop.index }}</td>
+        <td>{{ "%.6g"|format(e.price) }}</td>
+        <td>{{ "%.4g"|format(e.qty) }}</td>
+        <td class="{{ 'ok' if e.filled else 'no' }}">{{ "preenchida" if e.filled else "à espera" }}</td>
+        <td class="mut">{{ e.filled_at.strftime("%m-%d %H:%M") if e.filled_at else "—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Alvos (TP)</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Alvo</th><th>Preço</th><th>% fecho</th><th>Estado</th><th>Atingido em</th></tr></thead>
+    <tbody>
+      {% for tp in targets %}
+      <tr>
+        <td>TP{{ tp.rank }}</td>
+        <td>{{ "%.6g"|format(tp.price) }}</td>
+        <td>{{ "%.0f"|format(tp.close_fraction*100) }}%</td>
+        <td class="{{ 'ok' if tp.hit else 'no' }}">{{ "atingido" if tp.hit else "pendente" }}</td>
+        <td class="mut">{{ tp.hit_at.strftime("%m-%d %H:%M") if tp.hit_at else "—" }}</td>
+      </tr>
+      {% endfor %}
+      {% if not targets %}<tr><td colspan="5" class="mut" style="text-align:center">sem alvos definidos</td></tr>{% endif %}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Detalhes</h2>
+  <div class="meta">
+    <div><span class="lbl">Preço no alerta</span><span>{{ "%.6g"|format(t.signal_price) if t.signal_price else "—" }}</span></div>
+    <div><span class="lbl">Qty total planeada</span><span>{{ "%.4g"|format(t.total_qty) }}</span></div>
+    <div><span class="lbl">Qty preenchida</span><span>{{ "%.4g"|format(t.filled_qty) if t.filled_qty else "—" }}</span></div>
+    <div><span class="lbl">Qty aberta</span><span>{{ "%.4g"|format(t.remaining_qty) if t.remaining_qty else "—" }}</span></div>
+    <div><span class="lbl">PnL realizado</span><span class="{{ 'pos' if t.realized_pnl>=0 else 'neg' }}">{{ "%+.2f"|format(t.realized_pnl) }}</span></div>
+    <div><span class="lbl">PnL não-realizado</span><span class="{{ 'pos' if unrealized>=0 else 'neg' }}">{{ "%+.2f"|format(unrealized) }}</span></div>
+    <div><span class="lbl">Breakeven movido</span><span>{{ "sim" if t.moved_to_be else "não" }}</span></div>
+    <div><span class="lbl">Motivo de fecho</span><span>{{ t.close_reason.value if t.close_reason else "—" }}</span></div>
+    <div><span class="lbl">Aberta em</span><span class="mut">{{ t.opened_at.strftime("%Y-%m-%d %H:%M") if t.opened_at else "—" }}</span></div>
+    <div><span class="lbl">Fechada em</span><span class="mut">{{ t.closed_at.strftime("%Y-%m-%d %H:%M") if t.closed_at else "—" }}</span></div>
+  </div>
+</div>
+</body>
+</html>

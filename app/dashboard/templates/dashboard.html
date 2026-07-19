@@ -30,12 +30,19 @@
     .st-closed { color:var(--txt); } .st-cancelled { color:var(--muted); text-decoration:line-through; }
     .scroll { overflow-x:auto; }
     .tag { color:var(--muted); font-size:12px; }
+    .nav { display:flex; gap:8px; margin-bottom:20px; }
+    .nav a { padding:6px 14px; border-radius:8px; text-decoration:none; color:var(--muted);
+             border:1px solid var(--border); background:var(--panel); font-size:13px; }
+    .nav a.on { color:var(--txt); border-color:var(--orange); }
+    a.detail { color:var(--orange); text-decoration:none; font-size:12px; }
+    tbody tr:hover { background:rgba(255,255,255,.03); }
   </style>
 </head>
 <body>
 <div class="wrap">
   <h1>POC Strat — Live Paper Backtest</h1>
   <div class="sub">Atualiza a cada 20s · conta inicial ${{ "%.0f"|format(start) }}</div>
+  <div class="nav"><a href="/" class="on">Trades</a><a href="/stats">Estatísticas</a></div>
 
   <div class="cards">
     <div class="card"><div class="k">Equity</div>
@@ -54,7 +61,7 @@
     <thead>
       <tr>
         <th>Símbolo</th><th>Lado</th><th>Estado</th>
-        <th>Avg Entry</th><th>Qty</th><th>Stop</th><th>PnL</th><th>Motivo</th><th>Criado</th>
+        <th>Avg Entry</th><th>Qty</th><th>Stop</th><th>PnL</th><th>Motivo</th><th>Criado</th><th></th>
       </tr>
     </thead>
     <tbody>
@@ -69,10 +76,11 @@
         <td class="{{ 'pos' if pnl[t.id]>=0 else 'neg' }}">{{ "%+.2f"|format(pnl[t.id]) }}{% if t.id in live %} <span class="tag">~</span>{% endif %}</td>
         <td class="tag">{{ t.close_reason.value if t.close_reason else "—" }}</td>
         <td class="tag">{{ t.created_at.strftime("%m-%d %H:%M") }}</td>
+        <td><a class="detail" href="/trade/{{ t.id }}">Detalhes →</a></td>
       </tr>
       {% endfor %}
       {% if not trades %}
-      <tr><td colspan="9" style="text-align:center;color:var(--muted);padding:30px">
+      <tr><td colspan="10" style="text-align:center;color:var(--muted);padding:30px">
         Sem trades ainda. À espera de alertas do TradingView…</td></tr>
       {% endif %}
     </tbody>

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
@@ -15,7 +16,7 @@ from .config import settings
 from .db import get_session, init_db
 from .engine import create_trade_from_plan, process_tick
 from .feed import get_ticks, make_exchange
-from .models import Trade, TradeStatus
+from .models import EntryOrder, Target, Trade, TradeStatus
 from .schemas import AlertPayload
 from .strategy import build_plan
 
@@ -162,6 +163,124 @@ async def api_trades() -> JSONResponse:
                 "trades": [t.model_dump(mode="json") for t in trades],
             }
         )
+
+
+# --------------------------------------------------------------------------
+# Detalhe de uma trade
+# --------------------------------------------------------------------------
+def _r_multiple(trade: Trade) -> float | None:
+    return (trade.realized_pnl / trade.risk_usd) if trade.risk_usd else None
+
+
+@app.get("/trade/{trade_id}", response_class=HTMLResponse)
+async def trade_detail(request: Request, trade_id: int) -> HTMLResponse:
+    with get_session() as session:
+        trade = session.get(Trade, trade_id)
+        if trade is None:
+            raise HTTPException(status_code=404, detail="trade não encontrada")
+        entries = list(session.exec(select(EntryOrder).where(EntryOrder.trade_id == trade_id)))
+        targets = list(
+            session.exec(select(Target).where(Target.trade_id == trade_id).order_by(Target.rank))
+        )
+        return templates.TemplateResponse(
+            request,
+            "trade_detail.html",
+            {
+                "t": trade,
+                "entries": sorted(entries, key=lambda e: e.price, reverse=(trade.side == "short")),
+                "targets": targets,
+                "unrealized": _unrealized(trade),
+                "display_pnl": _display_pnl(trade),
+                "r_mult": _r_multiple(trade),
+                "start": settings.account_start_usd,
+            },
+        )
+
+
+# --------------------------------------------------------------------------
+# Estatísticas (com filtro por período)
+# --------------------------------------------------------------------------
+def _period_cutoff(period: str) -> datetime | None:
+    now = datetime.utcnow()
+    if period == "today":
+        return now.replace(hour=0, minute=0, second=0, microsecond=0)
+    if period == "7d":
+        return now - timedelta(days=7)
+    if period == "30d":
+        return now - timedelta(days=30)
+    return None  # "all"
+
+
+def _compute_stats(closed: list[Trade]) -> dict:
+    n = len(closed)
+    wins = [t for t in closed if t.realized_pnl > 0]
+    losses = [t for t in closed if t.realized_pnl < 0]
+    gross_profit = sum(t.realized_pnl for t in wins)
+    gross_loss = -sum(t.realized_pnl for t in losses)  # positivo
+    total = sum(t.realized_pnl for t in closed)
+    rs = [t.realized_pnl / t.risk_usd for t in closed if t.risk_usd]
+    longs = [t for t in closed if t.side == "long"]
+    shorts = [t for t in closed if t.side == "short"]
+
+    by_reason: dict[str, int] = {}
+    for t in closed:
+        key = t.close_reason.value if t.close_reason else "—"
+        by_reason[key] = by_reason.get(key, 0) + 1
+
+    by_symbol: dict[str, dict] = {}
+    for t in closed:
+        d = by_symbol.setdefault(t.symbol, {"n": 0, "pnl": 0.0, "wins": 0})
+        d["n"] += 1
+        d["pnl"] += t.realized_pnl
+        d["wins"] += 1 if t.realized_pnl > 0 else 0
+
+    # Curva de equity: PnL cumulativo pelas trades fechadas, por data de fecho.
+    ordered = sorted(closed, key=lambda t: t.closed_at or t.created_at)
+    curve, cum = [], 0.0
+    for t in ordered:
+        cum += t.realized_pnl
+        curve.append(cum)
+
+    return {
+        "n": n,
+        "wins": len(wins),
+        "losses": len(losses),
+        "win_rate": (len(wins) / n * 100.0) if n else 0.0,
+        "total_pnl": total,
+        "gross_profit": gross_profit,
+        "gross_loss": gross_loss,
+        "profit_factor": (gross_profit / gross_loss) if gross_loss > 0 else None,
+        "avg_r": (sum(rs) / len(rs)) if rs else 0.0,
+        "avg_win": (gross_profit / len(wins)) if wins else 0.0,
+        "avg_loss": (-gross_loss / len(losses)) if losses else 0.0,
+        "best": max((t.realized_pnl for t in closed), default=0.0),
+        "worst": min((t.realized_pnl for t in closed), default=0.0),
+        "by_reason": dict(sorted(by_reason.items(), key=lambda kv: -kv[1])),
+        "by_symbol": dict(sorted(by_symbol.items(), key=lambda kv: kv[1]["pnl"], reverse=True)),
+        "n_long": len(longs),
+        "n_short": len(shorts),
+        "wr_long": (len([t for t in longs if t.realized_pnl > 0]) / len(longs) * 100.0) if longs else 0.0,
+        "wr_short": (len([t for t in shorts if t.realized_pnl > 0]) / len(shorts) * 100.0) if shorts else 0.0,
+        "curve": curve,
+    }
+
+
+@app.get("/stats", response_class=HTMLResponse)
+async def stats_page(request: Request, period: str = "all") -> HTMLResponse:
+    if period not in ("today", "7d", "30d", "all"):
+        period = "all"
+    cutoff = _period_cutoff(period)
+    with get_session() as session:
+        closed = list(
+            session.exec(select(Trade).where(Trade.status == TradeStatus.closed))
+        )
+    if cutoff is not None:
+        closed = [t for t in closed if (t.closed_at or t.created_at) >= cutoff]
+    return templates.TemplateResponse(
+        request,
+        "stats.html",
+        {"stats": _compute_stats(closed), "period": period, "start": settings.account_start_usd},
+    )
 
 
 @app.get("/health")
