@@ -136,7 +136,19 @@ def process_tick(
         session.commit()
         return
 
-    # --- 3. Corte por zone_break (fecho de vela para lá do stop) ---
+    # --- 3a. Mover o stop para breakeven ao atingir 1R (só se a trade o usa) ---
+    if trade.use_breakeven and not trade.moved_to_be:
+        risk_dist = abs(trade.avg_entry - trade.stop)
+        if risk_dist > 0:
+            target_1r = trade.avg_entry + risk_dist if trade.side == "long" else trade.avg_entry - risk_dist
+            reached_1r = (trade.side == "long" and tick.bar_high >= target_1r) or (
+                trade.side == "short" and tick.bar_low <= target_1r
+            )
+            if reached_1r:
+                trade.stop = trade.avg_entry  # breakeven
+                trade.moved_to_be = True
+
+    # --- 3b. Corte por stop (fecho de vela para lá do stop, já em breakeven se movido) ---
     broke = (trade.side == "long" and tick.bar_close < trade.stop) or (
         trade.side == "short" and tick.bar_close > trade.stop
     )
@@ -145,7 +157,7 @@ def process_tick(
         trade.realized_pnl += _pnl_per_unit(trade.side, exit_price, trade.avg_entry) * trade.remaining_qty
         trade.remaining_qty = 0.0
         trade.status = TradeStatus.closed
-        trade.close_reason = CloseReason.zone_break
+        trade.close_reason = CloseReason.breakeven if trade.moved_to_be else CloseReason.zone_break
         trade.closed_at = now
         session.add(trade)
         session.commit()

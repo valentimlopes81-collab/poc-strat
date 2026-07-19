@@ -13,8 +13,17 @@ from dataclasses import dataclass, field
 class Settings:
     # --- Conta virtual / sizing ---
     account_start_usd: float = 5_000.0
-    # Risco por trade em fração da conta. 2% de 5k = $100.
-    risk_pct: float = 0.02
+    # Risco por trade em fração da conta (padrão 1%). Exceções por moeda abaixo.
+    risk_pct: float = 0.01
+    # Risco específico por moeda-base (ex.: BTC continua a 2%).
+    risk_by_coin: dict = field(default_factory=lambda: {"BTC": 0.02})
+
+    # --- Gestão de posição ---
+    # Mover o stop para o preço de entrada (breakeven) ao atingir 1R de lucro.
+    use_breakeven: bool = True
+
+    def risk_for(self, base_coin: str) -> float:
+        return self.risk_by_coin.get(base_coin.upper(), self.risk_pct)
 
     # --- Estratégia ---
     # Zonas de POC mais próximas que isto (em %) não contam como alvo de TP.

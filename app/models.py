@@ -26,6 +26,7 @@ class CloseReason(str, Enum):
     manual = "manual"
     expired = "expired"
     runaway = "runaway"  # preço fugiu da zona (front-run) sem encher
+    breakeven = "breakeven"  # cortada no breakeven (stop já movido para a entrada)
 
 
 class Trade(SQLModel, table=True):
@@ -46,6 +47,8 @@ class Trade(SQLModel, table=True):
     remaining_qty: float = 0.0                # posição ainda aberta
     realized_pnl: float = 0.0
     last_price: float = 0.0                   # último preço visto (para PnL live)
+    use_breakeven: bool = True                # esta trade usa breakeven a 1R? (novas=sim)
+    moved_to_be: bool = False                 # stop já movido para o breakeven?
 
     created_at: datetime = Field(default_factory=utcnow)
     opened_at: datetime | None = None

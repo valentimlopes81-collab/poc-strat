@@ -147,7 +147,8 @@ def build_plan(payload: AlertPayload, s: Settings | None = None) -> TradePlan | 
         return None
 
     # Sizing por risco: se o preço fechar além da zona, a perda é ~risk_usd.
-    risk_usd = s.account_start_usd * s.risk_pct
+    # Risco por moeda (padrão 1%, BTC 2%).
+    risk_usd = s.account_start_usd * s.risk_for(payload.symbol_base())
     total_qty = risk_usd / stop_dist
 
     per_order = total_qty / len(entry_levels)

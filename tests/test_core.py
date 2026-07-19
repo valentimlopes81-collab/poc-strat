@@ -144,6 +144,33 @@ def test_long_fill_beats_runaway_same_bar():
     assert trade.status == TradeStatus.open
 
 
+def test_risk_override_btc_stays_2pct():
+    # BTC mantém 2% ($100); as outras passam a 1% ($50).
+    common = dict(zone_pocs=[], targets_up=[130], targets_down=[99, 90], zone_break=0.0001)
+    plan_btc = build_plan(AlertPayload(ticker="BTCUSDT.P", side="long", price=100, **common))
+    plan_eth = build_plan(AlertPayload(ticker="ETHUSDT.P", side="long", price=100, **common))
+    assert abs(plan_btc.risk_usd - 100.0) < 1e-9
+    assert abs(plan_eth.risk_usd - 50.0) < 1e-9
+
+
+def test_breakeven_moves_stop_to_entry_at_1r():
+    s = _session()
+    p = AlertPayload(ticker="ETHUSDT.P", side="long", price=100,
+                     zone_pocs=[], targets_up=[130], targets_down=[99, 90], zone_break=0.0001)
+    plan = build_plan(p)  # entrada 99, stop < 99
+    trade = create_trade_from_plan(s, p, plan)
+    process_tick(s, trade, MarketTick(trade.symbol, 99, 99.5, 99.0, 99.2))  # fill @99
+    assert trade.stop < 99
+    # atinge 1R (bar_high sobe o suficiente) -> stop move para a entrada (99)
+    process_tick(s, trade, MarketTick(trade.symbol, 101, 101.5, 99.5, 100.8))
+    assert trade.moved_to_be
+    assert abs(trade.stop - 99) < 1e-9
+    # fecha abaixo da entrada -> corte em breakeven
+    process_tick(s, trade, MarketTick(trade.symbol, 98.5, 99.2, 98.0, 98.5))
+    assert trade.status == TradeStatus.closed
+    assert trade.close_reason == CloseReason.breakeven
+
+
 def test_short_cancels_on_runaway_down():
     s = _session()
     p = AlertPayload(ticker="SOLUSDT.P", side="short", price=100,
