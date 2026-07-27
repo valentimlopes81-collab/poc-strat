@@ -16,7 +16,7 @@ from .config import settings
 from .db import get_session, init_db
 from .engine import create_trade_from_plan, process_tick
 from .feed import get_ticks, make_exchange
-from .models import EntryOrder, Target, Trade, TradeStatus
+from .models import CloseReason, EntryOrder, Target, Trade, TradeStatus
 from .schemas import AlertPayload
 from .strategy import build_plan
 
@@ -116,9 +116,23 @@ def _display_pnl(trade: Trade) -> float:
     return trade.realized_pnl + _unrealized(trade)
 
 
+def _outcome(t: Trade) -> str:
+    """win / loss / scratch. Uma trade fechada em breakeven não é loss:
+    se deu lucro (ex.: bateu um TP antes) conta win; senão é 'scratch'."""
+    if t.realized_pnl > 1e-9:
+        return "win"
+    if t.close_reason == CloseReason.breakeven:
+        return "scratch"
+    if t.realized_pnl < -1e-9:
+        return "loss"
+    return "scratch"
+
+
 def _stats(trades: list[Trade]) -> dict:
     closed = [t for t in trades if t.status == TradeStatus.closed]
-    wins = [t for t in closed if t.realized_pnl > 0]
+    wins = [t for t in closed if _outcome(t) == "win"]
+    losses = [t for t in closed if _outcome(t) == "loss"]
+    decisive = len(wins) + len(losses)
     realized = sum(t.realized_pnl for t in trades)
     unrealized = sum(_unrealized(t) for t in trades)
     equity = settings.account_start_usd + realized + unrealized
@@ -130,7 +144,7 @@ def _stats(trades: list[Trade]) -> dict:
         "n_closed": len(closed),
         "n_open": len([t for t in trades if t.status == TradeStatus.open]),
         "n_pending": len([t for t in trades if t.status == TradeStatus.pending]),
-        "win_rate": (len(wins) / len(closed) * 100.0) if closed else 0.0,
+        "win_rate": (len(wins) / decisive * 100.0) if decisive else 0.0,
     }
 
 
@@ -211,12 +225,20 @@ def _period_cutoff(period: str) -> datetime | None:
     return None  # "all"
 
 
+def _side_wr(rows: list[Trade]) -> float:
+    w = len([t for t in rows if _outcome(t) == "win"])
+    d = w + len([t for t in rows if _outcome(t) == "loss"])
+    return (w / d * 100.0) if d else 0.0
+
+
 def _compute_stats(closed: list[Trade]) -> dict:
     n = len(closed)
-    wins = [t for t in closed if t.realized_pnl > 0]
-    losses = [t for t in closed if t.realized_pnl < 0]
+    wins = [t for t in closed if _outcome(t) == "win"]
+    losses = [t for t in closed if _outcome(t) == "loss"]
+    scratches = [t for t in closed if _outcome(t) == "scratch"]
+    decisive = len(wins) + len(losses)
     gross_profit = sum(t.realized_pnl for t in wins)
-    gross_loss = -sum(t.realized_pnl for t in losses)  # positivo
+    gross_loss = -sum(t.realized_pnl for t in losses)  # positivo (só perdas reais)
     total = sum(t.realized_pnl for t in closed)
     rs = [t.realized_pnl / t.risk_usd for t in closed if t.risk_usd]
     longs = [t for t in closed if t.side == "long"]
@@ -232,7 +254,7 @@ def _compute_stats(closed: list[Trade]) -> dict:
         d = by_symbol.setdefault(t.symbol, {"n": 0, "pnl": 0.0, "wins": 0})
         d["n"] += 1
         d["pnl"] += t.realized_pnl
-        d["wins"] += 1 if t.realized_pnl > 0 else 0
+        d["wins"] += 1 if _outcome(t) == "win" else 0
 
     # Curva de equity: PnL cumulativo pelas trades fechadas, por data de fecho.
     ordered = sorted(closed, key=lambda t: t.closed_at or t.created_at)
@@ -245,7 +267,8 @@ def _compute_stats(closed: list[Trade]) -> dict:
         "n": n,
         "wins": len(wins),
         "losses": len(losses),
-        "win_rate": (len(wins) / n * 100.0) if n else 0.0,
+        "scratches": len(scratches),
+        "win_rate": (len(wins) / decisive * 100.0) if decisive else 0.0,
         "total_pnl": total,
         "gross_profit": gross_profit,
         "gross_loss": gross_loss,
@@ -259,8 +282,8 @@ def _compute_stats(closed: list[Trade]) -> dict:
         "by_symbol": dict(sorted(by_symbol.items(), key=lambda kv: kv[1]["pnl"], reverse=True)),
         "n_long": len(longs),
         "n_short": len(shorts),
-        "wr_long": (len([t for t in longs if t.realized_pnl > 0]) / len(longs) * 100.0) if longs else 0.0,
-        "wr_short": (len([t for t in shorts if t.realized_pnl > 0]) / len(shorts) * 100.0) if shorts else 0.0,
+        "wr_long": _side_wr(longs),
+        "wr_short": _side_wr(shorts),
         "curve": curve,
     }
 

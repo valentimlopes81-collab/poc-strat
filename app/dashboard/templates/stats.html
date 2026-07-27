@@ -53,7 +53,7 @@
     <div class="card"><div class="k">PnL Total</div>
       <div class="v {{ 'pos' if stats.total_pnl>=0 else 'neg' }}">{{ "%+.2f"|format(stats.total_pnl) }}</div></div>
     <div class="card"><div class="k">Win Rate</div><div class="v">{{ "%.1f"|format(stats.win_rate) }}%</div>
-      <div class="mut" style="font-size:12px">{{ stats.wins }}W / {{ stats.losses }}L</div></div>
+      <div class="mut" style="font-size:12px">{{ stats.wins }}W / {{ stats.losses }}L / {{ stats.scratches }}BE</div></div>
     <div class="card"><div class="k">Profit Factor</div>
       <div class="v">{% if stats.profit_factor is not none %}{{ "%.2f"|format(stats.profit_factor) }}{% elif stats.wins>0 %}∞{% else %}—{% endif %}</div></div>
     <div class="card"><div class="k">R médio</div>

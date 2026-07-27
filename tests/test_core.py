@@ -171,6 +171,20 @@ def test_breakeven_moves_stop_to_entry_at_1r():
     assert trade.close_reason == CloseReason.breakeven
 
 
+def test_breakeven_not_counted_as_loss():
+    from app.main import _outcome
+    from app.models import Trade
+    t = Trade(symbol="X", ticker_raw="X", side="long", status=TradeStatus.closed,
+              planned_avg_entry=100, stop=100, risk_usd=100, total_qty=1,
+              realized_pnl=-1.5, close_reason=CloseReason.breakeven)
+    assert _outcome(t) == "scratch"          # BE com pnl negativo residual -> não é loss
+    t.realized_pnl = 20.0
+    assert _outcome(t) == "win"              # BE que ainda deu lucro (TP antes) -> win
+    t.realized_pnl = -30.0
+    t.close_reason = CloseReason.zone_break
+    assert _outcome(t) == "loss"             # stop real -> loss
+
+
 def test_short_cancels_on_runaway_down():
     s = _session()
     p = AlertPayload(ticker="SOLUSDT.P", side="short", price=100,

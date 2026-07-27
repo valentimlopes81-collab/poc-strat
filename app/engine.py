@@ -153,7 +153,8 @@ def process_tick(
         trade.side == "short" and tick.bar_close > trade.stop
     )
     if broke:
-        exit_price = tick.bar_close
+        # Em breakeven sai na entrada (PnL 0); nos outros stops sai no fecho da vela.
+        exit_price = trade.avg_entry if trade.moved_to_be else tick.bar_close
         trade.realized_pnl += _pnl_per_unit(trade.side, exit_price, trade.avg_entry) * trade.remaining_qty
         trade.remaining_qty = 0.0
         trade.status = TradeStatus.closed
