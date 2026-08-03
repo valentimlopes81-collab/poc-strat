@@ -263,6 +263,12 @@ def _compute_stats(closed: list[Trade]) -> dict:
         cum += t.realized_pnl
         curve.append(cum)
 
+    # Max drawdown (em $) sobre a curva, a partir de um pico inicial de 0.
+    peak, max_dd = 0.0, 0.0
+    for v in curve:
+        peak = max(peak, v)
+        max_dd = max(max_dd, peak - v)
+
     return {
         "n": n,
         "wins": len(wins),
@@ -274,6 +280,8 @@ def _compute_stats(closed: list[Trade]) -> dict:
         "gross_loss": gross_loss,
         "profit_factor": (gross_profit / gross_loss) if gross_loss > 0 else None,
         "avg_r": (sum(rs) / len(rs)) if rs else 0.0,
+        "expectancy_usd": (total / n) if n else 0.0,
+        "max_drawdown": max_dd,
         "avg_win": (gross_profit / len(wins)) if wins else 0.0,
         "avg_loss": (-gross_loss / len(losses)) if losses else 0.0,
         "best": max((t.realized_pnl for t in closed), default=0.0),
@@ -294,15 +302,29 @@ async def stats_page(request: Request, period: str = "all") -> HTMLResponse:
         period = "all"
     cutoff = _period_cutoff(period)
     with get_session() as session:
-        closed = list(
-            session.exec(select(Trade).where(Trade.status == TradeStatus.closed))
-        )
+        all_trades = list(session.exec(select(Trade)))
+
+    closed = [t for t in all_trades if t.status == TradeStatus.closed]
     if cutoff is not None:
         closed = [t for t in closed if (t.closed_at or t.created_at) >= cutoff]
+        created = [t for t in all_trades if t.created_at >= cutoff]
+    else:
+        created = all_trades
+
+    stats = _compute_stats(closed)
+
+    # Taxa de fill: dos setups que resolveram (encheram ou cancelaram), quantos encheram.
+    filled = [t for t in created if t.status in (TradeStatus.open, TradeStatus.closed)]
+    cancelled = [t for t in created if t.status == TradeStatus.cancelled]
+    resolved = len(filled) + len(cancelled)
+    stats["fill_rate"] = (len(filled) / resolved * 100.0) if resolved else 0.0
+    stats["n_filled"] = len(filled)
+    stats["n_cancelled"] = len(cancelled)
+
     return templates.TemplateResponse(
         request,
         "stats.html",
-        {"stats": _compute_stats(closed), "period": period, "start": settings.account_start_usd},
+        {"stats": stats, "period": period, "start": settings.account_start_usd},
     )
 
 

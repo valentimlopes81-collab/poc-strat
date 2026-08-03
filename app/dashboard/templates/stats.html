@@ -63,6 +63,15 @@
     <div class="card"><div class="k">Perda média</div><div class="v neg">{{ "%+.2f"|format(stats.avg_loss) }}</div></div>
     <div class="card"><div class="k">Melhor / Pior</div>
       <div class="v" style="font-size:15px"><span class="pos">{{ "%+.0f"|format(stats.best) }}</span> / <span class="neg">{{ "%+.0f"|format(stats.worst) }}</span></div></div>
+    <div class="card"><div class="k">Expectância</div>
+      <div class="v {{ 'pos' if stats.expectancy_usd>=0 else 'neg' }}">{{ "%+.2f"|format(stats.expectancy_usd) }}</div>
+      <div class="mut" style="font-size:12px">por trade</div></div>
+    <div class="card"><div class="k">Max Drawdown</div>
+      <div class="v neg">-${{ "%.2f"|format(stats.max_drawdown) }}</div>
+      <div class="mut" style="font-size:12px">{{ "%.1f"|format(stats.max_drawdown/start*100) }}% da conta</div></div>
+    <div class="card"><div class="k">Taxa de Fill</div>
+      <div class="v">{{ "%.0f"|format(stats.fill_rate) }}%</div>
+      <div class="mut" style="font-size:12px">{{ stats.n_filled }} encheram / {{ stats.n_cancelled }} canceladas</div></div>
   </div>
 
   <h2>Curva de Equity (PnL cumulativo)</h2>
