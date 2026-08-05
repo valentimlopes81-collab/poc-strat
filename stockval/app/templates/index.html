@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StockVal — Valor Intrínseco</title>
+  <style>
+    :root { --bg:#0f0f10; --panel:#1a1a1c; --border:#2a2a2d; --txt:#e6e6e6; --muted:#8a8a8f;
+            --green:#26a69a; --red:#ef5350; --orange:#ff9800; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--txt); font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+    .wrap { max-width:900px; margin:0 auto; padding:24px 16px; }
+    h1 { font-size:22px; margin:0 0 2px; }
+    .sub { color:var(--muted); margin-bottom:20px; }
+    form { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:22px; }
+    .row { display:flex; gap:10px; align-items:center; }
+    input[type=text], input[type=number] { background:#0f0f10; border:1px solid var(--border); color:var(--txt);
+        border-radius:8px; padding:9px 12px; font-size:15px; }
+    input[type=text] { flex:1; text-transform:uppercase; }
+    button { background:var(--orange); color:#111; border:0; border-radius:8px; padding:10px 20px; font-weight:600; cursor:pointer; font-size:15px; }
+    details { margin-top:14px; } summary { cursor:pointer; color:var(--muted); font-size:13px; }
+    .assum { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:12px; }
+    .assum label { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--muted); }
+    .assum input { width:100%; }
+    .err { background:rgba(239,83,80,.12); border:1px solid var(--red); color:#ffb4b0; border-radius:10px; padding:12px 14px; }
+    .hero { display:flex; flex-wrap:wrap; gap:16px; align-items:center; background:var(--panel); border:1px solid var(--border);
+            border-radius:12px; padding:20px; margin-bottom:18px; }
+    .hero .big { font-size:30px; font-weight:700; }
+    .hero .k { color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .badge { padding:4px 12px; border-radius:20px; font-size:13px; font-weight:600; }
+    .under { background:rgba(38,166,154,.15); color:var(--green); }
+    .over { background:rgba(239,83,80,.15); color:var(--red); }
+    .neutral { background:rgba(255,152,0,.15); color:var(--orange); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:18px; }
+    .card { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:12px 14px; }
+    .card .k { color:var(--muted); font-size:11px; text-transform:uppercase; }
+    .card .v { font-size:18px; font-weight:600; margin-top:3px; }
+    table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    th, td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--border); }
+    th:first-child, td:first-child { text-align:left; }
+    th { color:var(--muted); font-weight:500; font-size:12px; text-transform:uppercase; }
+    tr:last-child td { border-bottom:none; }
+    .pos { color:var(--green); } .neg { color:var(--red); } .mut { color:var(--muted); }
+    h2 { font-size:13px; text-transform:uppercase; color:var(--muted); letter-spacing:.05em; margin:22px 0 10px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>StockVal — Valor Intrínseco</h1>
+  <div class="sub">DCF (2 fases) + rácios · dados oficiais SEC EDGAR (EUA) · complementa com a tua análise técnica</div>
+
+  <form method="get" action="/">
+    <div class="row">
+      <input type="text" name="ticker" placeholder="Ticker (ex.: AAPL, MSFT, GOOGL)" value="{{ ticker }}" autofocus>
+      <button type="submit">Avaliar</button>
+    </div>
+    <details {% if result or error %}open{% endif %}>
+      <summary>Pressupostos (defaults sensatos — ajusta se quiseres)</summary>
+      <div class="assum">
+        <label>Anos de projeção<input type="number" name="years" value="{{ form.years }}" min="1" max="20"></label>
+        <label>Crescimento FCF %<input type="number" step="0.1" name="growth" value="{{ form.growth }}"></label>
+        <label>Cresc. terminal %<input type="number" step="0.1" name="terminal_growth" value="{{ form.terminal_growth }}"></label>
+        <label>Taxa sem risco %<input type="number" step="0.1" name="risk_free" value="{{ form.risk_free }}"></label>
+        <label>Beta<input type="number" step="0.05" name="beta" value="{{ form.beta }}"></label>
+        <label>Prémio de risco %<input type="number" step="0.1" name="erp" value="{{ form.erp }}"></label>
+        <label>Imposto %<input type="number" step="0.1" name="tax" value="{{ form.tax }}"></label>
+        <label>Custo dívida %<input type="number" step="0.1" name="cost_of_debt" value="{{ form.cost_of_debt }}"></label>
+        <label>Margem seg. %<input type="number" step="1" name="mos" value="{{ form.mos }}"></label>
+      </div>
+    </details>
+  </form>
+
+  {% if error %}<div class="err">⚠️ {{ error }}</div>{% endif %}
+
+  {% if result %}
+  {% set iv = result.intrinsic_per_share %}
+  {% set v = result.verdict %}
+  <div class="hero">
+    <div><div class="k">{{ name }} · valor intrínseco / ação</div>
+      <div class="big {{ 'pos' if iv and iv>=result.price else 'neg' }}">{{ "%.2f"|format(iv) if iv else "—" }}</div></div>
+    <div><div class="k">preço atual</div><div class="big" style="font-size:22px">{{ "%.2f"|format(result.price) }}</div></div>
+    {% if result.upside is not none %}
+    <div><div class="k">potencial</div>
+      <div class="big {{ 'pos' if result.upside>=0 else 'neg' }}" style="font-size:22px">{{ "%+.1f"|format(result.upside*100) }}%</div></div>
+    {% endif %}
+    <div style="margin-left:auto">
+      <span class="badge {{ 'under' if 'subvalorizada' in v else ('over' if 'sobrevalorizada' in v else 'neutral') }}">{{ v }}</span>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="k">Margem de segurança</div>
+      <div class="v {{ 'pos' if result.margin_of_safety and result.margin_of_safety>=0 else 'neg' }}">{{ "%+.1f"|format(result.margin_of_safety*100) if result.margin_of_safety is not none else "—" }}%</div></div>
+    <div class="card"><div class="k">WACC</div><div class="v">{{ "%.2f"|format(result.wacc*100) }}%</div></div>
+    <div class="card"><div class="k">Custo cap. próprio</div><div class="v">{{ "%.2f"|format(result.cost_of_equity*100) }}%</div></div>
+    <div class="card"><div class="k">Crescimento usado</div><div class="v">{{ "%.1f"|format(result.growth_used*100) }}%
+      <span class="mut" style="font-size:11px">({{ result.growth_source }})</span></div></div>
+    <div class="card"><div class="k">Market cap</div><div class="v">{{ "%.0f"|format(result.market_cap/1e6) }}M</div></div>
+    <div class="card"><div class="k">Dívida líquida</div><div class="v">{{ "%.0f"|format(result.net_debt/1e6) }}M</div></div>
+    <div class="card"><div class="k">Enterprise value</div><div class="v">{{ "%.0f"|format(result.enterprise_value/1e6) if result.enterprise_value else "—" }}M</div></div>
+    <div class="card"><div class="k">Equity value</div><div class="v">{{ "%.0f"|format(result.equity_value/1e6) if result.equity_value else "—" }}M</div></div>
+  </div>
+
+  <h2>Rácios fundamentais</h2>
+  {% set r = result.ratios %}
+  <table>
+    <tr><th>Métrica</th><th>Valor</th><th>Nota</th></tr>
+    <tr><td>P/E</td><td>{{ "%.2f"|format(r.pe) if r.pe else "—" }}</td><td class="mut">Preço / EPS</td></tr>
+    <tr><td>P/B</td><td>{{ "%.2f"|format(r.pb) if r.pb else "—" }}</td><td class="mut">Preço / Valor contabilístico</td></tr>
+    <tr><td>PEG</td><td>{{ "%.2f"|format(r.peg) if r.peg else "—" }}</td><td class="mut">≈1 = justo · &gt;&gt;1 = caro</td></tr>
+    <tr><td>ROE</td><td>{{ "%.1f"|format(r.roe*100) if r.roe is not none else "—" }}%</td><td class="mut">Lucro / Património</td></tr>
+    <tr><td>D/E</td><td>{{ "%.2f"|format(r.de) if r.de is not none else "—" }}</td><td class="mut">Dívida líquida / Património</td></tr>
+    <tr><td>EPS</td><td>{{ "%.2f"|format(r.eps) if r.eps else "—" }}</td><td class="mut">Lucro por ação</td></tr>
+  </table>
+
+  <div class="sub" style="margin-top:16px;font-size:12px">
+    ⚠️ Estimativa automática a partir dos fundamentais. O valor intrínseco depende muito dos pressupostos
+    (crescimento, WACC) — usa isto como base e confirma com o teu julgamento e a análise técnica.
+  </div>
+  {% endif %}
+
+  {% if not result and not error %}
+  <div class="sub">Escreve um ticker americano e carrega em <b>Avaliar</b>. Ex.: AAPL, MSFT, KO, JNJ.</div>
+  {% endif %}
+</div>
+</body>
+</html>
