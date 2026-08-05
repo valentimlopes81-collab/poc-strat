@@ -27,7 +27,9 @@ def ticker_to_cik(ticker: str) -> int | None:
     t = ticker.upper()
     if not _cik_cache:
         with _client() as c:
-            data = c.get(_TICKERS_URL).json()
+            r = c.get(_TICKERS_URL)
+            r.raise_for_status()
+            data = r.json()
         for row in data.values():
             _cik_cache[row["ticker"].upper()] = int(row["cik_str"])
     return _cik_cache.get(t)
@@ -65,14 +67,20 @@ def _latest(m: dict[int, float]) -> float | None:
 
 def fetch(ticker: str) -> dict:
     """Puxa e organiza os fundamentais de que o valuation precisa."""
-    cik = ticker_to_cik(ticker)
+    try:
+        cik = ticker_to_cik(ticker)
+    except Exception as e:
+        return {"error": f"falha a contactar a SEC (tenta novamente daqui a pouco). [{e}]"}
     if cik is None:
         return {"error": f"ticker '{ticker}' não encontrado na SEC (só EUA)."}
-    with _client() as c:
-        r = c.get(_FACTS_URL.format(cik=cik))
-        if r.status_code != 200:
-            return {"error": f"SEC devolveu {r.status_code} para {ticker}."}
-        facts = r.json()
+    try:
+        with _client() as c:
+            r = c.get(_FACTS_URL.format(cik=cik))
+            if r.status_code != 200:
+                return {"error": f"SEC devolveu {r.status_code} para {ticker}."}
+            facts = r.json()
+    except Exception as e:
+        return {"error": f"falha a obter dados da SEC para {ticker} (tenta novamente). [{e}]"}
 
     name = facts.get("entityName", ticker.upper())
     cfo_m = _annual_map(facts, ["NetCashProvidedByUsedInOperatingActivities",
