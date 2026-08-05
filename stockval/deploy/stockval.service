@@ -8,7 +8,7 @@ Type=simple
 WorkingDirectory=/opt/poc-strat/stockval
 # Reutiliza o venv do poc-strat (já tem fastapi/uvicorn/jinja2/httpx).
 Environment=SEC_UA=stockval valentimlopes21@gmail.com
-ExecStart=/opt/poc-strat/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001
+ExecStart=/opt/poc-strat/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --app-dir /opt/poc-strat/stockval
 Restart=always
 RestartSec=5
 
