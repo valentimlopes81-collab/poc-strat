@@ -1,0 +1,16 @@
+[Unit]
+Description=StockVal - site de valor intrínseco de ações
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/poc-strat/stockval
+# Reutiliza o venv do poc-strat (já tem fastapi/uvicorn/jinja2/httpx).
+Environment=SEC_UA=stockval valentimlopes21@gmail.com
+ExecStart=/opt/poc-strat/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
