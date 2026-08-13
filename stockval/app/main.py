@@ -19,8 +19,13 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
 # --- Watchlist do screener (persistida em ficheiro, com seed por omissão) ---
 _WL_FILE = os.getenv("STOCKVAL_WATCHLIST", str(Path(__file__).parent.parent / "watchlist.txt"))
-_DEFAULT_WL = ("AAPL, TSLA, NVDA, MSFT, META, GOOGL, AMZN, AMD, PLTR, MSTR, NKE, LMT, CROX, "
-               "XPEV, JPM, INTC, PFE, NFLX, ORCL, SOFI, HIMS, UNH, RGTI, TSM, CVX, SPCX")
+_DEFAULT_WL = (
+    # originais do utilizador
+    "AAPL, TSLA, NVDA, MSFT, META, GOOGL, AMZN, AMD, PLTR, MSTR, NKE, LMT, CROX, "
+    "XPEV, JPM, INTC, PFE, NFLX, ORCL, SOFI, HIMS, UNH, RGTI, TSM, CVX, SPCX, "
+    # valor/qualidade adicionadas (US, FCF positivo, cross-setor)
+    "KO, PEP, PG, MDLZ, MO, JNJ, MRK, ABBV, BMY, GILD, MDT, CVS, MCD, SBUX, HD, TGT, DIS, "
+    "CAT, DE, UPS, RTX, MMM, CSCO, QCOM, IBM, MU, XOM, COP, OXY, V, PYPL, WMT")
 
 
 def _load_watchlist() -> str:
