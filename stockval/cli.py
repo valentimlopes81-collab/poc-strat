@@ -20,7 +20,8 @@ def main() -> None:
         return
     price = get_price(ticker)
     print(f"\n{data['name']} ({ticker})   preço = {price}")
-    keys = ("fcf", "net_income", "equity", "total_debt", "cash", "shares", "eff_tax", "cost_of_debt")
+    keys = ("fcf", "net_income", "equity", "revenue", "ebitda", "shares", "eps",
+            "total_debt", "cash", "eff_tax", "cost_of_debt")
     for k in keys:
         print(f"  {k:>13}: {data.get(k)}")
     if data.get("missing"):
@@ -36,6 +37,7 @@ def main() -> None:
         fcf_history=data["fcf_history"],
         revenue=data.get("revenue", 0.0), ebitda=data.get("ebitda"),
         revenue_history=data.get("revenue_history"),
+        eps_reported=data.get("eps"),
     )
     r = value_company(f, Assumptions())
     iv = r["intrinsic_per_share"]
