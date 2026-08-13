@@ -11,8 +11,11 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
+from statistics import median
+
 from .analyze import analyze
 from .config import Assumptions
+from .sectors import sector_of
 
 app = FastAPI(title="StockVal — Valor Intrínseco")
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
@@ -65,10 +68,10 @@ def _row_for(ticker: str) -> dict:
         return hit[1]
     result, error, name = analyze(ticker, Assumptions())
     if error:
-        row = {"ticker": ticker, "name": name or ticker, "error": error}
+        row = {"ticker": ticker, "name": name or ticker, "error": error, "sector": sector_of(ticker)}
     else:
         row = {
-            "ticker": ticker, "name": name, "error": None,
+            "ticker": ticker, "name": name, "error": None, "sector": sector_of(ticker),
             "score": result["score"], "opportunity": result["opportunity"],
             "emoji": result["opportunity_emoji"], "mos": result["margin_of_safety"],
             "upside": result["upside"], "conflict": result["conflict"],
@@ -140,6 +143,19 @@ async def screener(request: Request, tickers: str = "") -> HTMLResponse:
     if lst:
         with ThreadPoolExecutor(max_workers=6) as ex:
             rows = list(ex.map(_row_for, lst))
+
+    # Comparáveis por setor: mediana de P/E por setor (>=2 pares) e desvio de cada ação.
+    by_sec: dict[str, list[float]] = {}
+    for r in rows:
+        if not r.get("error") and r.get("pe") and r["pe"] > 0:
+            by_sec.setdefault(r["sector"], []).append(r["pe"])
+    sec_med = {s: median(v) for s, v in by_sec.items() if len(v) >= 2}
+    for r in rows:
+        r["pe_vs_sector"] = None
+        if not r.get("error") and r.get("pe") and r["pe"] > 0 and r["sector"] in sec_med:
+            m = sec_med[r["sector"]]
+            r["pe_vs_sector"] = (r["pe"] - m) / m if m else None
+
     # ordena: válidas por score desc; erros no fim.
     rows.sort(key=lambda r: (r.get("error") is not None, -(r.get("score") if r.get("score") is not None else -1)))
 

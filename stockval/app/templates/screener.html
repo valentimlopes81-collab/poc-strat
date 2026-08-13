@@ -22,7 +22,8 @@
     button { margin-top:10px; background:var(--orange); color:#111; border:0; border-radius:8px; padding:10px 20px; font-weight:600; cursor:pointer; font-size:15px; }
     table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
     th, td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--border); white-space:nowrap; }
-    th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3) { text-align:left; }
+    th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3),
+    th:nth-child(4), td:nth-child(4) { text-align:left; }
     th { color:var(--muted); font-weight:500; font-size:12px; text-transform:uppercase; }
     tr:last-child td { border-bottom:none; }
     tbody tr:hover { background:rgba(255,255,255,.03); }
@@ -49,24 +50,27 @@
   <div class="scroll">
   <table>
     <thead><tr>
-      <th>#</th><th>Ticker</th><th>Veredicto</th><th>Score</th><th>Potencial</th>
+      <th>#</th><th>Ticker</th><th>Setor</th><th>Veredicto</th><th>Score</th><th>Potencial</th>
       <th title="Crescimento de FCF que o preço atual já paga (reverse-DCF)">Cresc. implícito</th>
-      <th>P/E</th><th>EV/EBITDA</th><th>ROE</th><th></th>
+      <th>P/E</th><th title="P/E vs mediana do setor na tua watchlist">vs setor</th>
+      <th>EV/EBITDA</th><th>ROE</th><th></th>
     </tr></thead>
     <tbody>
       {% for r in rows %}
       {% if r.error %}
-      <tr><td class="mut">—</td><td><b>{{ r.ticker }}</b></td>
-        <td colspan="7" class="mut">⚠️ {{ r.error }}</td><td></td></tr>
+      <tr><td class="mut">—</td><td><b>{{ r.ticker }}</b></td><td class="mut">{{ r.sector }}</td>
+        <td colspan="8" class="mut">⚠️ {{ r.error }}</td><td></td></tr>
       {% else %}
       <tr>
         <td class="mut">{{ loop.index }}</td>
         <td><b>{{ r.ticker }}</b></td>
+        <td class="mut">{{ r.sector }}</td>
         <td class="sc-{{ r.opportunity }}">{{ r.emoji }} {{ r.opportunity }}{% if r.conflict %} <span title="DCF barato mas múltiplos caros">⚠️</span>{% endif %}</td>
         <td class="sc-{{ r.opportunity }}">{{ r.score }}</td>
         <td class="{{ 'pos' if r.upside and r.upside>=0 else 'neg' }}">{{ "%+.0f"|format(r.upside*100) if r.upside is not none else "—" }}%</td>
         <td class="{{ 'neg' if r.implied_growth is not none and r.implied_growth>=0.15 else 'pos' }}">{{ "%.0f"|format(r.implied_growth*100) if r.implied_growth is not none else "—" }}%</td>
         <td>{{ "%.1f"|format(r.pe) if r.pe else "—" }}</td>
+        <td class="{{ 'pos' if r.pe_vs_sector is not none and r.pe_vs_sector<0 else ('neg' if r.pe_vs_sector is not none and r.pe_vs_sector>0 else 'mut') }}">{{ "%+.0f"|format(r.pe_vs_sector*100) if r.pe_vs_sector is not none else "—" }}%</td>
         <td>{{ "%.1f"|format(r.ev_ebitda) if r.ev_ebitda else "—" }}</td>
         <td>{{ "%.0f"|format(r.roe*100) if r.roe is not none else "—" }}%</td>
         <td><a class="detail" href="./?ticker={{ r.ticker }}">ver →</a></td>
@@ -74,7 +78,7 @@
       {% endif %}
       {% endfor %}
       {% if not rows %}
-      <tr><td colspan="10" class="mut" style="text-align:center;padding:26px">Mete tickers na caixa e carrega em Avaliar.</td></tr>
+      <tr><td colspan="12" class="mut" style="text-align:center;padding:26px">Mete tickers na caixa e carrega em Avaliar.</td></tr>
       {% endif %}
     </tbody>
   </table>
@@ -83,6 +87,7 @@
   <div class="sub" style="font-size:12px;margin-top:14px">
     A primeira avaliação pode demorar uns segundos (vai buscar tudo à SEC). Fica em cache ~6h.
     "—" numa métrica = dado em falta na SEC (comum em empresas estrangeiras/20-F).
+    <b>vs setor</b> = P/E face à mediana do setor na tua watchlist (verde = mais barata que os pares; precisa de ≥2 pares).
   </div>
 </div>
 </body>
