@@ -66,7 +66,7 @@ def _row_for(ticker: str) -> dict:
             "ticker": ticker, "name": name, "error": None,
             "score": result["score"], "opportunity": result["opportunity"],
             "emoji": result["opportunity_emoji"], "mos": result["margin_of_safety"],
-            "conflict": result["conflict"],
+            "upside": result["upside"], "conflict": result["conflict"],
             "pe": result["ratios"]["pe"], "ev_ebitda": result["ratios"]["ev_ebitda"],
             "roe": result["ratios"]["roe"],
         }

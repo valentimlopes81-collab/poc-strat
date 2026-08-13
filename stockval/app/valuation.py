@@ -88,11 +88,14 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
     re = cost_of_equity(a.risk_free, a.beta, a.erp)
     w = wacc(mktcap, f.total_debt, re, rd, tax)
 
-    # Base de FCF normalizada (média dos últimos 3 anos) — não depender de 1 ano só.
+    # Base de FCF normalizada: média dos anos com FCF POSITIVO nos últimos 4
+    # (evita depender de 1 ano só e evita que anos de capex pesado/FCF negativo
+    # afundem a base). Se não houver anos positivos, fica o FCF mais recente.
     base_fcf = f.fcf
-    if f.fcf_history and len(f.fcf_history) >= 2:
-        tail = f.fcf_history[-3:]
-        base_fcf = sum(tail) / len(tail)
+    if f.fcf_history:
+        pos = [x for x in f.fcf_history[-4:] if x > 0]
+        if pos:
+            base_fcf = sum(pos) / len(pos)
 
     ev = two_stage_dcf(base_fcf, growth, a.years, a.terminal_growth, w) if base_fcf > 0 else None
     intrinsic_ps = None

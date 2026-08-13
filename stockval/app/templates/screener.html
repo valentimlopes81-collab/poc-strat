@@ -49,7 +49,7 @@
   <div class="scroll">
   <table>
     <thead><tr>
-      <th>#</th><th>Ticker</th><th>Veredicto</th><th>Score</th><th>Margem seg.</th>
+      <th>#</th><th>Ticker</th><th>Veredicto</th><th>Score</th><th>Potencial</th>
       <th>P/E</th><th>EV/EBITDA</th><th>ROE</th><th></th>
     </tr></thead>
     <tbody>
@@ -63,7 +63,7 @@
         <td><b>{{ r.ticker }}</b></td>
         <td class="sc-{{ r.opportunity }}">{{ r.emoji }} {{ r.opportunity }}{% if r.conflict %} <span title="DCF barato mas múltiplos caros">⚠️</span>{% endif %}</td>
         <td class="sc-{{ r.opportunity }}">{{ r.score }}</td>
-        <td class="{{ 'pos' if r.mos and r.mos>=0 else 'neg' }}">{{ "%+.0f"|format(r.mos*100) if r.mos is not none else "—" }}%</td>
+        <td class="{{ 'pos' if r.upside and r.upside>=0 else 'neg' }}">{{ "%+.0f"|format(r.upside*100) if r.upside is not none else "—" }}%</td>
         <td>{{ "%.1f"|format(r.pe) if r.pe else "—" }}</td>
         <td>{{ "%.1f"|format(r.ev_ebitda) if r.ev_ebitda else "—" }}</td>
         <td>{{ "%.0f"|format(r.roe*100) if r.roe is not none else "—" }}%</td>
