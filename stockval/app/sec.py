@@ -36,8 +36,12 @@ def ticker_to_cik(ticker: str) -> int | None:
 
 
 def _annual_map(facts: dict, tags: list[str], unit: str, is_flow: bool) -> dict[int, float]:
-    """Devolve {ano_fiscal: valor} usando reports anuais (10-K)."""
-    out: dict[int, tuple[str, float]] = {}
+    """Devolve {ano_fiscal: valor} usando reports anuais (10-K).
+
+    Prefere valores "framed" (não-dimensionais) — evita apanhar linhas por
+    classe de ações / segmentos, que davam nº de ações e rácios errados.
+    """
+    out: dict[int, tuple[str, float, bool]] = {}  # fy -> (end, val, framed)
     for ns in ("us-gaap", "dei"):
         for tag in tags:
             node = facts.get("facts", {}).get(ns, {}).get(tag)
@@ -54,10 +58,13 @@ def _annual_map(facts: dict, tags: list[str], unit: str, is_flow: bool) -> dict[
                     fy, end, val = e.get("fy"), e.get("end"), e.get("val")
                     if fy is None or val is None or end is None:
                         continue
-                    if fy not in out or end > out[fy][0]:
-                        out[fy] = (end, float(val))
+                    framed = "frame" in e
+                    cur = out.get(fy)
+                    # prefere entradas com 'frame'; entre iguais, a de data mais recente.
+                    if cur is None or (framed and not cur[2]) or (framed == cur[2] and end > cur[0]):
+                        out[fy] = (end, float(val), framed)
             if out:
-                return {fy: v for fy, (_, v) in out.items()}
+                return {fy: v for fy, (_, v, _) in out.items()}
     return {}
 
 
@@ -97,9 +104,11 @@ def fetch(ticker: str) -> dict:
     pretax_m = _annual_map(facts, ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
                                    "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments"], "USD", True)
     int_m = _annual_map(facts, ["InterestExpense"], "USD", True)
-    sh_m = _annual_map(facts, ["EntityCommonStockSharesOutstanding", "CommonStockSharesOutstanding",
-                               "WeightedAverageNumberOfDilutedSharesOutstanding",
-                               "WeightedAverageNumberOfSharesOutstandingBasic"], "shares", False)
+    # Nº de ações: preferir a média ponderada diluída (escalar total, consistente
+    # com o EPS) — evita as contagens por classe que davam valores errados.
+    sh_m = _annual_map(facts, ["WeightedAverageNumberOfDilutedSharesOutstanding",
+                               "WeightedAverageNumberOfSharesOutstandingBasic",
+                               "EntityCommonStockSharesOutstanding"], "shares", False)
     rev_m = _annual_map(facts, ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax",
                                 "SalesRevenueNet"], "USD", True)
     opinc_m = _annual_map(facts, ["OperatingIncomeLoss"], "USD", True)

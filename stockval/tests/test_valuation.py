@@ -94,6 +94,27 @@ def test_negative_fcf_gives_no_intrinsic():
     assert r["opportunity"] != "forte"
 
 
+def test_absurd_intrinsic_is_flagged_not_forte():
+    # nº de ações minúsculo (erro de dados) -> valor intrínseco disparatado -> bloqueado.
+    a = Assumptions()
+    f = Fundamentals(price=100, shares=0.01, fcf=100, net_income=50, equity=500,
+                     total_debt=0, cash=0, revenue=200, ebitda=50, fcf_history=[90, 95, 100])
+    r = value_company(f, a)
+    assert r["intrinsic_per_share"] is None
+    assert r["dcf_note"] is not None and "improvável" in r["dcf_note"]
+    assert r["opportunity"] != "forte"
+
+
+def test_negative_equity_ratios_are_none():
+    a = Assumptions()
+    f = Fundamentals(price=100, shares=10, fcf=50, net_income=80, equity=-100,
+                     total_debt=50, cash=20, revenue=200, ebitda=60, fcf_history=[40, 45, 50])
+    r = value_company(f, a)
+    assert r["ratios"]["roe"] is None   # equity negativo -> não mostra ROE disparatado
+    assert r["ratios"]["pb"] is None
+    assert r["ratios"]["de"] is None
+
+
 def test_growth_from_history_is_capped():
     a = Assumptions()
     # histórico com CAGR ~30% deve ser limitado ao growth_cap (15%)

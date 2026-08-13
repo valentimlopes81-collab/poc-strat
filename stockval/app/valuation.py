@@ -106,10 +106,13 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
     elif ev is not None and f.shares > 0:
         equity_value = ev - net_debt
         _ips = equity_value / f.shares
-        if _ips > 0:
-            intrinsic_ps = _ips
-        else:
+        if _ips <= 0:
             dcf_note = "Valor para o acionista ≤ 0 (a dívida supera o valor da empresa)."
+        elif f.price > 0 and _ips > 20 * f.price:
+            # >20x o preço = quase de certeza erro de dados (nº de ações errado).
+            dcf_note = "Valor intrínseco improvável — provável erro de dados (nº de ações). Ignorar."
+        else:
+            intrinsic_ps = _ips
 
     upside = None
     mos = None  # margem de segurança implícita (quão abaixo está o preço)
@@ -127,10 +130,12 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
     eps = _safe_div(f.net_income, f.shares)
     bvps = _safe_div(f.equity, f.shares)
     pe = _safe_div(f.price, eps) if eps else None
-    pb = _safe_div(f.price, bvps) if bvps else None
+    # Rácios baseados no património só fazem sentido com equity positivo
+    # (empresas com recompras agressivas têm equity negativo — ex.: MCD, MO).
+    pb = _safe_div(f.price, bvps) if (bvps and f.equity > 0) else None
     peg = _safe_div(pe, growth * 100.0) if (pe and growth > 0) else None
-    roe = _safe_div(f.net_income, f.equity)
-    de = _safe_div(net_debt, f.equity)
+    roe = _safe_div(f.net_income, f.equity) if f.equity > 0 else None
+    de = _safe_div(net_debt, f.equity) if f.equity > 0 else None
     ps = _safe_div(mktcap, f.revenue) if f.revenue else None
     market_ev = mktcap + net_debt
     ev_ebitda = _safe_div(market_ev, f.ebitda) if (f.ebitda and f.ebitda > 0) else None
