@@ -27,5 +27,6 @@ def analyze(ticker: str, a: Assumptions):
         fcf_history=data["fcf_history"],
         revenue=data.get("revenue", 0.0), ebitda=data.get("ebitda"),
         revenue_history=data.get("revenue_history"),
+        eps_reported=data.get("eps"),
     )
     return value_company(f, a), None, name

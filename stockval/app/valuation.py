@@ -27,6 +27,7 @@ class Fundamentals:
     revenue: float = 0.0              # receita (para P/S e margens)
     ebitda: float | None = None       # EBITDA (para EV/EBITDA)
     revenue_history: list[float] | None = None  # receita por ano (crescimento)
+    eps_reported: float | None = None  # EPS diluído reportado (P/E direto e fiável)
 
 
 def cost_of_equity(rf: float, beta: float, erp: float) -> float:
@@ -127,7 +128,7 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         else:
             verdict = "sobrevalorizada"
 
-    eps = _safe_div(f.net_income, f.shares)
+    eps = f.eps_reported if f.eps_reported is not None else _safe_div(f.net_income, f.shares)
     bvps = _safe_div(f.equity, f.shares)
     pe = _safe_div(f.price, eps) if eps else None
     # Rácios baseados no património só fazem sentido com equity positivo

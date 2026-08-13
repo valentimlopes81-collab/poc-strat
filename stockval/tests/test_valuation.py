@@ -115,6 +115,16 @@ def test_negative_equity_ratios_are_none():
     assert r["ratios"]["de"] is None
 
 
+def test_pe_uses_reported_eps():
+    # P/E deve usar o EPS reportado (fiável), não net_income/shares.
+    a = Assumptions()
+    f = Fundamentals(price=100, shares=10, fcf=50, net_income=999, equity=200,
+                     total_debt=0, cash=0, revenue=300, ebitda=60,
+                     fcf_history=[40, 45, 50], eps_reported=5.0)
+    r = value_company(f, a)
+    assert abs(r["ratios"]["pe"] - 20.0) < 1e-9   # 100/5
+
+
 def test_growth_from_history_is_capped():
     a = Assumptions()
     # histórico com CAGR ~30% deve ser limitado ao growth_cap (15%)

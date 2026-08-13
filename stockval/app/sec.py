@@ -134,17 +134,28 @@ def fetch(ticker: str) -> dict:
     interest = _latest(int_m)
     cost_of_debt = (interest / total_debt) if (interest is not None and total_debt) else None
 
+    # EPS diluído reportado pela SEC (escalar limpo). Serve para o P/E direto e,
+    # sobretudo, para DERIVAR o nº de ações (= lucro / EPS) — imune a multi-classe.
+    epsd_m = _annual_map(facts, ["EarningsPerShareDiluted"], "USD/shares", True) or \
+        _annual_map(facts, ["EarningsPerShareDiluted", "EarningsPerShareBasic"], None, True)
+    eps = _latest(epsd_m)
+    net_income = _latest(ni_m)
+    shares = _latest(sh_m)
+    if eps and net_income is not None and eps != 0:
+        implied = net_income / eps
+        if implied > 0:
+            shares = implied  # base diluída correta, sem o problema das classes
+
     missing = [k for k, v in {
-        "FCF": fcf, "net_income": _latest(ni_m), "equity": _latest(eq_m),
-        "shares": _latest(sh_m),
+        "FCF": fcf, "net_income": net_income, "equity": _latest(eq_m), "shares": shares,
     }.items() if v in (None, 0)]
 
     return {
         "name": name, "cik": cik,
         "fcf": fcf, "cfo": cfo, "capex": capex,
-        "net_income": _latest(ni_m), "equity": _latest(eq_m),
+        "net_income": net_income, "equity": _latest(eq_m),
         "total_debt": total_debt, "cash": _latest(cash_m) or 0.0,
-        "shares": _latest(sh_m),
+        "shares": shares, "eps": eps,
         "eff_tax": eff_tax, "cost_of_debt": cost_of_debt,
         "fcf_history": fcf_history,
         "revenue": _latest(rev_m) or 0.0, "ebitda": ebitda,
