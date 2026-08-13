@@ -60,6 +60,8 @@ async def index(
                     total_debt=data["total_debt"], cash=data["cash"],
                     eff_tax=data["eff_tax"], cost_of_debt=data["cost_of_debt"],
                     fcf_history=data["fcf_history"],
+                    revenue=data.get("revenue", 0.0), ebitda=data.get("ebitda"),
+                    revenue_history=data.get("revenue_history"),
                 )
                 result = value_company(f, a)
 

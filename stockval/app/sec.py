@@ -98,10 +98,19 @@ def fetch(ticker: str) -> dict:
                                    "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments"], "USD", True)
     int_m = _annual_map(facts, ["InterestExpense"], "USD", True)
     sh_m = _annual_map(facts, ["EntityCommonStockSharesOutstanding", "CommonStockSharesOutstanding"], "shares", False)
+    rev_m = _annual_map(facts, ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax",
+                                "SalesRevenueNet"], "USD", True)
+    opinc_m = _annual_map(facts, ["OperatingIncomeLoss"], "USD", True)
+    da_m = _annual_map(facts, ["DepreciationDepletionAndAmortization", "DepreciationAndAmortization",
+                               "DepreciationAmortizationAndAccretionNet"], "USD", True)
 
     # FCF por ano (anos comuns entre CFO e CAPEX) -> histórico p/ CAGR.
     common = sorted(set(cfo_m) & set(capex_m))
     fcf_history = [cfo_m[fy] - capex_m[fy] for fy in common]
+    revenue_history = [rev_m[fy] for fy in sorted(rev_m)]
+
+    opinc, da = _latest(opinc_m), _latest(da_m)
+    ebitda = (opinc + (da or 0.0)) if opinc is not None else None
 
     cfo, capex = _latest(cfo_m), _latest(capex_m)
     fcf = (cfo - capex) if (cfo is not None and capex is not None) else None
@@ -127,5 +136,7 @@ def fetch(ticker: str) -> dict:
         "shares": _latest(sh_m),
         "eff_tax": eff_tax, "cost_of_debt": cost_of_debt,
         "fcf_history": fcf_history,
+        "revenue": _latest(rev_m) or 0.0, "ebitda": ebitda,
+        "revenue_history": revenue_history,
         "missing": missing,
     }

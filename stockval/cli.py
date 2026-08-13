@@ -34,15 +34,21 @@ def main() -> None:
         total_debt=data["total_debt"], cash=data["cash"],
         eff_tax=data["eff_tax"], cost_of_debt=data["cost_of_debt"],
         fcf_history=data["fcf_history"],
+        revenue=data.get("revenue", 0.0), ebitda=data.get("ebitda"),
+        revenue_history=data.get("revenue_history"),
     )
     r = value_company(f, Assumptions())
     iv = r["intrinsic_per_share"]
-    print(f"\n  VALOR INTRÍNSECO / ação: {iv:.2f}" if iv else "\n  valor intrínseco: n/a")
+    print(f"\n  {r['opportunity_emoji']} OPORTUNIDADE: {r['opportunity'].upper()}   score {r['score']}/100 "
+          f"(valor {r['value_score']} + qualidade {r['quality_score']} + coerência {r['coherence_score']})")
+    print(f"  VALOR INTRÍNSECO / ação: {iv:.2f}" if iv else "  valor intrínseco: n/a")
     if iv:
         print(f"  preço: {r['price']:.2f}   upside: {r['upside']*100:+.1f}%   "
-              f"margem seg.: {r['margin_of_safety']*100:+.1f}%   -> {r['verdict']}")
+              f"margem seg.: {r['margin_of_safety']*100:+.1f}%")
     print(f"  WACC: {r['wacc']*100:.2f}%   crescimento: {r['growth_used']*100:.1f}% ({r['growth_source']})")
     print("  rácios:", {k: (round(v, 3) if isinstance(v, float) else v) for k, v in r["ratios"].items()})
+    print("  qualidade:", [f"{'✓' if ok else '✗'} {lbl}" for lbl, ok, _ in r["quality"]])
+    print("  coerência:", [f"{'✓' if ok else '✗'} {lbl}" for lbl, ok, _ in r["coherence"]])
 
 
 if __name__ == "__main__":

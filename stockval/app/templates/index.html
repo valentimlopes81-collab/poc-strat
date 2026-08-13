@@ -74,31 +74,51 @@
 
   {% if result %}
   {% set iv = result.intrinsic_per_share %}
-  {% set v = result.verdict %}
+  {% set opp = result.opportunity %}
   <div class="hero">
-    <div><div class="k">{{ name }} · valor intrínseco / ação</div>
-      <div class="big {{ 'pos' if iv and iv>=result.price else 'neg' }}">{{ "%.2f"|format(iv) if iv else "—" }}</div></div>
-    <div><div class="k">preço atual</div><div class="big" style="font-size:22px">{{ "%.2f"|format(result.price) }}</div></div>
-    {% if result.upside is not none %}
-    <div><div class="k">potencial</div>
-      <div class="big {{ 'pos' if result.upside>=0 else 'neg' }}" style="font-size:22px">{{ "%+.1f"|format(result.upside*100) }}%</div></div>
-    {% endif %}
-    <div style="margin-left:auto">
-      <span class="badge {{ 'under' if 'subvalorizada' in v else ('over' if 'sobrevalorizada' in v else 'neutral') }}">{{ v }}</span>
+    <div>
+      <div class="k">{{ name }} · oportunidade</div>
+      <div class="big {{ 'pos' if opp=='forte' else ('neg' if opp=='evitar' else '') }}">{{ result.opportunity_emoji }} {{ opp|upper }}</div>
+    </div>
+    <div><div class="k">score</div>
+      <div class="big" style="font-size:26px">{{ result.score }}<span class="mut" style="font-size:14px">/100</span></div></div>
+    <div style="flex:1;min-width:230px">
+      <div class="k">valor {{ result.value_score }}/50 · qualidade {{ result.quality_score }}/30 · coerência {{ result.coherence_score }}/20</div>
+      <div style="height:12px;background:#0f0f10;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-top:8px;display:flex">
+        <span style="width:{{ result.value_score }}%;background:#26a69a" title="valor"></span>
+        <span style="width:{{ result.quality_score }}%;background:#5c9ded" title="qualidade"></span>
+        <span style="width:{{ result.coherence_score }}%;background:#9575cd" title="coerência"></span>
+      </div>
     </div>
   </div>
 
   <div class="cards">
+    <div class="card"><div class="k">Valor intrínseco / ação</div>
+      <div class="v {{ 'pos' if iv and iv>=result.price else 'neg' }}">{{ "%.2f"|format(iv) if iv else "—" }}</div></div>
+    <div class="card"><div class="k">Preço atual</div><div class="v">{{ "%.2f"|format(result.price) }}</div></div>
+    <div class="card"><div class="k">Potencial</div>
+      <div class="v {{ 'pos' if result.upside and result.upside>=0 else 'neg' }}">{{ "%+.1f"|format(result.upside*100) if result.upside is not none else "—" }}%</div></div>
     <div class="card"><div class="k">Margem de segurança</div>
       <div class="v {{ 'pos' if result.margin_of_safety and result.margin_of_safety>=0 else 'neg' }}">{{ "%+.1f"|format(result.margin_of_safety*100) if result.margin_of_safety is not none else "—" }}%</div></div>
-    <div class="card"><div class="k">WACC</div><div class="v">{{ "%.2f"|format(result.wacc*100) }}%</div></div>
-    <div class="card"><div class="k">Custo cap. próprio</div><div class="v">{{ "%.2f"|format(result.cost_of_equity*100) }}%</div></div>
-    <div class="card"><div class="k">Crescimento usado</div><div class="v">{{ "%.1f"|format(result.growth_used*100) }}%
-      <span class="mut" style="font-size:11px">({{ result.growth_source }})</span></div></div>
-    <div class="card"><div class="k">Market cap</div><div class="v">{{ "%.0f"|format(result.market_cap/1e6) }}M</div></div>
-    <div class="card"><div class="k">Dívida líquida</div><div class="v">{{ "%.0f"|format(result.net_debt/1e6) }}M</div></div>
-    <div class="card"><div class="k">Enterprise value</div><div class="v">{{ "%.0f"|format(result.enterprise_value/1e6) if result.enterprise_value else "—" }}M</div></div>
-    <div class="card"><div class="k">Equity value</div><div class="v">{{ "%.0f"|format(result.equity_value/1e6) if result.equity_value else "—" }}M</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <h2>Qualidade ({{ result.q_pass }}/{{ result.q_total }})</h2>
+      <table>
+        {% for lbl, ok, val in result.quality %}
+        <tr><td class="{{ 'pos' if ok else 'mut' }}">{{ '✓' if ok else '✗' }} {{ lbl }}</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div>
+      <h2>Coerência de preço ({{ result.c_pass }}/{{ result.c_total }})</h2>
+      <table>
+        {% for lbl, ok, val in result.coherence %}
+        <tr><td class="{{ 'pos' if ok else 'mut' }}">{{ '✓' if ok else '✗' }} {{ lbl }}</td></tr>
+        {% endfor %}
+      </table>
+    </div>
   </div>
 
   <h2>Rácios fundamentais</h2>
@@ -106,12 +126,29 @@
   <table>
     <tr><th>Métrica</th><th>Valor</th><th>Nota</th></tr>
     <tr><td>P/E</td><td>{{ "%.2f"|format(r.pe) if r.pe else "—" }}</td><td class="mut">Preço / EPS</td></tr>
-    <tr><td>P/B</td><td>{{ "%.2f"|format(r.pb) if r.pb else "—" }}</td><td class="mut">Preço / Valor contabilístico</td></tr>
     <tr><td>PEG</td><td>{{ "%.2f"|format(r.peg) if r.peg else "—" }}</td><td class="mut">≈1 = justo · &gt;&gt;1 = caro</td></tr>
+    <tr><td>P/S</td><td>{{ "%.2f"|format(r.ps) if r.ps else "—" }}</td><td class="mut">Preço / Vendas</td></tr>
+    <tr><td>EV/EBITDA</td><td>{{ "%.1f"|format(r.ev_ebitda) if r.ev_ebitda else "—" }}</td><td class="mut">Valor da empresa / EBITDA</td></tr>
+    <tr><td>P/B</td><td>{{ "%.2f"|format(r.pb) if r.pb else "—" }}</td><td class="mut">Preço / Valor contabilístico</td></tr>
     <tr><td>ROE</td><td>{{ "%.1f"|format(r.roe*100) if r.roe is not none else "—" }}%</td><td class="mut">Lucro / Património</td></tr>
+    <tr><td>Margem líquida</td><td>{{ "%.1f"|format(r.net_margin*100) if r.net_margin is not none else "—" }}%</td><td class="mut">Lucro / Receita</td></tr>
+    <tr><td>Cresc. receita</td><td>{{ "%+.1f"|format(r.rev_growth*100) if r.rev_growth is not none else "—" }}%</td><td class="mut">CAGR histórico</td></tr>
     <tr><td>D/E</td><td>{{ "%.2f"|format(r.de) if r.de is not none else "—" }}</td><td class="mut">Dívida líquida / Património</td></tr>
     <tr><td>EPS</td><td>{{ "%.2f"|format(r.eps) if r.eps else "—" }}</td><td class="mut">Lucro por ação</td></tr>
   </table>
+
+  <details style="margin-top:16px">
+    <summary class="mut" style="cursor:pointer;font-size:13px">Detalhes do DCF (WACC, crescimento, EV)</summary>
+    <div class="cards" style="margin-top:12px">
+      <div class="card"><div class="k">WACC</div><div class="v">{{ "%.2f"|format(result.wacc*100) }}%</div></div>
+      <div class="card"><div class="k">Custo cap. próprio</div><div class="v">{{ "%.2f"|format(result.cost_of_equity*100) }}%</div></div>
+      <div class="card"><div class="k">Crescimento usado</div><div class="v">{{ "%.1f"|format(result.growth_used*100) }}%
+        <span class="mut" style="font-size:11px">({{ result.growth_source }})</span></div></div>
+      <div class="card"><div class="k">Market cap</div><div class="v">{{ "%.0f"|format(result.market_cap/1e6) }}M</div></div>
+      <div class="card"><div class="k">Dívida líquida</div><div class="v">{{ "%.0f"|format(result.net_debt/1e6) }}M</div></div>
+      <div class="card"><div class="k">EV (DCF)</div><div class="v">{{ "%.0f"|format(result.enterprise_value/1e6) if result.enterprise_value else "—" }}M</div></div>
+    </div>
+  </details>
 
   <div class="sub" style="margin-top:16px;font-size:12px">
     ⚠️ Estimativa automática a partir dos fundamentais. O valor intrínseco depende muito dos pressupostos

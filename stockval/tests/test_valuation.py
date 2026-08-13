@@ -44,6 +44,31 @@ def test_value_company_end_to_end():
     assert r["verdict"] in ("subvalorizada (com margem)", "ligeiramente subvalorizada", "sobrevalorizada")
 
 
+def test_opportunity_forte_for_cheap_quality():
+    a = Assumptions()
+    f = Fundamentals(price=30, shares=10, fcf=120, net_income=100, equity=500,
+                     total_debt=100, cash=200, revenue=1000, ebitda=200,
+                     fcf_history=[100, 110, 120], revenue_history=[800, 900, 1000])
+    r = value_company(f, a)
+    assert r["opportunity"] == "forte"
+    assert r["score"] >= 65
+    assert r["q_pass"] >= 3
+    # múltiplos novos presentes
+    assert r["ratios"]["ps"] is not None
+    assert r["ratios"]["ev_ebitda"] is not None
+    assert r["ratios"]["net_margin"] is not None
+
+
+def test_opportunity_evitar_for_expensive_weak():
+    a = Assumptions()
+    f = Fundamentals(price=1000, shares=10, fcf=-10, net_income=-50, equity=100,
+                     total_debt=400, cash=10, revenue=50, ebitda=-5,
+                     fcf_history=[5, -2, -10], revenue_history=[60, 55, 50])
+    r = value_company(f, a)
+    assert r["opportunity"] == "evitar"
+    assert r["q_pass"] <= 1
+
+
 def test_growth_from_history_is_capped():
     a = Assumptions()
     # histórico com CAGR ~30% deve ser limitado ao growth_cap (15%)

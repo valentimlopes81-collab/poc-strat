@@ -24,6 +24,9 @@ class Fundamentals:
     eff_tax: float | None = None      # taxa de imposto efetiva (opcional)
     cost_of_debt: float | None = None  # juros / dívida (opcional)
     fcf_history: list[float] | None = None  # FCF por ano (mais antigo -> recente)
+    revenue: float = 0.0              # receita (para P/S e margens)
+    ebitda: float | None = None       # EBITDA (para EV/EBITDA)
+    revenue_history: list[float] | None = None  # receita por ano (crescimento)
 
 
 def cost_of_equity(rf: float, beta: float, erp: float) -> float:
@@ -112,6 +115,44 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
     peg = _safe_div(pe, growth * 100.0) if (pe and growth > 0) else None
     roe = _safe_div(f.net_income, f.equity)
     de = _safe_div(net_debt, f.equity)
+    ps = _safe_div(mktcap, f.revenue) if f.revenue else None
+    market_ev = mktcap + net_debt
+    ev_ebitda = _safe_div(market_ev, f.ebitda) if (f.ebitda and f.ebitda > 0) else None
+    net_margin = _safe_div(f.net_income, f.revenue) if f.revenue else None
+    rev_growth = cagr(f.revenue_history) if f.revenue_history else None
+
+    # --- Pilar QUALIDADE (negócio saudável) ---
+    quality = [
+        ("ROE ≥ 12%", roe is not None and roe >= 0.12, roe),
+        ("FCF positivo", f.fcf > 0, f.fcf),
+        ("Margem líquida > 5%", net_margin is not None and net_margin > 0.05, net_margin),
+        ("Dívida líq./Equity < 1", de is not None and f.equity > 0 and de < 1.0, de),
+        ("Receita a crescer", rev_growth is not None and rev_growth > 0, rev_growth),
+    ]
+    q_pass = sum(1 for _, ok, _ in quality if ok)
+
+    # --- Pilar COERÊNCIA DE PREÇO (múltiplos não gritam "caro") ---
+    coherence = [
+        ("PEG < 1.5", peg is not None and 0 < peg < 1.5, peg),
+        ("EV/EBITDA < 15", ev_ebitda is not None and 0 < ev_ebitda < 15, ev_ebitda),
+        ("P/S < 10", ps is not None and ps < 10, ps),
+        ("P/E < 30", pe is not None and 0 < pe < 30, pe),
+    ]
+    c_pass = sum(1 for _, ok, _ in coherence if ok)
+
+    # --- Score de Oportunidade (0-100): Valor 50 + Qualidade 30 + Coerência 20 ---
+    value_score = (max(0.0, min(1.0, mos / 0.30)) * 50.0) if mos is not None else 0.0
+    quality_score = q_pass / len(quality) * 30.0
+    coherence_score = c_pass / len(coherence) * 20.0
+    score = value_score + quality_score + coherence_score
+
+    # Veredicto: 🟢 só com margem de segurança (gate do Notion) + qualidade + score.
+    if mos is not None and mos >= 0.30 and q_pass >= 3 and score >= 65:
+        opportunity, opp_emoji = "forte", "🟢"
+    elif score >= 50:
+        opportunity, opp_emoji = "vigiar", "🟡"
+    else:
+        opportunity, opp_emoji = "evitar", "🔴"
 
     return {
         "intrinsic_per_share": intrinsic_ps,
@@ -119,13 +160,24 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         "upside": upside,                 # vs preço (>0 = potencial de subida)
         "margin_of_safety": mos,          # (intrínseco - preço)/intrínseco
         "verdict": verdict,
-        "enterprise_value": ev,
+        "enterprise_value": ev,           # EV pelo DCF
         "equity_value": equity_value,
+        "market_ev": market_ev,           # EV de mercado (mktcap + dívida líq.)
         "wacc": w,
         "cost_of_equity": re,
         "growth_used": growth,
         "growth_source": "histórico" if hist_cagr is not None else "default",
         "net_debt": net_debt,
         "market_cap": mktcap,
-        "ratios": {"pe": pe, "pb": pb, "peg": peg, "roe": roe, "de": de, "eps": eps, "bvps": bvps},
+        "ratios": {"pe": pe, "pb": pb, "peg": peg, "roe": roe, "de": de, "eps": eps,
+                   "bvps": bvps, "ps": ps, "ev_ebitda": ev_ebitda,
+                   "net_margin": net_margin, "rev_growth": rev_growth},
+        "quality": quality, "coherence": coherence,
+        "q_pass": q_pass, "q_total": len(quality),
+        "c_pass": c_pass, "c_total": len(coherence),
+        "score": round(score, 1),
+        "value_score": round(value_score, 1),
+        "quality_score": round(quality_score, 1),
+        "coherence_score": round(coherence_score, 1),
+        "opportunity": opportunity, "opportunity_emoji": opp_emoji,
     }
