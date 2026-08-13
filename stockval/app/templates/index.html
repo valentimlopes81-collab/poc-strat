@@ -108,6 +108,7 @@
     <div class="card"><div class="k">Margem de segurança</div>
       <div class="v {{ 'pos' if result.margin_of_safety and result.margin_of_safety>=0 else 'neg' }}">{{ "%+.1f"|format(result.margin_of_safety*100) if result.margin_of_safety is not none else "—" }}%</div></div>
   </div>
+  {% if result.dcf_note %}<div class="sub" style="font-size:12px;margin:-6px 0 14px">ℹ️ {{ result.dcf_note }}</div>{% endif %}
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
     <div>

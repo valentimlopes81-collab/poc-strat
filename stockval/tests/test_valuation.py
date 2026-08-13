@@ -82,6 +82,18 @@ def test_opportunity_evitar_for_expensive_weak():
     assert r["q_pass"] <= 1
 
 
+def test_negative_fcf_gives_no_intrinsic():
+    a = Assumptions()
+    f = Fundamentals(price=50, shares=10, fcf=-20, net_income=-10, equity=100,
+                     total_debt=50, cash=20, revenue=100, ebitda=-5,
+                     fcf_history=[-30, -20, -20])
+    r = value_company(f, a)
+    assert r["intrinsic_per_share"] is None       # sem valor negativo disparatado
+    assert r["dcf_note"] is not None
+    assert r["margin_of_safety"] is None
+    assert r["opportunity"] != "forte"
+
+
 def test_growth_from_history_is_capped():
     a = Assumptions()
     # histórico com CAGR ~30% deve ser limitado ao growth_cap (15%)

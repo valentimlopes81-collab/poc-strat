@@ -88,12 +88,25 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
     re = cost_of_equity(a.risk_free, a.beta, a.erp)
     w = wacc(mktcap, f.total_debt, re, rd, tax)
 
-    ev = two_stage_dcf(f.fcf, growth, a.years, a.terminal_growth, w)
+    # Base de FCF normalizada (média dos últimos 3 anos) — não depender de 1 ano só.
+    base_fcf = f.fcf
+    if f.fcf_history and len(f.fcf_history) >= 2:
+        tail = f.fcf_history[-3:]
+        base_fcf = sum(tail) / len(tail)
+
+    ev = two_stage_dcf(base_fcf, growth, a.years, a.terminal_growth, w) if base_fcf > 0 else None
     intrinsic_ps = None
     equity_value = None
-    if ev is not None and f.shares > 0:
+    dcf_note = None
+    if base_fcf <= 0:
+        dcf_note = "FCF médio negativo — DCF não aplicável a esta empresa."
+    elif ev is not None and f.shares > 0:
         equity_value = ev - net_debt
-        intrinsic_ps = equity_value / f.shares
+        _ips = equity_value / f.shares
+        if _ips > 0:
+            intrinsic_ps = _ips
+        else:
+            dcf_note = "Valor para o acionista ≤ 0 (a dívida supera o valor da empresa)."
 
     upside = None
     mos = None  # margem de segurança implícita (quão abaixo está o preço)
@@ -184,5 +197,5 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         "quality_score": round(quality_score, 1),
         "coherence_score": round(coherence_score, 1),
         "opportunity": opportunity, "opportunity_emoji": opp_emoji,
-        "conflict": conflict,
+        "conflict": conflict, "dcf_note": dcf_note,
     }

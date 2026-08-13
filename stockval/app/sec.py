@@ -97,7 +97,9 @@ def fetch(ticker: str) -> dict:
     pretax_m = _annual_map(facts, ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
                                    "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments"], "USD", True)
     int_m = _annual_map(facts, ["InterestExpense"], "USD", True)
-    sh_m = _annual_map(facts, ["EntityCommonStockSharesOutstanding", "CommonStockSharesOutstanding"], "shares", False)
+    sh_m = _annual_map(facts, ["EntityCommonStockSharesOutstanding", "CommonStockSharesOutstanding",
+                               "WeightedAverageNumberOfDilutedSharesOutstanding",
+                               "WeightedAverageNumberOfSharesOutstandingBasic"], "shares", False)
     rev_m = _annual_map(facts, ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax",
                                 "SalesRevenueNet"], "USD", True)
     opinc_m = _annual_map(facts, ["OperatingIncomeLoss"], "USD", True)
