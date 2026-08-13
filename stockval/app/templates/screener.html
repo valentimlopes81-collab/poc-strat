@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StockVal — Screener</title>
+  <style>
+    :root { --bg:#0f0f10; --panel:#1a1a1c; --border:#2a2a2d; --txt:#e6e6e6; --muted:#8a8a8f;
+            --green:#26a69a; --red:#ef5350; --orange:#ff9800; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--txt); font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+    .wrap { max-width:1000px; margin:0 auto; padding:24px 16px; }
+    h1 { font-size:22px; margin:0 0 2px; }
+    .sub { color:var(--muted); margin-bottom:14px; }
+    .nav { display:flex; gap:8px; margin-bottom:16px; }
+    .nav a { padding:6px 14px; border-radius:8px; text-decoration:none; color:var(--muted);
+             border:1px solid var(--border); background:var(--panel); font-size:13px; }
+    .nav a.on { color:var(--txt); border-color:var(--orange); }
+    form { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px; }
+    textarea { width:100%; background:#0f0f10; border:1px solid var(--border); color:var(--txt);
+        border-radius:8px; padding:10px 12px; font-size:14px; resize:vertical; text-transform:uppercase; }
+    button { margin-top:10px; background:var(--orange); color:#111; border:0; border-radius:8px; padding:10px 20px; font-weight:600; cursor:pointer; font-size:15px; }
+    table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    th, td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--border); white-space:nowrap; }
+    th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3) { text-align:left; }
+    th { color:var(--muted); font-weight:500; font-size:12px; text-transform:uppercase; }
+    tr:last-child td { border-bottom:none; }
+    tbody tr:hover { background:rgba(255,255,255,.03); }
+    .pos { color:var(--green); } .neg { color:var(--red); } .mut { color:var(--muted); }
+    .sc-forte { color:var(--green); font-weight:600; } .sc-vigiar { color:var(--orange); } .sc-evitar { color:var(--muted); }
+    a.detail { color:var(--orange); text-decoration:none; font-size:12px; }
+    .scroll { overflow-x:auto; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>StockVal — Screener</h1>
+  <div class="sub">Ordena a tua watchlist por oportunidade · dados oficiais SEC EDGAR (EUA)</div>
+  <div class="nav"><a href="./">Valuation</a><a href="screener" class="on">Screener</a></div>
+
+  <form method="get" action="">
+    <textarea name="tickers" rows="2" placeholder="AAPL, MSFT, KO, ...">{{ watchlist }}</textarea>
+    <button type="submit">Avaliar watchlist</button>
+  </form>
+
+  <div class="sub">{{ n_total }} avaliadas · 🟢 <b>{{ n_forte }}</b> fortes · 🟡 {{ n_vigiar }} a vigiar
+    <span class="mut">· ordenadas por score</span></div>
+
+  <div class="scroll">
+  <table>
+    <thead><tr>
+      <th>#</th><th>Ticker</th><th>Veredicto</th><th>Score</th><th>Margem seg.</th>
+      <th>P/E</th><th>EV/EBITDA</th><th>ROE</th><th></th>
+    </tr></thead>
+    <tbody>
+      {% for r in rows %}
+      {% if r.error %}
+      <tr><td class="mut">—</td><td><b>{{ r.ticker }}</b></td>
+        <td colspan="6" class="mut">⚠️ {{ r.error }}</td><td></td></tr>
+      {% else %}
+      <tr>
+        <td class="mut">{{ loop.index }}</td>
+        <td><b>{{ r.ticker }}</b></td>
+        <td class="sc-{{ r.opportunity }}">{{ r.emoji }} {{ r.opportunity }}{% if r.conflict %} <span title="DCF barato mas múltiplos caros">⚠️</span>{% endif %}</td>
+        <td class="sc-{{ r.opportunity }}">{{ r.score }}</td>
+        <td class="{{ 'pos' if r.mos and r.mos>=0 else 'neg' }}">{{ "%+.0f"|format(r.mos*100) if r.mos is not none else "—" }}%</td>
+        <td>{{ "%.1f"|format(r.pe) if r.pe else "—" }}</td>
+        <td>{{ "%.1f"|format(r.ev_ebitda) if r.ev_ebitda else "—" }}</td>
+        <td>{{ "%.0f"|format(r.roe*100) if r.roe is not none else "—" }}%</td>
+        <td><a class="detail" href="./?ticker={{ r.ticker }}">ver →</a></td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+      {% if not rows %}
+      <tr><td colspan="9" class="mut" style="text-align:center;padding:26px">Mete tickers na caixa e carrega em Avaliar.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="sub" style="font-size:12px;margin-top:14px">
+    A primeira avaliação pode demorar uns segundos (vai buscar tudo à SEC). Fica em cache ~6h.
+    "—" numa métrica = dado em falta na SEC (comum em empresas estrangeiras/20-F).
+  </div>
+</div>
+</body>
+</html>
