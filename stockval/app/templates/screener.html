@@ -50,13 +50,14 @@
   <table>
     <thead><tr>
       <th>#</th><th>Ticker</th><th>Veredicto</th><th>Score</th><th>Potencial</th>
+      <th title="Crescimento de FCF que o preço atual já paga (reverse-DCF)">Cresc. implícito</th>
       <th>P/E</th><th>EV/EBITDA</th><th>ROE</th><th></th>
     </tr></thead>
     <tbody>
       {% for r in rows %}
       {% if r.error %}
       <tr><td class="mut">—</td><td><b>{{ r.ticker }}</b></td>
-        <td colspan="6" class="mut">⚠️ {{ r.error }}</td><td></td></tr>
+        <td colspan="7" class="mut">⚠️ {{ r.error }}</td><td></td></tr>
       {% else %}
       <tr>
         <td class="mut">{{ loop.index }}</td>
@@ -64,6 +65,7 @@
         <td class="sc-{{ r.opportunity }}">{{ r.emoji }} {{ r.opportunity }}{% if r.conflict %} <span title="DCF barato mas múltiplos caros">⚠️</span>{% endif %}</td>
         <td class="sc-{{ r.opportunity }}">{{ r.score }}</td>
         <td class="{{ 'pos' if r.upside and r.upside>=0 else 'neg' }}">{{ "%+.0f"|format(r.upside*100) if r.upside is not none else "—" }}%</td>
+        <td class="{{ 'neg' if r.implied_growth is not none and r.implied_growth>=0.15 else 'pos' }}">{{ "%.0f"|format(r.implied_growth*100) if r.implied_growth is not none else "—" }}%</td>
         <td>{{ "%.1f"|format(r.pe) if r.pe else "—" }}</td>
         <td>{{ "%.1f"|format(r.ev_ebitda) if r.ev_ebitda else "—" }}</td>
         <td>{{ "%.0f"|format(r.roe*100) if r.roe is not none else "—" }}%</td>
@@ -72,7 +74,7 @@
       {% endif %}
       {% endfor %}
       {% if not rows %}
-      <tr><td colspan="9" class="mut" style="text-align:center;padding:26px">Mete tickers na caixa e carrega em Avaliar.</td></tr>
+      <tr><td colspan="10" class="mut" style="text-align:center;padding:26px">Mete tickers na caixa e carrega em Avaliar.</td></tr>
       {% endif %}
     </tbody>
   </table>

@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 from app.config import Assumptions
-from app.valuation import Fundamentals, cagr, cost_of_equity, two_stage_dcf, value_company, wacc
+from app.valuation import (Fundamentals, cagr, cost_of_equity, implied_growth,
+                           two_stage_dcf, value_company, wacc)
 
 
 def test_cost_of_equity():
@@ -113,6 +114,14 @@ def test_negative_equity_ratios_are_none():
     assert r["ratios"]["roe"] is None   # equity negativo -> não mostra ROE disparatado
     assert r["ratios"]["pb"] is None
     assert r["ratios"]["de"] is None
+
+
+def test_implied_growth_recovers_growth():
+    # target = DCF a um g conhecido -> o reverse-DCF deve recuperar esse g.
+    disc, tg, yrs, fcf = 0.09, 0.025, 10, 100.0
+    target = two_stage_dcf(fcf, 0.08, yrs, tg, disc)
+    g = implied_growth(fcf, target, yrs, tg, disc)
+    assert g is not None and abs(g - 0.08) < 0.005
 
 
 def test_pe_uses_reported_eps():

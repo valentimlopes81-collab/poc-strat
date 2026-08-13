@@ -114,6 +114,22 @@
   </div>
   {% if result.dcf_note %}<div class="sub" style="font-size:12px;margin:-6px 0 14px">ℹ️ {{ result.dcf_note }}</div>{% endif %}
 
+  {% if result.implied_growth is not none %}
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:18px">
+    <div class="k" style="color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em">Reverse-DCF · o crescimento que o preço já paga</div>
+    <div style="margin-top:6px;font-size:15px">Ao preço atual, o mercado está a pagar um crescimento de FCF de
+      <b class="{{ 'neg' if result.implied_growth>=0.15 else 'pos' }}">{{ "%.1f"|format(result.implied_growth*100) }}%/ano</b> durante 10 anos.
+      {% if result.ratios.rev_growth is not none %}<span class="mut">(histórico de receita: {{ "%+.1f"|format(result.ratios.rev_growth*100) }}%)</span>{% endif %}
+    </div>
+    <div class="mut" style="font-size:12px;margin-top:5px">
+      {% if result.implied_growth >= 0.25 %}⚠️ Muito alto — o mercado já paga bastante otimismo; precisa de execução excecional.
+      {% elif result.implied_growth <= 0.02 %}✅ Baixo — o mercado tem expectativas modestas; margem se a empresa apenas mantiver o passo.
+      {% else %}Moderado.{% endif %}
+      Pergunta-te: <b>a empresa consegue mesmo crescer isto?</b>
+    </div>
+  </div>
+  {% endif %}
+
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
     <div>
       <h2>Qualidade ({{ result.q_pass }}/{{ result.q_total }})</h2>

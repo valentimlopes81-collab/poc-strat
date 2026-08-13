@@ -58,6 +58,28 @@ def two_stage_dcf(fcf0: float, growth: float, years: int, terminal_growth: float
     return pv_stage1 + pv_tv
 
 
+def implied_growth(fcf0: float, target_ev: float, years: int, terminal_growth: float,
+                   disc: float, lo: float = -0.30, hi: float = 0.60) -> float | None:
+    """Reverse-DCF: crescimento de FCF (1ª fase) que o mercado está a pagar,
+    i.e. o g para o qual o DCF iguala o enterprise value de mercado.
+    Resolve por bisseção (o DCF é monótono crescente em g)."""
+    if fcf0 <= 0 or disc <= terminal_growth or target_ev <= 0:
+        return None
+    def ev(g: float) -> float:
+        return two_stage_dcf(fcf0, g, years, terminal_growth, disc) or 0.0
+    if target_ev <= ev(lo):
+        return lo   # nem com crescimento muito baixo justifica o preço (barata)
+    if target_ev >= ev(hi):
+        return hi   # exige crescimento improvável (cara)
+    for _ in range(60):
+        mid = (lo + hi) / 2.0
+        if ev(mid) < target_ev:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2.0
+
+
 def cagr(series: list[float]) -> float | None:
     """CAGR de uma série (mais antigo -> recente). None se não der (sinais/zeros)."""
     if not series or len(series) < 2:
@@ -143,6 +165,9 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
     net_margin = _safe_div(f.net_income, f.revenue) if f.revenue else None
     rev_growth = cagr(f.revenue_history) if f.revenue_history else None
 
+    # Reverse-DCF: que crescimento de FCF o preço atual está a pagar.
+    implied_g = implied_growth(base_fcf, market_ev, a.years, a.terminal_growth, w) if base_fcf > 0 else None
+
     # --- Pilar QUALIDADE (negócio saudável) ---
     quality = [
         ("ROE ≥ 12%", roe is not None and roe >= 0.12, roe),
@@ -193,6 +218,7 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         "cost_of_equity": re,
         "growth_used": growth,
         "growth_source": "histórico" if hist_cagr is not None else "default",
+        "implied_growth": implied_g,
         "net_debt": net_debt,
         "market_cap": mktcap,
         "ratios": {"pe": pe, "pb": pb, "peg": peg, "roe": roe, "de": de, "eps": eps,
