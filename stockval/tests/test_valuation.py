@@ -59,6 +59,19 @@ def test_opportunity_forte_for_cheap_quality():
     assert r["ratios"]["net_margin"] is not None
 
 
+def test_conflict_downgrades_cheap_dcf_but_expensive_multiples():
+    # DCF barato (crescimento alto) mas múltiplos caros -> não pode ser 'forte'.
+    a = Assumptions()
+    f = Fundamentals(price=100, shares=10, fcf=100, net_income=20, equity=100,
+                     total_debt=50, cash=50, revenue=200, ebitda=30,
+                     fcf_history=[50, 70, 100], revenue_history=[150, 175, 200])
+    r = value_company(f, a)
+    assert r["margin_of_safety"] is not None and r["margin_of_safety"] >= 0.30  # DCF diz barato
+    assert r["c_pass"] <= 1                                                      # múltiplos caros
+    assert r["opportunity"] != "forte"                                          # gate de coerência barra
+    assert r["conflict"] is True
+
+
 def test_opportunity_evitar_for_expensive_weak():
     a = Assumptions()
     f = Fundamentals(price=1000, shares=10, fcf=-10, net_income=-50, equity=100,

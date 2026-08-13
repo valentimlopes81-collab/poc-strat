@@ -146,8 +146,12 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
     coherence_score = c_pass / len(coherence) * 20.0
     score = value_score + quality_score + coherence_score
 
-    # Veredicto: 🟢 só com margem de segurança (gate do Notion) + qualidade + score.
-    if mos is not None and mos >= 0.30 and q_pass >= 3 and score >= 65:
+    # Sinal em conflito: DCF diz barato mas os múltiplos dizem caro (ou vice-versa).
+    conflict = (mos is not None and mos >= 0.30 and c_pass <= 1)
+
+    # Veredicto: 🟢 exige margem de segurança + qualidade + múltiplos coerentes
+    # (o Notion: "usar os múltiplos para verificar se o preço é coerente").
+    if mos is not None and mos >= 0.30 and q_pass >= 3 and c_pass >= 2 and score >= 65:
         opportunity, opp_emoji = "forte", "🟢"
     elif score >= 50:
         opportunity, opp_emoji = "vigiar", "🟡"
@@ -180,4 +184,5 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         "quality_score": round(quality_score, 1),
         "coherence_score": round(coherence_score, 1),
         "opportunity": opportunity, "opportunity_emoji": opp_emoji,
+        "conflict": conflict,
     }

@@ -92,6 +92,13 @@
     </div>
   </div>
 
+  {% if result.conflict %}
+  <div style="background:rgba(255,152,0,.12);border:1px solid var(--orange);color:#ffcc80;border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:13px">
+    ⚠️ <b>Sinal em conflito:</b> o DCF diz barato (margem de segurança), mas os múltiplos dizem caro.
+    O valor intrínseco depende muito do crescimento assumido — vê os múltiplos e confirma antes de agir.
+  </div>
+  {% endif %}
+
   <div class="cards">
     <div class="card"><div class="k">Valor intrínseco / ação</div>
       <div class="v {{ 'pos' if iv and iv>=result.price else 'neg' }}">{{ "%.2f"|format(iv) if iv else "—" }}</div></div>
