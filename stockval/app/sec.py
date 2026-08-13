@@ -136,8 +136,12 @@ def fetch(ticker: str) -> dict:
 
     # EPS diluído reportado pela SEC (escalar limpo). Serve para o P/E direto e,
     # sobretudo, para DERIVAR o nº de ações (= lucro / EPS) — imune a multi-classe.
-    epsd_m = _annual_map(facts, ["EarningsPerShareDiluted"], "USD/shares", True) or \
-        _annual_map(facts, ["EarningsPerShareDiluted", "EarningsPerShareBasic"], None, True)
+    epsd_m = (
+        _annual_map(facts, ["EarningsPerShareDiluted", "EarningsPerShareBasicAndDiluted",
+                            "IncomeLossFromContinuingOperationsPerDilutedShare"], "USD/shares", False)
+        or _annual_map(facts, ["EarningsPerShareBasic"], "USD/shares", False)
+        or _annual_map(facts, ["EarningsPerShareDiluted", "EarningsPerShareBasic",
+                               "EarningsPerShareBasicAndDiluted"], None, False))
     eps = _latest(epsd_m)
     net_income = _latest(ni_m)
     shares = _latest(sh_m)
