@@ -11,7 +11,7 @@ _FAKE = {
     "net_income": 95_000e6, "equity": 60_000e6,
     "total_debt": 110_000e6, "cash": 60_000e6, "shares": 15_000e6,
     "eff_tax": 0.15, "cost_of_debt": 0.03,
-    "fcf_history": [80_000e6, 90_000e6, 100_000e6], "missing": [],
+    "fcf_history": [80_000e6, 90_000e6, 100_000e6], "missing": [], "eps": 6.13,
     "revenue": 390_000e6, "ebitda": 130_000e6,
     "revenue_history": [350_000e6, 370_000e6, 390_000e6],
 }
@@ -38,6 +38,14 @@ def test_error_when_ticker_missing_data(monkeypatch):
     monkeypatch.setattr(an, "get_price", lambda t: 180.0)
     html = TestClient(m.app).get("/?ticker=XYZ").text
     assert "insuficientes" in html
+
+
+def test_multiclass_without_eps_is_flagged(monkeypatch):
+    d = dict(_FAKE); d["eps"] = None
+    monkeypatch.setattr(an, "fetch", lambda t: d)
+    monkeypatch.setattr(an, "get_price", lambda t: 300.0)
+    html = TestClient(m.app).get("/?ticker=V").text
+    assert "avaliável" in html or "multi-classe" in html
 
 
 def test_screener(monkeypatch):

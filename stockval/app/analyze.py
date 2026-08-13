@@ -19,6 +19,10 @@ def analyze(ticker: str, a: Assumptions):
     if data.get("fcf") is None or not data.get("shares"):
         miss = ", ".join(data.get("missing", [])) or "—"
         return None, f"dados insuficientes na SEC (em falta: {miss}).", name
+    if data.get("eps") is None:
+        # Sem EPS reportado não há nº de ações fiável (típico de empresas
+        # multi-classe: Visa, etc.). Melhor marcar do que dar um 🟢 falso.
+        return None, "EPS não reportado na SEC (empresa multi-classe?) — não avaliável de forma fiável.", name
     f = Fundamentals(
         price=price, shares=data["shares"], fcf=data["fcf"],
         net_income=data["net_income"] or 0.0, equity=data["equity"] or 0.0,
