@@ -100,6 +100,8 @@ show_div_line   = input.bool(true,  "Desenhar linha de divergência no RSI", gro
 show_div_shape  = input.bool(true,  "Mostrar marcador (triângulo)",         group=grp_div)
 c_bull_div      = input.color(color.rgb(38, 166, 154), "Cor Bullish", group=grp_div)
 c_bear_div      = input.color(color.rgb(239, 83, 80),  "Cor Bearish", group=grp_div)
+show_div_inval  = input.bool(true, "Marcar divergências INVALIDADAS (✖)", group=grp_div, tooltip="Bull div invalida se o preço FECHAR abaixo do fundo que a formou; bear div invalida se FECHAR acima do topo. A linha fica cinzenta tracejada.")
+c_inval         = input.color(color.gray, "Cor da invalidação", group=grp_div)
 
 div_left  = 5
 div_right = 2
@@ -116,6 +118,11 @@ var float last_ph_price = na, var float prev_ph_price = na
 var float last_ph_rsi   = na, var float prev_ph_rsi   = na
 var int   last_ph_bar   = na, var int   prev_ph_bar   = na
 
+// Estado para invalidação da divergência ativa (a última de cada tipo)
+var line  bull_line  = na,   var line  bear_line  = na
+var float bull_inval = na,   var float bear_inval = na
+var bool  bull_on    = false, var bool bear_on    = false
+
 if not na(pl_piv)
     prev_pl_price := last_pl_price, prev_pl_rsi := last_pl_rsi, prev_pl_bar := last_pl_bar
     last_pl_price := pl_piv, last_pl_rsi := rsi[div_right], last_pl_bar := bar_index - div_right
@@ -129,16 +136,43 @@ bear_div = not na(ph_piv) and not na(prev_ph_price) and last_ph_price > prev_ph_
 
 if bull_div
     if show_div_line
-        line.new(prev_pl_bar, prev_pl_rsi, last_pl_bar, last_pl_rsi, color=c_bull_div, width=2)
+        bull_line := line.new(prev_pl_bar, prev_pl_rsi, last_pl_bar, last_pl_rsi, color=c_bull_div, width=2)
     if show_div_shape
         label.new(last_pl_bar, last_pl_rsi, "Bull", style=label.style_label_up, color=color.new(c_bull_div, 10), textcolor=color.white, size=size.small, yloc=yloc.price)
+    bull_inval := last_pl_price   // fundo que, se perdido (fecho abaixo), invalida
+    bull_on    := true
 
 if bear_div
     if show_div_line
-        line.new(prev_ph_bar, prev_ph_rsi, last_ph_bar, last_ph_rsi, color=c_bear_div, width=2)
+        bear_line := line.new(prev_ph_bar, prev_ph_rsi, last_ph_bar, last_ph_rsi, color=c_bear_div, width=2)
     if show_div_shape
         label.new(last_ph_bar, last_ph_rsi, "Bear", style=label.style_label_down, color=color.new(c_bear_div, 10), textcolor=color.white, size=size.small, yloc=yloc.price)
+    bear_inval := last_ph_price   // topo que, se ultrapassado (fecho acima), invalida
+    bear_on    := true
+
+// ---- INVALIDAÇÃO das divergências ----
+// Bullish: invalida se o preço FECHAR abaixo do fundo que a formou.
+bull_invalidated = bull_on and not bull_div and not na(bull_inval) and close < bull_inval
+if bull_invalidated
+    bull_on := false
+    if not na(bull_line)
+        line.set_color(bull_line, color.new(c_inval, 30))
+        line.set_style(bull_line, line.style_dotted)
+    if show_div_inval
+        label.new(bar_index, rsi, "✖", style=label.style_label_down, color=color.new(c_inval, 20), textcolor=color.red, size=size.tiny, yloc=yloc.price, tooltip="Divergência bullish invalidada (fecho abaixo do fundo)")
+
+// Bearish: invalida se o preço FECHAR acima do topo que a formou.
+bear_invalidated = bear_on and not bear_div and not na(bear_inval) and close > bear_inval
+if bear_invalidated
+    bear_on := false
+    if not na(bear_line)
+        line.set_color(bear_line, color.new(c_inval, 30))
+        line.set_style(bear_line, line.style_dotted)
+    if show_div_inval
+        label.new(bar_index, rsi, "✖", style=label.style_label_up, color=color.new(c_inval, 20), textcolor=color.red, size=size.tiny, yloc=yloc.price, tooltip="Divergência bearish invalidada (fecho acima do topo)")
 
 // Alertas próprios (opcional) - mesma condição que o webhook do POC POC MAX
 alertcondition(bull_div, title="POC: Divergência Bullish (RSI)", message="{{ticker}}: Divergência Bullish confirmada no RSI (pivôs).")
 alertcondition(bear_div, title="POC: Divergência Bearish (RSI)", message="{{ticker}}: Divergência Bearish confirmada no RSI (pivôs).")
+alertcondition(bull_invalidated, title="POC: Div Bullish INVALIDADA", message="{{ticker}}: Divergência bullish INVALIDADA (fecho abaixo do fundo).")
+alertcondition(bear_invalidated, title="POC: Div Bearish INVALIDADA", message="{{ticker}}: Divergência bearish INVALIDADA (fecho acima do topo).")
