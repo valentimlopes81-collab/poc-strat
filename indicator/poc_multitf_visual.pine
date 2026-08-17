@@ -1,0 +1,138 @@
+//@version=6
+indicator("POC Multi-TF [visual]", shorttitle="POC MTF", overlay=true, max_lines_count=500, max_labels_count=500, max_bars_back=5000)
+
+// ============================================================================
+// POC Multi-Timeframe — VISUAL. Independente do timeframe do gráfico.
+// Calcula o histograma de volume a partir de uma RESOLUÇÃO FIXA
+// (request.security_lower_tf), por isso os POCs de 1D/1W/1M são os MESMOS
+// vejas em 30min, 4h ou qualquer TF (como o POCKY).
+// NÃO envia webhooks nem interfere com o indicador principal.
+// ⚠️ A "Resolução de amostragem" tem de ser MENOR que o TF do gráfico.
+// ============================================================================
+g = "POC Multi-Timeframe"
+ltf      = input.timeframe("15", "Resolução de amostragem", options=["1", "3", "5", "15", "30", "60"], group=g, tooltip="Resolução fixa do histograma. TEM de ser menor que o TF do gráfico. Menor = mais preciso mas menos alcance histórico (limite de intrabars do TradingView).")
+bins     = input.int(24, "Bins do perfil de volume", minval=10, maxval=50, group=g)
+extend_r = input.bool(true, "Estender linhas para a direita", group=g)
+show_live = input.bool(true, "Mostrar POC do período ATUAL (tracejado)", group=g)
+
+gd = "Períodos"
+show_d = input.bool(true, "POC Diário (1D)",  group=gd)
+show_w = input.bool(true, "POC Semanal (1W)", group=gd)
+show_m = input.bool(true, "POC Mensal (1M)",  group=gd)
+keep_d = input.int(12, "Manter últimos 1D", minval=1, maxval=60, group=gd)
+keep_w = input.int(8,  "Manter últimos 1W", minval=1, maxval=40, group=gd)
+keep_m = input.int(6,  "Manter últimos 1M", minval=1, maxval=24, group=gd)
+
+gc = "Cores"
+c_d = input.color(color.rgb(158, 158, 158), "1D (cinzento)",    group=gc)
+c_w = input.color(color.rgb(149, 117, 205), "1W (roxo)",        group=gc)
+c_m = input.color(color.rgb(120, 144, 156), "1M (azul-cinza)",  group=gc)
+
+// ---- POC de um bucket (histograma de volume) ----
+f_poc(array<float> px, array<float> vol, int nb) =>
+    float poc = na
+    int n = array.size(px)
+    if n > 0
+        float lo = array.min(px)
+        float hi = array.max(px)
+        float rng = hi - lo
+        if rng <= 0
+            poc := array.get(px, 0)
+        else
+            bv = array.new_float(nb, 0.0)
+            float bw = rng / nb
+            for i = 0 to n - 1
+                int idx = math.min(nb - 1, math.max(0, int((array.get(px, i) - lo) / bw)))
+                array.set(bv, idx, array.get(bv, idx) + array.get(vol, i))
+            poc := lo + (array.indexof(bv, array.max(bv)) + 0.5) * bw
+    poc
+
+// ---- Buckets (acumuladores por período) + listas de desenhos ----
+var array<float> d_px = array.new_float(),  var array<float> d_vol = array.new_float()
+var array<float> w_px = array.new_float(),  var array<float> w_vol = array.new_float()
+var array<float> mo_px = array.new_float(), var array<float> mo_vol = array.new_float()
+var array<line>  d_ln = array.new_line(),   var array<label> d_lb = array.new_label()
+var array<line>  w_ln = array.new_line(),   var array<label> w_lb = array.new_label()
+var array<line>  mo_ln = array.new_line(),  var array<label> mo_lb = array.new_label()
+
+// ---- Finaliza um período fechado: desenha o POC e limpa o bucket ----
+f_push(array<float> px, array<float> vol, array<line> lns, array<label> lbs, color c, string txt, int keep) =>
+    float poc = f_poc(px, vol, bins)
+    if not na(poc)
+        ln = line.new(bar_index, poc, bar_index + 1, poc, color=color.new(c, 0), width=1, extend=(extend_r ? extend.right : extend.none))
+        lb = label.new(bar_index, poc, txt + " " + str.tostring(poc, format.mintick), style=label.style_none, textcolor=c, size=size.small)
+        array.push(lns, ln)
+        array.push(lbs, lb)
+        if array.size(lns) > keep
+            line.delete(array.shift(lns))
+            label.delete(array.shift(lbs))
+    array.clear(px)
+    array.clear(vol)
+
+// ---- Amostragem à resolução fixa (independente do gráfico) ----
+useChart = timeframe.in_seconds(ltf) >= timeframe.in_seconds()
+[ltfP, ltfV] = request.security_lower_tf(syminfo.tickerid, ltf, [hlc3, volume])
+
+if barstate.isconfirmed
+    // 1) fechar os períodos que acabaram (desenha o POC do período completo)
+    if show_d and timeframe.change("D") and array.size(d_px) > 0
+        f_push(d_px, d_vol, d_ln, d_lb, c_d, "1D", keep_d)
+    if show_w and timeframe.change("W") and array.size(w_px) > 0
+        f_push(w_px, w_vol, w_ln, w_lb, c_w, "1W", keep_w)
+    if show_m and timeframe.change("M") and array.size(mo_px) > 0
+        f_push(mo_px, mo_vol, mo_ln, mo_lb, c_m, "1M", keep_m)
+    // 2) acumular as amostras desta barra nos buckets ativos
+    if useChart
+        if not na(hlc3) and not na(volume) and volume > 0
+            if show_d
+                array.push(d_px, hlc3), array.push(d_vol, volume)
+            if show_w
+                array.push(w_px, hlc3), array.push(w_vol, volume)
+            if show_m
+                array.push(mo_px, hlc3), array.push(mo_vol, volume)
+    else if not na(ltfP)
+        for i = 0 to array.size(ltfP) - 1
+            float p = array.get(ltfP, i)
+            float v = array.get(ltfV, i)
+            if not na(p) and not na(v) and v > 0
+                if show_d
+                    array.push(d_px, p), array.push(d_vol, v)
+                if show_w
+                    array.push(w_px, p), array.push(w_vol, v)
+                if show_m
+                    array.push(mo_px, p), array.push(mo_vol, v)
+
+// ---- POC do período ATUAL (ao vivo, tracejado) ----
+var line d_liv = na, var label d_livl = na
+var line w_liv = na, var label w_livl = na
+var line m_liv = na, var label m_livl = na
+
+if show_d and show_live and barstate.islast and array.size(d_px) > 0
+    float pd = f_poc(d_px, d_vol, bins)
+    if not na(pd)
+        if na(d_liv)
+            d_liv := line.new(bar_index, pd, bar_index, pd, color=color.new(c_d, 0), style=line.style_dashed, extend=extend.right)
+            d_livl := label.new(bar_index, pd, "1D•agora " + str.tostring(pd, format.mintick), style=label.style_none, textcolor=c_d, size=size.small)
+        else
+            line.set_xy1(d_liv, bar_index, pd), line.set_xy2(d_liv, bar_index, pd)
+            label.set_xy(d_livl, bar_index, pd), label.set_text(d_livl, "1D•agora " + str.tostring(pd, format.mintick))
+
+if show_w and show_live and barstate.islast and array.size(w_px) > 0
+    float pw = f_poc(w_px, w_vol, bins)
+    if not na(pw)
+        if na(w_liv)
+            w_liv := line.new(bar_index, pw, bar_index, pw, color=color.new(c_w, 0), style=line.style_dashed, extend=extend.right)
+            w_livl := label.new(bar_index, pw, "1W•agora " + str.tostring(pw, format.mintick), style=label.style_none, textcolor=c_w, size=size.small)
+        else
+            line.set_xy1(w_liv, bar_index, pw), line.set_xy2(w_liv, bar_index, pw)
+            label.set_xy(w_livl, bar_index, pw), label.set_text(w_livl, "1W•agora " + str.tostring(pw, format.mintick))
+
+if show_m and show_live and barstate.islast and array.size(mo_px) > 0
+    float pm = f_poc(mo_px, mo_vol, bins)
+    if not na(pm)
+        if na(m_liv)
+            m_liv := line.new(bar_index, pm, bar_index, pm, color=color.new(c_m, 0), style=line.style_dashed, extend=extend.right)
+            m_livl := label.new(bar_index, pm, "1M•agora " + str.tostring(pm, format.mintick), style=label.style_none, textcolor=c_m, size=size.small)
+        else
+            line.set_xy1(m_liv, bar_index, pm), line.set_xy2(m_liv, bar_index, pm)
+            label.set_xy(m_livl, bar_index, pm), label.set_text(m_livl, "1M•agora " + str.tostring(pm, format.mintick))
