@@ -1,5 +1,5 @@
 //@version=6
-indicator("POC POC [Smart Multi-Exchange MAX v2]", shorttitle="POC POC MAX v2", overlay=true, max_lines_count=500, max_labels_count=500, max_bars_back=500)
+indicator("POC POC [Smart Multi-Exchange MAX v2]", shorttitle="POC POC MAX v2", overlay=true, max_lines_count=500, max_labels_count=500, max_bars_back=5000)
 
 // ==========================================
 // 1. FILTRO DE ATIVOS
