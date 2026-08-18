@@ -90,10 +90,10 @@ if barstate.isconfirmed
                 array.push(w_px, hlc3), array.push(w_vol, volume)
             if show_m
                 array.push(mo_px, hlc3), array.push(mo_vol, volume)
-    else if not na(ltfP)
+    else if not na(ltfP) and array.size(ltfP) > 0
         for i = 0 to array.size(ltfP) - 1
             float p = array.get(ltfP, i)
-            float v = array.get(ltfV, i)
+            float v = na(ltfV) or array.size(ltfV) <= i ? na : array.get(ltfV, i)
             if not na(p) and not na(v) and v > 0
                 if show_d
                     array.push(d_px, p), array.push(d_vol, v)
