@@ -194,3 +194,64 @@ if show_1m and show_live and barstate.islast and array.size(b1m_px) > 0
         la_1m := na(la_1m) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1m,15), textcolor=color.white, size=size.small) : la_1m
         line.set_xy1(li_1m, bar_index, p), line.set_xy2(li_1m, bar_index+1, p)
         label.set_xy(la_1m, bar_index, p), label.set_text(la_1m, "POC:1M• " + str.tostring(p, format.mintick))
+
+// ============================================================================
+// DIVERGÊNCIAS (RSI) — mesma lógica do indicador RSI, agora aqui no preço.
+// FASE 1: setinhas + invalidação + alertas simples. (Webhook = fase seguinte.)
+// ============================================================================
+gdv = "Divergências (RSI)"
+show_div   = input.bool(true, "Mostrar divergências (setinhas)", group=gdv)
+show_inval = input.bool(true, "Marcar invalidação (✖)", group=gdv)
+rsi_len    = input.int(14, "RSI Length", minval=2, group=gdv)
+c_bull     = input.color(color.rgb(38, 166, 154), "Bull", group=gdv)
+c_bear     = input.color(color.rgb(239, 83, 80),  "Bear", group=gdv)
+
+_chg = ta.change(close)
+_u = ta.rma(math.max(_chg, 0), rsi_len)
+_d = ta.rma(-math.min(_chg, 0), rsi_len)
+rsi_v = _d == 0 ? 100.0 : _u == 0 ? 0.0 : 100.0 - 100.0 / (1.0 + _u / _d)
+
+dl = 5
+dr = 2
+plp = ta.pivotlow(low, dl, dr)
+php = ta.pivothigh(high, dl, dr)
+os15 = ta.lowest(rsi_v, 15) <= 35
+ob15 = ta.highest(rsi_v, 15) >= 65
+
+var float lplp=na, var float pplp=na, var float lplr=na, var float pplr=na
+var float lphp=na, var float pphp=na, var float lphr=na, var float pphr=na
+if not na(plp)
+    pplp := lplp, pplr := lplr
+    lplp := plp,  lplr := rsi_v[dr]
+if not na(php)
+    pphp := lphp, pphr := lphr
+    lphp := php,  lphr := rsi_v[dr]
+
+bull_div = not na(plp) and not na(pplp) and lplp < pplp and lplr > pplr and os15
+bear_div = not na(php) and not na(pphp) and lphp > pphp and lphr < pphr and ob15
+
+// setinhas no preço (no pivô, dr barras atrás)
+plotshape(show_div and bull_div ? low[dr]  : na, title="Bull div", offset=-dr, style=shape.triangleup,   location=location.absolute, color=c_bull, size=size.small)
+plotshape(show_div and bear_div ? high[dr] : na, title="Bear div", offset=-dr, style=shape.triangledown, location=location.absolute, color=c_bear, size=size.small)
+
+// invalidação: bull cai se fechar abaixo do fundo; bear cai se fechar acima do topo
+var float bull_iv=na, var bool bull_active=false
+var float bear_iv=na, var bool bear_active=false
+if bull_div
+    bull_iv := lplp, bull_active := true
+if bear_div
+    bear_iv := lphp, bear_active := true
+bull_inval = bull_active and not bull_div and not na(bull_iv) and close < bull_iv
+bear_inval = bear_active and not bear_div and not na(bear_iv) and close > bear_iv
+if bull_inval
+    bull_active := false
+if bear_inval
+    bear_active := false
+plotshape(show_inval and bull_inval ? low  : na, title="Bull inval", style=shape.xcross, location=location.belowbar, color=color.new(color.gray, 0), size=size.tiny)
+plotshape(show_inval and bear_inval ? high : na, title="Bear inval", style=shape.xcross, location=location.abovebar, color=color.new(color.gray, 0), size=size.tiny)
+
+// alertas simples (Fase 1 — sem webhook)
+alertcondition(bull_div,   title="Bull Div (POC MTF)",             message="{{ticker}}: Divergência BULLISH")
+alertcondition(bear_div,   title="Bear Div (POC MTF)",             message="{{ticker}}: Divergência BEARISH")
+alertcondition(bull_inval, title="Bull Div INVALIDADA (POC MTF)",  message="{{ticker}}: Bull div invalidada")
+alertcondition(bear_inval, title="Bear Div INVALIDADA (POC MTF)",  message="{{ticker}}: Bear div invalidada")
