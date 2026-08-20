@@ -1,0 +1,230 @@
+//@version=6
+// ============================================================================
+// NQ NY-Session — STRATEGY (backtest intraday). Volume Profile + divergência RSI.
+// Feito para NASDAQ intraday na manhã de Nova Iorque. Agnóstico ao volume:
+// usa volume real (NQ1!) quando existe, senão cai para perfil por TEMPO (TPO)
+// — corre igual em NQ1! (backtest fiável) e US100 (execução CFD).
+//
+// Zonas: POC/VAH/VAL do dia anterior · POC do overnight · VWAP · POC a desenvolver.
+// Gatilho: divergência RSI clássica, DENTRO da janela de NY, com o preço encostado
+//          a uma zona. Stop por ATR, alvo na próxima zona (fallback R), BE a 1R,
+//          fecho forçado no fim da sessão. Risco fixo % sobre capital base.
+// ⚠️ Usar num gráfico de 5min (ou 1min). Timezone tratado em America/New_York (DST-safe).
+// ============================================================================
+strategy("NQ NY-Session — Backtest", shorttitle="NQ NY bt", overlay=true,
+     initial_capital=25000, currency=currency.USD, pyramiding=0,
+     default_qty_type=strategy.fixed, calc_on_every_tick=false, slippage=1,
+     commission_type=strategy.commission.cash_per_contract, commission_value=2.0,
+     max_bars_back=5000)
+
+// ---------------- Sessão / horário (America/New_York) ----------------
+gs = "Sessão (Nova Iorque)"
+tz        = "America/New_York"
+rth_sess  = input.session("0930-1600", "Sessão RTH (para os perfis)", group=gs)
+win_sess  = input.session("0930-1130", "Janela de TRADE (manhã)", group=gs, tooltip="Só entra dentro desta janela. Fecha tudo no fim da RTH.")
+eod_flat  = input.bool(true, "Fechar posição no fim da RTH", group=gs)
+
+// ---------------- Perfil de volume ----------------
+gp = "Perfil de volume"
+bins   = input.int(30, "Bins", minval=10, maxval=60, group=gp)
+va_pct = input.float(70, "Value Area (%)", minval=50, maxval=90, group=gp) / 100.0
+z_pd   = input.bool(true, "Zona: POC/VAH/VAL dia anterior", group=gp)
+z_on   = input.bool(true, "Zona: POC overnight", group=gp)
+z_vwap = input.bool(true, "Zona: VWAP", group=gp)
+z_dev  = input.bool(true, "Zona: POC a desenvolver (hoje)", group=gp)
+
+// ---------------- Divergências (RSI clássica) ----------------
+gdv = "Divergências (RSI clássica)"
+rsi_len=input.int(14,"RSI Length",minval=2,group=gdv)
+lbR=input.int(5,"Pivot dir",minval=1,group=gdv)
+lbL=input.int(5,"Pivot esq",minval=1,group=gdv)
+rgU=input.int(60,"Máx barras entre pivôs",minval=1,group=gdv)
+rgL=input.int(5,"Mín barras entre pivôs",minval=1,group=gdv)
+
+// ---------------- Execução ----------------
+gx = "Execução"
+base_usd   = input.float(25000, "Capital base p/ risco (USD)", group=gx)
+risk_pct   = input.float(1.0, "Risco por trade (%)", minval=0.1, step=0.1, group=gx)
+atr_len    = input.int(14, "ATR Length", minval=2, group=gx)
+band_atr   = input.float(0.30, "Proximidade à zona (× ATR)", minval=0.05, step=0.05, group=gx, tooltip="A divergência só conta se o preço estiver a esta distância de uma zona.")
+stop_atr   = input.float(1.20, "Stop (× ATR)", minval=0.2, step=0.1, group=gx)
+tp_mode    = input.string("Próxima zona", "Alvo", options=["Próxima zona","R fixo"], group=gx)
+tp_r       = input.float(2.0, "R fixo (se escolhido / fallback)", minval=0.5, step=0.5, group=gx)
+use_be     = input.bool(true, "Mover stop p/ breakeven a 1R", group=gx)
+whole_ct   = input.bool(true, "Quantidade inteira (futuros)", group=gx, tooltip="ON p/ NQ (contratos inteiros). OFF p/ CFD fracionável.")
+
+// ---------------- Perfil: POC + Value Area ----------------
+f_profile(array<float> px, array<float> w, int nb, float vap) =>
+    float poc=na, vah=na, val=na
+    int n = array.size(px)
+    if n > 0
+        float lo=array.min(px), float hi=array.max(px)
+        if hi > lo
+            bv = array.new_float(nb, 0.0)
+            float bw = (hi-lo)/nb
+            for i=0 to n-1
+                int idx = math.min(nb-1, math.max(0, int((array.get(px,i)-lo)/bw)))
+                array.set(bv, idx, array.get(bv,idx)+array.get(w,i))
+            int pidx = array.indexof(bv, array.max(bv))
+            poc := lo + (pidx+0.5)*bw
+            float total = array.sum(bv)
+            float tgt = total*vap
+            float acc = array.get(bv, pidx)
+            int up=pidx, dn=pidx
+            while acc < tgt and (up < nb-1 or dn > 0)
+                float aup = up < nb-1 ? array.get(bv, up+1) : -1.0
+                float adn = dn > 0    ? array.get(bv, dn-1) : -1.0
+                if aup >= adn
+                    up += 1
+                    acc += aup > 0 ? aup : 0.0
+                else
+                    dn -= 1
+                    acc += adn > 0 ? adn : 0.0
+            vah := lo + (up+1)*bw
+            val := lo + dn*bw
+        else
+            poc := array.get(px,0), vah := poc, val := poc
+    [poc, vah, val]
+
+// ---------------- Estado da sessão ----------------
+in_rth   = not na(time(timeframe.period, rth_sess, tz))
+in_win   = not na(time(timeframe.period, win_sess, tz))
+rth_open = in_rth and not in_rth[1]
+rth_close= not in_rth and in_rth[1]
+
+var array<float> rth_px=array.new_float(), var array<float> rth_w=array.new_float()
+var array<float> on_px =array.new_float(), var array<float> on_w =array.new_float()
+var float pd_poc=na, var float pd_vah=na, var float pd_val=na
+var float on_poc=na
+var float dev_poc=na
+
+if barstate.isconfirmed
+    float w = na(volume) or volume == 0 ? 1.0 : volume   // volume real, senão TPO
+    float p = hlc3
+    if in_rth
+        array.push(rth_px, p), array.push(rth_w, w)
+    else
+        array.push(on_px, p), array.push(on_w, w)
+    if rth_close
+        [pc, vh, vl] = f_profile(rth_px, rth_w, bins, va_pct)
+        pd_poc := pc, pd_vah := vh, pd_val := vl
+        array.clear(rth_px), array.clear(rth_w)
+    if rth_open
+        [opc, _oh, _ol] = f_profile(on_px, on_w, bins, va_pct)
+        on_poc := opc
+        array.clear(on_px), array.clear(on_w)
+    // POC a desenvolver (hoje) — recalcula durante a RTH
+    if in_rth and array.size(rth_px) > 0
+        [dpc, _dh, _dl] = f_profile(rth_px, rth_w, bins, va_pct)
+        dev_poc := dpc
+
+// VWAP de sessão (reset diário automático)
+vwap_v = ta.vwap(hlc3)
+
+// ---------------- Divergências ----------------
+_chg=ta.change(close)
+_u=ta.rma(math.max(_chg,0),rsi_len)
+_d=ta.rma(-math.min(_chg,0),rsi_len)
+rsi_v = _d==0 ? 100.0 : _u==0 ? 0.0 : 100.0-100.0/(1.0+_u/_d)
+_inRange(bool c) =>
+    b = ta.barssince(c)
+    rgL <= b and b <= rgU
+rsiLBR  = rsi_v[lbR]
+plFound = not na(ta.pivotlow(rsi_v, lbL, lbR))
+phFound = not na(ta.pivothigh(rsi_v, lbL, lbR))
+bull_div = (low[lbR] < ta.valuewhen(plFound, low[lbR], 1)) and (rsiLBR > ta.valuewhen(plFound, rsiLBR, 1) and _inRange(plFound[1])) and plFound
+bear_div = (high[lbR] > ta.valuewhen(phFound, high[lbR], 1)) and (rsiLBR < ta.valuewhen(phFound, rsiLBR, 1) and _inRange(phFound[1])) and phFound
+
+// ---------------- Zonas ativas ----------------
+atr = ta.atr(atr_len)
+f_active(float lvl, bool on) => on and not na(lvl) ? lvl : na
+var array<float> zones = array.new_float()
+array.clear(zones)
+if not na(f_active(pd_poc, z_pd))
+    array.push(zones, pd_poc)
+if not na(f_active(pd_vah, z_pd))
+    array.push(zones, pd_vah)
+if not na(f_active(pd_val, z_pd))
+    array.push(zones, pd_val)
+if not na(f_active(on_poc, z_on))
+    array.push(zones, on_poc)
+if not na(f_active(vwap_v, z_vwap))
+    array.push(zones, vwap_v)
+if not na(f_active(dev_poc, z_dev))
+    array.push(zones, dev_poc)
+
+f_near_any(float ref, float tol) =>
+    bool hit = false
+    if array.size(zones) > 0
+        for i=0 to array.size(zones)-1
+            if math.abs(ref - array.get(zones, i)) <= tol
+                hit := true
+    hit
+f_next(float ref, bool above) =>
+    float best = na
+    if array.size(zones) > 0
+        for i=0 to array.size(zones)-1
+            float z = array.get(zones, i)
+            if (above ? z > ref : z < ref)
+                if na(best) or math.abs(z-ref) < math.abs(best-ref)
+                    best := z
+    best
+
+tol = band_atr * atr
+zone_near = f_near_any(close, tol)
+
+// ---------------- Sizing ----------------
+risk_usd = base_usd * risk_pct / 100.0
+pv = syminfo.pointvalue
+f_qty(float stop_pts) =>
+    float q = (stop_pts > 0 and pv > 0) ? risk_usd / (stop_pts * pv) : na
+    q := whole_ct ? math.floor(q) : q
+    q
+
+// ---------------- Entradas / saídas ----------------
+var float e_stop=na, var float e_tp=na, var float e_risk=na, var bool be_done=false, var int pend=0
+var float p_stop=na, var float p_tp=na, var float p_risk=na
+
+can_trade = in_win and strategy.position_size == 0
+
+if strategy.position_size != 0
+    if pend != 0
+        e_stop := p_stop, e_tp := p_tp, e_risk := p_risk, be_done := false, pend := 0
+    if use_be and not be_done and not na(e_risk)
+        if strategy.position_size > 0 and high >= strategy.position_avg_price + e_risk
+            e_stop := strategy.position_avg_price, be_done := true
+        if strategy.position_size < 0 and low  <= strategy.position_avg_price - e_risk
+            e_stop := strategy.position_avg_price, be_done := true
+    strategy.exit("X", from_entry="E", stop=e_stop, limit=e_tp)
+    if eod_flat and rth_close
+        strategy.close("E", comment="EOD")
+else
+    if can_trade and (bull_div or bear_div) and zone_near
+        float sp = stop_atr * atr
+        if bull_div
+            float st = close - sp
+            float nz = f_next(close, true)
+            float tp = tp_mode == "Próxima zona" and not na(nz) and (nz - close) >= sp ? nz : close + tp_r * sp
+            float q = f_qty(sp)
+            if not na(q) and q > 0
+                strategy.entry("E", strategy.long, qty=q)
+                p_stop := st, p_tp := tp, p_risk := sp, pend := 1
+        else
+            float st = close + sp
+            float nz = f_next(close, false)
+            float tp = tp_mode == "Próxima zona" and not na(nz) and (close - nz) >= sp ? nz : close - tp_r * sp
+            float q = f_qty(sp)
+            if not na(q) and q > 0
+                strategy.entry("E", strategy.short, qty=q)
+                p_stop := st, p_tp := tp, p_risk := sp, pend := -1
+
+// ---------------- Visual ----------------
+plot(z_pd  and not na(pd_poc) ? pd_poc : na, "PD POC",  color.new(color.orange,0), 2, plot.style_linebr)
+plot(z_pd  and not na(pd_vah) ? pd_vah : na, "PD VAH",  color.new(color.orange,50), 1, plot.style_linebr)
+plot(z_pd  and not na(pd_val) ? pd_val : na, "PD VAL",  color.new(color.orange,50), 1, plot.style_linebr)
+plot(z_on  and not na(on_poc) ? on_poc : na, "ON POC",  color.new(color.purple,0), 1, plot.style_linebr)
+plot(z_vwap? vwap_v : na,                    "VWAP",    color.new(color.blue,0),   1)
+plot(z_dev and in_rth and not na(dev_poc) ? dev_poc : na, "Dev POC", color.new(color.teal,0), 1, plot.style_linebr)
+bgcolor(in_win ? color.new(color.green, 92) : na, title="Janela de trade")
+plotshape(bull_div ? low[lbR]  : na, "Bull div", shape.triangleup,   location.belowbar, color.new(color.teal,0), offset=-lbR, size=size.tiny)
+plotshape(bear_div ? high[lbR] : na, "Bear div", shape.triangledown, location.abovebar, color.new(color.red,0),  offset=-lbR, size=size.tiny)
