@@ -55,7 +55,9 @@ whole_ct   = input.bool(true, "Quantidade inteira (futuros)", group=gx, tooltip=
 
 // ---------------- Perfil: POC + Value Area ----------------
 f_profile(array<float> px, array<float> w, int nb, float vap) =>
-    float poc=na, vah=na, val=na
+    float poc=na
+    float vah=na
+    float val=na
     int n = array.size(px)
     if n > 0
         float lo=array.min(px), float hi=array.max(px)
