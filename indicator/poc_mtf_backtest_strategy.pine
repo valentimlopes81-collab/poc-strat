@@ -1,0 +1,263 @@
+//@version=6
+// ============================================================================
+// POC MTF — STRATEGY (backtest). SÓ PARA TESTAR no Strategy Tester.
+// Espelha as regras do paper engine:
+//   • Entrada: divergência RSI clássica + preço numa zona forte de POCs naked.
+//   • Ordem LIMIT no preço do sinal, cancelada se o preço fugir X% (front-run).
+//   • Stop no "zone_break" (extremo naked da zona). Alvo no POC naked mais próximo.
+//   • Breakeven a 1R. Risco 1% por trade (BTC 2%), fixo sobre o capital base.
+// ⚠️ Aproximação do servidor, não idêntica. request.security_lower_tf tem
+//    histórico limitado em backtest → fiável nos últimos meses/1-2 anos.
+// ============================================================================
+strategy("POC MTF — Backtest", shorttitle="POC MTF bt", overlay=true,
+     initial_capital=10000, currency=currency.USD, pyramiding=0,
+     default_qty_type=strategy.fixed, commission_type=strategy.commission.percent,
+     commission_value=0.045, max_bars_back=5000, calc_on_every_tick=false)
+
+// ---------------- Amostragem / períodos (igual ao POC MTF) ----------------
+g = "POC Multi-Timeframe"
+ltf  = input.timeframe("15", "Resolução de amostragem", options=["1","3","5","15","30","60"], group=g, tooltip="Tem de ser MENOR que o TF do gráfico.")
+bins = input.int(24, "Bins do perfil de volume", minval=10, maxval=50, group=g)
+
+gd = "Períodos (liga · quantos manter)"
+show_1d=input.bool(true,"1D",inline="1d",group=gd), keep_1d=input.int(15,"",inline="1d",group=gd)
+show_2d=input.bool(true,"2D",inline="2d",group=gd), keep_2d=input.int(10,"",inline="2d",group=gd)
+show_3d=input.bool(true,"3D",inline="3d",group=gd), keep_3d=input.int(8,"",inline="3d",group=gd)
+show_5d=input.bool(true,"5D",inline="5d",group=gd), keep_5d=input.int(8,"",inline="5d",group=gd)
+show_1w=input.bool(true,"1W",inline="1w",group=gd), keep_1w=input.int(8,"",inline="1w",group=gd)
+show_2w=input.bool(true,"2W",inline="2w",group=gd), keep_2w=input.int(6,"",inline="2w",group=gd)
+show_1m=input.bool(true,"1M",inline="1m",group=gd), keep_1m=input.int(6,"",inline="1m",group=gd)
+
+// ---------------- Divergências (RSI clássica, igual ao POC MTF) ----------------
+gdv = "Divergências (RSI clássica)"
+rsi_len=input.int(14,"RSI Length",minval=2,group=gdv)
+lbR=input.int(5,"Pivot lookback direita",minval=1,group=gdv)
+lbL=input.int(5,"Pivot lookback esquerda",minval=1,group=gdv)
+rgU=input.int(60,"Máx. barras entre pivôs",minval=1,group=gdv)
+rgL=input.int(5,"Mín. barras entre pivôs",minval=1,group=gdv)
+
+// ---------------- Regras de execução (igual ao paper) ----------------
+gx = "Execução (paper engine)"
+base_usd    = input.float(10000, "Capital base p/ risco (USD)", group=gx, tooltip="Risco fixo sobre este valor, como no servidor (não compõe).")
+risk_pct    = input.float(1.0, "Risco por trade (%)", minval=0.1, step=0.1, group=gx)
+risk_btc    = input.float(2.0, "Risco BTC (%)", minval=0.1, step=0.1, group=gx)
+frontrun_pct= input.float(2.0, "Cancelar LIMIT se preço fugir (%)", minval=0.1, step=0.1, group=gx)
+use_be      = input.bool(true, "Mover stop p/ breakeven a 1R", group=gx)
+zone_band_pct = input.float(1.5, "Banda da zona (%) à volta do preço", minval=0.1, step=0.1, group=gx)
+min_stop_pct = input.float(0.3, "Distância mínima do stop (%)", minval=0.05, step=0.05, group=gx, tooltip="Evita stops colados que disparam a alavancagem.")
+
+// ---------------- POC de um bucket ----------------
+f_poc(array<float> px, array<float> vol, int nb) =>
+    float poc = na
+    int n = array.size(px)
+    if n > 0
+        float lo = array.min(px), float hi = array.max(px), float rng = hi - lo
+        if rng <= 0
+            poc := array.get(px, 0)
+        else
+            bv = array.new_float(nb, 0.0)
+            float bw = rng / nb
+            for i = 0 to n - 1
+                int idx = math.min(nb-1, math.max(0, int((array.get(px,i)-lo)/bw)))
+                array.set(bv, idx, array.get(bv, idx) + array.get(vol, i))
+            poc := lo + (array.indexof(bv, array.max(bv)) + 0.5) * bw
+    poc
+
+// ---------------- Buckets + valores de POCs fechados + flag "testado" ----------------
+var array<float> b1d_px=array.new_float(), var array<float> b1d_v=array.new_float(), var array<float> v1d=array.new_float(), var array<bool> k1d=array.new_bool()
+var array<float> b2d_px=array.new_float(), var array<float> b2d_v=array.new_float(), var array<float> v2d=array.new_float(), var array<bool> k2d=array.new_bool()
+var array<float> b3d_px=array.new_float(), var array<float> b3d_v=array.new_float(), var array<float> v3d=array.new_float(), var array<bool> k3d=array.new_bool()
+var array<float> b5d_px=array.new_float(), var array<float> b5d_v=array.new_float(), var array<float> v5d=array.new_float(), var array<bool> k5d=array.new_bool()
+var array<float> b1w_px=array.new_float(), var array<float> b1w_v=array.new_float(), var array<float> v1w=array.new_float(), var array<bool> k1w=array.new_bool()
+var array<float> b2w_px=array.new_float(), var array<float> b2w_v=array.new_float(), var array<float> v2w=array.new_float(), var array<bool> k2w=array.new_bool()
+var array<float> b1m_px=array.new_float(), var array<float> b1m_v=array.new_float(), var array<float> v1m=array.new_float(), var array<bool> k1m=array.new_bool()
+
+// fecha um período: calcula POC, guarda valor (sem desenhar), limpa bucket
+f_push(array<float> px, array<float> vol, array<float> vals, array<bool> tst, int keep) =>
+    float poc = f_poc(px, vol, bins)
+    if not na(poc)
+        array.push(vals, poc), array.push(tst, false)
+        if array.size(vals) > keep
+            array.shift(vals), array.shift(tst)
+    array.clear(px), array.clear(vol)
+
+// marca POC como testado quando a barra o atravessa (deixa de ser naked)
+f_mark(array<float> vals, array<bool> tst, float hi, float lo) =>
+    if array.size(vals) > 0
+        for i = 0 to array.size(vals) - 1
+            float lvl = array.get(vals, i)
+            if not na(lvl) and not array.get(tst, i) and lo <= lvl and hi >= lvl
+                array.set(tst, i, true)
+
+f_accum(float p, float v) =>
+    if show_1d
+        array.push(b1d_px,p), array.push(b1d_v,v)
+    if show_2d
+        array.push(b2d_px,p), array.push(b2d_v,v)
+    if show_3d
+        array.push(b3d_px,p), array.push(b3d_v,v)
+    if show_5d
+        array.push(b5d_px,p), array.push(b5d_v,v)
+    if show_1w
+        array.push(b1w_px,p), array.push(b1w_v,v)
+    if show_2w
+        array.push(b2w_px,p), array.push(b2w_v,v)
+    if show_1m
+        array.push(b1m_px,p), array.push(b1m_v,v)
+
+useChart = timeframe.in_seconds(ltf) >= timeframe.in_seconds()
+[ltfP, ltfV] = request.security_lower_tf(syminfo.tickerid, ltf, [hlc3, volume])
+
+if barstate.isconfirmed
+    f_mark(v1d,k1d,high,low), f_mark(v2d,k2d,high,low), f_mark(v3d,k3d,high,low)
+    f_mark(v5d,k5d,high,low), f_mark(v1w,k1w,high,low), f_mark(v2w,k2w,high,low), f_mark(v1m,k1m,high,low)
+    if show_1d and timeframe.change("D")  and array.size(b1d_px)>0
+        f_push(b1d_px,b1d_v,v1d,k1d,keep_1d)
+    if show_2d and timeframe.change("2D") and array.size(b2d_px)>0
+        f_push(b2d_px,b2d_v,v2d,k2d,keep_2d)
+    if show_3d and timeframe.change("3D") and array.size(b3d_px)>0
+        f_push(b3d_px,b3d_v,v3d,k3d,keep_3d)
+    if show_5d and timeframe.change("5D") and array.size(b5d_px)>0
+        f_push(b5d_px,b5d_v,v5d,k5d,keep_5d)
+    if show_1w and timeframe.change("W")  and array.size(b1w_px)>0
+        f_push(b1w_px,b1w_v,v1w,k1w,keep_1w)
+    if show_2w and timeframe.change("2W") and array.size(b2w_px)>0
+        f_push(b2w_px,b2w_v,v2w,k2w,keep_2w)
+    if show_1m and timeframe.change("M")  and array.size(b1m_px)>0
+        f_push(b1m_px,b1m_v,v1m,k1m,keep_1m)
+    if useChart
+        if not na(hlc3) and not na(volume) and volume > 0
+            f_accum(hlc3, volume)
+    else if not na(ltfP) and array.size(ltfP) > 0
+        for i = 0 to array.size(ltfP) - 1
+            float p = array.get(ltfP, i)
+            float vv = na(ltfV) or array.size(ltfV) <= i ? na : array.get(ltfV, i)
+            if not na(p) and not na(vv) and vv > 0
+                f_accum(p, vv)
+
+// ---------------- Divergências ----------------
+_chg = ta.change(close)
+_u = ta.rma(math.max(_chg,0), rsi_len)
+_d = ta.rma(-math.min(_chg,0), rsi_len)
+rsi_v = _d == 0 ? 100.0 : _u == 0 ? 0.0 : 100.0 - 100.0/(1.0 + _u/_d)
+_inRange(bool cond) =>
+    bars = ta.barssince(cond)
+    rgL <= bars and bars <= rgU
+rsiLBR  = rsi_v[lbR]
+plFound = not na(ta.pivotlow(rsi_v, lbL, lbR))
+phFound = not na(ta.pivothigh(rsi_v, lbL, lbR))
+rsiHL   = rsiLBR > ta.valuewhen(plFound, rsiLBR, 1) and _inRange(plFound[1])
+priceLL = low[lbR] < ta.valuewhen(plFound, low[lbR], 1)
+bull_div = priceLL and rsiHL and plFound
+rsiLH   = rsiLBR < ta.valuewhen(phFound, rsiLBR, 1) and _inRange(phFound[1])
+priceHH = high[lbR] > ta.valuewhen(phFound, high[lbR], 1)
+bear_div = priceHH and rsiLH and phFound
+
+// ---------------- Zona de POCs naked / stop / alvo ----------------
+f_has_band(array<float> vals, array<bool> tst, float ref) =>
+    bool found = false
+    if array.size(vals) > 0
+        for i = 0 to array.size(vals) - 1
+            float lvl = array.get(vals, i)
+            if not na(lvl) and not array.get(tst, i) and math.abs(lvl-ref)/ref*100.0 <= zone_band_pct
+                found := true
+    found
+f_zone_extreme(float cur, array<float> vals, array<bool> tst, float ref, bool want_min) =>
+    float ext = cur
+    if array.size(vals) > 0
+        for i = 0 to array.size(vals) - 1
+            float lvl = array.get(vals, i)
+            if not na(lvl) and not array.get(tst, i) and math.abs(lvl-ref)/ref*100.0 <= zone_band_pct
+                ext := na(ext) ? lvl : (want_min ? math.min(ext, lvl) : math.max(ext, lvl))
+    ext
+f_nearest_dir(array<float> vals, array<bool> tst, float ref, bool above) =>
+    float best = na
+    if array.size(vals) > 0
+        for i = 0 to array.size(vals) - 1
+            float lvl = array.get(vals, i)
+            if not na(lvl) and not array.get(tst, i) and (above ? lvl > ref : lvl < ref)
+                if na(best) or math.abs(lvl-ref) < math.abs(best-ref)
+                    best := lvl
+    best
+f_pick(float cur, float cand, float ref) =>
+    na(cand) ? cur : na(cur) ? cand : (math.abs(cand-ref) < math.abs(cur-ref) ? cand : cur)
+
+has_zone = f_has_band(v1d,k1d,close) or f_has_band(v2d,k2d,close) or f_has_band(v3d,k3d,close) or f_has_band(v5d,k5d,close) or f_has_band(v1w,k1w,close) or f_has_band(v2w,k2w,close) or f_has_band(v1m,k1m,close)
+
+f_stop(bool want_min, float ref) =>
+    float zb = na
+    zb := f_zone_extreme(zb, v1d,k1d,ref,want_min), zb := f_zone_extreme(zb, v2d,k2d,ref,want_min), zb := f_zone_extreme(zb, v3d,k3d,ref,want_min)
+    zb := f_zone_extreme(zb, v5d,k5d,ref,want_min), zb := f_zone_extreme(zb, v1w,k1w,ref,want_min), zb := f_zone_extreme(zb, v2w,k2w,ref,want_min), zb := f_zone_extreme(zb, v1m,k1m,ref,want_min)
+    zb
+f_target(bool above, float ref) =>
+    float tp = na
+    tp := f_pick(tp, f_nearest_dir(v1d,k1d,ref,above), ref), tp := f_pick(tp, f_nearest_dir(v2d,k2d,ref,above), ref), tp := f_pick(tp, f_nearest_dir(v3d,k3d,ref,above), ref)
+    tp := f_pick(tp, f_nearest_dir(v5d,k5d,ref,above), ref), tp := f_pick(tp, f_nearest_dir(v1w,k1w,ref,above), ref), tp := f_pick(tp, f_nearest_dir(v2w,k2w,ref,above), ref), tp := f_pick(tp, f_nearest_dir(v1m,k1m,ref,above), ref)
+    tp
+
+is_btc = str.contains(syminfo.ticker, "BTC")
+risk_usd = base_usd * (is_btc ? risk_btc : risk_pct) / 100.0
+fr = frontrun_pct / 100.0
+
+// ---------------- Máquina de estados: pending → posição → saída ----------------
+var float pend_sig=na, var int pend_dir=0, var float pend_stop=na, var float pend_tp=na, var float pend_risk=na
+var float entry_px=na, var float cur_stop=na, var float tp_px=na, var float risk_unit=na, var bool moved_be=false
+
+if strategy.position_size != 0
+    // acabou de encher? captura os parâmetros da ordem
+    if pend_dir != 0
+        entry_px := strategy.position_avg_price
+        cur_stop := pend_stop
+        tp_px    := pend_tp
+        risk_unit:= pend_risk
+        moved_be := false
+        pend_dir := 0
+    // breakeven a 1R
+    if use_be and not moved_be and not na(risk_unit)
+        if strategy.position_size > 0 and high >= entry_px + risk_unit
+            cur_stop := entry_px, moved_be := true
+        if strategy.position_size < 0 and low  <= entry_px - risk_unit
+            cur_stop := entry_px, moved_be := true
+    strategy.exit("X", from_entry="E", stop=cur_stop, limit=tp_px)
+else
+    entry_px := na
+    if pend_dir != 0
+        // ordem LIMIT ainda pendente → cancelar se o preço fugiu (front-run)
+        if pend_dir > 0 and high >= pend_sig * (1 + fr)
+            strategy.cancel("E"), pend_dir := 0
+        if pend_dir < 0 and low  <= pend_sig * (1 - fr)
+            strategy.cancel("E"), pend_dir := 0
+    else
+        // procurar novo sinal
+        if bull_div and has_zone
+            float sig = close
+            float st  = f_stop(true, sig)
+            if na(st) or st >= sig
+                st := sig * (1 - min_stop_pct/100.0)
+            st := math.min(st, sig * (1 - min_stop_pct/100.0))
+            float ru = sig - st
+            float tp = f_target(true, sig)
+            if na(tp) or tp <= sig
+                tp := sig + 2.0 * ru
+            float qty = ru > 0 ? risk_usd / ru : na
+            if not na(qty) and qty > 0
+                strategy.entry("E", strategy.long, qty=qty, limit=sig)
+                pend_sig := sig, pend_dir := 1, pend_stop := st, pend_tp := tp, pend_risk := ru
+        else if bear_div and has_zone
+            float sig = close
+            float st  = f_stop(false, sig)
+            if na(st) or st <= sig
+                st := sig * (1 + min_stop_pct/100.0)
+            st := math.max(st, sig * (1 + min_stop_pct/100.0))
+            float ru = st - sig
+            float tp = f_target(false, sig)
+            if na(tp) or tp >= sig
+                tp := sig - 2.0 * ru
+            float qty = ru > 0 ? risk_usd / ru : na
+            if not na(qty) and qty > 0
+                strategy.entry("E", strategy.short, qty=qty, limit=sig)
+                pend_sig := sig, pend_dir := -1, pend_stop := st, pend_tp := tp, pend_risk := ru
+
+// marcadores das divergências (para conferir visualmente)
+plotshape(bull_div ? low[lbR]  : na, title="Bull div", offset=-lbR, style=shape.triangleup,   location=location.absolute, color=color.new(color.teal,0), size=size.tiny)
+plotshape(bear_div ? high[lbR] : na, title="Bear div", offset=-lbR, style=shape.triangledown, location=location.absolute, color=color.new(color.red,0),  size=size.tiny)
