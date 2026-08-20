@@ -11,7 +11,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 - Trades registadas: **2**
 - Wins / Losses / BE: **2 / 0 / 0**
 - Win rate: **100%** (2/2)
-- R total: **+4.22R** *(trade 2 assumindo scale-out 50/50; a confirmar)*
+- R total: **+4.22R**
 - Expectância (R por trade): **+2.11R**
 - Profit factor: **— (sem perdas ainda)**
 - Melhor zona: PD POC (short) · PD VAH+VWAP (long) — ambas 1 win
@@ -23,7 +23,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | # | Data | Dir | Gatilho | Zona | Entrada | Stop | Alvo | Saída | Result | R | Notas |
 |---|------|-----|---------|------|---------|------|------|-------|--------|---|-------|
 | 1 | 29/06 ~10:00 ET | Short | Liquidez/aceitação | PD POC | 29552.5 | 29629.75 (PD VAH) | 29364.5 (Asia low) | TP 29364.5 | ✅ Win | **+2.43R** | sweep highs pré-market → manipulação no open → close 5m < PD POC & VWAP = aceitação p/ baixo; BE no PD VAL; out o resto do dia |
-| 2 | 30/06 open NY | Long | Aceitação/continuação | PD VAH + VWAP | 30085.5 | 29998.5 (< low pré-market & PD VAH) | TP1 30217.25 (HOD) · TP2 30264.5 (high sem. passada) | TP1+TP2 | ✅ Win | **+1.79R** *(50/50, a confirmar)* | dia bullish; close 14:30 > VAH & VWAP = aceitação p/ cima; scale-out HOD → important high; BE após TP1 |
+| 2 | 30/06 open NY | Long | Aceitação/continuação | PD VAH + VWAP | 30085.5 | 29998.5 (< low pré-market & PD VAH) | TP1 30217.25 (HOD) · TP2 30264.5 (high sem. passada) | TP1+TP2 | ✅ Win | **+1.79R** (50/50) | dia bullish; close 14:30 > VAH & VWAP = aceitação p/ cima; scale-out HOD → important high; BE após TP1 |
 
 ## Notas detalhadas
 
@@ -62,7 +62,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 **Métricas:**
 - Risco = 30085.5 − 29998.5 = **87 pts**
 - TP1 = +131.75 pts = **+1.51R** · TP2 = +179 pts = **+2.06R**
-- Scale-out 50/50 (assumido) → **+1.79R** *(confirma o split, ou se foi tudo a um dos TPs)*
+- Scale-out **50/50** (confirmado) → **+1.79R**
 
 **Resultado:** ✅ **Ambos os TPs atingidos.** Modelo B (aceitação/continuação), lado longo.
 
