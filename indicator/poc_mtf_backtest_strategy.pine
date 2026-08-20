@@ -40,7 +40,8 @@ rgL=input.int(5,"Mín. barras entre pivôs",minval=1,group=gdv)
 gx = "Execução (paper engine)"
 base_usd    = input.float(10000, "Capital base p/ risco (USD)", group=gx, tooltip="Risco fixo sobre este valor, como no servidor (não compõe).")
 risk_pct    = input.float(1.0, "Risco por trade (%)", minval=0.1, step=0.1, group=gx)
-risk_btc    = input.float(2.0, "Risco BTC (%)", minval=0.1, step=0.1, group=gx)
+btc_special = input.bool(false, "BTC usa risco próprio", group=gx, tooltip="OFF (defeito): BTC é tratado igual às outras. ON: usa o campo abaixo, como no servidor ao vivo.")
+risk_btc    = input.float(2.0, "Risco BTC (%) — só se ligado acima", minval=0.1, step=0.1, group=gx)
 frontrun_pct= input.float(2.0, "Cancelar LIMIT se preço fugir (%)", minval=0.1, step=0.1, group=gx)
 use_be      = input.bool(true, "Mover stop p/ breakeven a 1R", group=gx)
 zone_band_pct = input.float(1.5, "Banda da zona (%) à volta do preço", minval=0.1, step=0.1, group=gx)
@@ -196,7 +197,7 @@ f_target(bool above, float ref) =>
     tp
 
 is_btc = str.contains(syminfo.ticker, "BTC")
-risk_usd = base_usd * (is_btc ? risk_btc : risk_pct) / 100.0
+risk_usd = base_usd * ((is_btc and btc_special) ? risk_btc : risk_pct) / 100.0
 fr = frontrun_pct / 100.0
 
 // ---------------- Máquina de estados: pending → posição → saída ----------------
