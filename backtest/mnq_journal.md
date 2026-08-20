@@ -8,8 +8,8 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **4** (29/06 → 02/07)
-- Dias com setup: **3** · Dias sem setup (no-play): **1** (01/07)
+- Dias observados: **5** (29/06 → 03/07)
+- Dias com setup: **3** · Dias sem setup (no-play): **2** (01/07, 03/07)
 - Trades registadas: **3**
 - Wins / Losses / BE: **3 / 0 / 0**
 - Win rate: **100%** (3/3)
@@ -29,6 +29,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 2 | 30/06 open NY | Long | Aceitação/continuação | PD VAH + VWAP | 30085.5 | 29998.5 (< low pré-market & PD VAH) | TP1 30217.25 (HOD) · TP2 30264.5 (high sem. passada) | TP1+TP2 | ✅ Win | **+1.79R** (50/50) | dia bullish; close 14:30 > VAH & VWAP = aceitação p/ cima; scale-out HOD → important high; BE após TP1 |
 | — | 01/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | pré-market abaixo de todos os POIs; low-prob day; só longs em aceitação > PD VAL, que nunca deu; PA feia, ficou fora |
 | 3 | 02/07 15:05 | Short | Rejeição em POI | PD POC | 30180 | 30319.5 (HOD) | 29825.75 (EQL London / LOD) | TP 29825.75 | ✅ Win | **+2.54R** | bias bearish; rejeição categórica no PD POC; BE no impulso da vela 14:40; TP cheio nos lows |
+| — | 03/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | meio-dia US (fecho antecipado, véspera de 4 jul); sem volume; bias bearish mas queria aceitação < VAH que nunca deu; sem trade |
 
 ## Notas detalhadas
 
@@ -106,3 +107,11 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 **Resultado:** ✅ **TP cheio → +2.54R.** Modelo B (rejeição em POI), lado curto.
 
 **Opinião (coach):** leitura **adaptativa de nível pro**. O melhor não foi o R — foi teres entrado com bias bearish mas **sem casar com ela**: estavas pronto a ir long acima do PD POC. Deixaste o preço escolher (fecho acima do VAL tirou o short cedo; rejeição no PD POC deu o short bom). Essa flexibilidade é o que separa "ter uma opinião" de "ler o mercado". E a auto-crítica do VAL mostra que já vês o detalhe que quase te escapou — é assim que se evolui.
+
+### Dia 5 — 03/07, NO-PLAY (sem trade)
+**Contexto:**
+- Bias **bearish**: só descemos no dia 2 e a recuperação desde o fim de NY vinha **fraca** (compradores com pouca força).
+- POIs em baixo (PD POC e VAL) + lows que interessava ver "taken". Para short queria **aceitação abaixo do VAH** — caso contrário o move não compensava.
+- **Sessão fina / fecho antecipado** (3 jul = meio-dia US, véspera do feriado de 4 de julho). **Sem volume → sem trade.**
+
+**Nota de padrão:** à volta de feriados americanos (3-4 jul, Thanksgiving, etc.) as sessões são meias/finas — geralmente **evitar**. Registar para futuro.
