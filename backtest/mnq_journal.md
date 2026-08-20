@@ -8,6 +8,8 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
+- Dias observados: **3** (29/06, 30/06, 01/07)
+- Dias com setup: **2** · Dias sem setup (no-play): **1** (01/07)
 - Trades registadas: **2**
 - Wins / Losses / BE: **2 / 0 / 0**
 - Win rate: **100%** (2/2)
@@ -24,6 +26,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 |---|------|-----|---------|------|---------|------|------|-------|--------|---|-------|
 | 1 | 29/06 ~10:00 ET | Short | Liquidez/aceitação | PD POC | 29552.5 | 29629.75 (PD VAH) | 29364.5 (Asia low) | TP 29364.5 | ✅ Win | **+2.43R** | sweep highs pré-market → manipulação no open → close 5m < PD POC & VWAP = aceitação p/ baixo; BE no PD VAL; out o resto do dia |
 | 2 | 30/06 open NY | Long | Aceitação/continuação | PD VAH + VWAP | 30085.5 | 29998.5 (< low pré-market & PD VAH) | TP1 30217.25 (HOD) · TP2 30264.5 (high sem. passada) | TP1+TP2 | ✅ Win | **+1.79R** (50/50) | dia bullish; close 14:30 > VAH & VWAP = aceitação p/ cima; scale-out HOD → important high; BE após TP1 |
+| — | 01/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | pré-market abaixo de todos os POIs; low-prob day; só longs em aceitação > PD VAL, que nunca deu; PA feia, ficou fora |
 
 ## Notas detalhadas
 
@@ -67,3 +70,12 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 **Resultado:** ✅ **Ambos os TPs atingidos.** Modelo B (aceitação/continuação), lado longo.
 
 **Prints:** enviadas na conversa (execução + tese). Ficheiros não anexados ao repo — descrição acima serve de registo.
+
+### Dia 3 — 01/07, NO-PLAY (sem trade)
+**Contexto:**
+- No fim da NY afternoon do dia 30 parece ter-se formado um **topo**.
+- No 5 min, no pré-market do dia 01, o preço estava **abaixo de todos os POIs** relevantes → **low-prob day**.
+- Plano: só olhar **longs**, e apenas numa **aceitação acima do PD VAL**.
+- **Nenhum POI deu entry** e a price action não agradou → **ficou de fora o dia todo.**
+
+**Opinião (coach):** decisão **correta e disciplinada**. Quando o preço não está em nenhum POI e a PA é feia, não há trade — forçar seria pagar para jogar. Estar abaixo de todos os POIs tira-te a referência de onde tomar risco; o único cenário (long em aceitação > PD VAL) nunca se armou. **Não jogar também é uma decisão que protege o R.** Os dois dias anteriores foram A+; dias como este são os que separam quem sobrevive de quem devolve os ganhos. 👍
