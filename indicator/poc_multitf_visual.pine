@@ -64,19 +64,40 @@ var array<float> b1w_px=array.new_float(), var array<float> b1w_v=array.new_floa
 var array<float> b2w_px=array.new_float(), var array<float> b2w_v=array.new_float(), var array<line> l2w=array.new_line(), var array<label> t2w=array.new_label()
 var array<float> b1m_px=array.new_float(), var array<float> b1m_v=array.new_float(), var array<line> l1m=array.new_line(), var array<label> t1m=array.new_label()
 
-// ---- Finaliza um período fechado: desenha POC (linha pontilhada + tag) e limpa ----
-f_push(array<float> px, array<float> vol, array<line> lns, array<label> lbs, color c, string txt, int keep) =>
+// ---- Valores dos POCs fechados + flag "testado" (para o webhook: naked = não testado) ----
+var array<float> v1d=array.new_float(), var array<bool> k1d=array.new_bool()
+var array<float> v2d=array.new_float(), var array<bool> k2d=array.new_bool()
+var array<float> v3d=array.new_float(), var array<bool> k3d=array.new_bool()
+var array<float> v5d=array.new_float(), var array<bool> k5d=array.new_bool()
+var array<float> v1w=array.new_float(), var array<bool> k1w=array.new_bool()
+var array<float> v2w=array.new_float(), var array<bool> k2w=array.new_bool()
+var array<float> v1m=array.new_float(), var array<bool> k1m=array.new_bool()
+
+// ---- Finaliza um período fechado: desenha POC (linha pontilhada + tag) e guarda o valor ----
+f_push(array<float> px, array<float> vol, array<line> lns, array<label> lbs, array<float> vals, array<bool> tst, color c, string txt, int keep) =>
     float poc = f_poc(px, vol, bins)
     if not na(poc)
         ln = line.new(bar_index, poc, bar_index + 1, poc, color=color.new(c, 20), width=1, style=line.style_dotted, extend=extend.right)
         lb = label.new(bar_index, poc, "POC:" + txt + " " + str.tostring(poc, format.mintick), style=label.style_label_right, color=color.new(c, 25), textcolor=color.white, size=size.small)
         array.push(lns, ln)
         array.push(lbs, lb)
+        array.push(vals, poc)
+        array.push(tst, false)
         if array.size(lns) > keep
             line.delete(array.shift(lns))
             label.delete(array.shift(lbs))
+            array.shift(vals)
+            array.shift(tst)
     array.clear(px)
     array.clear(vol)
+
+// ---- Marca como "testado" qualquer POC que a barra atual atravessa (deixa de ser naked) ----
+f_mark(array<float> vals, array<bool> tst, float hi, float lo) =>
+    if array.size(vals) > 0
+        for i = 0 to array.size(vals) - 1
+            float lvl = array.get(vals, i)
+            if not na(lvl) and not array.get(tst, i) and lo <= lvl and hi >= lvl
+                array.set(tst, i, true)
 
 // ---- Acumula uma amostra (preço, volume) em todos os buckets ativos ----
 f_accum(float p, float v) =>
@@ -106,21 +127,24 @@ useChart = timeframe.in_seconds(ltf) >= timeframe.in_seconds()
 [ltfP, ltfV] = request.security_lower_tf(syminfo.tickerid, ltf, [hlc3, volume])
 
 if barstate.isconfirmed
+    // 0) marcar POCs que a barra atual atravessou (deixam de ser naked)
+    f_mark(v1d, k1d, high, low), f_mark(v2d, k2d, high, low), f_mark(v3d, k3d, high, low)
+    f_mark(v5d, k5d, high, low), f_mark(v1w, k1w, high, low), f_mark(v2w, k2w, high, low), f_mark(v1m, k1m, high, low)
     // 1) fechar os períodos que acabaram
     if show_1d and timeframe.change("D")  and array.size(b1d_px) > 0
-        f_push(b1d_px, b1d_v, l1d, t1d, c_1d, "1D", keep_1d)
+        f_push(b1d_px, b1d_v, l1d, t1d, v1d, k1d, c_1d, "1D", keep_1d)
     if show_2d and timeframe.change("2D") and array.size(b2d_px) > 0
-        f_push(b2d_px, b2d_v, l2d, t2d, c_2d, "2D", keep_2d)
+        f_push(b2d_px, b2d_v, l2d, t2d, v2d, k2d, c_2d, "2D", keep_2d)
     if show_3d and timeframe.change("3D") and array.size(b3d_px) > 0
-        f_push(b3d_px, b3d_v, l3d, t3d, c_3d, "3D", keep_3d)
+        f_push(b3d_px, b3d_v, l3d, t3d, v3d, k3d, c_3d, "3D", keep_3d)
     if show_5d and timeframe.change("5D") and array.size(b5d_px) > 0
-        f_push(b5d_px, b5d_v, l5d, t5d, c_5d, "5D", keep_5d)
+        f_push(b5d_px, b5d_v, l5d, t5d, v5d, k5d, c_5d, "5D", keep_5d)
     if show_1w and timeframe.change("W")  and array.size(b1w_px) > 0
-        f_push(b1w_px, b1w_v, l1w, t1w, c_1w, "1W", keep_1w)
+        f_push(b1w_px, b1w_v, l1w, t1w, v1w, k1w, c_1w, "1W", keep_1w)
     if show_2w and timeframe.change("2W") and array.size(b2w_px) > 0
-        f_push(b2w_px, b2w_v, l2w, t2w, c_2w, "2W", keep_2w)
+        f_push(b2w_px, b2w_v, l2w, t2w, v2w, k2w, c_2w, "2W", keep_2w)
     if show_1m and timeframe.change("M")  and array.size(b1m_px) > 0
-        f_push(b1m_px, b1m_v, l1m, t1m, c_1m, "1M", keep_1m)
+        f_push(b1m_px, b1m_v, l1m, t1m, v1m, k1m, c_1m, "1M", keep_1m)
     // 2) acumular as amostras desta barra
     if useChart
         if not na(hlc3) and not na(volume) and volume > 0
@@ -253,8 +277,92 @@ if bear_inval
 plotshape(show_inval and bull_inval ? low  : na, title="Bull inval", style=shape.xcross, location=location.belowbar, color=color.new(color.gray, 0), size=size.tiny)
 plotshape(show_inval and bear_inval ? high : na, title="Bear inval", style=shape.xcross, location=location.abovebar, color=color.new(color.gray, 0), size=size.tiny)
 
-// alertas simples (Fase 1 — sem webhook)
+// alertas simples (sem webhook — para uso manual no diálogo "Add Alert")
 alertcondition(bull_div,   title="Bull Div (POC MTF)",             message="{{ticker}}: Divergência BULLISH")
 alertcondition(bear_div,   title="Bear Div (POC MTF)",             message="{{ticker}}: Divergência BEARISH")
 alertcondition(bull_inval, title="Bull Div INVALIDADA (POC MTF)",  message="{{ticker}}: Bull div invalidada")
 alertcondition(bear_inval, title="Bear Div INVALIDADA (POC MTF)",  message="{{ticker}}: Bear div invalidada")
+
+// ============================================================================
+// WEBHOOK poc-strat — envia o MESMO payload que o MAX V2 enviava, mas agora
+// disparado pela divergência RSI clássica DESTE indicador + preço numa zona
+// forte de POCs (naked, dentro da banda %). Server NÃO muda.
+// Gatilho: bull_div -> long / bear_div -> short, só se houver POC naked na zona.
+// ============================================================================
+gwh = "Webhook (poc-strat)"
+enable_webhook = input.bool(false, "Ativar envio de webhook", group=gwh, tooltip="OFF por omissão. Liga aqui E cria um alerta 'Any alert() function call' neste indicador. Não esqueças de DESLIGAR o alerta do MAX V2 para não abrir trades duplicadas.")
+webhook_secret = input.string("O_TEU_SEGREDO", "Segredo (tem de bater certo com o servidor)", group=gwh)
+zone_band_pct  = input.float(1.5, "Banda da zona (%) à volta do preço", minval=0.1, step=0.1, group=gwh, tooltip="Um POC conta para a 'zona forte' se estiver a <= esta % do preço.")
+
+// --- serializar POCs naked em JSON (igual ao MAX V2) ---
+f_json_levels(string acc, array<float> levels, array<bool> tested, float ref, string mode) =>
+    string s = acc
+    if array.size(levels) > 0
+        for i = 0 to array.size(levels) - 1
+            float lvl = array.get(levels, i)
+            if not na(lvl) and not array.get(tested, i)
+                bool ok = mode == "zone" ? (math.abs(lvl - ref) / ref * 100.0 <= zone_band_pct) : mode == "up" ? (lvl > ref) : (lvl < ref)
+                if ok
+                    s := s + (s == "" ? "" : ",") + str.tostring(lvl, format.mintick)
+    s
+
+f_zone_extreme(float cur, array<float> levels, array<bool> tested, float ref, bool want_min) =>
+    float ext = cur
+    if array.size(levels) > 0
+        for i = 0 to array.size(levels) - 1
+            float lvl = array.get(levels, i)
+            if not na(lvl) and not array.get(tested, i) and math.abs(lvl - ref) / ref * 100.0 <= zone_band_pct
+                ext := na(ext) ? lvl : (want_min ? math.min(ext, lvl) : math.max(ext, lvl))
+    ext
+
+// zone_pocs: POCs naked de TODOS os períodos dentro da banda à volta do preço
+string zj = ""
+zj := f_json_levels(zj, v1d, k1d, close, "zone")
+zj := f_json_levels(zj, v2d, k2d, close, "zone")
+zj := f_json_levels(zj, v3d, k3d, close, "zone")
+zj := f_json_levels(zj, v5d, k5d, close, "zone")
+zj := f_json_levels(zj, v1w, k1w, close, "zone")
+zj := f_json_levels(zj, v2w, k2w, close, "zone")
+zj := f_json_levels(zj, v1m, k1m, close, "zone")
+
+// zona forte válida = existe pelo menos um POC naked na banda
+bool valid_strong_zone = zj != ""
+bool sniper_long_setup  = enable_webhook and bull_div and valid_strong_zone
+bool sniper_short_setup = enable_webhook and bear_div and valid_strong_zone
+
+if sniper_long_setup or sniper_short_setup
+    string side_str = sniper_long_setup ? "long" : "short"
+
+    string up = ""
+    up := f_json_levels(up, v1d, k1d, close, "up")
+    up := f_json_levels(up, v2d, k2d, close, "up")
+    up := f_json_levels(up, v3d, k3d, close, "up")
+    up := f_json_levels(up, v5d, k5d, close, "up")
+    up := f_json_levels(up, v1w, k1w, close, "up")
+    up := f_json_levels(up, v2w, k2w, close, "up")
+    up := f_json_levels(up, v1m, k1m, close, "up")
+
+    string dn = ""
+    dn := f_json_levels(dn, v1d, k1d, close, "down")
+    dn := f_json_levels(dn, v2d, k2d, close, "down")
+    dn := f_json_levels(dn, v3d, k3d, close, "down")
+    dn := f_json_levels(dn, v5d, k5d, close, "down")
+    dn := f_json_levels(dn, v1w, k1w, close, "down")
+    dn := f_json_levels(dn, v2w, k2w, close, "down")
+    dn := f_json_levels(dn, v1m, k1m, close, "down")
+
+    float zb = na
+    bool want_min = side_str == "long"
+    zb := f_zone_extreme(zb, v1d, k1d, close, want_min)
+    zb := f_zone_extreme(zb, v2d, k2d, close, want_min)
+    zb := f_zone_extreme(zb, v3d, k3d, close, want_min)
+    zb := f_zone_extreme(zb, v5d, k5d, close, want_min)
+    zb := f_zone_extreme(zb, v1w, k1w, close, want_min)
+    zb := f_zone_extreme(zb, v2w, k2w, close, want_min)
+    zb := f_zone_extreme(zb, v1m, k1m, close, want_min)
+    if na(zb)
+        zb := side_str == "long" ? close * 0.99 : close * 1.01
+
+    string payload = '{"ticker":"' + syminfo.ticker + '","side":"' + side_str + '","price":' + str.tostring(close, format.mintick) + ',"zone_pocs":[' + zj + '],"targets_up":[' + up + '],"targets_down":[' + dn + '],"zone_break":' + str.tostring(zb, format.mintick) + ',"secret":"' + webhook_secret + '"}'
+
+    alert(payload, alert.freq_once_per_bar_close)
