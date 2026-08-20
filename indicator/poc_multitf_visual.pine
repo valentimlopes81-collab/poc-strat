@@ -199,10 +199,14 @@ if show_1m and show_live and barstate.islast and array.size(b1m_px) > 0
 // DIVERGÊNCIAS (RSI) — mesma lógica do indicador RSI, agora aqui no preço.
 // FASE 1: setinhas + invalidação + alertas simples. (Webhook = fase seguinte.)
 // ============================================================================
-gdv = "Divergências (RSI)"
+gdv = "Divergências (RSI clássica)"
 show_div   = input.bool(true, "Mostrar divergências (setinhas)", group=gdv)
 show_inval = input.bool(true, "Marcar invalidação (✖)", group=gdv)
 rsi_len    = input.int(14, "RSI Length", minval=2, group=gdv)
+lbR        = input.int(5, "Pivot lookback direita", minval=1, group=gdv)
+lbL        = input.int(5, "Pivot lookback esquerda", minval=1, group=gdv)
+rgU        = input.int(60, "Máx. barras entre pivôs", minval=1, group=gdv)
+rgL        = input.int(5,  "Mín. barras entre pivôs", minval=1, group=gdv)
 c_bull     = input.color(color.rgb(38, 166, 154), "Bull", group=gdv)
 c_bear     = input.color(color.rgb(239, 83, 80),  "Bear", group=gdv)
 
@@ -211,36 +215,35 @@ _u = ta.rma(math.max(_chg, 0), rsi_len)
 _d = ta.rma(-math.min(_chg, 0), rsi_len)
 rsi_v = _d == 0 ? 100.0 : _u == 0 ? 0.0 : 100.0 - 100.0 / (1.0 + _u / _d)
 
-dl = 5
-dr = 2
-plp = ta.pivotlow(low, dl, dr)
-php = ta.pivothigh(high, dl, dr)
-os15 = ta.lowest(rsi_v, 15) <= 35
-ob15 = ta.highest(rsi_v, 15) >= 65
+_inRange(bool cond) =>
+    bars = ta.barssince(cond)
+    rgL <= bars and bars <= rgU
 
-var float lplp=na, var float pplp=na, var float lplr=na, var float pplr=na
-var float lphp=na, var float pphp=na, var float lphr=na, var float pphr=na
-if not na(plp)
-    pplp := lplp, pplr := lplr
-    lplp := plp,  lplr := rsi_v[dr]
-if not na(php)
-    pphp := lphp, pphr := lphr
-    lphp := php,  lphr := rsi_v[dr]
+rsiLBR  = rsi_v[lbR]
+plFound = not na(ta.pivotlow(rsi_v, lbL, lbR))
+phFound = not na(ta.pivothigh(rsi_v, lbL, lbR))
 
-bull_div = not na(plp) and not na(pplp) and lplp < pplp and lplr > pplr and os15
-bear_div = not na(php) and not na(pphp) and lphp > pphp and lphr < pphr and ob15
+// Bullish: preço faz lower low, RSI faz higher low
+rsiHL   = rsiLBR > ta.valuewhen(plFound, rsiLBR, 1) and _inRange(plFound[1])
+priceLL = low[lbR] < ta.valuewhen(plFound, low[lbR], 1)
+bull_div = priceLL and rsiHL and plFound
 
-// setinhas no preço (no pivô, dr barras atrás)
-plotshape(show_div and bull_div ? low[dr]  : na, title="Bull div", offset=-dr, style=shape.triangleup,   location=location.absolute, color=c_bull, size=size.small)
-plotshape(show_div and bear_div ? high[dr] : na, title="Bear div", offset=-dr, style=shape.triangledown, location=location.absolute, color=c_bear, size=size.small)
+// Bearish: preço faz higher high, RSI faz lower high
+rsiLH   = rsiLBR < ta.valuewhen(phFound, rsiLBR, 1) and _inRange(phFound[1])
+priceHH = high[lbR] > ta.valuewhen(phFound, high[lbR], 1)
+bear_div = priceHH and rsiLH and phFound
+
+// setinhas no preço (no pivô, lbR barras atrás)
+plotshape(show_div and bull_div ? low[lbR]  : na, title="Bull div", offset=-lbR, style=shape.triangleup,   location=location.absolute, color=c_bull, size=size.small)
+plotshape(show_div and bear_div ? high[lbR] : na, title="Bear div", offset=-lbR, style=shape.triangledown, location=location.absolute, color=c_bear, size=size.small)
 
 // invalidação: bull cai se fechar abaixo do fundo; bear cai se fechar acima do topo
 var float bull_iv=na, var bool bull_active=false
 var float bear_iv=na, var bool bear_active=false
 if bull_div
-    bull_iv := lplp, bull_active := true
+    bull_iv := low[lbR],  bull_active := true
 if bear_div
-    bear_iv := lphp, bear_active := true
+    bear_iv := high[lbR], bear_active := true
 bull_inval = bull_active and not bull_div and not na(bull_iv) and close < bull_iv
 bear_inval = bear_active and not bear_div and not na(bear_iv) and close > bear_iv
 if bull_inval
