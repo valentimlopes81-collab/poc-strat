@@ -8,17 +8,17 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **7** (29/06 → 07/07)
-- Dias com setup: **3** · Dias sem setup (no-play): **4** (01/07, 03/07, 06/07, 07/07)
-- Taxa de setup: **~43%** dos dias
-- Trades registadas: **3**
-- Wins / Losses / BE: **3 / 0 / 0**
-- Win rate: **100%** (3/3)
+- Dias observados: **8** (29/06 → 08/07)
+- Dias com setup: **4** · Dias sem setup (no-play): **4** (01, 03, 06, 07/07)
+- Taxa de setup: **50%** dos dias
+- Trades registadas: **4**
+- Wins / Losses / BE: **3 / 0 / 1**
+- Win rate: **100%** decididas (3/3) · **75%** incl. BE (3/4)
 - R total: **+6.76R**
-- Expectância (R por trade): **+2.25R**
+- Expectância (R por trade, incl. BE): **+1.69R**
 - Profit factor: **— (sem perdas ainda)**
 - Melhor zona: **PD POC** (2 wins, ambos short) · PD VAH+VWAP (1 win long)
-- Distância média do stop: ~101 pts (77 / 87 / 139) — relevante p/ sizing real em MNQ
+- Distância média do stop: ~116 pts (77 / 87 / 139 / 161) — a **alargar**; relevante p/ sizing em prop
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
 
@@ -47,6 +47,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 03/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | meio-dia US (fecho antecipado, véspera de 4 jul); sem volume; bias bearish mas queria aceitação < VAH que nunca deu; sem trade |
 | — | 06/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias bearish (lows da sem. anterior + EQL Asia perto); manipulação no open tirou os highs c/ extremo do value como suporte; **sem target com RR perto** → sem trade |
 | — | 07/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | full bearish; muitos targets em baixo mas **POIs muito acima do preço** — precisava de revisita ao value + rejeição clara p/ short, que não veio (preço nunca voltou ao POI) |
+| 4 | 08/07 ~11:00 ET | Short | Rejeição/VAL a aguentar | VAL | 29257 | 29418 | 28909.25 (novos lows) | BE 29257 (17:20 local) | ⚪ BE | **0R** | entrada tardia (tail da janela → almoço); setup fraco "por causa das horas"; BE na wick pré-market (14:25 local) |
 
 ## Notas detalhadas
 
@@ -132,3 +133,22 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 - **Sessão fina / fecho antecipado** (3 jul = meio-dia US, véspera do feriado de 4 de julho). **Sem volume → sem trade.**
 
 **Nota de padrão:** à volta de feriados americanos (3-4 jul, Thanksgiving, etc.) as sessões são meias/finas — geralmente **evitar**. Registar para futuro.
+
+### Trade 4 — 08/07, short @ 29257 → BE
+**Contexto:**
+- **Finalmente tiraram os lows** que eram target há ~1 semana → alvo cumprido.
+- Plano: **long** numa aceitação do value (target = limpar os highs da quinta anterior); OU, se revisita ao value **com rejeição**, **short** até novos lows (ainda **bastante longe**).
+- Dia **muito fraco**; o **VAL aguentava** → jogou **short** até ao LOD.
+- **Problema (do próprio):** já eram **quase 16h local (~11:00 ET)** — entrada no **tail da janela**, a correr para o almoço.
+
+**Execução:**
+- Entrada 29257 · Stop 29418 (161 pts) · TP 28909.25 (novos lows).
+- BE colocado na **wick do pré-market** (14:25 local). Levou **BE às 17:20** (~12:20 ET, hora de almoço).
+
+**Métricas:** risco 161 pts; se TP = +2.16R; **saiu BE = 0R.**
+
+**Resultado:** ⚪ **BE (0R).** Primeira não-vitória — mas gestão protegeu, não virou loss.
+
+**Opinião (coach):** duas lições honestas, e tu já apontaste a principal:
+1. **Timing.** Entrada ~11:00 ET, a rebentar para o almoço — o pior momento p/ momentum. Os teus 3 setups A+ foram todos **cedo na janela**; este foi no fim. **Regra a fixar: setup no tail da janela / a entrar no lunch = qualidade menor, ou passa.**
+2. **Conviç​ão baixa.** Dia fraco, VAL a aguentar (obstáculo!), target "bastante longe" = RR e prob mais fracos. Era um **B-setup**, e veio depois de **3 no-plays seguidos** — cuidado com a comichão de "finalmente entrar". Aqui saiu barato (BE); é a lição perfeita ao preço mais baixo.
