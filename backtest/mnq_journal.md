@@ -8,8 +8,8 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **5** (29/06 → 03/07)
-- Dias com setup: **3** · Dias sem setup (no-play): **2** (01/07, 03/07)
+- Dias observados: **6** (29/06 → 06/07)
+- Dias com setup: **3** · Dias sem setup (no-play): **3** (01/07, 03/07, 06/07)
 - Trades registadas: **3**
 - Wins / Losses / BE: **3 / 0 / 0**
 - Win rate: **100%** (3/3)
@@ -38,6 +38,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 01/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | pré-market abaixo de todos os POIs; low-prob day; só longs em aceitação > PD VAL, que nunca deu; PA feia, ficou fora |
 | 3 | 02/07 15:05 | Short | Rejeição em POI | PD POC | 30180 | 30319.5 (HOD) | 29825.75 (EQL London / LOD) | TP 29825.75 | ✅ Win | **+2.54R** | bias bearish; rejeição categórica no PD POC; BE no impulso da vela 14:40; TP cheio nos lows |
 | — | 03/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | meio-dia US (fecho antecipado, véspera de 4 jul); sem volume; bias bearish mas queria aceitação < VAH que nunca deu; sem trade |
+| — | 06/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias bearish (lows da sem. anterior + EQL Asia perto); manipulação no open tirou os highs c/ extremo do value como suporte; **sem target com RR perto** → sem trade |
 
 ## Notas detalhadas
 
