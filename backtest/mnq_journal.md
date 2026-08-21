@@ -21,6 +21,14 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
 
+## Notas de risco (prop Lucid — 25k)
+
+- Buffer real = **Max Loss Limit $1.000** (não os 25k). Alvo p/ passar: **$1.250**. Trailing **EOD** (só conta no close). Cap: 20 micros.
+- **$300/trade = 30% do buffer** → 3 losers rebentam. Regra saudável: **~10% = ~$100/trade**.
+- Conflito: 1 MNQ com stop 100–140 pts = $200–280 de risco → já é 2–3× o ideal, e não há fração em futuros.
+- Saídas: **(1) conta 50k** (buffer ~2×) · **(2) stops mais apertados** · **(3) prop CFD** (lotes fracionados).
+- Decisão pendente do utilizador: tamanho de conta + risco/trade final.
+
 ## Registo
 
 | # | Data | Dir | Gatilho | Zona | Entrada | Stop | Alvo | Saída | Result | R | Notas |
