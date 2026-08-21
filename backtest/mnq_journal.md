@@ -8,9 +8,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **8** (29/06 → 08/07)
-- Dias com setup: **4** · Dias sem setup (no-play): **4** (01, 03, 06, 07/07)
-- Taxa de setup: **50%** dos dias
+- Dias observados: **9** (29/06 → 09/07)
+- Dias com setup: **4** · Dias sem setup (no-play): **5** (01, 03, 06, 07, 09/07)
+- Taxa de setup: **~44%** dos dias
 - Trades registadas: **4**
 - Wins / Losses / BE: **3 / 0 / 1**
 - Win rate: **100%** decididas (3/3) · **75%** incl. BE (3/4)
@@ -48,6 +48,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 06/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias bearish (lows da sem. anterior + EQL Asia perto); manipulação no open tirou os highs c/ extremo do value como suporte; **sem target com RR perto** → sem trade |
 | — | 07/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | full bearish; muitos targets em baixo mas **POIs muito acima do preço** — precisava de revisita ao value + rejeição clara p/ short, que não veio (preço nunca voltou ao POI) |
 | 4 | 08/07 ~11:00 ET | Short | Rejeição/VAL a aguentar | VAL | 29257 | 29418 | 28909.25 (novos lows) | BE 29257 (17:20 local) | ⚪ BE | **0R** | entrada tardia (tail da janela → almoço); setup fraco "por causa das horas"; BE na wick pré-market (14:25 local) |
+| — | 09/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias virou **bullish** (pump overnight; aceitação do Monday range + PD value); só longs num retrace ao extremo do value — **value não foi revisitado** → sem entry. Bias correta, sem setup |
 
 ## Notas detalhadas
 
