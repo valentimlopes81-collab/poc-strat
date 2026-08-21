@@ -5,12 +5,13 @@ Modelos em teste: **(A)** divergência RSI + zona · **(B)** liquidez/aceitaçã
 Zonas de referência: POC/VAH/VAL dia anterior, POC overnight, VWAP, POC a desenvolver, Asia high/low.
 Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 **Regra da sessão:** 1 setup por dia — depois de entrar, fora o resto do dia.
+**Metodologia:** a tese/plano é escrita em **pré-market, sem ver a sessão**; a execução é registada depois. Separa plano de outcome (anti-hindsight). ✓
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **14** (29/06 → 16/07)
-- Dias com setup: **8** · Dias sem setup (no-play): **6** (01, 03, 06, 07, 09, 13/07)
-- Taxa de setup: **~57%** dos dias
+- Dias observados: **15** (29/06 → 17/07)
+- Dias com setup: **8** · Dias sem setup (no-play): **7** (01, 03, 06, 07, 09, 13, 17/07)
+- Taxa de setup: **~53%** dos dias
 - Trades registadas: **9** (14/07 teve 2)
 - Wins / Losses / BE: **6 / 1 / 2**
 - Win rate: **86%** decididas (6/7) · **67%** incl. BE (6/9)
@@ -56,6 +57,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 7 | 14/07 | Long (re-entry) | Aceitação PD POC | PD POC | 29660.25 | 29493.5 (167 pts, < PD POC ✓) | 30041.5 | Manual 29723.25 (VAH, 17h) | ✅ Win | **+0.38R** | re-entry "muito confiante na bias" (**quebra da regra 1/dia**); stop corrigido; fecho manual pequeno no VAH às 17h |
 | 8 | 15/07 | Long | Aceitação PD POC (suporte) | PD POC | 29806 | 29708.5 (97.5 pts) | 30094.5 (high sem. passada) | BE 29806 | ⚪ BE | **0R** | bias bullish (value como suporte); reagiu ligeiramente acima do PD POC; subiu ~+0.8R (29886.5) e voltou; BE, sem TP. **Voltou à regra 1/dia ✓** |
 | 9 | 16/07 14:35 | Short | Continuation < value | low semana (key) | 29417.75 | 29531.75 (114 pts) | TP1 29303.5 (low semana) · TP2 29096 | TP1 (50%) + BE | ✅ Win | **+0.50R** | dia 15 fechou full bearish; a trocar < PD value; short continuation; TP1 no low da semana, runner p/ TP2 (não veio) → BE; disciplina 1/dia ✓ |
+| — | 17/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | full dump quinta→sexta (visitou o TP2 de 16/07); 2 lows ainda p/ tirar mas cenário pouco jogável e sem setup claro p/ short; ficou de fora |
 
 ## Notas detalhadas
 
