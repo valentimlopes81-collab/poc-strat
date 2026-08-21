@@ -8,17 +8,17 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **11** (29/06 → 13/07)
-- Dias com setup: **5** · Dias sem setup (no-play): **6** (01, 03, 06, 07, 09, 13/07)
-- Taxa de setup: **~45%** dos dias
-- Trades registadas: **5**
-- Wins / Losses / BE: **4 / 0 / 1**
-- Win rate: **100%** decididas (4/4) · **80%** incl. BE (4/5)
-- R total: **+7.64R**
-- Expectância (R por trade, incl. BE): **+1.53R**
-- Profit factor: **— (sem perdas ainda)**
-- Melhor zona: **PD POC** (workhorse — 3 trades: 2 short + 1 long) · PD VAH+VWAP (1 long)
-- Distância média do stop: ~105 pts (77 / 87 / 139 / 161 / 60)
+- Dias observados: **12** (29/06 → 14/07)
+- Dias com setup: **6** · Dias sem setup (no-play): **6** (01, 03, 06, 07, 09, 13/07)
+- Taxa de setup: **50%** dos dias
+- Trades registadas: **7** (14/07 teve 2 — quebra da regra 1/dia)
+- Wins / Losses / BE: **5 / 1 / 1**
+- Win rate: **83%** decididas (5/6) · **71%** incl. BE (5/7)
+- R total: **+7.02R**
+- Expectância (R por trade, incl. BE): **+1.00R**
+- Profit factor (R): **8.02 / 1.0 = 8.0** · payoff médio ~1.6R
+- Melhor zona: **PD POC** (workhorse — 4 das 7 trades)
+- Distância média do stop: ~113 pts (77/87/139/161/60/100/167)
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
 
@@ -51,6 +51,8 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 09/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias virou **bullish** (pump overnight; aceitação do Monday range + PD value); só longs num retrace ao extremo do value — **value não foi revisitado** → sem entry. Bias correta, sem setup |
 | 5 | 10/07 14:40 | Long | Aceitação PD POC | PD POC | 29857.25 | 29797 | TP1 29963.5 · TP2 29992.75 | TP1 (50%) + BE | ✅ Win | **+0.88R** | range PD POC–PD VAL; aceitação PD POC → long p/ highs dia anterior (≈ PD VAH); TP2 não atingiu, resto BE; stop apertado 60 pts |
 | — | 13/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | abriu semana p/ baixo, bias bearish; queria value como resistência p/ short ao LOD; **tirou o low ANTES de revisitar o value** → sem entry; parou de procurar às 16h (disciplina de horário ✓) |
+| 6 | 14/07 | Long | Aceitação PD POC | PD POC | 29785.25 | 29685.25 (100 pts) | 30041.5 (open semanal) | Stop | ❌ Loss | **−1R** | **stop demasiado curto** (devia estar < PD POC) → wicked out; auto-identificado |
+| 7 | 14/07 | Long (re-entry) | Aceitação PD POC | PD POC | 29660.25 | 29493.5 (167 pts, < PD POC ✓) | 30041.5 | Manual 29723.25 (VAH, 17h) | ✅ Win | **+0.38R** | re-entry "muito confiante na bias" (**quebra da regra 1/dia**); stop corrigido; fecho manual pequeno no VAH às 17h |
 
 ## Notas detalhadas
 
@@ -175,3 +177,24 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 - ⚠️ Risco no stop = 60.25 × $2 × 2 = **$241 = 24% do buffer de $1.000** (Lucid 25k). Mesmo no mínimo p/ escalar, é agressivo p/ a 25k.
 
 **Resultado:** ✅ **Win +0.88R (~+$210).** Modelo B, long em PD POC. Stop finalmente apertado — bom.
+
+### Dia 12 — 14/07: 2 trades (1º loss + re-entry). Dia líquido −0.62R
+**Contexto:** dia bullish. Ásia fez o LOD e gerou pump; Londres consolidou. PD POC era forte resistência mas foi **aceite** no pré-market → passámos a estar **acima do value**. Jogada mais provável: **longs no extremo do value** até ao **open semanal** (30041.5).
+
+**Trade 6 — long @ 29785.25 → −1R (loss):**
+- Stop 29685.25 (100 pts), TP 30041.5.
+- **Erro (auto-identificado): stop demasiado curto** — devia estar **abaixo do PD POC**. Foi **wicked out** e depois o preço foi na direção certa.
+- Lição: em aceitação de POC, o stop tem de ir **abaixo da estrutura (PD POC)**, não a meio do ruído.
+
+**Trade 7 — long re-entry @ 29660.25 → +0.38R (win, fecho manual):**
+- Stop 29493.5 (167 pts, agora **< PD POC** ✓ — o stop corrigido), TP 30041.5.
+- Fechou **manualmente no VAH (29723.25)** às 17h — "não fazia sentido continuar na trade".
+
+**Opinião (coach) — separar RESULTADO de PROCESSO:**
+1. ✅ **Diagnóstico do stop certo.** Perceber que o loss veio de um stop curto (e corrigi-lo na 2ª entrada, abaixo do PD POC) é exatamente a resposta certa a um loss.
+2. ⚠️ **Quebraste a regra 1-trade/dia**, motivado por "muito confiante na bias". Desta vez a bias estava certa e saíste com lucro — **e é precisamente por isso que é perigoso.** O outcome positivo reforça um hábito mau. A regra 1/dia existe para te proteger **nos dias em que a bias está ERRADA**; re-entrar após loss por confiança é o padrão que rebenta contas quando o mercado não colabora. **Não deixes o resultado validar o processo.**
+3. 🟡 **Fecho manual a +0.38R.** Time-disciplinado (17h), mas desviaste do plano (TP 30041.5 / BE). Fechar tão pequeno logo a seguir a um loss pode ser "scared money" a querer travar qualquer verde. Vale a pena refletir: foi leitura ou foi medo?
+
+**Nota prop:** 2 trades num dia = **2 mordidas no buffer de $1.000**. Um −1R + risco outra vez ⇒ na Lucid 25k isto aproxima-te do limite diário/MLL bem mais depressa. Mais uma razão para a regra 1/dia.
+
+**Resultado do dia:** ❌ **−0.62R líquido.** Primeiro dia vermelho — gerido sem desastre, mas com uma quebra de regra a registar.
