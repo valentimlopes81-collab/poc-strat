@@ -9,18 +9,18 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **17** (29/06 → 21/07)
-- Dias com setup: **10** · Dias sem setup (no-play): **7** (01, 03, 06, 07, 09, 13, 17/07)
-- Taxa de setup: **~59%** dos dias
-- Trades registadas: **11** (14/07 teve 2)
-- Wins / Losses / BE: **6 / 3 / 2**
-- Win rate: **67%** decididas (6/9) · **55%** incl. BE (6/11)
-- R total: **+5.52R**
-- Expectância (R por trade, incl. BE): **+0.50R**
-- Profit factor (R): **8.52 / 3.0 = 2.8** · payoff médio ~1.4R
+- Dias observados: **18** (29/06 → 22/07)
+- Dias com setup: **11** · Dias sem setup (no-play): **7** (01, 03, 06, 07, 09, 13, 17/07)
+- Taxa de setup: **~61%** dos dias
+- Trades registadas: **12** (14/07 teve 2)
+- Wins / Losses / BE: **7 / 3 / 2**
+- Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
+- R total: **+5.91R**
+- Expectância (R por trade, incl. BE): **+0.49R**
+- Profit factor (R): **8.91 / 3.0 = 3.0** · payoff médio ~1.3R
 - Melhor zona: **PD POC** (workhorse)
-- Distância média do stop: ~112 pts
-- **Nota de regime:** primeiras 3 trades = +6.76R; últimas 7 (5→11) = **−1.24R**. Duas losses seguidas (T10, T11).
+- Distância média do stop: ~120 pts (a tendência p/ stops largos capa o R dos winners — T12: mov +155 pts valeu só +0.77R por stop de 200)
+- **Nota de regime:** primeiras 3 trades = +6.76R; últimas 8 (5→12) = **−0.85R**. T12 quebrou a série de 2 losses com o setup-tipo CERTO (aceitação confirmada).
 - **Hipótese a testar (edge):** GANHA quando entra em **aceitação/rejeição CONFIRMADA e alinhada com a bias** (T1/2/3/5/7/9). PERDE quando **antecipa** (apanhar suporte: T6/T10) ou **luta a própria bias** (T11 short num dia que planeou longs). → *Entrar NA confirmação, no sentido da bias. Nunca antecipar nem contrariar o próprio plano.*
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
@@ -61,6 +61,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 17/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | full dump quinta→sexta (visitou o TP2 de 16/07); 2 lows ainda p/ tirar mas cenário pouco jogável e sem setup claro p/ short; ficou de fora |
 | 10 | 20/07 | Long | "Apanhar suporte" PD VAH | PD VAH | 29009.5 | 28908.5 (low NY, 101 pts) | 29192.75 (HOS NY) | Stop | ❌ Loss | **−1R** | range ON POC–PD VAH aceite p/ cima na London; tentou VAH como suporte; stopado. **Levou a loss e fechou charts — SEM revenge (lição do 14/07 aplicada) ✓** |
 | 11 | 21/07 | Short | Aceitação < PD VAH (**contra bias**) | PD VAH | 29117.75 | 29249 (high open, 131 pts) | TP1 28957 (PD POC) · TP2 28703.75 (EQL) | Stop | ❌ Loss | **−1R** | bias planeada = **LONGS** (Ásia low + rally London); jogou **short** numa "suposta aceitação < VAH" → leitura errada, contra o próprio plano; stopado |
+| 12 | 22/07 | Long | **Aceitação PD VAL+POC** (confirmada ✓) | PD VAL+POC | 29163 | 28962.5 (200 pts) | TP1 29318 (PD VAH) · TP2 29509 | TP1 (50%) + BE | ✅ Win | **+0.39R** | "PA terrível" mas setup-tipo CERTO (aceitação, no sentido da leitura); quebra a série de 2 losses; stop largo (200) capou o R |
 
 ## Notas detalhadas
 
