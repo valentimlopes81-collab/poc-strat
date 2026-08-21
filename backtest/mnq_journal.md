@@ -8,8 +8,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **6** (29/06 → 06/07)
-- Dias com setup: **3** · Dias sem setup (no-play): **3** (01/07, 03/07, 06/07)
+- Dias observados: **7** (29/06 → 07/07)
+- Dias com setup: **3** · Dias sem setup (no-play): **4** (01/07, 03/07, 06/07, 07/07)
+- Taxa de setup: **~43%** dos dias
 - Trades registadas: **3**
 - Wins / Losses / BE: **3 / 0 / 0**
 - Win rate: **100%** (3/3)
@@ -20,6 +21,12 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 - Distância média do stop: ~101 pts (77 / 87 / 139) — relevante p/ sizing real em MNQ
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
+
+## Observações do modelo (a acumular)
+
+- **Modelo = reversão/rejeição num POI de value area → liquidez oposta.** Precisa que o preço **volte a um POI** e o rejeite/aceite.
+- **Ponto cego:** dias de **trend forte que fogem sem retração ao POI** (03, 06, 07/07 foram bearish e o preço não voltou ao value) → **sem entrada**. Correto para o modelo, mas significa **curva de equity plana em regimes de trend persistente**. Não é bug; é a natureza do sistema.
+- Implicação: a frequência de setups cai quando o mercado só corre numa direção. Aceitável — mas ter presente que ficas de fora de moves grandes sem retração.
 
 ## Notas de risco (prop Lucid — 25k)
 
@@ -39,6 +46,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 3 | 02/07 15:05 | Short | Rejeição em POI | PD POC | 30180 | 30319.5 (HOD) | 29825.75 (EQL London / LOD) | TP 29825.75 | ✅ Win | **+2.54R** | bias bearish; rejeição categórica no PD POC; BE no impulso da vela 14:40; TP cheio nos lows |
 | — | 03/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | meio-dia US (fecho antecipado, véspera de 4 jul); sem volume; bias bearish mas queria aceitação < VAH que nunca deu; sem trade |
 | — | 06/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias bearish (lows da sem. anterior + EQL Asia perto); manipulação no open tirou os highs c/ extremo do value como suporte; **sem target com RR perto** → sem trade |
+| — | 07/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | full bearish; muitos targets em baixo mas **POIs muito acima do preço** — precisava de revisita ao value + rejeição clara p/ short, que não veio (preço nunca voltou ao POI) |
 
 ## Notas detalhadas
 
