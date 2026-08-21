@@ -9,9 +9,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **18** (29/06 → 22/07)
-- Dias com setup: **11** · Dias sem setup (no-play): **7** (01, 03, 06, 07, 09, 13, 17/07)
-- Taxa de setup: **~61%** dos dias
+- Dias observados: **19** (29/06 → 23/07)
+- Dias com setup: **11** · Dias sem setup (no-play): **8** (01, 03, 06, 07, 09, 13, 17, 23/07)
+- Taxa de setup: **~58%** dos dias
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -62,6 +62,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 10 | 20/07 | Long | "Apanhar suporte" PD VAH | PD VAH | 29009.5 | 28908.5 (low NY, 101 pts) | 29192.75 (HOS NY) | Stop | ❌ Loss | **−1R** | range ON POC–PD VAH aceite p/ cima na London; tentou VAH como suporte; stopado. **Levou a loss e fechou charts — SEM revenge (lição do 14/07 aplicada) ✓** |
 | 11 | 21/07 | Short | Aceitação < PD VAH (**contra bias**) | PD VAH | 29117.75 | 29249 (high open, 131 pts) | TP1 28957 (PD POC) · TP2 28703.75 (EQL) | Stop | ❌ Loss | **−1R** | bias planeada = **LONGS** (Ásia low + rally London); jogou **short** numa "suposta aceitação < VAH" → leitura errada, contra o próprio plano; stopado |
 | 12 | 22/07 | Long | **Aceitação PD VAL+POC** (confirmada ✓) | PD VAL+POC | 29163 | 28962.5 (200 pts) | TP1 29318 (PD VAH) · TP2 29509 | TP1 (50%) + BE | ✅ Win | **+0.39R** | "PA terrível" mas setup-tipo CERTO (aceitação, no sentido da leitura); quebra a série de 2 losses; stop largo (200) capou o R |
+| — | 23/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | queda absurda no pré-market (limpou Monday low); POI (PD value) muito longe; open horrível; sem trade. Utilizador quer testar **meses mais atrás** (regime diferente) |
 
 ## Notas detalhadas
 
