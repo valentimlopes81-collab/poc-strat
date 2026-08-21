@@ -8,17 +8,17 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **9** (29/06 → 09/07)
-- Dias com setup: **4** · Dias sem setup (no-play): **5** (01, 03, 06, 07, 09/07)
-- Taxa de setup: **~44%** dos dias
-- Trades registadas: **4**
-- Wins / Losses / BE: **3 / 0 / 1**
-- Win rate: **100%** decididas (3/3) · **75%** incl. BE (3/4)
-- R total: **+6.76R**
-- Expectância (R por trade, incl. BE): **+1.69R**
+- Dias observados: **10** (29/06 → 10/07)
+- Dias com setup: **5** · Dias sem setup (no-play): **5** (01, 03, 06, 07, 09/07)
+- Taxa de setup: **50%** dos dias
+- Trades registadas: **5**
+- Wins / Losses / BE: **4 / 0 / 1**
+- Win rate: **100%** decididas (4/4) · **80%** incl. BE (4/5)
+- R total: **+7.64R**
+- Expectância (R por trade, incl. BE): **+1.53R**
 - Profit factor: **— (sem perdas ainda)**
-- Melhor zona: **PD POC** (2 wins, ambos short) · PD VAH+VWAP (1 win long)
-- Distância média do stop: ~116 pts (77 / 87 / 139 / 161) — a **alargar**; relevante p/ sizing em prop
+- Melhor zona: **PD POC** (workhorse — 3 trades: 2 short + 1 long) · PD VAH+VWAP (1 long)
+- Distância média do stop: ~105 pts (77 / 87 / 139 / 161 / 60)
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
 
@@ -49,6 +49,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 07/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | full bearish; muitos targets em baixo mas **POIs muito acima do preço** — precisava de revisita ao value + rejeição clara p/ short, que não veio (preço nunca voltou ao POI) |
 | 4 | 08/07 ~11:00 ET | Short | Rejeição/VAL a aguentar | VAL | 29257 | 29418 | 28909.25 (novos lows) | BE 29257 (17:20 local) | ⚪ BE | **0R** | entrada tardia (tail da janela → almoço); setup fraco "por causa das horas"; BE na wick pré-market (14:25 local) |
 | — | 09/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias virou **bullish** (pump overnight; aceitação do Monday range + PD value); só longs num retrace ao extremo do value — **value não foi revisitado** → sem entry. Bias correta, sem setup |
+| 5 | 10/07 14:40 | Long | Aceitação PD POC | PD POC | 29857.25 | 29797 | TP1 29963.5 · TP2 29992.75 | TP1 (50%) + BE | ✅ Win | **+0.88R** | range PD POC–PD VAL; aceitação PD POC → long p/ highs dia anterior (≈ PD VAH); TP2 não atingiu, resto BE; stop apertado 60 pts |
 
 ## Notas detalhadas
 
@@ -153,3 +154,23 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 **Opinião (coach):** duas lições honestas, e tu já apontaste a principal:
 1. **Timing.** Entrada ~11:00 ET, a rebentar para o almoço — o pior momento p/ momentum. Os teus 3 setups A+ foram todos **cedo na janela**; este foi no fim. **Regra a fixar: setup no tail da janela / a entrar no lunch = qualidade menor, ou passa.**
 2. **Conviç​ão baixa.** Dia fraco, VAL a aguentar (obstáculo!), target "bastante longe" = RR e prob mais fracos. Era um **B-setup**, e veio depois de **3 no-plays seguidos** — cuidado com a comichão de "finalmente entrar". Aqui saiu barato (BE); é a lição perfeita ao preço mais baixo.
+
+### Trade 5 — 10/07, long @ 29857.25 → TP1 + BE
+**Contexto:**
+- Range entre **PD POC e PD VAL** → a reação nesse range era o tudo.
+- Plano pré-market: aceitação do **PD POC** → **long** até aos highs do dia anterior (≈ confluência com PD VAH). Em alternativa, aceitação **< PD VAL** → short p/ a wick feia das 10:00 + lows pré-subida.
+- Confirmou-se o cenário long: aceitação do PD POC às 14:40.
+
+**Execução:**
+- Entrada 29857.25 · Stop 29797 (**60 pts** — tight) · TP1 29963.5 (50%) · TP2 29992.75.
+- Só atingiu **TP1**; resto para **BE** (fecho acima da wick das 14:35). TP2 não veio.
+- Às 15:30 uma candle absurda de ~280 pts (provável news).
+
+**Métricas (R):** risco 60.25 pts; TP1 = +1.76R na 1ª metade; 2ª metade BE = 0R → **blended +0.88R**.
+
+**P&L em $ (funded 25k, sizing mínimo = 2 MNQ p/ escalar):**
+- Contrato 1 → TP1: +106.25 pts × $2 = **+$212.50** · Contrato 2 → BE: $0.
+- Bruto **+$212.50**, líquido **≈ +$210** (após ~$2-3 comissão).
+- ⚠️ Risco no stop = 60.25 × $2 × 2 = **$241 = 24% do buffer de $1.000** (Lucid 25k). Mesmo no mínimo p/ escalar, é agressivo p/ a 25k.
+
+**Resultado:** ✅ **Win +0.88R (~+$210).** Modelo B, long em PD POC. Stop finalmente apertado — bom.
