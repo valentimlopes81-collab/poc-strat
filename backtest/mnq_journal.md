@@ -9,18 +9,19 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **15** (29/06 → 17/07)
-- Dias com setup: **8** · Dias sem setup (no-play): **7** (01, 03, 06, 07, 09, 13, 17/07)
-- Taxa de setup: **~53%** dos dias
-- Trades registadas: **9** (14/07 teve 2)
-- Wins / Losses / BE: **6 / 1 / 2**
-- Win rate: **86%** decididas (6/7) · **67%** incl. BE (6/9)
-- R total: **+7.52R**
-- Expectância (R por trade, incl. BE): **+0.84R**
-- Profit factor (R): **8.52 / 1.0 = 8.5** · payoff médio ~1.4R
-- Melhor zona: **PD POC** (workhorse — 5 das 9 trades)
-- Distância média do stop: ~108 pts (77/87/139/161/60/100/167/98/114)
-- **Nota de regime:** primeiras 3 trades = +6.76R; últimas 5 (5→9) = **+0.76R** (choppy, mas positivo).
+- Dias observados: **16** (29/06 → 20/07)
+- Dias com setup: **9** · Dias sem setup (no-play): **7** (01, 03, 06, 07, 09, 13, 17/07)
+- Taxa de setup: **~56%** dos dias
+- Trades registadas: **10** (14/07 teve 2)
+- Wins / Losses / BE: **6 / 2 / 2**
+- Win rate: **75%** decididas (6/8) · **60%** incl. BE (6/10)
+- R total: **+6.52R**
+- Expectância (R por trade, incl. BE): **+0.65R**
+- Profit factor (R): **8.52 / 2.0 = 4.3** · payoff médio ~1.4R
+- Melhor zona: **PD POC** (workhorse — 6 das 10 trades)
+- Distância média do stop: ~110 pts
+- **Nota de regime:** primeiras 3 trades = +6.76R; últimas 6 (5→10) = **−0.24R**. O edge nos livros veio quase todo da lua-de-mel.
+- **Hipótese a testar (padrão):** longs a "**apanhar suporte**" no VAH/POC = fracos (T6 −1, T8 BE, T10 −1 = **−2R**). Longs por **aceitação/continuação** (T2/T5/T7) = **+3.05R**. Shorts (T1/T3/T9) = todos win. → *entrar NA aceitação confirmada, não a antecipar o suporte.*
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
 
@@ -58,6 +59,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 8 | 15/07 | Long | Aceitação PD POC (suporte) | PD POC | 29806 | 29708.5 (97.5 pts) | 30094.5 (high sem. passada) | BE 29806 | ⚪ BE | **0R** | bias bullish (value como suporte); reagiu ligeiramente acima do PD POC; subiu ~+0.8R (29886.5) e voltou; BE, sem TP. **Voltou à regra 1/dia ✓** |
 | 9 | 16/07 14:35 | Short | Continuation < value | low semana (key) | 29417.75 | 29531.75 (114 pts) | TP1 29303.5 (low semana) · TP2 29096 | TP1 (50%) + BE | ✅ Win | **+0.50R** | dia 15 fechou full bearish; a trocar < PD value; short continuation; TP1 no low da semana, runner p/ TP2 (não veio) → BE; disciplina 1/dia ✓ |
 | — | 17/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | full dump quinta→sexta (visitou o TP2 de 16/07); 2 lows ainda p/ tirar mas cenário pouco jogável e sem setup claro p/ short; ficou de fora |
+| 10 | 20/07 | Long | "Apanhar suporte" PD VAH | PD VAH | 29009.5 | 28908.5 (low NY, 101 pts) | 29192.75 (HOS NY) | Stop | ❌ Loss | **−1R** | range ON POC–PD VAH aceite p/ cima na London; tentou VAH como suporte; stopado. **Levou a loss e fechou charts — SEM revenge (lição do 14/07 aplicada) ✓** |
 
 ## Notas detalhadas
 
