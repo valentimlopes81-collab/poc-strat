@@ -8,18 +8,18 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **13** (29/06 → 15/07)
-- Dias com setup: **7** · Dias sem setup (no-play): **6** (01, 03, 06, 07, 09, 13/07)
-- Taxa de setup: **~54%** dos dias
-- Trades registadas: **8** (14/07 teve 2)
-- Wins / Losses / BE: **5 / 1 / 2**
-- Win rate: **83%** decididas (5/6) · **62.5%** incl. BE (5/8)
-- R total: **+7.02R**
-- Expectância (R por trade, incl. BE): **+0.88R**
-- Profit factor (R): **8.02 / 1.0 = 8.0** · payoff médio ~1.6R
-- Melhor zona: **PD POC** (workhorse — 5 das 8 trades)
-- Distância média do stop: ~110 pts (77/87/139/161/60/100/167/98)
-- **Nota de regime:** primeiras 3 trades = +6.76R; últimas 4 (5→8) = **+0.26R** (choppy). Edge é dependente do regime.
+- Dias observados: **14** (29/06 → 16/07)
+- Dias com setup: **8** · Dias sem setup (no-play): **6** (01, 03, 06, 07, 09, 13/07)
+- Taxa de setup: **~57%** dos dias
+- Trades registadas: **9** (14/07 teve 2)
+- Wins / Losses / BE: **6 / 1 / 2**
+- Win rate: **86%** decididas (6/7) · **67%** incl. BE (6/9)
+- R total: **+7.52R**
+- Expectância (R por trade, incl. BE): **+0.84R**
+- Profit factor (R): **8.52 / 1.0 = 8.5** · payoff médio ~1.4R
+- Melhor zona: **PD POC** (workhorse — 5 das 9 trades)
+- Distância média do stop: ~108 pts (77/87/139/161/60/100/167/98/114)
+- **Nota de regime:** primeiras 3 trades = +6.76R; últimas 5 (5→9) = **+0.76R** (choppy, mas positivo).
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
 
@@ -55,6 +55,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 6 | 14/07 | Long | Aceitação PD POC | PD POC | 29785.25 | 29685.25 (100 pts) | 30041.5 (open semanal) | Stop | ❌ Loss | **−1R** | **stop demasiado curto** (devia estar < PD POC) → wicked out; auto-identificado |
 | 7 | 14/07 | Long (re-entry) | Aceitação PD POC | PD POC | 29660.25 | 29493.5 (167 pts, < PD POC ✓) | 30041.5 | Manual 29723.25 (VAH, 17h) | ✅ Win | **+0.38R** | re-entry "muito confiante na bias" (**quebra da regra 1/dia**); stop corrigido; fecho manual pequeno no VAH às 17h |
 | 8 | 15/07 | Long | Aceitação PD POC (suporte) | PD POC | 29806 | 29708.5 (97.5 pts) | 30094.5 (high sem. passada) | BE 29806 | ⚪ BE | **0R** | bias bullish (value como suporte); reagiu ligeiramente acima do PD POC; subiu ~+0.8R (29886.5) e voltou; BE, sem TP. **Voltou à regra 1/dia ✓** |
+| 9 | 16/07 14:35 | Short | Continuation < value | low semana (key) | 29417.75 | 29531.75 (114 pts) | TP1 29303.5 (low semana) · TP2 29096 | TP1 (50%) + BE | ✅ Win | **+0.50R** | dia 15 fechou full bearish; a trocar < PD value; short continuation; TP1 no low da semana, runner p/ TP2 (não veio) → BE; disciplina 1/dia ✓ |
 
 ## Notas detalhadas
 
