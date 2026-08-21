@@ -8,9 +8,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **10** (29/06 → 10/07)
-- Dias com setup: **5** · Dias sem setup (no-play): **5** (01, 03, 06, 07, 09/07)
-- Taxa de setup: **50%** dos dias
+- Dias observados: **11** (29/06 → 13/07)
+- Dias com setup: **5** · Dias sem setup (no-play): **6** (01, 03, 06, 07, 09, 13/07)
+- Taxa de setup: **~45%** dos dias
 - Trades registadas: **5**
 - Wins / Losses / BE: **4 / 0 / 1**
 - Win rate: **100%** decididas (4/4) · **80%** incl. BE (4/5)
@@ -50,6 +50,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 4 | 08/07 ~11:00 ET | Short | Rejeição/VAL a aguentar | VAL | 29257 | 29418 | 28909.25 (novos lows) | BE 29257 (17:20 local) | ⚪ BE | **0R** | entrada tardia (tail da janela → almoço); setup fraco "por causa das horas"; BE na wick pré-market (14:25 local) |
 | — | 09/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias virou **bullish** (pump overnight; aceitação do Monday range + PD value); só longs num retrace ao extremo do value — **value não foi revisitado** → sem entry. Bias correta, sem setup |
 | 5 | 10/07 14:40 | Long | Aceitação PD POC | PD POC | 29857.25 | 29797 | TP1 29963.5 · TP2 29992.75 | TP1 (50%) + BE | ✅ Win | **+0.88R** | range PD POC–PD VAL; aceitação PD POC → long p/ highs dia anterior (≈ PD VAH); TP2 não atingiu, resto BE; stop apertado 60 pts |
+| — | 13/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | abriu semana p/ baixo, bias bearish; queria value como resistência p/ short ao LOD; **tirou o low ANTES de revisitar o value** → sem entry; parou de procurar às 16h (disciplina de horário ✓) |
 
 ## Notas detalhadas
 
