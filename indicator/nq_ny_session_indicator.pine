@@ -1,69 +1,95 @@
 //@version=6
 // ============================================================================
-// NQ NY-Session [indicador] — para testar em BAR REPLAY.
-// Mesma lógica da strategy, mas mostra SINAIS visuais (LONG/SHORT) com o
-// stop e o alvo sugeridos, em vez de abrir trades. Agnóstico ao volume
-// (usa volume real do NQ1!/MNQ1! ou perfil por tempo/TPO no US100).
+// NQ Session POIs — mapa de níveis para intraday de NY. v2
 //
-// SINAL = divergência RSI clássica + DENTRO da janela de NY + preço encostado
-//         a uma zona (POC dia anterior / VAH / VAL / overnight / VWAP / POC hoje).
-// ⚠️ Usar em 5min (ou 1min). Timezone America/New_York (DST-safe).
+// >>> VALORES IGUAIS EM QUALQUER TIMEFRAME <<<
+// Os perfis são calculados a partir de uma resolução FIXA (amostragem a 1 min
+// via request.security_lower_tf), não das velas do gráfico. Logo o PD POC/VAH/VAL,
+// ON POC, VWAP, etc. são os MESMOS em 1m, 5m, 15m ou 30m.
+//
+// POIs desenhados (cada linha tem o NOME encostado à direita):
+//   • PD POC / PD VAH / PD VAL  — value area do dia anterior (RTH)
+//   • PDH / PDL                 — high/low do dia anterior (RTH)
+//   • ON POC                    — POC do overnight (fora da RTH)
+//   • VWAP                      — VWAP de sessão (ancorado no open da RTH)
+//   • POC hoje                  — POC do dia a desenvolver-se
+//   • Asia H / Asia L           — extremos da sessão asiática
+// Sem sinais automáticos: é um mapa de níveis para leitura manual.
+// Timezone America/New_York (DST-safe).
 // ============================================================================
-indicator("NQ NY-Session [indicador]", shorttitle="NQ NY", overlay=true,
+indicator("NQ Session POIs", shorttitle="NQ POIs", overlay=true,
      max_lines_count=500, max_labels_count=500, max_bars_back=5000)
 
-// ---------------- Sessão / horário ----------------
-gs = "Sessão (Nova Iorque)"
-tz       = "America/New_York"
-rth_sess = input.session("0930-1600", "Sessão RTH (para os perfis)", group=gs)
-win_sess = input.session("0930-1130", "Janela de SINAL (manhã)", group=gs)
+tz = "America/New_York"
 
-// ---------------- Perfil ----------------
-gp = "Perfil de volume"
+// ---------------- Sessões (horário de NY) ----------------
+gs = "Sessões (Nova Iorque)"
+rth_sess  = input.session("0930-1600", "RTH (value area / PDH-PDL / VWAP)", group=gs)
+win_sess  = input.session("0930-1130", "Janela de trade (sombreado)", group=gs)
+asia_sess = input.session("1800-0300", "Sessão asiática (Asia H/L)", group=gs)
+
+// ---------------- Amostragem / perfil ----------------
+gp = "Perfil (resolução fixa)"
+sample_tf = input.timeframe("1", "Resolução de amostragem", options=["1","3","5"], group=gp, tooltip="Fixa. Torna os POIs iguais em qualquer TF do gráfico. 1 min = mais preciso.")
 bins   = input.int(30, "Bins", minval=10, maxval=60, group=gp)
 va_pct = input.float(70, "Value Area (%)", minval=50, maxval=90, group=gp) / 100.0
-z_pd   = input.bool(true, "Zona: POC/VAH/VAL dia anterior", group=gp)
-z_on   = input.bool(true, "Zona: POC overnight", group=gp)
-z_vwap = input.bool(true, "Zona: VWAP", group=gp)
-z_dev  = input.bool(true, "Zona: POC a desenvolver (hoje)", group=gp)
 
-// ---------------- Divergências ----------------
-gdv = "Divergências (RSI clássica)"
-rsi_len=input.int(14,"RSI Length",minval=2,group=gdv)
-lbR=input.int(5,"Pivot dir",minval=1,group=gdv)
-lbL=input.int(5,"Pivot esq",minval=1,group=gdv)
-rgU=input.int(60,"Máx barras entre pivôs",minval=1,group=gdv)
-rgL=input.int(5,"Mín barras entre pivôs",minval=1,group=gdv)
+// ---------------- POIs a mostrar ----------------
+gv = "POIs (liga/desliga)"
+z_pdva = input.bool(true,  "PD POC / VAH / VAL", group=gv)
+z_pdhl = input.bool(true,  "PDH / PDL (dia anterior)", group=gv)
+z_on   = input.bool(true,  "ON POC (overnight)", group=gv)
+z_vwap = input.bool(true,  "VWAP (sessão)", group=gv)
+z_dev  = input.bool(true,  "POC hoje (a desenvolver)", group=gv)
+z_asia = input.bool(true,  "Asia H / Asia L", group=gv)
 
-// ---------------- Sinal / níveis sugeridos ----------------
-gx = "Sinal"
-atr_len  = input.int(14, "ATR Length", minval=2, group=gx)
-band_atr = input.float(0.30, "Proximidade à zona (× ATR)", minval=0.05, step=0.05, group=gx)
-stop_atr = input.float(1.20, "Stop sugerido (× ATR)", minval=0.2, step=0.1, group=gx)
-tp_mode  = input.string("Próxima zona", "Alvo sugerido", options=["Próxima zona","R fixo"], group=gx)
-tp_r     = input.float(2.0, "R fixo (se escolhido / fallback)", minval=0.5, step=0.5, group=gx)
-show_lvls= input.bool(true, "Desenhar stop/alvo no sinal", group=gx)
+gl = "Etiquetas"
+show_names = input.bool(true, "Mostrar nome do POI na linha", group=gl)
+show_vals  = input.bool(false, "Mostrar também o valor", group=gl)
+lab_off    = input.int(3, "Afastamento da etiqueta (barras)", minval=0, maxval=30, group=gl)
+
+// ---------------- Cores ----------------
+gc = "Cores"
+c_poc  = input.color(color.orange, "PD POC", group=gc)
+c_va   = input.color(color.new(color.orange,45), "PD VAH/VAL", group=gc)
+c_hl   = input.color(color.gray, "PDH/PDL", group=gc)
+c_on   = input.color(color.purple, "ON POC", group=gc)
+c_vw   = input.color(color.blue, "VWAP", group=gc)
+c_dev  = input.color(color.teal, "POC hoje", group=gc)
+c_asia = input.color(color.new(color.aqua,20), "Asia H/L", group=gc)
+
+// ---------------- Helpers de horário ----------------
+f_mins(int t) => hour(t, tz) * 60 + minute(t, tz)
+f_parse(string s) =>
+    int sh = math.round(str.tonumber(str.substring(s,0,2)))
+    int sm = math.round(str.tonumber(str.substring(s,2,4)))
+    int eh = math.round(str.tonumber(str.substring(s,5,7)))
+    int em = math.round(str.tonumber(str.substring(s,7,9)))
+    [sh*60+sm, eh*60+em]
+f_in(int m, int s, int e) => s < e ? (m >= s and m < e) : (m >= s or m < e)
+
+[rth_s, rth_e]   = f_parse(rth_sess)
+[win_s, win_e]   = f_parse(win_sess)
+[asia_s, asia_e] = f_parse(asia_sess)
 
 // ---------------- Perfil: POC + Value Area ----------------
 f_profile(array<float> px, array<float> w, int nb, float vap) =>
-    float poc=na
-    float vah=na
-    float val=na
+    float poc = na
+    float vah = na
+    float val = na
     int n = array.size(px)
     if n > 0
-        float lo=array.min(px), float hi=array.max(px)
+        float lo = array.min(px), float hi = array.max(px)
         if hi > lo
             bv = array.new_float(nb, 0.0)
-            float bw = (hi-lo)/nb
-            for i=0 to n-1
+            float bw = (hi - lo) / nb
+            for i = 0 to n - 1
                 int idx = math.min(nb-1, math.max(0, int((array.get(px,i)-lo)/bw)))
-                array.set(bv, idx, array.get(bv,idx)+array.get(w,i))
+                array.set(bv, idx, array.get(bv,idx) + array.get(w,i))
             int pidx = array.indexof(bv, array.max(bv))
-            poc := lo + (pidx+0.5)*bw
-            float total = array.sum(bv)
-            float tgt = total*vap
-            float acc = array.get(bv, pidx)
-            int up=pidx, dn=pidx
+            poc := lo + (pidx + 0.5) * bw
+            float total = array.sum(bv), float tgt = total * vap, float acc = array.get(bv, pidx)
+            int up = pidx, dn = pidx
             while acc < tgt and (up < nb-1 or dn > 0)
                 float aup = up < nb-1 ? array.get(bv, up+1) : -1.0
                 float adn = dn > 0    ? array.get(bv, dn-1) : -1.0
@@ -73,123 +99,127 @@ f_profile(array<float> px, array<float> w, int nb, float vap) =>
                 else
                     dn -= 1
                     acc += adn > 0 ? adn : 0.0
-            vah := lo + (up+1)*bw
-            val := lo + dn*bw
+            vah := lo + (up + 1) * bw
+            val := lo + dn * bw
         else
             poc := array.get(px,0), vah := poc, val := poc
     [poc, vah, val]
 
-// ---------------- Sessão ----------------
-in_rth   = not na(time(timeframe.period, rth_sess, tz))
-in_win   = not na(time(timeframe.period, win_sess, tz))
-rth_open = in_rth and not in_rth[1]
-rth_close= not in_rth and in_rth[1]
+// ---------------- Estado ----------------
+var array<float> rth_px = array.new_float(), var array<float> rth_w = array.new_float()
+var array<float> on_px  = array.new_float(), var array<float> on_w  = array.new_float()
+var float rth_hi = na, var float rth_lo = na
+var float pv_sum = 0.0, var float v_sum = 0.0
+var float asia_hi = na, var float asia_lo = na
 
-var array<float> rth_px=array.new_float(), var array<float> rth_w=array.new_float()
-var array<float> on_px =array.new_float(), var array<float> on_w =array.new_float()
 var float pd_poc=na, var float pd_vah=na, var float pd_val=na
-var float on_poc=na
-var float dev_poc=na
+var float pd_high=na, var float pd_low=na
+var float on_poc=na, var float dev_poc=na, var float vwap_v=na
+var float asia_high=na, var float asia_low=na
+
+// amostras à resolução fixa
+useChart = timeframe.in_seconds(sample_tf) >= timeframe.in_seconds()
+[ltfH3, ltfV, ltfT, ltfHi, ltfLo] = request.security_lower_tf(syminfo.tickerid, sample_tf, [hlc3, volume, time, high, low])
+
+nowM = f_mins(time)
+inR  = f_in(nowM, rth_s, rth_e)
+inA  = f_in(nowM, asia_s, asia_e)
+rth_open  = inR and not inR[1]
+rth_close = not inR and inR[1]
+asia_open = inA and not inA[1]
 
 if barstate.isconfirmed
-    float w = na(volume) or volume == 0 ? 1.0 : volume
-    float p = hlc3
-    if in_rth
-        array.push(rth_px, p), array.push(rth_w, w)
-    else
-        array.push(on_px, p), array.push(on_w, w)
-    if rth_close
+    if asia_open
+        asia_hi := na
+        asia_lo := na
+    // construir amostras desta barra
+    array<float> sH3 = array.new_float(), array<float> sV = array.new_float()
+    array<int> sT = array.new_int(), array<float> sHi = array.new_float(), array<float> sLo = array.new_float()
+    if useChart
+        array.push(sH3, hlc3), array.push(sV, volume), array.push(sT, time), array.push(sHi, high), array.push(sLo, low)
+    else if not na(ltfH3) and array.size(ltfH3) > 0
+        for i = 0 to array.size(ltfH3) - 1
+            array.push(sH3, array.get(ltfH3,i))
+            array.push(sV, na(ltfV) or array.size(ltfV)<=i ? na : array.get(ltfV,i))
+            array.push(sT, array.size(ltfT)<=i ? time : array.get(ltfT,i))
+            array.push(sHi, array.size(ltfHi)<=i ? na : array.get(ltfHi,i))
+            array.push(sLo, array.size(ltfLo)<=i ? na : array.get(ltfLo,i))
+    // acumular
+    if array.size(sH3) > 0
+        for i = 0 to array.size(sH3) - 1
+            float p = array.get(sH3, i)
+            float w = na(array.get(sV,i)) or array.get(sV,i) == 0 ? 1.0 : array.get(sV,i)
+            int   t = array.get(sT, i)
+            float hi = array.get(sHi, i), float lo = array.get(sLo, i)
+            int m = f_mins(t)
+            if f_in(m, rth_s, rth_e)
+                array.push(rth_px, p), array.push(rth_w, w)
+                pv_sum += p * w, v_sum += w
+                rth_hi := na(rth_hi) ? hi : math.max(rth_hi, hi)
+                rth_lo := na(rth_lo) ? lo : math.min(rth_lo, lo)
+            else
+                array.push(on_px, p), array.push(on_w, w)
+            if f_in(m, asia_s, asia_e)
+                asia_hi := na(asia_hi) ? hi : math.max(asia_hi, hi)
+                asia_lo := na(asia_lo) ? lo : math.min(asia_lo, lo)
+    // fim da RTH → fixar dia anterior
+    if rth_close and array.size(rth_px) > 0
         [pc, vh, vl] = f_profile(rth_px, rth_w, bins, va_pct)
         pd_poc := pc, pd_vah := vh, pd_val := vl
+        pd_high := rth_hi, pd_low := rth_lo
         array.clear(rth_px), array.clear(rth_w)
-    if rth_open
-        [opc, _oh, _ol] = f_profile(on_px, on_w, bins, va_pct)
+        rth_hi := na, rth_lo := na, pv_sum := 0.0, v_sum := 0.0
+    // abertura RTH → fixar ON POC
+    if rth_open and array.size(on_px) > 0
+        [opc, _a, _b] = f_profile(on_px, on_w, bins, va_pct)
         on_poc := opc
         array.clear(on_px), array.clear(on_w)
-    if in_rth and array.size(rth_px) > 0
-        [dpc, _dh, _dl] = f_profile(rth_px, rth_w, bins, va_pct)
+    // POC a desenvolver + VWAP (durante a RTH)
+    if inR and array.size(rth_px) > 0
+        [dpc, _c, _d] = f_profile(rth_px, rth_w, bins, va_pct)
         dev_poc := dpc
+        vwap_v := v_sum > 0 ? pv_sum / v_sum : na
+    asia_high := asia_hi, asia_low := asia_lo
 
-vwap_v = ta.vwap(hlc3)
+// ---------------- Linhas ----------------
+plot(z_pdva and not na(pd_poc) ? pd_poc : na, "PD POC", c_poc, 2, plot.style_linebr)
+plot(z_pdva and not na(pd_vah) ? pd_vah : na, "PD VAH", c_va, 1, plot.style_linebr)
+plot(z_pdva and not na(pd_val) ? pd_val : na, "PD VAL", c_va, 1, plot.style_linebr)
+plot(z_pdhl and not na(pd_high) ? pd_high : na, "PDH", c_hl, 1, plot.style_linebr)
+plot(z_pdhl and not na(pd_low)  ? pd_low  : na, "PDL", c_hl, 1, plot.style_linebr)
+plot(z_on and not na(on_poc) ? on_poc : na, "ON POC", c_on, 1, plot.style_linebr)
+plot(z_vwap and inR and not na(vwap_v) ? vwap_v : na, "VWAP", c_vw, 1, plot.style_linebr)
+plot(z_dev and inR and not na(dev_poc) ? dev_poc : na, "POC hoje", c_dev, 1, plot.style_linebr)
+plot(z_asia and not na(asia_high) ? asia_high : na, "Asia H", c_asia, 1, plot.style_linebr)
+plot(z_asia and not na(asia_low)  ? asia_low  : na, "Asia L", c_asia, 1, plot.style_linebr)
 
-// ---------------- Divergências ----------------
-_chg=ta.change(close)
-_u=ta.rma(math.max(_chg,0),rsi_len)
-_d=ta.rma(-math.min(_chg,0),rsi_len)
-rsi_v = _d==0 ? 100.0 : _u==0 ? 0.0 : 100.0-100.0/(1.0+_u/_d)
-_inRange(bool c) =>
-    b = ta.barssince(c)
-    rgL <= b and b <= rgU
-rsiLBR  = rsi_v[lbR]
-plFound = not na(ta.pivotlow(rsi_v, lbL, lbR))
-phFound = not na(ta.pivothigh(rsi_v, lbL, lbR))
-bull_div = (low[lbR] < ta.valuewhen(plFound, low[lbR], 1)) and (rsiLBR > ta.valuewhen(plFound, rsiLBR, 1) and _inRange(plFound[1])) and plFound
-bear_div = (high[lbR] > ta.valuewhen(phFound, high[lbR], 1)) and (rsiLBR < ta.valuewhen(phFound, rsiLBR, 1) and _inRange(phFound[1])) and phFound
+bgcolor(f_in(nowM, win_s, win_e) ? color.new(color.green, 92) : na, title="Janela de trade")
 
-// ---------------- Zonas ----------------
-atr = ta.atr(atr_len)
-var array<float> zones = array.new_float()
-array.clear(zones)
-if z_pd and not na(pd_poc)
-    array.push(zones, pd_poc)
-if z_pd and not na(pd_vah)
-    array.push(zones, pd_vah)
-if z_pd and not na(pd_val)
-    array.push(zones, pd_val)
-if z_on and not na(on_poc)
-    array.push(zones, on_poc)
-if z_vwap and not na(vwap_v)
-    array.push(zones, vwap_v)
-if z_dev and not na(dev_poc)
-    array.push(zones, dev_poc)
+// ---------------- Etiquetas com o nome do POI ----------------
+f_lab(label lb, bool on, float y, string name, color c) =>
+    if barstate.islast
+        if show_names and on and not na(y)
+            label.set_xy(lb, bar_index + lab_off, y)
+            label.set_text(lb, show_vals ? name + " " + str.tostring(y, format.mintick) : name)
+            label.set_textcolor(lb, c)
+            label.set_color(lb, color.new(c, 100))
+            label.set_style(lb, label.style_label_left)
+            label.set_size(lb, size.small)
+        else
+            label.set_text(lb, "")
 
-f_near_any(float ref, float tol) =>
-    bool hit=false
-    if array.size(zones) > 0
-        for i=0 to array.size(zones)-1
-            if math.abs(ref - array.get(zones, i)) <= tol
-                hit := true
-    hit
-f_next(float ref, bool above) =>
-    float best=na
-    if array.size(zones) > 0
-        for i=0 to array.size(zones)-1
-            float z = array.get(zones, i)
-            if (above ? z > ref : z < ref)
-                if na(best) or math.abs(z-ref) < math.abs(best-ref)
-                    best := z
-    best
+var label L_poc=label.new(na,na,""), var label L_vah=label.new(na,na,""), var label L_val=label.new(na,na,"")
+var label L_pdh=label.new(na,na,""), var label L_pdl=label.new(na,na,"")
+var label L_on=label.new(na,na,""),  var label L_vw=label.new(na,na,"")
+var label L_dev=label.new(na,na,""), var label L_ah=label.new(na,na,""), var label L_al=label.new(na,na,"")
 
-tol = band_atr * atr
-zone_near = f_near_any(close, tol)
-
-// ---------------- SINAL ----------------
-long_sig  = in_win and bull_div and zone_near
-short_sig = in_win and bear_div and zone_near
-
-// níveis sugeridos + etiqueta com Entrada/Stop/Alvo
-if show_lvls and (long_sig or short_sig)
-    float sp = stop_atr * atr
-    float e  = close
-    float st = long_sig ? e - sp : e + sp
-    float nz = f_next(e, long_sig)
-    bool nz_ok = long_sig ? (not na(nz) and nz - e >= sp) : (not na(nz) and e - nz >= sp)
-    float tp = tp_mode == "Próxima zona" and nz_ok ? nz : (long_sig ? e + tp_r*sp : e - tp_r*sp)
-    color cc = long_sig ? color.teal : color.red
-    line.new(bar_index, st, bar_index+8, st, color=color.new(color.red,0),   style=line.style_dotted)
-    line.new(bar_index, tp, bar_index+8, tp, color=color.new(color.green,0), style=line.style_dotted)
-    label.new(bar_index, long_sig ? low : high, (long_sig?"LONG":"SHORT") + "\nE " + str.tostring(e, format.mintick) + "\nSL " + str.tostring(st, format.mintick) + "\nTP " + str.tostring(tp, format.mintick), style=long_sig?label.style_label_up:label.style_label_down, color=color.new(cc,15), textcolor=color.white, size=size.small)
-
-// ---------------- Visual ----------------
-plot(z_pd  and not na(pd_poc) ? pd_poc : na, "PD POC",  color.new(color.orange,0), 2, plot.style_linebr)
-plot(z_pd  and not na(pd_vah) ? pd_vah : na, "PD VAH",  color.new(color.orange,50), 1, plot.style_linebr)
-plot(z_pd  and not na(pd_val) ? pd_val : na, "PD VAL",  color.new(color.orange,50), 1, plot.style_linebr)
-plot(z_on  and not na(on_poc) ? on_poc : na, "ON POC",  color.new(color.purple,0), 1, plot.style_linebr)
-plot(z_vwap? vwap_v : na,                    "VWAP",    color.new(color.blue,0),   1)
-plot(z_dev and in_rth and not na(dev_poc) ? dev_poc : na, "Dev POC", color.new(color.teal,0), 1, plot.style_linebr)
-bgcolor(in_win ? color.new(color.green, 92) : na, title="Janela de sinal")
-plotshape(long_sig  ? low  : na, "LONG",  shape.triangleup,   location.belowbar, color.new(color.teal,0), size=size.small)
-plotshape(short_sig ? high : na, "SHORT", shape.triangledown, location.abovebar, color.new(color.red,0),  size=size.small)
-
-alertcondition(long_sig,  title="LONG (NQ NY)",  message="{{ticker}}: LONG — divergência bull em zona (janela NY)")
-alertcondition(short_sig, title="SHORT (NQ NY)", message="{{ticker}}: SHORT — divergência bear em zona (janela NY)")
+f_lab(L_poc, z_pdva, pd_poc, "PD POC", c_poc)
+f_lab(L_vah, z_pdva, pd_vah, "PD VAH", c_va)
+f_lab(L_val, z_pdva, pd_val, "PD VAL", c_va)
+f_lab(L_pdh, z_pdhl, pd_high, "PDH", c_hl)
+f_lab(L_pdl, z_pdhl, pd_low, "PDL", c_hl)
+f_lab(L_on,  z_on,   on_poc, "ON POC", c_on)
+f_lab(L_vw,  z_vwap and inR, vwap_v, "VWAP", c_vw)
+f_lab(L_dev, z_dev and inR,  dev_poc, "POC hoje", c_dev)
+f_lab(L_ah,  z_asia, asia_high, "Asia H", c_asia)
+f_lab(L_al,  z_asia, asia_low, "Asia L", c_asia)
