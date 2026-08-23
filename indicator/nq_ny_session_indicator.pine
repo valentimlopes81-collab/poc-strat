@@ -232,6 +232,8 @@ f_lab(L_al,  z_asia, asia_low, "Asia L", c_asia)
 // ============================================================================
 gf = "Aceitação / Recusa / Absorção (usar em 5m)"
 show_ar  = input.bool(true,  "Marcar aceitação / recusa nos POIs de value", group=gf)
+ar_win   = input.bool(true,  "Só dentro da janela de trade (menos ruído)", group=gf)
+ar_dev   = input.bool(false, "Incluir 'POC hoje' no tagger (mais ruído)", group=gf)
 acc_n    = input.int(1, "Closes para aceitação", minval=1, maxval=2, group=gf, tooltip="1 = mais cedo (mais fakeouts). 2 = mais confirmação (entrada mais tarde).")
 show_abs = input.bool(true,  "Marcar absorção (proxy de volume)", group=gf)
 vol_len  = input.int(20, "Média de volume (barras)", minval=5, group=gf)
@@ -244,10 +246,11 @@ f_add(array<float> a, bool on, float v) =>
 
 float vsma = ta.sma(volume, vol_len)
 bool accUp=false, bool accDn=false, bool rejUp=false, bool rejDn=false, bool absorb=false
-if barstate.isconfirmed
+bool ar_ok = barstate.isconfirmed and (not ar_win or f_in(nowM, win_s, win_e))
+if ar_ok
     array<float> lv = array.new_float()
     f_add(lv, z_pdva, pd_poc), f_add(lv, z_pdva, pd_vah), f_add(lv, z_pdva, pd_val)
-    f_add(lv, z_on, on_poc), f_add(lv, z_dev and inR, dev_poc)
+    f_add(lv, z_on, on_poc), f_add(lv, ar_dev and inR, dev_poc)
     bool hiVol = not na(vsma) and volume > vsma * vol_mult
     bool smallBody = (high - low) > 0 and math.abs(close - open) <= (high - low) * body_fr
     if array.size(lv) > 0
