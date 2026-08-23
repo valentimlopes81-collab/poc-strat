@@ -223,3 +223,51 @@ f_lab(L_vw,  z_vwap and inR, vwap_v, "VWAP", c_vw)
 f_lab(L_dev, z_dev and inR,  dev_poc, "POC hoje", c_dev)
 f_lab(L_ah,  z_asia, asia_high, "Asia H", c_asia)
 f_lab(L_al,  z_asia, asia_low, "Asia L", c_asia)
+
+// ============================================================================
+// ACEITAÇÃO / RECUSA / ABSORÇÃO  (proxy de preço+volume — NÃO é order flow real)
+// ⚠️ Desenhado nas velas do GRÁFICO → usar num gráfico de 5 min.
+// Aceitação = fecho além do POI (N closes). Recusa = pavio atravessa mas fecha
+// do lado de origem. Absorção = toca o POI com volume alto e corpo pequeno.
+// ============================================================================
+gf = "Aceitação / Recusa / Absorção (usar em 5m)"
+show_ar  = input.bool(true,  "Marcar aceitação / recusa nos POIs de value", group=gf)
+acc_n    = input.int(1, "Closes para aceitação", minval=1, maxval=2, group=gf, tooltip="1 = mais cedo (mais fakeouts). 2 = mais confirmação (entrada mais tarde).")
+show_abs = input.bool(true,  "Marcar absorção (proxy de volume)", group=gf)
+vol_len  = input.int(20, "Média de volume (barras)", minval=5, group=gf)
+vol_mult = input.float(1.8, "Volume alto = × média", minval=1.1, step=0.1, group=gf)
+body_fr  = input.float(0.4, "Corpo pequeno ≤ × range", minval=0.1, maxval=0.9, step=0.05, group=gf)
+
+f_add(array<float> a, bool on, float v) =>
+    if on and not na(v)
+        array.push(a, v)
+
+float vsma = ta.sma(volume, vol_len)
+bool accUp=false, bool accDn=false, bool rejUp=false, bool rejDn=false, bool absorb=false
+if barstate.isconfirmed
+    array<float> lv = array.new_float()
+    f_add(lv, z_pdva, pd_poc), f_add(lv, z_pdva, pd_vah), f_add(lv, z_pdva, pd_val)
+    f_add(lv, z_on, on_poc), f_add(lv, z_dev and inR, dev_poc)
+    bool hiVol = not na(vsma) and volume > vsma * vol_mult
+    bool smallBody = (high - low) > 0 and math.abs(close - open) <= (high - low) * body_fr
+    if array.size(lv) > 0
+        for i = 0 to array.size(lv) - 1
+            float L = array.get(lv, i)
+            bool up = acc_n == 1 ? (close > L and close[1] <= L) : (close > L and close[1] > L and close[2] <= L)
+            bool dn = acc_n == 1 ? (close < L and close[1] >= L) : (close < L and close[1] < L and close[2] >= L)
+            if up
+                accUp := true
+            if dn
+                accDn := true
+            if high >= L and open < L and close < L
+                rejUp := true
+            if low <= L and open > L and close > L
+                rejDn := true
+            if high >= L and low <= L and hiVol and smallBody
+                absorb := true
+
+plotshape(show_ar and accUp ? low  : na, "Aceite ↑",          shape.triangleup,   location.belowbar, color.new(color.green,0), size=size.tiny)
+plotshape(show_ar and accDn ? high : na, "Aceite ↓",          shape.triangledown, location.abovebar, color.new(color.red,0),   size=size.tiny)
+plotshape(show_ar and rejUp ? high : na, "Recusa (resist.)",  shape.xcross,       location.abovebar, color.new(color.red,0),   size=size.tiny)
+plotshape(show_ar and rejDn ? low  : na, "Recusa (suporte)",  shape.xcross,       location.belowbar, color.new(color.green,0), size=size.tiny)
+plotshape(show_abs and absorb ? hl2 : na, "Absorção (proxy)", shape.square,       location.absolute, color.new(color.orange,0), size=size.tiny)
