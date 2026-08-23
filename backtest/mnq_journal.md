@@ -9,15 +9,15 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **24** (29/06 → 30/07)
-- Dias com setup: **12** · Dias sem setup (no-play): **12** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27, 28, 30/07)
-- Taxa de setup: **50%** dos dias
-- Trades registadas: **13** (14/07 teve 2)
-- Wins / Losses / BE: **7 / 4 / 2**
-- Win rate: **64%** decididas (7/11) · **54%** incl. BE (7/13)
-- R total: **+4.91R**
-- Expectância (R por trade, incl. BE): **+0.38R**
-- Profit factor (R): **8.91 / 4.0 = 2.2** · payoff médio ~1.3R
+- Dias observados: **25** (29/06 → 31/07) — **JULHO FECHADO**
+- Dias com setup: **13** · Dias sem setup (no-play): **12** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27, 28, 30/07)
+- Taxa de setup: **~52%** dos dias
+- Trades registadas: **14** (14/07 teve 2)
+- Wins / Losses / BE: **8 / 4 / 2**
+- Win rate: **67%** decididas (8/12) · **57%** incl. BE (8/14)
+- R total: **+6.12R**
+- Expectância (R por trade, incl. BE): **+0.44R**
+- Profit factor (R): **10.12 / 4.0 = 2.5** · payoff médio ~1.3R
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -31,15 +31,15 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
 
-## ANÁLISE — Bloco de Julho (29/06 → 29/07, 13 trades)
+## ANÁLISE — Bloco de Julho FECHADO (29/06 → 31/07, 14 trades)
 
-**Resultado:** +4.91R · 7W/4L/2BE · PF 2.2 · expectância +0.38R/trade · setup em ~52% dos dias.
+**Resultado:** +6.12R · 8W/4L/2BE · PF 2.5 · expectância +0.44R/trade · setup em ~52% dos dias.
 
 **A decomposição que explica tudo:**
 | Fase | Trades | R |
 |---|---|---|
 | Lua-de-mel (1–3) | 3 | **+6.76R** |
-| Resto de julho (4–13) | 10 | **−1.85R** |
+| Resto de julho (4–14) | 11 | **−0.64R** |
 
 → O edge nos livros veio **todo** dos 3 primeiros dias (regime de rotação/reversão). O resto de julho foi **trend/dump vertical** — hostil a um modelo de reversão em POI. Não é o edge partido; é **dependência de regime**.
 
@@ -101,6 +101,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 28/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | Asia deu continuação de queda; plano: rejeição do value → short p/ Asia Low; aceitação → long p/ PD VAH+Asia High. Rejeição **confirmou-se** mas às ~9:20 ET (**antes do open**) → leitura certa, fora da janela, sem entry |
 | 13 | 29/07 | (n/e) | POC / value | PD POC | — | — | PDL / Asia High | Stop | ❌ Loss | **−1R** | dia abriu bull mas Asia continuou queda (PDL não tirado); London voltou ao value **abaixo do POC** (desconfiança); loss. Níveis exatos não especificados. Utilizador farto do regime de julho |
 | — | 30/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | dump no fim da NY anterior mas Asia fez low forte → volta a favorecer longs, mas só > PD VAH; **front-run absurdo no PD VAH** → não perseguiu, sem entry ✓ |
+| 14 | 31/07 | Long | PD POC suporte (bias virou bull) | PD POC | 28254 | 28079.75 (174 pts) | TP1 28725.75 · TP2 28883.25 | Manual 28464.25 (20:40, risk-free) | ✅ Win | **+1.21R** | trend parece ter virado bull (Asia low forte); PD POC como suporte; "PA não o melhor" → fechou cedo manual a +1.21R (deixou meat: preço foi à zona TP) |
 
 ## Notas detalhadas
 
