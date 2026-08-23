@@ -9,9 +9,15 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **22** (29/06 → 28/07)
-- Dias com setup: **11** · Dias sem setup (no-play): **11** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27, 28/07)
-- Taxa de setup: **50%** dos dias · **4 no-plays seguidos** (23→28/07, regime pouco jogável)
+- Dias observados: **23** (29/06 → 29/07)
+- Dias com setup: **12** · Dias sem setup (no-play): **11** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27, 28/07)
+- Taxa de setup: **~52%** dos dias
+- Trades registadas: **13** (14/07 teve 2)
+- Wins / Losses / BE: **7 / 4 / 2**
+- Win rate: **64%** decididas (7/11) · **54%** incl. BE (7/13)
+- R total: **+4.91R**
+- Expectância (R por trade, incl. BE): **+0.38R**
+- Profit factor (R): **8.91 / 4.0 = 2.2** · payoff médio ~1.3R
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -19,11 +25,38 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 - Expectância (R por trade, incl. BE): **+0.49R**
 - Profit factor (R): **8.91 / 3.0 = 3.0** · payoff médio ~1.3R
 - Melhor zona: **PD POC** (workhorse)
-- Distância média do stop: ~120 pts (a tendência p/ stops largos capa o R dos winners — T12: mov +155 pts valeu só +0.77R por stop de 200)
-- **Nota de regime:** primeiras 3 trades = +6.76R; últimas 8 (5→12) = **−0.85R**. T12 quebrou a série de 2 losses com o setup-tipo CERTO (aceitação confirmada).
+- Distância média do stop: ~115 pts (stops largos capam o R dos winners → payoff só ~1.3R)
+- **Nota de regime:** primeiras 3 trades = +6.76R; trades 4→13 = **−1.85R**. O edge nos livros veio TODO da lua-de-mel; o resto de julho (regime de trend/dump vertical) foi hostil ao modelo.
 - **Hipótese a testar (edge):** GANHA quando entra em **aceitação/rejeição CONFIRMADA e alinhada com a bias** (T1/2/3/5/7/9). PERDE quando **antecipa** (apanhar suporte: T6/T10) ou **luta a própria bias** (T11 short num dia que planeou longs). → *Entrar NA confirmação, no sentido da bias. Nunca antecipar nem contrariar o próprio plano.*
 
 > Amostra ainda minúscula (2 trades) — números não significam nada até ~20-30. Só a acumular.
+
+## ANÁLISE — Bloco de Julho (29/06 → 29/07, 13 trades)
+
+**Resultado:** +4.91R · 7W/4L/2BE · PF 2.2 · expectância +0.38R/trade · setup em ~52% dos dias.
+
+**A decomposição que explica tudo:**
+| Fase | Trades | R |
+|---|---|---|
+| Lua-de-mel (1–3) | 3 | **+6.76R** |
+| Resto de julho (4–13) | 10 | **−1.85R** |
+
+→ O edge nos livros veio **todo** dos 3 primeiros dias (regime de rotação/reversão). O resto de julho foi **trend/dump vertical** — hostil a um modelo de reversão em POI. Não é o edge partido; é **dependência de regime**.
+
+**Padrão de execução (o que separa W de L):**
+- ✅ GANHA: entrar em **aceitação/rejeição CONFIRMADA**, no sentido da bias (T1/2/3/5/7/9/12).
+- ❌ PERDE: **antecipar** (apanhar suporte T6/T10), **contrariar a bias** (T11), ou **forçar setup tardio/marginal** (T4). As 4 losses + o BE fraco têm todas esta assinatura → são **desvios de execução**, não falha do setup.
+
+**Fraquezas técnicas:**
+- Stops **largos** (~115 pts médio) → payoff só ~1.3R. Colocação mais estrutural/apertada subiria o múltiplo.
+- Modelo fica de fora de trends sem retração (ponto cego confirmado nos dois lados).
+
+**Disciplina (forte):** 11 no-plays com razão objetiva; gestão a BE evitou losses; recuperou bem após o deslize de 14/07 (no 20/07 levou loss e NÃO fez revenge). Metodologia plano-pré-market→execução mantida.
+
+**Conclusões:**
+1. **Não julgar o edge por julho** — é 1 regime, e adverso. Precisa de um mês de rotação/range para ver o outro lado (que os 3 primeiros dias sugeriram ser forte).
+2. **Leak principal:** antecipar/contrariar a bias. Regra reforçada: *só na confirmação, só no sentido da bias.*
+3. **Próximo passo:** testar **outro período** (idealmente mais rotacional) + trabalhar colocação de stops.
 
 ## Observações do modelo (a acumular)
 
@@ -66,6 +99,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 24/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | ranging no value; short no PD VAL = RR terrível (só valeria no PD POC/VAH); long possível no PD VAL p/ POC/VAH/NY high; nada se armou → sem trade |
 | — | 27/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | gap up semanal; **HTF 4h bullish → semana a favorecer longs**; pré-market > PD value, preferência long p/ HOD/open semanal; mas "só caiu" e **não houve 5m close > POC** → esperou confirmação, sem entry ✓ |
 | — | 28/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | Asia deu continuação de queda; plano: rejeição do value → short p/ Asia Low; aceitação → long p/ PD VAH+Asia High. Rejeição **confirmou-se** mas às ~9:20 ET (**antes do open**) → leitura certa, fora da janela, sem entry |
+| 13 | 29/07 | (n/e) | POC / value | PD POC | — | — | PDL / Asia High | Stop | ❌ Loss | **−1R** | dia abriu bull mas Asia continuou queda (PDL não tirado); London voltou ao value **abaixo do POC** (desconfiança); loss. Níveis exatos não especificados. Utilizador farto do regime de julho |
 
 ## Notas detalhadas
 
