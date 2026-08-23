@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 0 | — | em curso; 2 no-play (02, 03/03) — value longe, sem gatilho limpo |
+| **Março 2026** (02/03→…) | 0 | — | em curso; 3 no-play (02, 03, 04) — front-runs, value longe, sem gatilho |
 
 ### ⚠️⚠️ Leak nº1 (JÁ PROVADO) — "apanhar suporte no extremo do value"
 Sub-setup = comprar/vender o extremo do value **antecipando** que segura (vs entrar NA reação confirmada).
@@ -128,6 +128,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | | **═══ MARÇO 2026 ═══** | | | | | | | | | | |
 | — | 02/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | gap down, não fechado na Asia (dump); sellers em controlo; plano = fecho de gap + rejeição do value → dump p/ lows do mês anterior; gap fechou mas **sem setup nas regras** → sem trade |
 | — | 03/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | grande dump (tirou low do dia anterior); trend bearish; **value muito longe + sem gatilho limpo** → sem trade; ficou no range de London |
+| — | 04/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | reação forte num POI às 6:00 (confluências) → trend inverteu bull; acima do PD value = bias bull, alvo Monday high; **front-run no PD VAH** → não perseguiu, sem play |
 
 ## Notas detalhadas
 
