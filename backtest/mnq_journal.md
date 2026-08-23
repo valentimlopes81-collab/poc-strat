@@ -9,9 +9,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **23** (29/06 → 29/07)
-- Dias com setup: **12** · Dias sem setup (no-play): **11** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27, 28/07)
-- Taxa de setup: **~52%** dos dias
+- Dias observados: **24** (29/06 → 30/07)
+- Dias com setup: **12** · Dias sem setup (no-play): **12** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27, 28, 30/07)
+- Taxa de setup: **50%** dos dias
 - Trades registadas: **13** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 4 / 2**
 - Win rate: **64%** decididas (7/11) · **54%** incl. BE (7/13)
@@ -100,6 +100,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 27/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | gap up semanal; **HTF 4h bullish → semana a favorecer longs**; pré-market > PD value, preferência long p/ HOD/open semanal; mas "só caiu" e **não houve 5m close > POC** → esperou confirmação, sem entry ✓ |
 | — | 28/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | Asia deu continuação de queda; plano: rejeição do value → short p/ Asia Low; aceitação → long p/ PD VAH+Asia High. Rejeição **confirmou-se** mas às ~9:20 ET (**antes do open**) → leitura certa, fora da janela, sem entry |
 | 13 | 29/07 | (n/e) | POC / value | PD POC | — | — | PDL / Asia High | Stop | ❌ Loss | **−1R** | dia abriu bull mas Asia continuou queda (PDL não tirado); London voltou ao value **abaixo do POC** (desconfiança); loss. Níveis exatos não especificados. Utilizador farto do regime de julho |
+| — | 30/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | dump no fim da NY anterior mas Asia fez low forte → volta a favorecer longs, mas só > PD VAH; **front-run absurdo no PD VAH** → não perseguiu, sem entry ✓ |
 
 ## Notas detalhadas
 
