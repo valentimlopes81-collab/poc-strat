@@ -9,9 +9,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **21** (29/06 → 27/07)
-- Dias com setup: **11** · Dias sem setup (no-play): **10** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27/07)
-- Taxa de setup: **~52%** dos dias
+- Dias observados: **22** (29/06 → 28/07)
+- Dias com setup: **11** · Dias sem setup (no-play): **11** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27, 28/07)
+- Taxa de setup: **50%** dos dias · **4 no-plays seguidos** (23→28/07, regime pouco jogável)
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -65,6 +65,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | — | 23/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | queda absurda no pré-market (limpou Monday low); POI (PD value) muito longe; open horrível; sem trade. Utilizador quer testar **meses mais atrás** (regime diferente) |
 | — | 24/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | ranging no value; short no PD VAL = RR terrível (só valeria no PD POC/VAH); long possível no PD VAL p/ POC/VAH/NY high; nada se armou → sem trade |
 | — | 27/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | gap up semanal; **HTF 4h bullish → semana a favorecer longs**; pré-market > PD value, preferência long p/ HOD/open semanal; mas "só caiu" e **não houve 5m close > POC** → esperou confirmação, sem entry ✓ |
+| — | 28/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | Asia deu continuação de queda; plano: rejeição do value → short p/ Asia Low; aceitação → long p/ PD VAH+Asia High. Rejeição **confirmou-se** mas às ~9:20 ET (**antes do open**) → leitura certa, fora da janela, sem entry |
 
 ## Notas detalhadas
 
