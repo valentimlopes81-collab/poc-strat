@@ -10,20 +10,26 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **17** · Wins/Losses/BE: **9 / 4 / 4**
-- Win rate: **69%** decididas (9/13) · **53%** incl. BE (9/17)
-- R total: **+7.15R** · Expectância: **+0.42R/trade** · PF (R): **11.15 / 4.0 = 2.8**
+- Trades: **18** · Wins/Losses/BE: **9 / 5 / 4**
+- Win rate: **64%** decididas (9/14) · **50%** incl. BE (9/18)
+- R total: **+6.15R** · Expectância: **+0.34R/trade** · PF (R): **11.15 / 5.0 = 2.2**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
 |---|---|---|---|
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
-| **Janeiro 2026** (02/01→…) | 3 | **+1.03R** | 5 dias; T15 +1.03, T16/T17 BE; 07/01 no-play; **08/01 setup válido PERDIDO (hesitação)** |
+| **Janeiro 2026** (02/01→…) | 4 | **+0.03R** | ~flat; T15 +1.03, T16/T17 BE, T18 −1; 07 no-play; 08 setup perdido |
 
-### ⚠️ Leak recorrente — "apanhar suporte no extremo do value"
-Sub-setup = comprar o extremo do value **antecipando** que segura (vs entrar NA reação confirmada).
-Histórico: **T6 −1R · T8 BE · T10 −1R · T16 BE** (o único "win" foi T14, e só num regime a virar bull, fechado cedo).
-→ **É a tua categoria mais fraca, 0 wins limpos.** Os teus wins de value são sempre **aceitação/reação confirmada** (T1/2/3/5/15). Recomendação: **ou saltar este sub-setup, ou só entrar depois da reação confirmar — nunca a antecipar.**
+### ⚠️⚠️ Leak nº1 (JÁ PROVADO) — "apanhar suporte no extremo do value"
+Sub-setup = comprar/vender o extremo do value **antecipando** que segura (vs entrar NA reação confirmada).
+Histórico: **T6 −1R · T8 BE · T10 −1R · T16 BE · T18 −1R** = **−3R, 2 BE, 0 wins limpos** em 5 tentativas.
+Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/15).
+**09/01 é o caso-escola:** a −1R foi antecipação; a "play certa textbook" do mesmo dia foi a **reação confirmada** (marcada pelo tagger ▲). Mesma zona/direção — só muda o timing.
+→ **REGRA: nunca antecipar o extremo do value. Esperar o ✖/▲ de recusa/aceitação confirmada.**
+
+### Leak nº2 — hesitar na reação confirmada
+08/01: recusa confirmada do PD VAL (setup tipo-A) não jogada → dump perdido. Face oposta do nº1.
+→ Ambos = **timing da leitura**. Alvo: entrar **na** confirmação — nem antes (nº1) nem depois (nº2).
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -114,6 +120,7 @@ Histórico: **T6 −1R · T8 BE · T10 −1R · T16 BE** (o único "win" foi T14
 | 17 | 06/01 | Short | **Rejeição do PD VAH** (válido ✓) | PD VAH | — | — | — | BE | ⚪ BE | **0R** | grande vela de rejeição do value na open de London, depois subiu ao PD VAH e sentiu resistência; jogou a rejeição do VAH (única entry, ou continuação > VAH); mercado morto → não seguiu, BE bem colocado |
 | — | 07/01 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias bull mantém; value muito grande, EQL dentro do value; só jogaria reação nos extremos; **subiu sem tocar o VAH (front-run)** → não perseguiu, sem entry ✓ |
 | — | 08/01 | (Short) | Rejeição PD VAL | PD VAL | — | — | — | — | ⚠️ Perdida | — | sellers fortes (retrace total do move de 07); **rejeição confirmada do PD VAL = setup tipo-A**, mas hesitou e não entrou; full dump que teria apanhado. Leak: **hesitação na leitura de recusa** (o tagger accept/reject é p/ isto) |
+| 18 | 09/01 | Long | **"Apanhar suporte" extremo value** (leak nº1) | value low | ~25738 | −66 pts (RR 1.92) | tp1 50% | Stop | ❌ Loss | **−1R** | sexta, ranging desde o dump; "achei que o extreme se estava a segurar bem mas não foi"; **antecipação = leak nº1**. A "play certa textbook" do dia era a **reação confirmada** (tagger ▲) — mesmo dia, teria sido win |
 
 ## Notas detalhadas
 
