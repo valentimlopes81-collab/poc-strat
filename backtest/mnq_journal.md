@@ -9,9 +9,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **20** (29/06 → 24/07)
-- Dias com setup: **11** · Dias sem setup (no-play): **9** (01, 03, 06, 07, 09, 13, 17, 23, 24/07)
-- Taxa de setup: **~55%** dos dias
+- Dias observados: **21** (29/06 → 27/07)
+- Dias com setup: **11** · Dias sem setup (no-play): **10** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27/07)
+- Taxa de setup: **~52%** dos dias
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -64,6 +64,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 12 | 22/07 | Long | **Aceitação PD VAL+POC** (confirmada ✓) | PD VAL+POC | 29163 | 28962.5 (200 pts) | TP1 29318 (PD VAH) · TP2 29509 | TP1 (50%) + BE | ✅ Win | **+0.39R** | "PA terrível" mas setup-tipo CERTO (aceitação, no sentido da leitura); quebra a série de 2 losses; stop largo (200) capou o R |
 | — | 23/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | queda absurda no pré-market (limpou Monday low); POI (PD value) muito longe; open horrível; sem trade. Utilizador quer testar **meses mais atrás** (regime diferente) |
 | — | 24/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | ranging no value; short no PD VAL = RR terrível (só valeria no PD POC/VAH); long possível no PD VAL p/ POC/VAH/NY high; nada se armou → sem trade |
+| — | 27/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | gap up semanal; **HTF 4h bullish → semana a favorecer longs**; pré-market > PD value, preferência long p/ HOD/open semanal; mas "só caiu" e **não houve 5m close > POC** → esperou confirmação, sem entry ✓ |
 
 ## Notas detalhadas
 
