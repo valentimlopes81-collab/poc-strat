@@ -10,15 +10,16 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **18** · Wins/Losses/BE: **9 / 5 / 4**
-- Win rate: **64%** decididas (9/14) · **50%** incl. BE (9/18)
-- R total: **+6.15R** · Expectância: **+0.34R/trade** · PF (R): **11.15 / 5.0 = 2.2**
+- Trades: **19** · Wins/Losses/BE: **10 / 5 / 4**
+- Win rate: **67%** decididas (10/15) · **53%** incl. BE (10/19)
+- R total: **+6.84R** · Expectância: **+0.36R/trade** · PF (R): **11.84 / 5.0 = 2.4**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
 |---|---|---|---|
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
-| **Janeiro 2026** (02/01→…) | 4 | **+0.03R** | ~flat; T15 +1.03, T16/T17 BE, T18 −1; 07 no-play; 08 setup perdido |
+| **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
+| **Fevereiro 2026** (27/02→…) | 1 | **+0.69R** | em curso; 1min disponível a partir daqui |
 
 ### ⚠️⚠️ Leak nº1 (JÁ PROVADO) — "apanhar suporte no extremo do value"
 Sub-setup = comprar/vender o extremo do value **antecipando** que segura (vs entrar NA reação confirmada).
@@ -121,6 +122,8 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | — | 07/01 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias bull mantém; value muito grande, EQL dentro do value; só jogaria reação nos extremos; **subiu sem tocar o VAH (front-run)** → não perseguiu, sem entry ✓ |
 | — | 08/01 | (Short) | Rejeição PD VAL | PD VAL | — | — | — | — | ⚠️ Perdida | — | sellers fortes (retrace total do move de 07); **rejeição confirmada do PD VAL = setup tipo-A**, mas hesitou e não entrou; full dump que teria apanhado. Leak: **hesitação na leitura de recusa** (o tagger accept/reject é p/ isto) |
 | 18 | 09/01 | Long | **"Apanhar suporte" extremo value** (leak nº1) | value low | ~25738 | −66 pts (RR 1.92) | tp1 50% | Stop | ❌ Loss | **−1R** | sexta, ranging desde o dump; "achei que o extreme se estava a segurar bem mas não foi"; **antecipação = leak nº1**. A "play certa textbook" do dia era a **reação confirmada** (tagger ▲) — mesmo dia, teria sido win |
+| | **═══ FEVEREIRO 2026 (1min disponível) ═══** | | | | | | | | | | |
+| 19 | 27/02 | Short | **Rejeição confirmada PD VAL** (tipo-A ✓) | PD VAL | 24880.75 | 24942.75 (62 pts) | TP1 24795.5 (low pré-mkt) · TP2 24694 | TP1 (50%) + BE | ✅ Win | **+0.69R** | dia anterior forte queda→value; pré-NY nova queda; continuation short na rejeição do value; low pré-mkt segurou (TP1), resto BE. **Setup certo no dia a seguir ao leak — boa correção** |
 
 ## Notas detalhadas
 
