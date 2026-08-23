@@ -10,15 +10,20 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **15** · Wins/Losses/BE: **9 / 4 / 2**
-- Win rate: **69%** decididas (9/13) · **60%** incl. BE (9/15)
-- R total: **+7.15R** · Expectância: **+0.48R/trade** · PF (R): **11.15 / 4.0 = 2.8**
+- Trades: **16** · Wins/Losses/BE: **9 / 4 / 3**
+- Win rate: **69%** decididas (9/13) · **56%** incl. BE (9/16)
+- R total: **+7.15R** · Expectância: **+0.45R/trade** · PF (R): **11.15 / 4.0 = 2.8**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
 |---|---|---|---|
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
-| **Janeiro 2026** (02/01→…) | 1 | **+1.03R** | em curso |
+| **Janeiro 2026** (02/01→…) | 2 | **+1.03R** | em curso (T15 +1.03, T16 BE) |
+
+### ⚠️ Leak recorrente — "apanhar suporte no extremo do value"
+Sub-setup = comprar o extremo do value **antecipando** que segura (vs entrar NA reação confirmada).
+Histórico: **T6 −1R · T8 BE · T10 −1R · T16 BE** (o único "win" foi T14, e só num regime a virar bull, fechado cedo).
+→ **É a tua categoria mais fraca, 0 wins limpos.** Os teus wins de value são sempre **aceitação/reação confirmada** (T1/2/3/5/15). Recomendação: **ou saltar este sub-setup, ou só entrar depois da reação confirmar — nunca a antecipar.**
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -105,6 +110,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 14 | 31/07 | Long | PD POC suporte (bias virou bull) | PD POC | 28254 | 28079.75 (174 pts) | TP1 28725.75 · TP2 28883.25 | Manual 28464.25 (20:40, risk-free) | ✅ Win | **+1.21R** | trend parece ter virado bull (Asia low forte); PD POC como suporte; "PA não o melhor" → fechou cedo manual a +1.21R (deixou meat: preço foi à zona TP) |
 | | **═══ JANEIRO 2026 ═══** | | | | | | | | | | (replay só anda de 5 em 5 min — sem dados 1m) |
 | 15 | 02/01 14:40 | Long | Aceitação/reação PD VAH | PD VAH | 25689.75 | 25639.25 (low open, **50 pts**) | TP1 25794 (PWH) · TP2 25818.75 | TP1 (50%) + BE | ✅ Win | **+1.03R** | ano abriu bull, a trocar > value; manipulação no open → PD VAH → reação bullish forte; TP1 atingido (PWH pendente); stop apertado → 1ª metade +2.06R |
+| 16 | 05/01 | Long | "Apanhar suporte" extremo value | value | — | — | — | BE | ⚪ BE | **0R** | subida da Asia suspeita (menos volume/agressão que a queda); acima do PD value = sem confluência p/ short; **catch-support outra vez** + **entry bem tardia** → RR mau, BE. Auto-crítica: 1min teria ajudado (sem dados) |
 
 ## Notas detalhadas
 
