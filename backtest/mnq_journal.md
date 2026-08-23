@@ -10,15 +10,15 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **16** · Wins/Losses/BE: **9 / 4 / 3**
-- Win rate: **69%** decididas (9/13) · **56%** incl. BE (9/16)
-- R total: **+7.15R** · Expectância: **+0.45R/trade** · PF (R): **11.15 / 4.0 = 2.8**
+- Trades: **17** · Wins/Losses/BE: **9 / 4 / 4**
+- Win rate: **69%** decididas (9/13) · **53%** incl. BE (9/17)
+- R total: **+7.15R** · Expectância: **+0.42R/trade** · PF (R): **11.15 / 4.0 = 2.8**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
 |---|---|---|---|
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
-| **Janeiro 2026** (02/01→…) | 2 | **+1.03R** | em curso (T15 +1.03, T16 BE) |
+| **Janeiro 2026** (02/01→…) | 3 | **+1.03R** | em curso (T15 +1.03, T16 BE, T17 BE) — início lento/range, muitos BE |
 
 ### ⚠️ Leak recorrente — "apanhar suporte no extremo do value"
 Sub-setup = comprar o extremo do value **antecipando** que segura (vs entrar NA reação confirmada).
@@ -111,6 +111,7 @@ Histórico: **T6 −1R · T8 BE · T10 −1R · T16 BE** (o único "win" foi T14
 | | **═══ JANEIRO 2026 ═══** | | | | | | | | | | (replay só anda de 5 em 5 min — sem dados 1m) |
 | 15 | 02/01 14:40 | Long | Aceitação/reação PD VAH | PD VAH | 25689.75 | 25639.25 (low open, **50 pts**) | TP1 25794 (PWH) · TP2 25818.75 | TP1 (50%) + BE | ✅ Win | **+1.03R** | ano abriu bull, a trocar > value; manipulação no open → PD VAH → reação bullish forte; TP1 atingido (PWH pendente); stop apertado → 1ª metade +2.06R |
 | 16 | 05/01 | Long | "Apanhar suporte" extremo value | value | — | — | — | BE | ⚪ BE | **0R** | subida da Asia suspeita (menos volume/agressão que a queda); acima do PD value = sem confluência p/ short; **catch-support outra vez** + **entry bem tardia** → RR mau, BE. Auto-crítica: 1min teria ajudado (sem dados) |
+| 17 | 06/01 | Short | **Rejeição do PD VAH** (válido ✓) | PD VAH | — | — | — | BE | ⚪ BE | **0R** | grande vela de rejeição do value na open de London, depois subiu ao PD VAH e sentiu resistência; jogou a rejeição do VAH (única entry, ou continuação > VAH); mercado morto → não seguiu, BE bem colocado |
 
 ## Notas detalhadas
 
