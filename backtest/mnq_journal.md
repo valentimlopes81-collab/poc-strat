@@ -18,7 +18,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | Bloco | Trades | R | Notas |
 |---|---|---|---|
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
-| **Janeiro 2026** (02/01→…) | 3 | **+1.03R** | em curso (T15 +1.03, T16 BE, T17 BE) — início lento/range, muitos BE |
+| **Janeiro 2026** (02/01→…) | 3 | **+1.03R** | 4 dias (1 no-play, 07/01); início lento/range, muitos BE (T15 +1.03, T16 BE, T17 BE) |
 
 ### ⚠️ Leak recorrente — "apanhar suporte no extremo do value"
 Sub-setup = comprar o extremo do value **antecipando** que segura (vs entrar NA reação confirmada).
@@ -112,6 +112,7 @@ Histórico: **T6 −1R · T8 BE · T10 −1R · T16 BE** (o único "win" foi T14
 | 15 | 02/01 14:40 | Long | Aceitação/reação PD VAH | PD VAH | 25689.75 | 25639.25 (low open, **50 pts**) | TP1 25794 (PWH) · TP2 25818.75 | TP1 (50%) + BE | ✅ Win | **+1.03R** | ano abriu bull, a trocar > value; manipulação no open → PD VAH → reação bullish forte; TP1 atingido (PWH pendente); stop apertado → 1ª metade +2.06R |
 | 16 | 05/01 | Long | "Apanhar suporte" extremo value | value | — | — | — | BE | ⚪ BE | **0R** | subida da Asia suspeita (menos volume/agressão que a queda); acima do PD value = sem confluência p/ short; **catch-support outra vez** + **entry bem tardia** → RR mau, BE. Auto-crítica: 1min teria ajudado (sem dados) |
 | 17 | 06/01 | Short | **Rejeição do PD VAH** (válido ✓) | PD VAH | — | — | — | BE | ⚪ BE | **0R** | grande vela de rejeição do value na open de London, depois subiu ao PD VAH e sentiu resistência; jogou a rejeição do VAH (única entry, ou continuação > VAH); mercado morto → não seguiu, BE bem colocado |
+| — | 07/01 | — | — | — | — | — | — | — | ⏸️ No-play | — | bias bull mantém; value muito grande, EQL dentro do value; só jogaria reação nos extremos; **subiu sem tocar o VAH (front-run)** → não perseguiu, sem entry ✓ |
 
 ## Notas detalhadas
 
