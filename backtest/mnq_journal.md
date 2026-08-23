@@ -9,15 +9,16 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 
 ## Estatísticas (atualizado a cada lote)
 
-- Dias observados: **25** (29/06 → 31/07) — **JULHO FECHADO**
-- Dias com setup: **13** · Dias sem setup (no-play): **12** (01, 03, 06, 07, 09, 13, 17, 23, 24, 27, 28, 30/07)
-- Taxa de setup: **~52%** dos dias
-- Trades registadas: **14** (14/07 teve 2)
-- Wins / Losses / BE: **8 / 4 / 2**
-- Win rate: **67%** decididas (8/12) · **57%** incl. BE (8/14)
-- R total: **+6.12R**
-- Expectância (R por trade, incl. BE): **+0.44R**
-- Profit factor (R): **10.12 / 4.0 = 2.5** · payoff médio ~1.3R
+### Cumulativo (todos os blocos)
+- Trades: **15** · Wins/Losses/BE: **9 / 4 / 2**
+- Win rate: **69%** decididas (9/13) · **60%** incl. BE (9/15)
+- R total: **+7.15R** · Expectância: **+0.48R/trade** · PF (R): **11.15 / 4.0 = 2.8**
+
+### Por bloco
+| Bloco | Trades | R | Notas |
+|---|---|---|---|
+| **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
+| **Janeiro 2026** (02/01→…) | 1 | **+1.03R** | em curso |
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -102,6 +103,8 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | 13 | 29/07 | (n/e) | POC / value | PD POC | — | — | PDL / Asia High | Stop | ❌ Loss | **−1R** | dia abriu bull mas Asia continuou queda (PDL não tirado); London voltou ao value **abaixo do POC** (desconfiança); loss. Níveis exatos não especificados. Utilizador farto do regime de julho |
 | — | 30/07 | — | — | — | — | — | — | — | ⏸️ No-play | — | dump no fim da NY anterior mas Asia fez low forte → volta a favorecer longs, mas só > PD VAH; **front-run absurdo no PD VAH** → não perseguiu, sem entry ✓ |
 | 14 | 31/07 | Long | PD POC suporte (bias virou bull) | PD POC | 28254 | 28079.75 (174 pts) | TP1 28725.75 · TP2 28883.25 | Manual 28464.25 (20:40, risk-free) | ✅ Win | **+1.21R** | trend parece ter virado bull (Asia low forte); PD POC como suporte; "PA não o melhor" → fechou cedo manual a +1.21R (deixou meat: preço foi à zona TP) |
+| | **═══ JANEIRO 2026 ═══** | | | | | | | | | | (replay só anda de 5 em 5 min — sem dados 1m) |
+| 15 | 02/01 14:40 | Long | Aceitação/reação PD VAH | PD VAH | 25689.75 | 25639.25 (low open, **50 pts**) | TP1 25794 (PWH) · TP2 25818.75 | TP1 (50%) + BE | ✅ Win | **+1.03R** | ano abriu bull, a trocar > value; manipulação no open → PD VAH → reação bullish forte; TP1 atingido (PWH pendente); stop apertado → 1ª metade +2.06R |
 
 ## Notas detalhadas
 
