@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **24** · Wins/Losses/BE: **13 / 6 / 5**
-- Win rate: **68%** decididas (13/19) · **54%** incl. BE (13/24)
-- R total: **+11.36R** · Expectância: **+0.47R/trade** · PF (R): **17.36 / 6.0 = 2.9**
+- Trades: **25** · Wins/Losses/BE: **14 / 6 / 5**
+- Win rate: **70%** decididas (14/20) · **56%** incl. BE (14/25)
+- R total: **+12.54R** · Expectância: **+0.50R/trade** · PF (R): **18.54 / 6.0 = 3.1**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 5 | **+4.52R** | T20 +2.09, T21 BE, T22 +1.47, T23 +1.96, T24 −1; 7 no-play. T24 = reincidência leak nº1 (apanhada no ato) |
+| **Março 2026** (02/03→…) | 6 | **+5.70R** | T20-T25; 7 no-play. T24 leak −1, T25 recuperou clean +1.18; melhor bloco em R/trade |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -152,6 +152,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | 23 | 13/03 | Short | **Exaustão no PD POC** (falha de suporte) | PD POC | 24616.5 | 24728.25 (HOD NY, 112 pts) | LOD 24397.75 | Full TP (100%) | ✅ Win | **+1.96R** | leu **exaustão**: repetidos toques no PD POC c/ bounces cada vez mais fracos → suporte a ceder → short p/ LOD. BE ao passar o PDL. Full TP (após killzone, mas risk-free). **Leitura de tape avançada — o oposto do leak nº1** |
 | 24 | 16/03 | Long | **"Apanhar suporte" PD VAH** (leak nº1) | PD VAH | — | — | — | Stop | ❌ Loss | **−1R** | open bull anulou queda de sexta; zona do PD VAH era p/ **shorts** (rejeição), mas tentou long a usar o VAH como **suporte** = leak nº1. **Apanhou o erro no ato** ("estupidamente, tenho de me concentrar"). 1ª reincidência em 15 trades |
 | — | 17/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | consolidação acima do value de ontem; bias bull; procuraria continuation long no extreme do value SE voltasse; **subiu sem parar, nunca voltou ao value** → sem entry |
+| 25 | 18/03 | Short | **Rejeição confirmada PD VAL** (tipo-A ✓) | PD VAL | 24936.75 | 24999 (62 pts) | TP1 24863.25 (fechou tudo) · [final 24729] | Full close TP1 | ✅ Win | **+1.18R** | subida de ontem anulada no pré-NY (rejeição a higher prices); short na rejeição do PD VAL; **fechou 100% no TP1** por já estar fora da killzone (não segurou). Final TP veio só na afternoon (fora do modelo). **Recuperou clean no dia a seguir ao leak** |
 
 ## Notas detalhadas
 
