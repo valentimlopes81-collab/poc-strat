@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **21** · Wins/Losses/BE: **11 / 5 / 5**
-- Win rate: **69%** decididas (11/16) · **52%** incl. BE (11/21)
-- R total: **+8.93R** · Expectância: **+0.43R/trade** · PF (R): **13.93 / 5.0 = 2.8**
+- Trades: **22** · Wins/Losses/BE: **12 / 5 / 5**
+- Win rate: **71%** decididas (12/17) · **55%** incl. BE (12/22)
+- R total: **+10.40R** · Expectância: **+0.47R/trade** · PF (R): **15.40 / 5.0 = 3.1**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 2 | **+2.09R** | 7 dias: T20 +2.09, T21 BE; 5 no-play (02,03,04,09,10) — baixo volume / value longe |
+| **Março 2026** (02/03→…) | 3 | **+3.56R** | 8 dias: T20 +2.09, T21 BE, T22 +1.47; 5 no-play; runner de T22 até ao PDL |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -145,6 +145,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | 21 | 06/03 | Short | **Rejeição PD VAL** (resistência, tipo-A ✓) | PD VAL | — | — | — | BE | ⚪ BE | **0R** | breakout downside (sellers fortes); short na rejeição do PD VAL como resistência; **sexta + fim da killzone, pouco volume** → não seguiu, BE. Setup válido, timing fraco |
 | — | 09/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | abriu semana a limpar lows importantes + gap por preencher; trend bearish forte; recuperação com pouco volume (suspeita); NY sem volume, gap fechou mas POIs acima → sem entry |
 | — | 10/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | full retrace do move bearish → buyers em controlo; ranging; queria revisita ao PD value p/ long até HOD; **preço nunca perto do PD value** → sem entry |
+| 22 | 11/03 | Short | **Rejeição confirmada PD VAH** (tipo-A ✓) | PD VAH | 25092 | 25180 (88 pts) | TP1 25032.25 (PD POC) · TP2 24892.5 (PDL) | TP1 (50%) + TP2 (runner) | ✅ Win | **+1.47R** | range pós-segunda; leve apatia no open (não viu logo o PD POC a segurar), esperou o VAH → rejeição → short; TP1 no POC + **runner até ao PDL** (+2.27R na 2ª metade). Runner a pagar |
 
 ## Notas detalhadas
 
