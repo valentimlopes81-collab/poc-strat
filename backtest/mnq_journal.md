@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 6 | **+5.70R** | T20-T25; 7 no-play. T24 leak −1, T25 recuperou clean +1.18; melhor bloco em R/trade |
+| **Março 2026** (02/03→…) | 6 | **+5.70R** | T20-T25; 8 no-play. T24 leak −1, T25 recuperou clean +1.18; melhor bloco em R/trade |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -153,6 +153,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | 24 | 16/03 | Long | **"Apanhar suporte" PD VAH** (leak nº1) | PD VAH | — | — | — | Stop | ❌ Loss | **−1R** | open bull anulou queda de sexta; zona do PD VAH era p/ **shorts** (rejeição), mas tentou long a usar o VAH como **suporte** = leak nº1. **Apanhou o erro no ato** ("estupidamente, tenho de me concentrar"). 1ª reincidência em 15 trades |
 | — | 17/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | consolidação acima do value de ontem; bias bull; procuraria continuation long no extreme do value SE voltasse; **subiu sem parar, nunca voltou ao value** → sem entry |
 | 25 | 18/03 | Short | **Rejeição confirmada PD VAL** (tipo-A ✓) | PD VAL | 24936.75 | 24999 (62 pts) | TP1 24863.25 (fechou tudo) · [final 24729] | Full close TP1 | ✅ Win | **+1.18R** | subida de ontem anulada no pré-NY (rejeição a higher prices); short na rejeição do PD VAL; **fechou 100% no TP1** por já estar fora da killzone (não segurou). Final TP veio só na afternoon (fora do modelo). **Recuperou clean no dia a seguir ao leak** |
+| — | 19/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | grande queda retoma trend bearish (favorece shorts); mas **preço muito abaixo dos POIs** → era preciso subida de volta a eles p/ shortar (ou invalidar), que não veio → sem entry |
 
 ## Notas detalhadas
 
