@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 8 | **+7.76R** | T20-T27; 11 no-play. Só T24 (leak) negativa; 6 wins. Melhor bloco de sempre |
+| **Março 2026** (02/03→…) | 8 | **+7.76R** | T20-T27; 12 no-play. Só T24 (leak) negativa; 6 wins. Melhor bloco de sempre |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -92,6 +92,29 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 - **Ponto cego:** dias de **trend forte que fogem sem retração ao POI** (03, 06, 07/07 foram bearish e o preço não voltou ao value) → **sem entrada**. Correto para o modelo, mas significa **curva de equity plana em regimes de trend persistente**. Não é bug; é a natureza do sistema.
 - Implicação: a frequência de setups cai quando o mercado só corre numa direção. Aceitável — mas ter presente que ficas de fora de moves grandes sem retração.
 
+## SIMULAÇÃO — Funded Lucid 25k (27 trades)
+
+**Pressuposto:** risco disciplinado **$100/trade = 1R** (10% do buffer de $1.000). Contratos MNQ, $2/ponto.
+
+**Resultado:** +14.60R → **+$1.460**.
+
+**Curva de equity (R):** pico intermédio +7.64R (T5), max drawdown até +4.91R (T13) = **−2.73R**, depois subida consistente até +14.60R.
+
+**Regras Lucid 25k — verificação:**
+| Regra | Limite | No backtest | Estado |
+|---|---|---|---|
+| Profit target | +$1.250 | atingido na **T25** (18/03), +$1.254 | ✅ **Eval passada** |
+| Max Loss Limit (trailing EOD) | −$1.000 | max drawdown só **−$273** | ✅ nunca perto |
+| Daily loss limit | ~−$300 | pior dia −$100 (ou −$62 no 14/07, 2 trades) | ✅ nunca perto |
+| Consistency (se o plano tiver) | típico 30-40% | maior dia +$254 (T3) ≈ 17% do lucro | ✅ provável (confirmar plano) |
+
+**Conclusão:** passaria a avaliação **com margem enorme** — usou no máximo **$273 dos $1.000** de buffer. Sobra espaço para arriscar mais: a **$150/R** → +$2.190, max DD ~$410 (ainda longe do limite).
+
+**Caveats honestos:**
+- Com MNQ inteiros + stops de 50-200 pts, nem sempre dá para arriscar exatamente $100 (1 MNQ num stop de 100 pts = $200 = 2R). Os $ reais seriam mais "aos saltos"; a estrutura em R e a conclusão (passa com folga) mantêm-se.
+- É backtest em replay 5m/1m, execução manual — fills reais ao vivo variam.
+- Passar a eval ≠ ser lucrativo a longo prazo. É 27 trades; o edge é bom mas a amostra é pequena.
+
 ## Notas de risco (prop Lucid — 25k)
 
 - Buffer real = **Max Loss Limit $1.000** (não os 25k). Alvo p/ passar: **$1.250**. Trailing **EOD** (só conta no close). Cap: 20 micros.
@@ -159,6 +182,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | — | 24/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | a reverter a candle bull de ontem; perda de força, várias rejeições dos POIs do value em Asia/London → favorecia shorts; mas **NY terrível**, nada jogável → sem entry |
 | 27 | 25/03 | Long | **Reação confirmada PD VAH** (tipo-A ✓) | PD VAH | 24337.5 | 24287.75 (VAH, 50 pts) | TP1 24438.75 · TP2 24540 | TP1 (50%) + BE | ✅ Win | **+0.51R** | acima do PD value; boa reação no PD VAH → long, mas **arriscou só 0.5R** por estar quase fora da killzone (bom sizing à qualidade do momento); faltou volume p/ TP2, resto BE. Stop no VAH = invalidação estrutural |
 | — | 26/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | trend bearish de volta (após dia choppy); a trocar < PD value → favorece continuation shorts, mas era preciso revisitar o value p/ entrar; **não revisitou** → sem entry |
+| — | 27/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | igual ao 26; trend bearish, ovn move estragou a NY; killzone terrível (2 dias seguidos) → proibido jogar; sem entry |
 
 ## Notas detalhadas
 
