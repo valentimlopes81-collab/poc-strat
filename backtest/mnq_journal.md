@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 8 | **+7.76R** | T20-T27; 10 no-play. Só T24 (leak) negativa; 6 wins. Melhor bloco de sempre |
+| **Março 2026** (02/03→…) | 8 | **+7.76R** | T20-T27; 11 no-play. Só T24 (leak) negativa; 6 wins. Melhor bloco de sempre |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -158,6 +158,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | — | 23/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | trend bearish confirmada; gap acima + value acima do gap; **candle de ~800 pts em 5min por news (Trump)** → move erráctico/suspeito, sem edge no meio do spike → ficou de fora ✓ |
 | — | 24/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | a reverter a candle bull de ontem; perda de força, várias rejeições dos POIs do value em Asia/London → favorecia shorts; mas **NY terrível**, nada jogável → sem entry |
 | 27 | 25/03 | Long | **Reação confirmada PD VAH** (tipo-A ✓) | PD VAH | 24337.5 | 24287.75 (VAH, 50 pts) | TP1 24438.75 · TP2 24540 | TP1 (50%) + BE | ✅ Win | **+0.51R** | acima do PD value; boa reação no PD VAH → long, mas **arriscou só 0.5R** por estar quase fora da killzone (bom sizing à qualidade do momento); faltou volume p/ TP2, resto BE. Stop no VAH = invalidação estrutural |
+| — | 26/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | trend bearish de volta (após dia choppy); a trocar < PD value → favorece continuation shorts, mas era preciso revisitar o value p/ entrar; **não revisitou** → sem entry |
 
 ## Notas detalhadas
 
