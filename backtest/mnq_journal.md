@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **25** · Wins/Losses/BE: **14 / 6 / 5**
-- Win rate: **70%** decididas (14/20) · **56%** incl. BE (14/25)
-- R total: **+12.54R** · Expectância: **+0.50R/trade** · PF (R): **18.54 / 6.0 = 3.1**
+- Trades: **26** · Wins/Losses/BE: **15 / 6 / 5**
+- Win rate: **71%** decididas (15/21) · **58%** incl. BE (15/26)
+- R total: **+14.09R** · Expectância: **+0.54R/trade** · PF (R): **20.09 / 6.0 = 3.3**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 6 | **+5.70R** | T20-T25; 8 no-play. T24 leak −1, T25 recuperou clean +1.18; melhor bloco em R/trade |
+| **Março 2026** (02/03→…) | 7 | **+7.25R** | T20-T26; 8 no-play. Só T24 (leak) negativa; 5 wins. Melhor bloco de sempre |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -154,6 +154,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | — | 17/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | consolidação acima do value de ontem; bias bull; procuraria continuation long no extreme do value SE voltasse; **subiu sem parar, nunca voltou ao value** → sem entry |
 | 25 | 18/03 | Short | **Rejeição confirmada PD VAL** (tipo-A ✓) | PD VAL | 24936.75 | 24999 (62 pts) | TP1 24863.25 (fechou tudo) · [final 24729] | Full close TP1 | ✅ Win | **+1.18R** | subida de ontem anulada no pré-NY (rejeição a higher prices); short na rejeição do PD VAL; **fechou 100% no TP1** por já estar fora da killzone (não segurou). Final TP veio só na afternoon (fora do modelo). **Recuperou clean no dia a seguir ao leak** |
 | — | 19/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | grande queda retoma trend bearish (favorece shorts); mas **preço muito abaixo dos POIs** → era preciso subida de volta a eles p/ shortar (ou invalidar), que não veio → sem entry |
+| 26 | 20/03 | Short | **Rejeição confirmada extremo value** (tipo-A ✓) | PD VAH | 24426.5 | 24527 (100 pts) | 24270.75 (low 13/03) | Full TP (100%) | ✅ Win | **+1.55R** | tirou o PDL na London, voltou a lutar com o value; extreme do value = forte resistência → short. **Fill mau + entrada tardia** penalizaram o RR; jogou na conviction da bias. Full TP |
 
 ## Notas detalhadas
 
