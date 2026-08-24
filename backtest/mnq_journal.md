@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 5 | **+4.52R** | T20 +2.09, T21 BE, T22 +1.47, T23 +1.96, T24 −1; 6 no-play. T24 = reincidência leak nº1 (apanhada no ato) |
+| **Março 2026** (02/03→…) | 5 | **+4.52R** | T20 +2.09, T21 BE, T22 +1.47, T23 +1.96, T24 −1; 7 no-play. T24 = reincidência leak nº1 (apanhada no ato) |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -151,6 +151,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | — | 12/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | dia 11 fez full retrace do move de segunda; overnight equilibrou, subiu ao extreme low do value e rejeitou → cenário de short p/ Asia low/LOD; mas **só caiu sem tocar nenhum POI** → sem entry |
 | 23 | 13/03 | Short | **Exaustão no PD POC** (falha de suporte) | PD POC | 24616.5 | 24728.25 (HOD NY, 112 pts) | LOD 24397.75 | Full TP (100%) | ✅ Win | **+1.96R** | leu **exaustão**: repetidos toques no PD POC c/ bounces cada vez mais fracos → suporte a ceder → short p/ LOD. BE ao passar o PDL. Full TP (após killzone, mas risk-free). **Leitura de tape avançada — o oposto do leak nº1** |
 | 24 | 16/03 | Long | **"Apanhar suporte" PD VAH** (leak nº1) | PD VAH | — | — | — | Stop | ❌ Loss | **−1R** | open bull anulou queda de sexta; zona do PD VAH era p/ **shorts** (rejeição), mas tentou long a usar o VAH como **suporte** = leak nº1. **Apanhou o erro no ato** ("estupidamente, tenho de me concentrar"). 1ª reincidência em 15 trades |
+| — | 17/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | consolidação acima do value de ontem; bias bull; procuraria continuation long no extreme do value SE voltasse; **subiu sem parar, nunca voltou ao value** → sem entry |
 
 ## Notas detalhadas
 
