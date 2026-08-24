@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **20** · Wins/Losses/BE: **11 / 5 / 4**
-- Win rate: **69%** decididas (11/16) · **55%** incl. BE (11/20)
-- R total: **+8.93R** · Expectância: **+0.45R/trade** · PF (R): **13.93 / 5.0 = 2.8**
+- Trades: **21** · Wins/Losses/BE: **11 / 5 / 5**
+- Win rate: **69%** decididas (11/16) · **52%** incl. BE (11/21)
+- R total: **+8.93R** · Expectância: **+0.43R/trade** · PF (R): **13.93 / 5.0 = 2.8**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→…) | 1 | **+2.09R** | 3 no-play (02-04) + T20 full TP; T20 tipo-A clean |
+| **Março 2026** (02/03→…) | 2 | **+2.09R** | 3 no-play (02-04); T20 full TP +2.09; T21 BE (sexta/killzone) |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -142,6 +142,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | — | 03/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | grande dump (tirou low do dia anterior); trend bearish; **value muito longe + sem gatilho limpo** → sem trade; ficou no range de London |
 | — | 04/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | reação forte num POI às 6:00 (confluências) → trend inverteu bull; acima do PD value = bias bull, alvo Monday high; **front-run no PD VAH** → não perseguiu, sem play |
 | 20 | 05/03 15:10 | Short | **Rejeição confirmada PD VAH** (tipo-A ✓) | PD VAH | 25131 | 25209.50 (78.5 pts) | 24966.75 (open mkt) | TP 24966.75 (100%) | ✅ Win | **+2.09R** | range a lutar dentro do PD value; não apanhou o open, esperou reação DENTRO do value; rejeição do PD VAH → short clean, full TP. **Setup-tipo perfeito, execução limpa** |
+| 21 | 06/03 | Short | **Rejeição PD VAL** (resistência, tipo-A ✓) | PD VAL | — | — | — | BE | ⚪ BE | **0R** | breakout downside (sellers fortes); short na rejeição do PD VAL como resistência; **sexta + fim da killzone, pouco volume** → não seguiu, BE. Setup válido, timing fraco |
 
 ## Notas detalhadas
 
