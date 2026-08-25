@@ -20,7 +20,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Julho 2026** (29/06→31/07) | 14 | **+6.12R** | regime trend/dump (adverso); edge veio da lua-de-mel |
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
-| **Março 2026** (02/03→30/03) | 9 | **+7.76R** | T20-T28; 12 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. Melhor bloco de sempre |
+| **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -184,6 +184,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | — | 26/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | trend bearish de volta (após dia choppy); a trocar < PD value → favorece continuation shorts, mas era preciso revisitar o value p/ entrar; **não revisitou** → sem entry |
 | — | 27/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | igual ao 26; trend bearish, ovn move estragou a NY; killzone terrível (2 dias seguidos) → proibido jogar; sem entry |
 | 28 | 30/03 | Short | **Rejeição confirmada PD POC** (tipo-A ✓) | PD POC | — | — | — | BE | ⚪ BE | **0R** | Asia recuperou bull, a tentar aceitar o value; a trocar entre VAL e POC; short na rejeição do POC, mas **fill muito mau e lento** → BE. "A lógica estava lá" — execução, não leitura |
+| — | 31/03 | — | — | — | — | — | — | — | ⏸️ No-play | — | queda de segunda → impulso bull na Asia de volta ao PD value, a lutar com o PD POC; ver se POC segura (bull→Monday high) ou esgota (bear→Asia low); **sessão má** → sem setup |
 
 ## Notas detalhadas
 
