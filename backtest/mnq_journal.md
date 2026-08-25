@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 0 | — | em curso; 2 no-play (01, 02) — value longe / sem volume |
+| **Abril 2026** (01/04→…) | 0 | — | em curso; 3 no-play (01, 02, 06); 03/04 feriado (Good Friday) |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -189,6 +189,8 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | | **═══ ABRIL 2026 ═══** | | | | | | | | | | |
 | — | 01/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | abril começa bull com impulso comprador forte; acima do value → esperar volta ao value p/ longs com reação forte; **não voltou** → sem setup |
 | — | 02/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | **dump gigante ovn** → PD value muito acima (dificulta o modelo); só chegou ao value no fim da sessão e sem volume → sem setup |
+| — | 03/04 | — | — | — | — | — | — | — | 🚫 Feriado | — | **Good Friday** — bolsas US fechadas, sem sessão |
+| — | 06/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | a aguentar o value, acima dele (impulso bull não invalidado); plano = long scalp se o extremo superior do value segurasse como suporte; **só deu range** → sem trade |
 
 ## Notas detalhadas
 
