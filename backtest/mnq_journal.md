@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **28** · Wins/Losses/BE: **16 / 6 / 6**
-- Win rate: **73%** decididas (16/22) · **57%** incl. BE (16/28)
-- R total: **+14.60R** · Expectância: **+0.52R/trade** · PF (R): **20.60 / 6.0 = 3.4**
+- Trades: **29** · Wins/Losses/BE: **17 / 6 / 6**
+- Win rate: **74%** decididas (17/23) · **59%** incl. BE (17/29)
+- R total: **+16.84R** · Expectância: **+0.58R/trade** · PF (R): **22.84 / 6.0 = 3.8**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 0 | — | em curso; 3 no-play (01, 02, 06); 03/04 feriado (Good Friday) |
+| **Abril 2026** (01/04→…) | 1 | **+2.24R** | T29 full TP; 3 no-play (01,02,06); 03/04 feriado |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -116,6 +116,23 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 - É backtest em replay 5m/1m, execução manual — fills reais ao vivo variam.
 - Passar a eval ≠ ser lucrativo a longo prazo. É 27 trades; o edge é bom mas a amostra é pequena.
 
+## SIMULAÇÃO — 1 contrato MNQ fixo (29 trades)
+
+Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
+
+**Resultado: ≈ +$2.950** (bruto) → **~$2.900** líquido (após ~$45 comissões).
+*(4 trades com stop estimado — T3, T5, T13, T24 — sem pontos exatos; aproximação ±~$100. T15/T22/T27 eram scaled 50/50, impossível com 1 contrato → usado o resultado blended.)*
+
+**Regras Lucid 25k (1 contrato):**
+| Regra | Limite | 1 contrato | Estado |
+|---|---|---|---|
+| Profit target | +$1.250 | atingido ~T14-15 | ✅ passa |
+| Max Loss Limit | −$1.000 | max drawdown ≈ **−$468** | ✅ ok (mais apertado que $100/R) |
+| Daily loss | ~−$300 | pior trade −$262 (T11) | ✅ ok, mas perto |
+| Payout | buffer $1.100, min $500 | $1.851 acima do buffer → **~$1.666** (90/10) | ✅ |
+
+**⚠️ Aviso honesto — risco INCONSISTENTE:** 1 contrato fixo = risco de **$100 a $400/trade** conforme o stop (50-200 pts). A **T12 (stop 200 pts) arriscou $400 = 40% do buffer numa só trade.** Deu mais $ que a versão $100/R ($2.950 vs $1.460) precisamente porque arrisca mais nos stops largos — mas é **frágil**: um mau dia com stop largo tira grande fatia do buffer de uma vez. O sizing por risco fixo (%/R) é mais sólido; 1 contrato fixo dá mais retorno mas pior gestão de risco.
+
 ## Notas de risco (prop Lucid — 25k)
 
 - Buffer real = **Max Loss Limit $1.000** (não os 25k). Alvo p/ passar: **$1.250**. Trailing **EOD** (só conta no close). Cap: 20 micros.
@@ -191,6 +208,7 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 | — | 02/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | **dump gigante ovn** → PD value muito acima (dificulta o modelo); só chegou ao value no fim da sessão e sem volume → sem setup |
 | — | 03/04 | — | — | — | — | — | — | — | 🚫 Feriado | — | **Good Friday** — bolsas US fechadas, sem sessão |
 | — | 06/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | a aguentar o value, acima dele (impulso bull não invalidado); plano = long scalp se o extremo superior do value segurasse como suporte; **só deu range** → sem trade |
+| 29 | 07/04 | Short | **Rejeição confirmada extremo value** (tipo-A ✓) | value extreme | 24251.75 | 24304.5 (52.75 pts) | 24133.75 (full) | Full TP (100%) | ✅ Win | **+2.24R** | dia volátil, luta entre extremos do value; pré-NY em range < value; NY levou ao value e rejeitou → short; sem BE (margem pequena); full TP. Stop apertado → bom múltiplo |
 
 ## Notas detalhadas
 
