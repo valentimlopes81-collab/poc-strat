@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 4 | **+0.24R** | T29 +2.24, T30 BE, T31 −1, T32 −1; 7 no-play; regime bull a dar-lhe shorts maus |
+| **Abril 2026** (01/04→…) | 4 | **+0.24R** | T29 +2.24, T30 BE, T31 −1, T32 −1; 8 no-play; regime bull a dar-lhe shorts maus |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -221,6 +221,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 14/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | impulso super bullish, price discovery; acima do value → long no extremo do value se possível; **só subiu, nunca voltou ao value** → sem entry |
 | — | 15/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | range a aceitar bem o value; bias bull (higher prices); atento a longs em reações no value; **sem bons targets** (RR) → sem trade |
 | 32 | 16/04 | Short | **Contra bias bull** (leak nº3) | PD VAH | — | — | — | Stop | ❌ Loss | **−1R** | trend super bullish, value criado abaixo; bias = LONGS; tentou short na rejeição do VAH p/ baixo → **contra-tendência** = "estúpido" (palavras dele). Igual à T11. Loss |
+| — | 17/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | só subimos outra vez, sem retração ao value → sem oportunidade (sem tentação de short desta vez ✓) |
 
 ## Notas detalhadas
 
