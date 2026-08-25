@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 1 | **+2.24R** | T29 full TP; 3 no-play (01,02,06); 03/04 feriado |
+| **Abril 2026** (01/04→…) | 1 | **+2.24R** | T29 full TP; 4 no-play (01,02,06,08); 03/04 feriado |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -209,6 +209,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 03/04 | — | — | — | — | — | — | — | 🚫 Feriado | — | **Good Friday** — bolsas US fechadas, sem sessão |
 | — | 06/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | a aguentar o value, acima dele (impulso bull não invalidado); plano = long scalp se o extremo superior do value segurasse como suporte; **só deu range** → sem trade |
 | 29 | 07/04 | Short | **Rejeição confirmada extremo value** (tipo-A ✓) | value extreme | 24251.75 | 24304.5 (52.75 pts) | 24133.75 (full) | Full TP (100%) | ✅ Win | **+2.24R** | dia volátil, luta entre extremos do value; pré-NY em range < value; NY levou ao value e rejeitou → short; sem BE (margem pequena); full TP. Stop apertado → bom múltiplo |
+| — | 08/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | subida absurda no fim do dia 7 → pré-NY muito longe do value; volume secou muito após o impulso → sem oportunidade |
 
 ## Notas detalhadas
 
