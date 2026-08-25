@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **30** · Wins/Losses/BE: **17 / 6 / 7**
-- Win rate: **74%** decididas (17/23) · **57%** incl. BE (17/30)
-- R total: **+16.84R** · Expectância: **+0.56R/trade** · PF (R): **22.84 / 6.0 = 3.8**
+- Trades: **31** · Wins/Losses/BE: **17 / 7 / 7**
+- Win rate: **71%** decididas (17/24) · **55%** incl. BE (17/31)
+- R total: **+15.84R** · Expectância: **+0.51R/trade** · PF (R): **22.84 / 7.0 = 3.3**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 2 | **+2.24R** | T29 +2.24, T30 BE; 5 no-play (01,02,06,08,10); 03/04 feriado |
+| **Abril 2026** (01/04→…) | 3 | **+1.24R** | T29 +2.24, T30 BE, T31 −1; 5 no-play; 03/04 feriado |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -212,6 +212,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 08/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | subida absurda no fim do dia 7 → pré-NY muito longe do value; volume secou muito após o impulso → sem oportunidade |
 | 30 | 09/04 | Short | **Rejeição confirmada PD POC** (tipo-A ✓) | PD POC | — | — | — | BE | ⚪ BE | **0R** | consolidação desde o move bull; a lutar com o value; short na rejeição do POC, mas reagiu no VAL e voltou ao POC (range chop) → BE. Setup válido, sem espaço p/ seguir |
 | — | 10/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | bullish, acima do PD value; plano = long se o extremo do value segurasse como suporte (enquadramento leak nº1); **sem setup** → sem trade |
+| 31 | 13/04 | Short | Rejeição PD POC (**VAL segurou**) | PD POC | — | — | — | Stop | ❌ Loss | **−1R** | abriu bear, gap acima; short no PD POC visando o fecho do gap/baixo; mas o **PD VAL logo abaixo atuou como suporte** e não partiu → loss. "Má leitura". Sub-padrão: **não pesou o POI intermédio (VAL)** como obstáculo — repete lição do T3 |
 
 ## Notas detalhadas
 
