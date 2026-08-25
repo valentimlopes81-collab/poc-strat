@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **31** · Wins/Losses/BE: **17 / 7 / 7**
-- Win rate: **71%** decididas (17/24) · **55%** incl. BE (17/31)
-- R total: **+15.84R** · Expectância: **+0.51R/trade** · PF (R): **22.84 / 7.0 = 3.3**
+- Trades: **32** · Wins/Losses/BE: **17 / 8 / 7**
+- Win rate: **68%** decididas (17/25) · **53%** incl. BE (17/32)
+- R total: **+14.84R** · Expectância: **+0.46R/trade** · PF (R): **22.84 / 8.0 = 2.9**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 3 | **+1.24R** | T29 +2.24, T30 BE, T31 −1; 7 no-play; 03/04 feriado |
+| **Abril 2026** (01/04→…) | 4 | **+0.24R** | T29 +2.24, T30 BE, T31 −1, T32 −1; 7 no-play; regime bull a dar-lhe shorts maus |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -47,6 +47,11 @@ Contraste: wins de value = **sempre aceitação/reação confirmada** (T1/2/3/5/
 ### Leak nº2 — hesitar na reação confirmada
 08/01: recusa confirmada do PD VAL (setup tipo-A) não jogada → dump perdido. Face oposta do nº1.
 → Ambos = **timing da leitura**. Alvo: entrar **na** confirmação — nem antes (nº1) nem depois (nº2).
+
+### Leak nº3 — short contra-tendência em bull forte
+**T11 (21/07) −1R · T32 (16/04) −1R** — ambas shorts contra uma bias claramente bullish ("estúpido", nas palavras dele).
+→ Num regime nitidamente bull, um short precisa de ser **A+ (exaustão/rejeição confirmada com sinal)**, nunca "deixa-me tentar um short aqui". Idem para longs contra bear.
+**Pergunta pré-entrada (2 partes):** (1) reação confirmada (✖/▲)? (2) **no sentido da minha bias?** Se falha qualquer uma → PASSA.
 - Trades registadas: **12** (14/07 teve 2)
 - Wins / Losses / BE: **7 / 3 / 2**
 - Win rate: **70%** decididas (7/10) · **58%** incl. BE (7/12)
@@ -215,6 +220,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 31 | 13/04 | Short | Rejeição PD POC (**VAL segurou**) | PD POC | — | — | — | Stop | ❌ Loss | **−1R** | abriu bear, gap acima; short no PD POC visando o fecho do gap/baixo; mas o **PD VAL logo abaixo atuou como suporte** e não partiu → loss. "Má leitura". Sub-padrão: **não pesou o POI intermédio (VAL)** como obstáculo — repete lição do T3 |
 | — | 14/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | impulso super bullish, price discovery; acima do value → long no extremo do value se possível; **só subiu, nunca voltou ao value** → sem entry |
 | — | 15/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | range a aceitar bem o value; bias bull (higher prices); atento a longs em reações no value; **sem bons targets** (RR) → sem trade |
+| 32 | 16/04 | Short | **Contra bias bull** (leak nº3) | PD VAH | — | — | — | Stop | ❌ Loss | **−1R** | trend super bullish, value criado abaixo; bias = LONGS; tentou short na rejeição do VAH p/ baixo → **contra-tendência** = "estúpido" (palavras dele). Igual à T11. Loss |
 
 ## Notas detalhadas
 
