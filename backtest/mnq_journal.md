@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **35** · Wins/Losses/BE: **20 / 8 / 7**
-- Win rate: **71%** decididas (20/28) · **57%** incl. BE (20/35)
-- R total: **+18.25R** · Expectância: **+0.52R/trade** · PF (R): **26.25 / 8.0 = 3.3**
+- Trades: **37** · Wins/Losses/BE: **21 / 8 / 8**
+- Win rate: **72%** decididas (21/29) · **57%** incl. BE (21/37)
+- R total: **+19.21R** · Expectância: **+0.52R/trade** · PF (R): **27.21 / 8.0 = 3.4**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 7 | **+3.65R** | T29-T35; 8 no-play; 3 wins seguidas (T33/34/35) a favor da leitura após 2 shorts contra-tendência |
+| **Abril 2026** (01/04→…) | 9 | **+4.61R** | T29-T37; 8 no-play; 23/04 teve 2 trades (T36 BE + T37 +0.96 half-risk) |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -225,6 +225,8 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 33 | 20/04 | Short | **Rejeição confirmada PD POC** (tipo-A ✓) | PD POC | 26757 | 26860 (>VAH, 103 pts) | TP1 26629.5 (LOD) | Full close TP1 | ✅ Win | **+1.24R** | ATH, gap down, recuperação fraca (suspeita) → fade; POC rejeitado "com classe" → short p/ LOD; stop acima do VAH (abdicou RR por invalidação estrutural); fechou no TP1 às 16h (killzone). **Regresso ao tipo-A após 2 shorts contra-tendência** |
 | 34 | 21/04 | Long | **Retrace ao value, COM bias bull** (tipo-A ✓) | PD value | 26774.5 | 26725.5 (49 pts) | TP1 26838 · TP2 26901 | TP1 (50%) + BE | ✅ Win | **+0.65R** | super bull/ATH; retrace ao PD value = a oportunidade certa p/ LONG (não short!); TP1 + BE, TP2 não veio. **Lado certo da bias — lição da T32 aplicada.** Stop apertado |
 | 35 | 22/04 | Long | **VAH como suporte, reação CONFIRMADA** (tipo-A ✓) | PD VAH | 26845.75 | 26809 (37 pts) | 26901.5 (high semana) | Full TP (100%) | ✅ Win | **+1.52R** | bull/ATH, > value a usar VAH como suporte; **wick ao VAH + rejeição super clara** (reação confirmada, NÃO antecipação — o oposto do leak nº1); long p/ high da semana; stop apertado; full TP. Contraste perfeito T24 vs T35 |
+| 36 | 23/04 | Long | Long p/ ATH (target greedy) | PD value | ~27013 | (stop 56.5 pts) | ATH (~27138, RR 1.85) | BE | ⚪ BE | **0R** | correção < value, luta p/ manter dentro; long p/ ATH; **target ganancioso + stop alargado p/ salvar RR** → precisava de move grande, não veio → BE. Auto-crítica certa |
+| 37 | 23/04 | Long (2ª do dia, ½R) | **Reação confirmada PD POC**, COM bias | PD POC | 27013 | 26966.5 (low do move, 46.5 pts) | 27102.5 (NY high) | Full TP (100%) | ✅ Win | **+0.96R** | preço a reagir muito bem no PD POC → long; **2ª trade do dia (quebra 1/dia)**, mitigada com **half-risk (0.5R)**; full TP. ⚠️ justificação = "muito confiante" (mesmo gatilho da quebra de 14/07) |
 
 ## Notas detalhadas
 
