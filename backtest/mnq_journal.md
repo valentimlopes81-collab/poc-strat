@@ -4,15 +4,15 @@ Sessão de replay, timeframe **5 min**, janela **manhã de NY**.
 Modelos em teste: **(A)** divergência RSI + zona · **(B)** liquidez/aceitação em zona (sweep + acceptance).
 Zonas de referência: POC/VAH/VAL dia anterior, POC overnight, VWAP, POC a desenvolver, Asia high/low.
 Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
-**Regra da sessão:** 1 setup por dia — depois de entrar, fora o resto do dia.
+**Regra da sessão:** 1 setup por dia. **Exceção (decidida 24/04):** uma 2ª trade só se a 1ª foi **BE** (nunca após loss/win), **sempre a half-risk (0.5R)** e a favor da bias. Não decidir por "confiança" — só por esta regra.
 **Metodologia:** a tese/plano é escrita em **pré-market, sem ver a sessão**; a execução é registada depois. Separa plano de outcome (anti-hindsight). ✓
 
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **37** · Wins/Losses/BE: **21 / 8 / 8**
-- Win rate: **72%** decididas (21/29) · **57%** incl. BE (21/37)
-- R total: **+19.21R** · Expectância: **+0.52R/trade** · PF (R): **27.21 / 8.0 = 3.4**
+- Trades: **38** · Wins/Losses/BE: **22 / 8 / 8**
+- Win rate: **73%** decididas (22/30) · **58%** incl. BE (22/38)
+- R total: **+20.00R** · Expectância: **+0.53R/trade** · PF (R): **28.00 / 8.0 = 3.5**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 9 | **+4.61R** | T29-T37; 8 no-play; 23/04 teve 2 trades (T36 BE + T37 +0.96 half-risk) |
+| **Abril 2026** (01/04→…) | 10 | **+5.40R** | T29-T38; 8 no-play; forte 2ª metade, tudo a favor da bias bull |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -227,6 +227,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 35 | 22/04 | Long | **VAH como suporte, reação CONFIRMADA** (tipo-A ✓) | PD VAH | 26845.75 | 26809 (37 pts) | 26901.5 (high semana) | Full TP (100%) | ✅ Win | **+1.52R** | bull/ATH, > value a usar VAH como suporte; **wick ao VAH + rejeição super clara** (reação confirmada, NÃO antecipação — o oposto do leak nº1); long p/ high da semana; stop apertado; full TP. Contraste perfeito T24 vs T35 |
 | 36 | 23/04 | Long | Long p/ ATH (target greedy) | PD value | ~27013 | (stop 56.5 pts) | ATH (~27138, RR 1.85) | BE | ⚪ BE | **0R** | correção < value, luta p/ manter dentro; long p/ ATH; **target ganancioso + stop alargado p/ salvar RR** → precisava de move grande, não veio → BE. Auto-crítica certa |
 | 37 | 23/04 | Long (2ª do dia, ½R) | **Reação confirmada PD POC**, COM bias | PD POC | 27013 | 26966.5 (low do move, 46.5 pts) | 27102.5 (NY high) | Full TP (100%) | ✅ Win | **+0.96R** | preço a reagir muito bem no PD POC → long; **2ª trade do dia (quebra 1/dia)**, mitigada com **half-risk (0.5R)**; full TP. ⚠️ justificação = "muito confiante" (mesmo gatilho da quebra de 14/07) |
+| 38 | 24/04 | Long | **Extremo do value como suporte** (reação confirmada ✓) | PD value | 27179.5 | 27130.75 (48.75 pts) | TP1 27256.75 · TP2 27365.75 | TP1 (50%) + BE | ✅ Win | **+0.79R** | ATH, > value, cuidado com shorts; extremo do value = suporte (reação) → long COM bias; TP1 + runner a BE — **runner stopado por 1 tick** antes do move insano (variância, gestão certa). Stop apertado |
 
 ## Notas detalhadas
 
