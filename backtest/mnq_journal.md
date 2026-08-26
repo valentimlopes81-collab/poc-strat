@@ -373,3 +373,101 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 **Nota prop:** 2 trades num dia = **2 mordidas no buffer de $1.000**. Um −1R + risco outra vez ⇒ na Lucid 25k isto aproxima-te do limite diário/MLL bem mais depressa. Mais uma razão para a regra 1/dia.
 
 **Resultado do dia:** ❌ **−0.62R líquido.** Primeiro dia vermelho — gerido sem desastre, mas com uma quebra de regra a registar.
+
+---
+
+## ANÁLISE ESTATÍSTICA APROFUNDADA (38 trades)
+
+*Fecho do lote Abril. 38 trades · 22W / 8L / 8BE · WR 73% (decididas) · +20.00R · expectância +0.53R/trade · PF 3.5.*
+
+### 1. Por direção
+| Direção | Trades | WR | R total | R/trade |
+|---|---|---|---|---|
+| **Shorts** | 19 | 79% | +14.8R | **+0.78R** |
+| **Longs** | 18 | 73% | +7.2R | +0.40R |
+| Longs (limpos, sem leak nº1) | 14 | — | — | **+0.84R** |
+
+**Leitura:** os shorts rendem quase o dobro por trade. Não é que o lado curto seja "melhor" — é que os meus **longs estão contaminados** pelo leak nº1 (catch-support / antecipar que o nível segura). Removidas essas entradas antecipadas, o long limpo vale +0.84R — praticamente igual ao short. **O edge é simétrico; o que não é simétrico é a minha execução.**
+
+### 2. Por zona (POI de entrada)
+| Zona | Trades | R/trade | Nota |
+|---|---|---|---|
+| **PD POC** | 14 | **+0.69R** | a zona-mãe. Maior volume, maior fiabilidade |
+| PD VAH | 11 | +0.50R | topo do value → fade / continuação |
+| Value / extremo | 7 | +0.46R | |
+| PD VAL | 5 | +0.45R | fundo do value |
+
+**Leitura:** a hierarquia de fiabilidade segue exatamente a hierarquia de volume dos POIs. O **PD POC** — o preço onde ontem se transacionou mais — é o meu melhor ponto de decisão. Isto não é coincidência: é a confirmação de que estou a operar estrutura real e não linhas arbitrárias.
+
+### 3. Trades limpas vs. trades com erro
+| Grupo | Trades | R total | R/trade |
+|---|---|---|---|
+| **Limpas** (processo correto) | 27 | **+28R** | **+1.04R** |
+| **Com erro** (leak nº1/2/3) | 11 | −8R | −0.73R |
+
+**Esta é a tabela mais importante do diário.** A estratégia executada como está desenhada gera **+1.04R por trade**. As 11 trades com leak drenam 8R e cortam a expectância de +1.04R para +0.53R — **metade do resultado desaparece na execução, não na estratégia.** O trabalho não é encontrar um edge novo; é parar de sabotar o que já tenho.
+
+### 4. Qualidade dos trades
+- **Win médio:** +1.27R · **Loss médio:** −1.00R → **payoff 1.27** (ganho quando acerto > perda quando erro).
+- **Max drawdown:** −2.73R, para +20R de ganho → rácio ganho/DD ≈ **7:1**. Curva de equity muito estável.
+- **Máx. losses consecutivos:** 2. Nunca entrei em espiral.
+- **Distribuição bimodal dos wins:** ou vai a **full-TP (~2R)** ou fica em **saída escalada (~0.6R)**. Poucos wins "no meio".
+
+### 5. Pista de scaling (a testar)
+- Wins que foram a **full-TP:** média **+1.75R**.
+- Wins **escalados** (TP1 50% + BE/runner): média **≈ +0.9R**.
+
+O scaling 50%+BE está a **cortar os grandes vencedores**. Protege a trade (transforma potenciais losses em BE), mas quando a leitura está certa deixa metade do movimento em cima da mesa. **Questão em aberto:** vale a pena manter o runner mais tempo (trailing por estrutura em vez de BE fixo) nas trades a favor da bias forte? Não mexer ainda — recolher mais amostra e decidir com dados.
+
+### Conclusão da análise
+1. O edge é **real e simétrico** (long limpo ≈ short ≈ +0.8R).
+2. A fiabilidade das zonas **segue o volume dos POIs** (POC > VAH > extremo > VAL).
+3. **50%+ do resultado perde-se em 11 trades com leak** — o foco nº1 é execução, não descoberta.
+4. Payoff 1.27 e DD 7:1 dizem que o sistema é **estruturalmente saudável**.
+5. Próxima experiência candidata: **runner por estrutura** em vez de BE fixo, para recuperar os full-TPs.
+
+---
+
+## PORQUE É QUE A ESTRATÉGIA FUNCIONA — POIs + teoria de leilão
+
+*A resposta à pergunta "porque é que estes POIs são pontos realmente relevantes e não linhas arbitrárias".*
+
+### O mercado é um leilão
+Cada dia de mercado é um **leilão duplo contínuo**: o preço sobe à procura de vendedores e desce à procura de compradores. Onde encontra muito interesse dos dois lados, **fica** (transaciona muito volume) → é aí que se forma o **valor**. Onde encontra pouco interesse, **passa rápido** (pouco volume) → são zonas de rejeição/desequilíbrio. Todo o meu indicador é apenas uma forma de **ler onde ontem se formou valor** e usar isso para hoje.
+
+### Porque cada POI importa
+
+- **POC (Point of Control)** — o preço com **mais volume** do dia anterior. É o "preço justo" consensual. Funciona como **íman** (o preço tende a voltar-lhe quando está em balanço) e como **suporte/resistência** (muito inventário trocou de mãos ali → muitas ordens em memória). É o meu melhor POI nas estatísticas (+0.69R) precisamente por ser o de maior volume. **Aceitação acima/abaixo do POC = mudança de quem controla o leilão.**
+
+- **VAH / VAL (Value Area High/Low)** — as bordas dos **70% de valor**. São a fronteira entre "dentro do justo" e "caro/barato". Duas leituras, que são exatamente os meus dois setups:
+  - **Rejeição na borda** (o preço testa VAH e volta) → **fade** de volta ao value.
+  - **Aceitação além da borda** (fecho aceite acima do VAH) → **continuação / discovery** para novo valor.
+  O meu modelo-A (aceitação/rejeição confirmada num POI) é literalmente a teoria de value area em ação.
+
+- **PDH / PDL (Prior Day High/Low)** — **memória do mercado**. São os extremos que toda a gente vê. Atraem liquidez (stops acumulados por cima/baixo) → alvos naturais de sweep e pontos de reversão.
+
+- **ON POC / Asia H-L** — **poças de liquidez** da sessão overnight/asiática. Antes da sessão de NY abrir, estes níveis marcam onde há stops para "varrer". Um sweep destes níveis seguido de rejeição é dos sinais mais limpos de armadilha/reversão.
+
+- **VWAP (âncora RTH)** — o preço médio ponderado por volume da sessão. É a referência das **instituições**: acima do VWAP = compradores em controlo intradiário, abaixo = vendedores. Filtro de bias em tempo real.
+
+### Balanço vs. desequilíbrio (o interruptor)
+- **Balanço (rotação):** o preço roda dentro do value. Estratégia certa = **fade das bordas** (VAH/VAL de volta ao POC).
+- **Desequilíbrio (tendência / discovery):** o preço aceita além do value e procura preço novo. Estratégia certa = **continuação** a favor da direção.
+
+Ler em que regime estou é o que decide se hoje faço fade ou continuação. É por isso que dias de "aceitação do POC no pré-market" mudam toda a minha bias — porque mudam o regime do leilão.
+
+### Onde está o edge (porque é que isto ganha dinheiro)
+O edge **não** é adivinhar direção. É **empilhar 3 filtros** que, juntos, isolam um subconjunto de alta probabilidade:
+
+1. **Localização** — só ajo num POI real (estrutura de volume), não no meio do nada.
+2. **Confirmação** — espero aceitação/rejeição confirmada (fecho[s] em 5min), não antecipo.
+3. **Direção** — só a favor da bias do leilão do dia.
+
+Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type-A — e é esse subconjunto que rende +1.04R/trade. Bónus estrutural: o POI dá-me um **stop objetivo** (do outro lado da estrutura), portanto o risco é definido pelo mercado, não por um número arbitrário.
+
+### Porque é que os leaks falham — mecanicamente
+- **Leak nº1 (catch-support / antecipar):** entrar *antes* da confirmação remove o filtro nº2. Fico a apostar que o nível segura → volta a ser ≈ moeda ao ar. Foi o que contaminou os meus longs (0.40R vs 0.84R limpos).
+- **Leak nº2 (hesitar no setup confirmado):** os 3 filtros alinharam e eu não entrei / entrei tarde → deixo o edge em cima da mesa.
+- **Leak nº3 (short contra-tendência em bull forte):** violar o filtro nº3 (direção) = lutar contra o order flow dominante. Estruturalmente é o pior erro porque o mercado tem momentum contra mim.
+
+**Resumo:** a estratégia funciona porque lê **onde se formou valor** (POIs = volume real), **espera o leilão confirmar** quem controla, e só age **a favor desse controlo**. Os POIs são relevantes por serem os preços onde o mercado *de facto* transacionou — memória e liquidez reais — e não linhas desenhadas à mão. O edge está provado (5 regimes, +1.04R limpo); o trabalho é executar sem os leaks.
