@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **41** · Wins/Losses/BE: **23 / 9 / 9**
-- Win rate: **72%** decididas (23/32) · **56%** incl. BE (23/41)
-- R total: **+21.23R** · Expectância: **+0.52R/trade** · PF (R): **30.23 / 9.0 = 3.4**
+- Trades: **42** · Wins/Losses/BE: **24 / 9 / 9**
+- Win rate: **73%** decididas (24/33) · **57%** incl. BE (24/42)
+- R total: **+23.61R** · Expectância: **+0.56R/trade** · PF (R): **32.61 / 9.0 = 3.6**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -22,7 +22,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
-| **Maio 2026** (01/05→…) | 1 | **+2.23R** | T41; 1º teste do sistema intradiário POC-hoje+VWAP → full TP limpo |
+| **Maio 2026** (01/05→…) | 2 | **+4.61R** | T41 (POC-hoje+VWAP full TP) + T42 (rejeição VAH+POC full TP); 2 full-TP limpos a abrir o mês |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -235,6 +235,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 40 | 30/04 | Long | **"Apanhar suporte" no PD VAH** (leak nº1) | PD VAH | ~27271 | −1R | (revisita ao value) | Stop | ❌ Loss | **−1R** | ovn gigante: push a novo ATH pós-NY → **full retrace na Asia**; London bullish → de novo **> PD value**. Entrou long a assumir que o **PD VAH aceitava como suporte** — mas **não confirmou**; quem segurou foi o **PD POC** logo abaixo. Antecipou o nível em vez de esperar a reação → **leak nº1 outra vez**. O tell estava lá: com VAH e POC juntos, o suporte real era o POC (maior volume), não o VAH |
 | | **═══ MAIO 2026 ═══** | | | | | | | | | | |
 | 41 | 01/05 | Long | **POC-hoje suporte + reclaim do VWAP** (novo sistema intradiário, COM bias) | POC hoje + VWAP | 27812.75 | 27770 (42.75 pts) | 27908.25 (HOD) | Full TP (100%) | ✅ Win | **+2.23R** | ATH bull, **PD value muito esticado** (VAH longe do POC) → impossível jogar o value do dia anterior. Testou confluência intradiária do script: **POC-hoje segurou como suporte + reclaim do VWAP** → long a mirar o HOD (target fácil). Stop apertado no low antes do move; BE a 27844.5; **full TP, exit perfeita**. Continuation a favor da bias forte — tipo-A limpo, só com POIs intradiários |
+| 42 | 04/05 | Short | **Rejeição confirmada VAH+POC em simultâneo** (tipo-A ✓) | PD VAH + PD POC | 27854.75 | 27940.25 (HOD sessão, 85.5 pts) | 27651 (wick 11:00, alvo HTF) | Full TP (100%) | ✅ Win | **+2.38R** | move bearish deixou **wick estranha às 11:00** = imbalance/alvo HTF por preencher; recuperação de volta ao value. Comprimiu muito dentro do value (value curto) → demorou. Gatilho = **rejeição clara do VAH e do POC ao mesmo tempo** → short p/ a wick; BE ao passar o PD VAL (27808.25); **full TP no alvo**. ⚠️ Entrada **meio fora de horas** + tinha o alvo "cravado" na cabeça — funcionou, mas atenção a esperar o gatilho e não o outcome desejado |
 
 ## Notas detalhadas
 
