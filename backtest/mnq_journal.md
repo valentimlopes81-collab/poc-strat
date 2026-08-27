@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **38** · Wins/Losses/BE: **22 / 8 / 8**
-- Win rate: **73%** decididas (22/30) · **58%** incl. BE (22/38)
-- R total: **+20.00R** · Expectância: **+0.53R/trade** · PF (R): **28.00 / 8.0 = 3.5**
+- Trades: **39** · Wins/Losses/BE: **22 / 8 / 9**
+- Win rate: **73%** decididas (22/30) · **56%** incl. BE (22/39)
+- R total: **+20.00R** · Expectância: **+0.51R/trade** · PF (R): **28.00 / 8.0 = 3.5**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -21,7 +21,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 10 | **+5.40R** | T29-T38; 8 no-play; forte 2ª metade, tudo a favor da bias bull |
+| **Abril 2026** (01/04→…) | 11 | **+5.40R** | T29-T39; 8 no-play; forte 2ª metade, tudo a favor da bias bull; T39 BE (short contra o tell no POC) |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -228,6 +228,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 36 | 23/04 | Long | Long p/ ATH (target greedy) | PD value | ~27013 | (stop 56.5 pts) | ATH (~27138, RR 1.85) | BE | ⚪ BE | **0R** | correção < value, luta p/ manter dentro; long p/ ATH; **target ganancioso + stop alargado p/ salvar RR** → precisava de move grande, não veio → BE. Auto-crítica certa |
 | 37 | 23/04 | Long (2ª do dia, ½R) | **Reação confirmada PD POC**, COM bias | PD POC | 27013 | 26966.5 (low do move, 46.5 pts) | 27102.5 (NY high) | Full TP (100%) | ✅ Win | **+0.96R** | preço a reagir muito bem no PD POC → long; **2ª trade do dia (quebra 1/dia)**, mitigada com **half-risk (0.5R)**; full TP. ⚠️ justificação = "muito confiante" (mesmo gatilho da quebra de 14/07) |
 | 38 | 24/04 | Long | **Extremo do value como suporte** (reação confirmada ✓) | PD value | 27179.5 | 27130.75 (48.75 pts) | TP1 27256.75 · TP2 27365.75 | TP1 (50%) + BE | ✅ Win | **+0.79R** | ATH, > value, cuidado com shorts; extremo do value = suporte (reação) → long COM bias; TP1 + runner a BE — **runner stopado por 1 tick** antes do move insano (variância, gestão certa). Stop apertado |
+| 39 | 27/04 | Short | Exaustão/rotação no PD POC (cenário 2, **contra o tell bullish**) | PD POC | — | — | rotação p/ baixo | BE | ⚪ BE | **0R** | abriu semana bull (Asia novo ATH → correção de volta ao PD value); pré-market **usou o PD POC 2× como suporte** = tell bullish. Leu 2 cenários (POC almofada p/ cima **ou** esgota→rotação). Jogou o short (exaustão) mas o preço **só andou de lado** → BE. Gestão certa (scratch, não loss); mas shortar um nível que acabou de segurar 2× como suporte é apostar contra a evidência — sem confirmação de exaustão (nem falha do POC), era esperar |
 
 ## Notas detalhadas
 
