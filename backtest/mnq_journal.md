@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **40** · Wins/Losses/BE: **22 / 9 / 9**
-- Win rate: **71%** decididas (22/31) · **55%** incl. BE (22/40)
-- R total: **+19.00R** · Expectância: **+0.48R/trade** · PF (R): **28.00 / 9.0 = 3.1**
+- Trades: **41** · Wins/Losses/BE: **23 / 9 / 9**
+- Win rate: **72%** decididas (23/32) · **56%** incl. BE (23/41)
+- R total: **+21.23R** · Expectância: **+0.52R/trade** · PF (R): **30.23 / 9.0 = 3.4**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -21,7 +21,8 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Janeiro 2026** (02/01→09/01) | 4 | **+0.03R** | ~flat; range/lento; T18 = caso-escola do leak nº1 |
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
-| **Abril 2026** (01/04→…) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
+| **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
+| **Maio 2026** (01/05→…) | 1 | **+2.23R** | T41; 1º teste do sistema intradiário POC-hoje+VWAP → full TP limpo |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -232,6 +233,8 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 28/04 | — | — | — | — | — | — | — | ⏸️ No-play | — | **bearish desde a Asia** — retrace total do move desde sexta; a trocar **< PD value** (bias virou vs. as últimas semanas bull); mas **preço longe do value** e não voltou lá → sem POI para reagir → sem trade. Disciplina ✓ |
 | — | 29/04 | (Long) | Reação no PD POC | PD POC | — | — | — | — | ⏸️ No-play | — | recuperação da queda de ontem; a trocar **> PD value** com o extremo como suporte. Curto prazo pode ser bearish, mas **longo prazo continua bull** → long e short de scalp válidos, só com reação clara no value. Viu long no PD POC mas **"não estava confiante" + RR pequeno** → não entrou. Não-entrada por baixa qualidade (não hesitação num tipo-A confirmado) ✓ |
 | 40 | 30/04 | Long | **"Apanhar suporte" no PD VAH** (leak nº1) | PD VAH | ~27271 | −1R | (revisita ao value) | Stop | ❌ Loss | **−1R** | ovn gigante: push a novo ATH pós-NY → **full retrace na Asia**; London bullish → de novo **> PD value**. Entrou long a assumir que o **PD VAH aceitava como suporte** — mas **não confirmou**; quem segurou foi o **PD POC** logo abaixo. Antecipou o nível em vez de esperar a reação → **leak nº1 outra vez**. O tell estava lá: com VAH e POC juntos, o suporte real era o POC (maior volume), não o VAH |
+| | **═══ MAIO 2026 ═══** | | | | | | | | | | |
+| 41 | 01/05 | Long | **POC-hoje suporte + reclaim do VWAP** (novo sistema intradiário, COM bias) | POC hoje + VWAP | 27812.75 | 27770 (42.75 pts) | 27908.25 (HOD) | Full TP (100%) | ✅ Win | **+2.23R** | ATH bull, **PD value muito esticado** (VAH longe do POC) → impossível jogar o value do dia anterior. Testou confluência intradiária do script: **POC-hoje segurou como suporte + reclaim do VWAP** → long a mirar o HOD (target fácil). Stop apertado no low antes do move; BE a 27844.5; **full TP, exit perfeita**. Continuation a favor da bias forte — tipo-A limpo, só com POIs intradiários |
 
 ## Notas detalhadas
 
