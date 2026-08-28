@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **43** · Wins/Losses/BE: **24 / 10 / 9**
-- Win rate: **71%** decididas (24/34) · **56%** incl. BE (24/43)
-- R total: **+22.61R** · Expectância: **+0.53R/trade** · PF (R): **32.61 / 10.0 = 3.3**
+- Trades: **44** · Wins/Losses/BE: **25 / 10 / 9**
+- Win rate: **71%** decididas (25/35) · **57%** incl. BE (25/44)
+- R total: **+25.10R** · Expectância: **+0.57R/trade** · PF (R): **35.10 / 10.0 = 3.5**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -22,7 +22,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
-| **Maio 2026** (01/05→…) | 3 | **+3.61R** | T41 (+2.23) + T42 (+2.38) + T43 (−1, sweep no sistema novo); sistema intradiário POC+VWAP: 2 usos = +1.23R (1W/1L) |
+| **Maio 2026** (01/05→…) | 4 | **+6.10R** | T41-T44; 3 full-TP limpos (T41/T42/T44) + T43 (−1 sweep). Regime ATH bull: tipo-A a favor da bias a pagar bem |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -240,6 +240,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 43 | 06/05 | Long | **Sistema novo POC-hoje+VWAP** (2º uso) | POC hoje + VWAP | — | −1R | (HOD/target) | Stop | ❌ Loss | **−1R** | mesmo cenário do dia 5 (ATH, > value). Jogou o sistema intradiário; **bias não estava errada**, mas o preço deu **sweep à wick onde o move começou** e stopou antes de seguir. Fase de aprendizagem do sistema. Pista: no sistema intradiário o **stop tem de ficar para lá do swing/wick que originou o move**, não dentro do ruído (mesma lição de stop dos T6/T14) |
 | — | 07/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | de novo **> value, quase em ATH**; p/ o sistema original era preciso **descer ao value**, que não aconteceu; bias segue bullish. NY **subiu como louca dentro da killzone** e só começou a descer (retrace total) **depois** da killzone → sem setup na janela. Sem trade |
 | — | 08/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | > value (ainda não ATH no pré-mkt), pré-NY **full bullish** outra vez; esperava regresso ao PD value que **nunca veio** — NY "só subiu desalmadamente na killzone". **Semana inteira a subir a direito**, sem revisita ao value → 3º no-play da semana. Sem trade. Disciplina mantida num regime que não dá o setup |
+| 44 | 11/05 | Long | **Aceitação confirmada PD POC** (tipo-A ✓) | PD POC | 29301 | 29247.25 (wick pré-entry, 53.75 pts) | 29435 (HOD/ATH) | Full TP (100%) | ✅ Win | **+2.49R** | forte consolidação pós-move de sexta; PD POC a segurar como suporte no pré-NY. No open houve reação rápida no POC (não perseguiu) → **esperou a 2ª reação**: voltou ao PD POC e **fechou acima** = aceitação → long p/ tirar o high. BE ao fechar candle 5m > PD VAH; **full TP no HOD**. Paciência exemplar (não caçou a 1ª) + stop estrutural + COM bias. ⚠️ nota: jogou em NQ1 (não MNQ1) por lapso — mesmo instrumento, R idêntico |
 
 ## Notas detalhadas
 
