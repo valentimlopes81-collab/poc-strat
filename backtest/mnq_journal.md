@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **46** · Wins/Losses/BE: **26 / 10 / 10**
-- Win rate: **72%** decididas (26/36) · **57%** incl. BE (26/46)
-- R total: **+27.93R** · Expectância: **+0.61R/trade** · PF (R): **37.93 / 10.0 = 3.8**
+- Trades: **47** · Wins/Losses/BE: **27 / 10 / 10**
+- Win rate: **73%** decididas (27/37) · **57%** incl. BE (27/47)
+- R total: **+29.41R** · Expectância: **+0.63R/trade** · PF (R): **39.41 / 10.0 = 3.9**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -22,7 +22,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
-| **Maio 2026** (01/05→…) | 6 | **+8.93R** | T41-T46; 4 wins grandes a favor da bias (T41/T42/T44/T46) + T43 (−1) + T45 (BE). **Melhor bloco a par de Março** — tipo-A limpo a pagar |
+| **Maio 2026** (01/05→…) | 7 | **+10.41R** | T41-T47; 5 wins a favor da bias (T41/T42/T44/T46/T47) + T43 (−1) + T45 (BE). **Melhor bloco de sempre** — tipo-A limpo a pagar |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -245,6 +245,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 45 | 13/05 | Short | Fade de cima do value → value/POC | > value → Asia low + PD POC | — | 0R | Asia low + PD POC | BE | ⚪ BE | **0R** | momentum bull recuperado (inverteu o move bearish de 12/05) → bias volta a favorecer **longs**; pré-NY **acima do value**. Jogou um **short** de fade p/ Asia low + PD POC ("linda short") que **quase deu full TP** mas não chegou → BE. Gestão certa (scratch). ⚠️ tensão: dia que ele próprio classificou como long-favoring, e jogou short — mesmo sendo fade à value, ir contra a bias do dia é o padrão de baixa qualidade (ver leaks nº3). BE salvou-o |
 | 46 | 14/05 | Long | **Aceitação confirmada PD POC** (tipo-A ✓, plano pré-escrito) | PD POC | 29497.5 | 29448.5 (wick pré-mkt, 49 pts) | TP1 29575.25 · TP2 29640.25 · final 29693.5 | **3 TPs (33% cada), todos hit** | ✅ Win | **+2.83R** | descida da Asia com **pouco volume** (suspeita) + PD VAL muito longe (muito espaço) → **plano pré-escrito: long se o PD POC segurar como suporte, só com confirmação**. No open reagiu logo no PD POC → **1ª candle verde = gatilho**; stop na wick pré-mkt. Scale em thirds: TP1(+1.59R)·TP2(+2.91R)·final(+4.0R) → blended **+2.83R**. Tese → paciência → confirmação → execução completa. **A trade-modelo do diário** |
 | — | 15/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | **retrace de todo o move bull de 14/05**; preço **muito longe do value** (acima). Normalmente o low da semana já estaria feito, mas a forma da descida deixou dúvida. **Alto chop**, sem revisita ao value → sem POI, sem trade. Disciplina ✓ |
+| 47 | 18/05 | Short | **Rejeição completa do value** (close < POC E < VAL, tipo-A ✓) | PD POC + PD VAL | 29153.5 | 29266 (112.5 pts) | tp1 29049.5 · final 28924 | tp1 (50%) + final (50%), **ambos hit** | ✅ Win | **+1.48R** | correção do move bull das últimas semanas, mas buyers a reagir; pré-NY a lutar dentro do PD value. Bias principal **bearish**. **Passou a 1ª short** (tentativa de romper o value, VAH segurou) por **não gostar do PA** → esperou. Entrou na **rejeição completa**: fecho abaixo do PD POC E do PD VAL com força bearish clara → short p/ novos lows. tp1(+0.92R) + final(+2.04R) → blended **+1.48R**. Paciência (skip do setup fraco) + a favor da bias + confirmação dupla. Oposto exato da T45 |
 
 ## Notas detalhadas
 
