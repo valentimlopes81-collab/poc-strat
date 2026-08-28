@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **47** · Wins/Losses/BE: **27 / 10 / 10**
-- Win rate: **73%** decididas (27/37) · **57%** incl. BE (27/47)
-- R total: **+29.41R** · Expectância: **+0.63R/trade** · PF (R): **39.41 / 10.0 = 3.9**
+- Trades: **48** · Wins/Losses/BE: **27 / 11 / 10**
+- Win rate: **71%** decididas (27/38) · **56%** incl. BE (27/48)
+- R total: **+28.41R** · Expectância: **+0.59R/trade** · PF (R): **39.41 / 11.0 = 3.6**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -22,7 +22,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
-| **Maio 2026** (01/05→…) | 7 | **+10.41R** | T41-T47; 5 wins a favor da bias (T41/T42/T44/T46/T47) + T43 (−1) + T45 (BE). **Melhor bloco de sempre** — tipo-A limpo a pagar |
+| **Maio 2026** (01/05→…) | 8 | **+9.41R** | T41-T48; 5 wins a favor da bias + T43/T48 (−1 cada, stop/sweep) + T45 (BE). **Melhor bloco de sempre** — tipo-A limpo a pagar |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -249,6 +249,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 19/05 | (Short) | Rejeição do PD POC | PD POC | — | — | low HTF | — | ⚠️ Perdida | — | value a formar-se desde o dump de ontem; reagiu 2× bem ao PD VAL. **Preferia longs** (melhores targets em cima, apesar da exaustão HTF bull) → estava focado nesse cenário. Deu-se uma **short-modelo perfeita: rejeição do PD POC** que tirou um **low importante do HTF** — mas como não estava atento ao cenário short, **perdeu-a**. Leak: casar-se com uma direção no pré-mkt tapou um tipo-A limpo do outro lado (ecoa 08/01). O POI decide, não a preferência |
 | — | 20/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | possível **inversão da tese bearish** após tirar o low de ontem (reagiu muito bem a esse low); pré-NY **> value** → cenário ideal = **long numa revisita ao value**. Mas o preço **não revisitou** — "subiu muito" a direito → sem POI, sem entry. **Bias certa (bull), sem setup.** Disciplina ✓ |
 | — | 21/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | segue bullish apesar da consolidação; pré-NY numa **"terra de ninguém"** entre PD POC/VAL (abaixo) e PD VAH (acima). Plano: **long só se revisitasse o PD POC/VAL com volume buyer**. Não revisitou; **dia de chop** → sem setup. Auto-avaliação certa: "não teria capitalizado num dia destes". Disciplina ✓ |
+| 48 | 22/05 | Long | **Aceitação do PD VAH** (tipo-A, COM bias ✓) | PD VAH | — | −1R | high (full tp) | Stop | ❌ Loss | **−1R** | move forte no fim da NY de ontem tirou o high-alvo → momentum bull mantém-se. Long na aceitação do PD VAH (a favor da bias, ideia certa). **Stopado por uma wick** e depois foi ao alvo (full tp no gráfico). Não é leak — direção e gatilho certos; foi **stop apertado/variância** (mesma família dos T6/T14/T43). Ele próprio: "a ideia era boa, estas coisas acontecem" — atitude certa |
 
 ## Notas detalhadas
 
