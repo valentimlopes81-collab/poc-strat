@@ -493,3 +493,36 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 - **Leak nº3 (short contra-tendência em bull forte):** violar o filtro nº3 (direção) = lutar contra o order flow dominante. Estruturalmente é o pior erro porque o mercado tem momentum contra mim.
 
 **Resumo:** a estratégia funciona porque lê **onde se formou valor** (POIs = volume real), **espera o leilão confirmar** quem controla, e só age **a favor desse controlo**. Os POIs são relevantes por serem os preços onde o mercado *de facto* transacionou — memória e liquidez reais — e não linhas desenhadas à mão. O edge está provado (5 regimes, +1.04R limpo); o trabalho é executar sem os leaks.
+
+---
+
+## ATUALIZAÇÃO DA ANÁLISE — 48 trades (fecho parcial de Maio)
+
+*+28.41R · 27W/11L/10BE · WR 71% decididas · expectância +0.59R · PF 3.6. Todos os 11 losses = −1R (risco perfeitamente consistente).*
+
+### Por direção — edge simétrico (confirmado com mais amostra)
+| Grupo | Trades | R/trade | Nota |
+|---|---|---|---|
+| **Shorts** | 23 | **+0.82R** | WR decididas 81% |
+| Longs (com leak nº1) | 24 | +0.44R | contaminados pela antecipação |
+| **Longs LIMPOS** (sem leak nº1) | 17 | **+0.92R** | ≈ shorts → **o edge é simétrico** |
+
+### O leak nº1 continua a ser o maior travão
+- 7 tentativas ao todo (T6,T8,T10,T16,T18,T24,T40): **−5R, 0 wins, 5 losses, 2 BE.**
+- **Sem elas** → 41 trades: **+33.41R · +0.82R/trade · PF 6.6** (vs +0.59R / PF 3.6 com elas). Expectância **+38%**.
+- Processo 100% limpo (sem leaks nem contra-bias, 37 trades): **+35.41R · +0.96R/trade · PF ≈ 9.9.** As 11 trades com erro drenaram −7R **e** diluíram a WR, sem 1 único win.
+
+### Onde nasce o lucro (poucas trades grandes)
+- **8 trades ≥ +2R** (⅓ dos wins) = **+19.23R = 68% do total.** As outras 40 = +9.18R.
+- Win médio **+1.46R** · Loss médio **−1.00R** → **payoff 1.46.**
+- Máx. losses seguidos **2** (nunca espiral). DD máx ≈ −2.73R p/ +28.41R → **ganho/DD ≈ 10:1.**
+
+### Estou a MELHORAR (não é estático)
+- 1ª metade (T1–T24): **+0.47R/trade** · 2ª metade (T25–T48): **+0.71R/trade** → **+50%.**
+- Maio = melhor mês: **+1.18R/trade** (inclui a T46, a trade mais limpa do diário).
+- Positivo nos **6 blocos / 5 regimes** (trend, dump, range, ATH, correção).
+
+### Padrões de execução a vigiar (novos desde os 38 trades)
+1. **Stop caçado por wick → move segue** — já **4 losses** com esta assinatura exata (T6, T14, T43, T48). Candidato a calibração: stop **para lá do swing** que confirma a entrada, não junto à linha do POI.
+2. **Casar-se com uma direção no pré-mkt** — custou uma short-modelo perdida (19/05) e uma short contra-bias em BE (T45, 13/05). Regra: escrever **os dois cenários** (aceitação→X / rejeição→Y) e deixar o POI/gatilho decidir.
+3. **Sistema intradiário novo (POC-hoje + VWAP)** — 2 usos (T41 +2.23, T43 −1) = +1.23R, 1W/1L. Amostra minúscula; manter à parte e reavaliar aos ~8-10 usos. Boa ferramenta específica para dias de ATH em que o value do dia anterior está esticado/inútil.
