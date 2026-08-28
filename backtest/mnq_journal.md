@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **44** · Wins/Losses/BE: **25 / 10 / 9**
-- Win rate: **71%** decididas (25/35) · **57%** incl. BE (25/44)
-- R total: **+25.10R** · Expectância: **+0.57R/trade** · PF (R): **35.10 / 10.0 = 3.5**
+- Trades: **45** · Wins/Losses/BE: **25 / 10 / 10**
+- Win rate: **71%** decididas (25/35) · **56%** incl. BE (25/45)
+- R total: **+25.10R** · Expectância: **+0.56R/trade** · PF (R): **35.10 / 10.0 = 3.5**
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -22,7 +22,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
-| **Maio 2026** (01/05→…) | 4 | **+6.10R** | T41-T44; 3 full-TP limpos (T41/T42/T44) + T43 (−1 sweep). Regime ATH bull: tipo-A a favor da bias a pagar bem |
+| **Maio 2026** (01/05→…) | 5 | **+6.10R** | T41-T45; 3 full-TP limpos (T41/T42/T44) + T43 (−1 sweep) + T45 (BE, short contra bias do dia). Tipo-A a favor da bias a pagar bem |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -242,6 +242,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 08/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | > value (ainda não ATH no pré-mkt), pré-NY **full bullish** outra vez; esperava regresso ao PD value que **nunca veio** — NY "só subiu desalmadamente na killzone". **Semana inteira a subir a direito**, sem revisita ao value → 3º no-play da semana. Sem trade. Disciplina mantida num regime que não dá o setup |
 | 44 | 11/05 | Long | **Aceitação confirmada PD POC** (tipo-A ✓) | PD POC | 29301 | 29247.25 (wick pré-entry, 53.75 pts) | 29435 (HOD/ATH) | Full TP (100%) | ✅ Win | **+2.49R** | forte consolidação pós-move de sexta; PD POC a segurar como suporte no pré-NY. No open houve reação rápida no POC (não perseguiu) → **esperou a 2ª reação**: voltou ao PD POC e **fechou acima** = aceitação → long p/ tirar o high. BE ao fechar candle 5m > PD VAH; **full TP no HOD**. Paciência exemplar (não caçou a 1ª) + stop estrutural + COM bias. ⚠️ nota: jogou em NQ1 (não MNQ1) por lapso — mesmo instrumento, R idêntico |
 | — | 12/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | **1º dia com bias curto-prazo bearish** em muito tempo (Asia corrigiu + London bearish); HTF ainda bull. Para jogar era preciso **voltar ao value** (longe): reject → cair mais, ou aceitação → bias vira outra vez. Preço **nunca revisitou o value** (dia bearish a direito) → sem POI, sem trade. Disciplina ✓ |
+| 45 | 13/05 | Short | Fade de cima do value → value/POC | > value → Asia low + PD POC | — | 0R | Asia low + PD POC | BE | ⚪ BE | **0R** | momentum bull recuperado (inverteu o move bearish de 12/05) → bias volta a favorecer **longs**; pré-NY **acima do value**. Jogou um **short** de fade p/ Asia low + PD POC ("linda short") que **quase deu full TP** mas não chegou → BE. Gestão certa (scratch). ⚠️ tensão: dia que ele próprio classificou como long-favoring, e jogou short — mesmo sendo fade à value, ir contra a bias do dia é o padrão de baixa qualidade (ver leaks nº3). BE salvou-o |
 
 ## Notas detalhadas
 
