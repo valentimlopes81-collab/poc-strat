@@ -10,10 +10,11 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **58** · Wins/Losses/BE: **32 / 14 / 12**
-- Win rate: **70%** decididas (32/46) · **55%** incl. BE (32/58)
-- R total: **+31.34R** *(novo máximo)* · Expectância: **+0.54R/trade** · PF (R): **44.84 / 13.5 = 3.3**
-- *(13 losses = −1R + 1 loss half-risk = −0.5R → −13.5R total)*
+- Trades: **64** · Wins/Losses/BE: **33 / 16 / 15**
+- Win rate: **67%** decididas (33/49) · **52%** incl. BE (33/64)
+- R total: **+30.85R** · Expectância: **+0.48R/trade** · PF (R): **46.35 / 15.5 = 3.0**
+- *(15 losses = −1R + 1 loss half-risk = −0.5R → −15.5R total)*
+- **Backtest COMPLETO:** semestre 2026 sem buracos (29/06 → 26/06). Pico +31.34R (T58); fim de Junho fechou com cluster de BEs num regime de chop/transição (value a ser respeitado pouco).
 - *Sistema intradiário POC-hoje+VWAP: 3 usos (T41 +2.23, T43 −1, T55 +0.82) = **+2.05R**, 2W/1L.*
 - **Drawdown:** pico +29.41R (18-mai) → fundo +26.91R (−2.5R, dias de baixa prob) → **recuperação com 2 setups A** (T53/T54); a subir de novo.
 
@@ -26,7 +27,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
 | **Maio 2026** (01/05→31/05) | 12 | **+7.91R** | T41-T52; 5 wins a favor da bias + 4 losses + 3 BE. Forte 1ª metade; 2ª metade drenada por trades forçadas em dias de baixa prob (T48-T52 = −2.5R) |
-| **Junho 2026** (01/06→…) | 6 | **+4.43R** | T53/T54/T55/T57/T58 (5 wins) + T56 (−1). T58 (gap-fill ½R) fez **novo máximo (+31.34R)**; 5 shorts em 6 (regime bearish/gap) |
+| **Junho 2026** (01/06→26/06) | 12 | **+3.94R** | T53-T64; 6 wins, 2 losses, 4 BE. Forte 1ª metade (recuperação do drawdown, pico +31.34R); 2ª metade em chop/transição (value pouco respeitado) → cluster de BEs bem geridos |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -273,6 +274,14 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 12/06 | — | — | — | — | — | — | — | ⏸️ No-play | — | subida forte desde ontem → **bastante acima do value** = low-prob day. Única hipótese seria o sistema intradiário POC+VWAP se desse confiança, mas **não deu setup** → sem play. Auto-rótulo certo ("low prob i guess"). Disciplina ✓ |
 | — | 15/06 | — | — | — | — | — | — | — | ⏸️ No-play | — | *(reportado como "13/06"; corrigido p/ 15 — 13 era sábado)* abre a semana **super bullish**, gap grande em baixo que coincide com o **extremo high do PD value**; de novo em ATH. Low-prob (não provável voltar ao value) → sem entry. Disciplina ✓ |
 | 58 | 16/06 | Short (½R) | Gap-fill (a favor do move imediato p/ o gap) | gap / Monday low | 30646 | 30755 (109 pts) | gap em baixo (fechou no Monday low 30280.75) | Full close no Monday low | ✅ Win | **+1.68R** | *(reportado como "14/06"; corrigido p/ 16)* ATH, difícil não favorecer longs, **mas gap grande em baixo** (raramente não fecham) = tese short de gap-fill. Entrada **quase fora da killzone** → sizing **½R** (cautela certa p/ o timing). Deixou correr pela NY afternoon; **TP no Monday low** e fechou tudo (não chegou ao gap e já era tarde). BE a 30538.25. +3.35R×0.5 = **+1.68R**. Boa gestão do timing tardio com risco reduzido; ⚠️ hold fora da janela habitual — funcionou, mas é exceção, não regra |
+| 59 | 17/06 | Long | Recuperação/reação do PD VAL → NY high | PD VAL | 30408.5 | 30320.75 (87.75 pts) | 30541.25 (NY high) | Full TP (100%) | ✅ Win | **+1.51R** | recuperação após tirar o Monday low; a trocar dentro do value < POC. Reação no PD VAL → long p/ o NY high. "Não era o cenário mais provável mas deu a play" — reação confirmada no VAL, full TP |
+| 60 | 18/06 | Short | Rejeição do value → gap-fill | value | — | −1R | gap | Stop | ❌ Loss | **−1R** | fomos ao gap de noite mas não fechou; tese = rejeição do value → short p/ fechar o gap (formar weekly low). Rejeição não vingou → −1R |
+| — | 19/06 | — | — | — | — | — | — | — | ⏸️ No-play | — | dentro do value; ontem bullish contra a bias. Sexta + **sem volume (provável feriado)** → cauteloso nas horas; sem setup limpo → sem trade. Disciplina ✓ |
+| 61 | 22/06 | Long | Long no value → ATH | value | — | −1R | ATH | Stop | ❌ Loss | **−1R** | abre a semana bullish, a olhar o ATH com o value cá em baixo como gatilho. Long ao tocar o value → **"o value serviu de pouquíssimo"** → −1R. Value não segurou |
+| — | 23/06 | — | — | — | — | — | — | — | ⏸️ No-play | — | só caiu; **fechou o gap da semana passada** finalmente. Sem entry (dia de observação) |
+| 62 | 24/06 | Short | Tentativa de rompimento do value (ranging) | value | — | 0R | — | BE | ⚪ BE | **0R** | ranging pós-fecho do gap, a comprimir dentro do value; queria rompimento p/ jogar continuação. Tentou um short → sem seguimento → BE |
+| 63 | 25/06 | (n/e) | Reação no value (pós-low importante) | value | — | 0R | — | BE | ⚪ BE | **0R** | tirou um low importante → bom react bullish → acima do value por impulso de candle 30m. Só jogaria na volta ao value; a trade que fez → BE |
+| 64 | 26/06 | Short | Continuação < value → LOD | value | — | 0R | LOD | BE | ⚪ BE | **0R** | abaixo do value após dia bearish, tirou low importante mas **sem grande reação** → manteve viés short p/ LOD. Trade → BE, "fechei a loja". **Fim do backtest — 26/06 liga-se ao 29/06 (T1): semestre completo** |
 
 ## Notas detalhadas
 
