@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **50** · Wins/Losses/BE: **27 / 12 / 11**
-- Win rate: **69%** decididas (27/39) · **54%** incl. BE (27/50)
-- R total: **+27.91R** · Expectância: **+0.56R/trade** · PF (R): **39.41 / 11.5 = 3.4**
+- Trades: **51** · Wins/Losses/BE: **27 / 12 / 12**
+- Win rate: **69%** decididas (27/39) · **53%** incl. BE (27/51)
+- R total: **+27.91R** · Expectância: **+0.55R/trade** · PF (R): **39.41 / 11.5 = 3.4**
 - *(11 losses = −1R + 1 loss half-risk = −0.5R → −11.5R total)*
 
 ### Por bloco
@@ -23,7 +23,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
-| **Maio 2026** (01/05→…) | 10 | **+8.91R** | T41-T50; 5 wins a favor da bias + 3 losses (T43/T48/T50) + 2 BE (T45/T49). **Melhor bloco de sempre** — tipo-A limpo a pagar |
+| **Maio 2026** (01/05→…) | 11 | **+8.91R** | T41-T51; 5 wins a favor da bias + 3 losses + 3 BE (T45/T49/T51). **Melhor bloco de sempre** — tipo-A limpo a pagar |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -254,6 +254,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 25/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | de novo em **ATH, muito longe do PD value** (abaixo). **Low-prob day** típico (o preço não volta ao value) → raramente há play nestes dias. Sem setup, sem trade. Disciplina ✓ |
 | 49 | 26/05 | Short | Rejeição do PD VAL (resistência) | PD VAL | — | 0R | (lows) | BE | ⚪ BE | **0R** | ovn forte correção, mas London reagiu bem; ainda **< PD value**. Plano: short se o extremo-low do value = resistência / long se aceitar o value. Jogou short na **rejeição do PD VAL** no open → boa reação, pôs BE, **sem TP** → scratch |
 | 50 | 26/05 | Short (2ª do dia, ½R) | Short (continuação < value) | value low | — | −0.5R | (lows) | Stop | ❌ Loss | **−0.5R** | **2ª trade do dia** — permitida pela regra (1ª foi BE) e corretamente a **half-risk**. Nova tentativa de short que não vingou → −0.5R. Regra a cumprir o papel: capou o dano a metade. ⚠️ 2 tentativas do mesmo short num dia; a 2ª (a que perdeu) foi a de menor qualidade — a regra ½R é a rede |
+| 51 | 27/05 | Long (contra-trend) | Long contra o move imediato | — | — | 0R | — | BE | ⚪ BE | **0R** | super bullish (HTF) mas **muito acima do value** → difícil jogar. Tentou uma **long contra-trend** (contra o move imediato) que não vingou → BE, out do dia. Scratch bem gerido; mas contra-trend + longe do value = baixa qualidade — o BE salvou-o. Sem revisita ao value não havia setup A |
 
 ## Notas detalhadas
 
