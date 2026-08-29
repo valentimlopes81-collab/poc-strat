@@ -10,11 +10,11 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **52** · Wins/Losses/BE: **27 / 13 / 12**
-- Win rate: **68%** decididas (27/40) · **52%** incl. BE (27/52)
-- R total: **+26.91R** · Expectância: **+0.52R/trade** · PF (R): **39.41 / 12.5 = 3.2**
+- Trades: **53** · Wins/Losses/BE: **28 / 13 / 12**
+- Win rate: **68%** decididas (28/41) · **53%** incl. BE (28/53)
+- R total: **+27.68R** · Expectância: **+0.52R/trade** · PF (R): **40.18 / 12.5 = 3.2**
 - *(12 losses = −1R + 1 loss half-risk = −0.5R → −12.5R total)*
-- ⚠️ **Drawdown atual:** desde o pico (+29.41R, pós-T47/18-mai) → −2.5R em 5 trades (T48-T52: 3 losses, 2 BE, 0 wins). **Todas em dias longe do value / ATH / equilíbrio (baixa prob).** O leak não é o modelo — é jogar nos dias que o modelo diz para não jogar.
+- **Drawdown:** pico +29.41R (18-mai) → fundo +26.91R (−2.5R, 5 trades em dias de baixa prob) → **T53 quebrou a série com setup A limpo** (+0.77R).
 
 ### Por bloco
 | Bloco | Trades | R | Notas |
@@ -24,7 +24,8 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Fevereiro 2026** (27/02) | 1 | **+0.69R** | 1min disponível a partir daqui |
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
-| **Maio 2026** (01/05→…) | 12 | **+7.91R** | T41-T52; 5 wins a favor da bias + 4 losses + 3 BE. Forte 1ª metade; 2ª metade drenada por trades forçadas em dias de baixa prob (T48-T52 = −2.5R) |
+| **Maio 2026** (01/05→31/05) | 12 | **+7.91R** | T41-T52; 5 wins a favor da bias + 4 losses + 3 BE. Forte 1ª metade; 2ª metade drenada por trades forçadas em dias de baixa prob (T48-T52 = −2.5R) |
+| **Junho 2026** (01/06→…) | 1 | **+0.77R** | T53; short rejeição PD VAH → quebra o drawdown com setup A limpo |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -258,6 +259,8 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 51 | 27/05 | Long (contra-trend) | Long contra o move imediato | — | — | 0R | — | BE | ⚪ BE | **0R** | super bullish (HTF) mas **muito acima do value** → difícil jogar. Tentou uma **long contra-trend** (contra o move imediato) que não vingou → BE, out do dia. Scratch bem gerido; mas contra-trend + longe do value = baixa qualidade — o BE salvou-o. Sem revisita ao value não havia setup A |
 | 52 | 28/05 | (n/e) | Equilíbrio buyers/sellers (chop) | value | — | −1R | LOD / above value | Stop | ❌ Loss | **−1R** | **zona de equilíbrio** após o dump de ontem; a lutar para fugir ao value p/ cima. Escreveu 2 cenários (aceitação > value → longs / rejeição → shorts p/ LOD). Jogou e levou −1R. **Auto-honesto:** "o modelo não conseguia propriamente ajudar aqui". Dia de baixa probabilidade (equilíbrio/chop) — mais uma trade forçada num dia sem setup A limpo |
 | — | 29/05 | — | — | — | — | — | — | — | ⏸️ No-play | — | perto de novo ATH, a trocar no PD POC/VAH com o **PD VAL muito abaixo** (bom espaço). Plano coerente: tirar o high → descer ao value → **rejeitá-lo → short p/ PD VAL** (1º alvo Asia low). Mas **parou antes de forçar** ("ia fazer outra vez porcaria") → out. **A lição do drawdown aplicada em tempo real** — reconheceu que ia inventar uma trade e travou. Disciplina ✓✓ |
+| | **═══ JUNHO 2026 ═══** | | | | | | | | | | (fecha o semestre; 29/06 = onde o diário começou, T1) |
+| 53 | 01/06 | Short | **Rejeição confirmada PD VAH** (tipo-A ✓) | PD VAH | 30436.25 | 30497.25 (61 pts) | TP1 30341.75 (VAL) · TP2 30291.25 (LOD) | TP1 (50%) + BE | ✅ Win | **+0.77R** | mês abre bullish (novo ATH), mas pré-NY a lutar p/ ficar **fora do value**; candle muito bearish antes do open levou ao extremo do value. **PD VAH rejeitado continuamente** → short; stop ligeiro acima, BE no POC. TP1 no VAL (+1.55R na 1ª metade); runner p/ LOD não veio → BE. **Setup A limpo — quebra o drawdown de 5 trades exatamente como planeado: esperar o A e executá-lo** |
 
 ## Notas detalhadas
 
