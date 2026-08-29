@@ -10,9 +10,9 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **56** · Wins/Losses/BE: **30 / 14 / 12**
-- Win rate: **68%** decididas (30/44) · **54%** incl. BE (30/56)
-- R total: **+27.87R** · Expectância: **+0.50R/trade** · PF (R): **41.37 / 13.5 = 3.1**
+- Trades: **57** · Wins/Losses/BE: **31 / 14 / 12**
+- Win rate: **69%** decididas (31/45) · **54%** incl. BE (31/57)
+- R total: **+29.66R** *(novo máximo)* · Expectância: **+0.52R/trade** · PF (R): **43.16 / 13.5 = 3.2**
 - *(13 losses = −1R + 1 loss half-risk = −0.5R → −13.5R total)*
 - *Sistema intradiário POC-hoje+VWAP: 3 usos (T41 +2.23, T43 −1, T55 +0.82) = **+2.05R**, 2W/1L.*
 - **Drawdown:** pico +29.41R (18-mai) → fundo +26.91R (−2.5R, dias de baixa prob) → **recuperação com 2 setups A** (T53/T54); a subir de novo.
@@ -26,7 +26,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
 | **Maio 2026** (01/05→31/05) | 12 | **+7.91R** | T41-T52; 5 wins a favor da bias + 4 losses + 3 BE. Forte 1ª metade; 2ª metade drenada por trades forçadas em dias de baixa prob (T48-T52 = −2.5R) |
-| **Junho 2026** (01/06→…) | 4 | **+0.96R** | T53/T54/T55 (3 wins) + T56 (−1, short sem stop estrutural). Recuperou do drawdown; T56 = lição "sem sítio p/ stop = sem trade" |
+| **Junho 2026** (01/06→…) | 5 | **+2.75R** | T53/T54/T55 + T57 (4 wins) + T56 (−1). T57 (rejeição POC+ON POC) fez **novo máximo do diário (+29.66R)** |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -269,6 +269,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | — | 08/06 | — | — | — | — | — | — | — | ⏸️ No-play | — | nova semana; sexta fechou a cair pesado; Asia fez bom fundo mas recuperação **sem força**. **Dois cenários escritos:** rejeição do POC → short p/ LOD/target HTF; recuperação do POC → long p/ PD VAH (longe, menos provável). Mas os minutos antes do open estragaram tudo — ficou só a **trocar entre POC e VAH** (terra de ninguém) → sem gatilho, sem play. Disciplina ✓ |
 | — | 09/06 | (Short) | Rejeição do PD VAH | PD VAH | — | — | value/LOD | — | ⏸️ No-play | — | recuperação bull da correção mas **volume fraco** (shorts na equação); pré-NY > value → também olhava longs no VAH-suporte. **Veio o dump que ele esperava**, mas **não jogou** o short porque antes de rejeitar o VAH o preço foi "**acima de mais**" → PA/entrada desconfortável (stop largo). Pass defensável (qualidade do PA), mas ⚠️ **2ª vez de "esperei o move, aconteceu, não joguei"** (ecoa 19/05) — vigiar se é filtro de qualidade ou hesitação/medo |
 | 56 | 10/06 | Short | Short p/ LOD **sem stop estrutural** | (sem POI de stop) | — | −1R | LOD | Stop | ❌ Loss | **−1R** | dump de ontem limpou toda a LRL + o low. Queria short p/ o LOD, só válido com **rejeição do POC**. Entrou mas **"não tinha sítio para o stop"** → stop arbitrário → −1R. **Auto-diagnóstico certo e assumido:** sem invalidação estrutural, não havia trade. Regra que isto crava: **sem sítio para o stop = sem trade** (o filtro nº1 "localização" a falhar) |
+| 57 | 11/06 | Short | **Rejeição confirmada PD POC + ON POC alinhados** (tipo-A ✓, confluência) | PD POC + ON POC | 28903 | 29050.75 (acima do POC = invalidação, 147.75 pts) | 28638.75 (lows pré-mkt) | Full TP (100%) | ✅ Win | **+1.79R** | subida de desconfiar + muita LRL acumulada → viés short. **Rejeição clara do POC** (PD POC + ON POC **alinhados** = confluência forte) → short. Stop acima do POC ("voltar lá invalidava tudo") = invalidação real. **Não perseguiu o LOD** — mirou os lows de pré-mkt por causa do RR (escolha inteligente do alvo mais provável). Sem BE por não haver ponto estrutural (honesto). Full TP. **Contraste perfeito com T56: ontem sem sítio p/ stop = −1R; hoje POI + stop estrutural claro = +1.79R** |
 
 ## Notas detalhadas
 
