@@ -10,10 +10,11 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **54** · Wins/Losses/BE: **29 / 13 / 12**
-- Win rate: **69%** decididas (29/42) · **54%** incl. BE (29/54)
-- R total: **+28.05R** · Expectância: **+0.52R/trade** · PF (R): **40.55 / 12.5 = 3.2**
+- Trades: **55** · Wins/Losses/BE: **30 / 13 / 12**
+- Win rate: **70%** decididas (30/43) · **55%** incl. BE (30/55)
+- R total: **+28.87R** · Expectância: **+0.52R/trade** · PF (R): **41.37 / 12.5 = 3.3**
 - *(12 losses = −1R + 1 loss half-risk = −0.5R → −12.5R total)*
+- *Sistema intradiário POC-hoje+VWAP: 3 usos (T41 +2.23, T43 −1, T55 +0.82) = **+2.05R**, 2W/1L.*
 - **Drawdown:** pico +29.41R (18-mai) → fundo +26.91R (−2.5R, dias de baixa prob) → **recuperação com 2 setups A** (T53/T54); a subir de novo.
 
 ### Por bloco
@@ -25,7 +26,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
 | **Maio 2026** (01/05→31/05) | 12 | **+7.91R** | T41-T52; 5 wins a favor da bias + 4 losses + 3 BE. Forte 1ª metade; 2ª metade drenada por trades forçadas em dias de baixa prob (T48-T52 = −2.5R) |
-| **Junho 2026** (01/06→…) | 2 | **+1.14R** | T53/T54; 2 shorts de rejeição do value, ambos TP1+BE. RR modesto (runner p/ PDL não veio) mas recuperação limpa do drawdown |
+| **Junho 2026** (01/06→…) | 3 | **+1.96R** | T53/T54 (rejeição do value) + T55 (scalp POC+VWAP ½R full TP); recuperação limpa do drawdown, 3 wins seguidos |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -263,7 +264,8 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 53 | 01/06 | Short | **Rejeição confirmada PD VAH** (tipo-A ✓) | PD VAH | 30436.25 | 30497.25 (61 pts) | TP1 30341.75 (VAL) · TP2 30291.25 (LOD) | TP1 (50%) + BE | ✅ Win | **+0.77R** | mês abre bullish (novo ATH), mas pré-NY a lutar p/ ficar **fora do value**; candle muito bearish antes do open levou ao extremo do value. **PD VAH rejeitado continuamente** → short; stop ligeiro acima, BE no POC. TP1 no VAL (+1.55R na 1ª metade); runner p/ LOD não veio → BE. **Setup A limpo — quebra o drawdown de 5 trades exatamente como planeado: esperar o A e executá-lo** |
 | — | 02/06 | (Short) | Rejeição do extremo do value | PD VAH | — | — | LRL em baixo | — | ⏸️ No-play | — | NY de ontem subiu forte, Asia anulou; recuperação até ao topo do PD value **sem o mesmo volume da descida** (suspeita) → inclinado a **shorts no extremo do value** p/ limpar a liquidez em baixo. Leitura de volume boa (recuperação fraca = desconfiança), mas o setup não se armou na janela → sem entry. Disciplina ✓ |
 | 54 | 03/06 | Short | **Rejeição do value a higher prices** (tipo-A ✓, RR capado) | PD VAH → POC/VAL | 30679.25 | 30807.75 (128.5 pts) | TP1 30584 (POC/VAL) · TP2 30423.75 (PDL) | TP1 (50%) + BE | ✅ Win | **+0.37R** | ATH, sessões anteriores paradas → esperava move forte na NY. Rejeição do extremo do value a higher prices → short p/ o outro lado do value. TP1 (+0.74R na 1ª metade); TP2 no PDL não veio → BE. ⚠️ **stop muito alto (128.5 pts) capou o RR** — ele próprio: "em live apanhava isto muito antes". Ideia e direção certas; a entrada tardia (replay 5m) diluiu o múltiplo |
-| — | 04/06 | (Short) | Short no value → LOD | value | — | — | LOD | — | ⏸️ No-play | — | **1º dia claramente bearish** em algum tempo; longe do value (acima). Tese: se voltar ao value → **short p/ LOD** (buyers possivelmente exaustos), com cautela. Mas o preço **não desceu mais nem chegou ao value** → sem revisita, sem gatilho, sem entry. Disciplina ✓ |
+| — | 04/06 | (Short) | Short no value → LOD | value | — | — | LOD | — | ⏸️ No-play | — | **1º dia claramente bearish** em algum tempo; longe do value (acima). Tese: se voltar ao value → **short p/ LOD** (buyers possivelmente exaustos), com cautela. Mas o preço **não desceu mais nem chegou ao value** → sem revisita, sem gatilho, sem entry. Disciplina ✓. (Nota: ontem o value foi tocado e rejeitado mas **fora de horas** → não jogou, "regras são regras" ✓) |
+| 55 | 05/06 | Short (scalp, ½R) | **Sistema POC-hoje+VWAP** (3º uso) — fecho < POC & VWAP | POC hoje + VWAP | 29873 | 29942.25 (high anterior, 69.25 pts) | 29759.25 (LOD) | Full TP (100%) | ✅ Win | **+0.82R** | segue bearish pós-queda de ontem; sem setup A limpo (só desceu). POC-hoje e VWAP **encostados** → fecho abaixo de ambos = gatilho intradiário → short p/ LOD (a favor do viés bearish); stop no high anterior. **Sizing a ½R** (scalp, não A) → full TP = +1.64R×0.5 = **+0.82R**. Uso correto da ferramenta certa p/ o dia + risco reduzido à conviction |
 
 ## Notas detalhadas
 
