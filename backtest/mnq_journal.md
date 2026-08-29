@@ -10,10 +10,10 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 ## Estatísticas (atualizado a cada lote)
 
 ### Cumulativo (todos os blocos)
-- Trades: **55** · Wins/Losses/BE: **30 / 13 / 12**
-- Win rate: **70%** decididas (30/43) · **55%** incl. BE (30/55)
-- R total: **+28.87R** · Expectância: **+0.52R/trade** · PF (R): **41.37 / 12.5 = 3.3**
-- *(12 losses = −1R + 1 loss half-risk = −0.5R → −12.5R total)*
+- Trades: **56** · Wins/Losses/BE: **30 / 14 / 12**
+- Win rate: **68%** decididas (30/44) · **54%** incl. BE (30/56)
+- R total: **+27.87R** · Expectância: **+0.50R/trade** · PF (R): **41.37 / 13.5 = 3.1**
+- *(13 losses = −1R + 1 loss half-risk = −0.5R → −13.5R total)*
 - *Sistema intradiário POC-hoje+VWAP: 3 usos (T41 +2.23, T43 −1, T55 +0.82) = **+2.05R**, 2W/1L.*
 - **Drawdown:** pico +29.41R (18-mai) → fundo +26.91R (−2.5R, dias de baixa prob) → **recuperação com 2 setups A** (T53/T54); a subir de novo.
 
@@ -26,7 +26,7 @@ Início dos dados: **29/06/2026**. Risco por trade = 1R (BE = 0R).
 | **Março 2026** (02/03→31/03) | 9 | **+7.76R** | T20-T28; 13 no-play. Só T24 (leak) negativa; 6 wins, 2 BE. **Melhor bloco de sempre** |
 | **Abril 2026** (01/04→30/04) | 12 | **+4.40R** | T29-T40; 8 no-play; forte 2ª metade a favor da bias bull; T39 BE (short contra o tell); T40 loss (leak nº1 reincidiu) |
 | **Maio 2026** (01/05→31/05) | 12 | **+7.91R** | T41-T52; 5 wins a favor da bias + 4 losses + 3 BE. Forte 1ª metade; 2ª metade drenada por trades forçadas em dias de baixa prob (T48-T52 = −2.5R) |
-| **Junho 2026** (01/06→…) | 3 | **+1.96R** | T53/T54 (rejeição do value) + T55 (scalp POC+VWAP ½R full TP); recuperação limpa do drawdown, 3 wins seguidos |
+| **Junho 2026** (01/06→…) | 4 | **+0.96R** | T53/T54/T55 (3 wins) + T56 (−1, short sem stop estrutural). Recuperou do drawdown; T56 = lição "sem sítio p/ stop = sem trade" |
 
 ### 🔑 ANÁLISE — 20 trades (3+ regimes)
 **Global:** +8.93R · 11W/5L/4BE · WR 69% (decididas) · PF 2.8 · expectância +0.45R.
@@ -268,6 +268,7 @@ Cada trade = 1 MNQ ($2/ponto). P&L por trade ≈ R × distância_do_stop × $2.
 | 55 | 05/06 | Short (scalp, ½R) | **Sistema POC-hoje+VWAP** (3º uso) — fecho < POC & VWAP | POC hoje + VWAP | 29873 | 29942.25 (high anterior, 69.25 pts) | 29759.25 (LOD) | Full TP (100%) | ✅ Win | **+0.82R** | segue bearish pós-queda de ontem; sem setup A limpo (só desceu). POC-hoje e VWAP **encostados** → fecho abaixo de ambos = gatilho intradiário → short p/ LOD (a favor do viés bearish); stop no high anterior. **Sizing a ½R** (scalp, não A) → full TP = +1.64R×0.5 = **+0.82R**. Uso correto da ferramenta certa p/ o dia + risco reduzido à conviction |
 | — | 08/06 | — | — | — | — | — | — | — | ⏸️ No-play | — | nova semana; sexta fechou a cair pesado; Asia fez bom fundo mas recuperação **sem força**. **Dois cenários escritos:** rejeição do POC → short p/ LOD/target HTF; recuperação do POC → long p/ PD VAH (longe, menos provável). Mas os minutos antes do open estragaram tudo — ficou só a **trocar entre POC e VAH** (terra de ninguém) → sem gatilho, sem play. Disciplina ✓ |
 | — | 09/06 | (Short) | Rejeição do PD VAH | PD VAH | — | — | value/LOD | — | ⏸️ No-play | — | recuperação bull da correção mas **volume fraco** (shorts na equação); pré-NY > value → também olhava longs no VAH-suporte. **Veio o dump que ele esperava**, mas **não jogou** o short porque antes de rejeitar o VAH o preço foi "**acima de mais**" → PA/entrada desconfortável (stop largo). Pass defensável (qualidade do PA), mas ⚠️ **2ª vez de "esperei o move, aconteceu, não joguei"** (ecoa 19/05) — vigiar se é filtro de qualidade ou hesitação/medo |
+| 56 | 10/06 | Short | Short p/ LOD **sem stop estrutural** | (sem POI de stop) | — | −1R | LOD | Stop | ❌ Loss | **−1R** | dump de ontem limpou toda a LRL + o low. Queria short p/ o LOD, só válido com **rejeição do POC**. Entrou mas **"não tinha sítio para o stop"** → stop arbitrário → −1R. **Auto-diagnóstico certo e assumido:** sem invalidação estrutural, não havia trade. Regra que isto crava: **sem sítio para o stop = sem trade** (o filtro nº1 "localização" a falhar) |
 
 ## Notas detalhadas
 
