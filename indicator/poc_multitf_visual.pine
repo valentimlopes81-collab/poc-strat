@@ -257,9 +257,29 @@ rsiLH   = rsiLBR < ta.valuewhen(phFound, rsiLBR, 1) and _inRange(phFound[1])
 priceHH = high[lbR] > ta.valuewhen(phFound, high[lbR], 1)
 bear_div = priceHH and rsiLH and phFound
 
-// setinhas no preço (no pivô, lbR barras atrás)
-plotshape(show_div and bull_div ? low[lbR]  : na, title="Bull div", offset=-lbR, style=shape.triangleup,   location=location.absolute, color=c_bull, size=size.small)
-plotshape(show_div and bear_div ? high[lbR] : na, title="Bear div", offset=-lbR, style=shape.triangledown, location=location.absolute, color=c_bear, size=size.small)
+// ---- Densidade de POCs (a "teia") à volta do preço — filtro de setup completo ----
+gq = "Qualidade do sinal (teia + MTF)"
+require_density = input.bool(true, "Exigir zona DENSA de POCs (teia)", group=gq, tooltip="A seta e o webhook só disparam com um cluster de N POCs, não com qualquer div.")
+dens_band_pct  = input.float(0.5, "Banda da densidade (%)", minval=0.1, step=0.1, group=gq)
+dens_min       = input.int(3, "Mín. de POCs no cluster", minval=1, group=gq)
+f_cnt(array<float> a, float ref, float tol) =>
+    int c = 0
+    if array.size(a) > 0
+        for i = 0 to array.size(a) - 1
+            float v = array.get(a, i)
+            if not na(v) and math.abs(v - ref) <= tol
+                c += 1
+    c
+float tolabs = close * dens_band_pct / 100.0
+int density = f_cnt(v1d, close, tolabs) + f_cnt(v2d, close, tolabs) + f_cnt(v3d, close, tolabs) + f_cnt(v5d, close, tolabs) + f_cnt(v1w, close, tolabs) + f_cnt(v2w, close, tolabs) + f_cnt(v1m, close, tolabs)
+bool dense_zone = density >= dens_min
+// setup completo = divergência DENTRO da teia (ou div pura se o filtro estiver OFF)
+bool bull_setup = bull_div and (dense_zone or not require_density)
+bool bear_setup = bear_div and (dense_zone or not require_density)
+
+// setinhas no preço (no pivô, lbR barras atrás) — SÓ no setup completo
+plotshape(show_div and bull_setup ? low[lbR]  : na, title="Bull setup", offset=-lbR, style=shape.triangleup,   location=location.absolute, color=c_bull, size=size.small)
+plotshape(show_div and bear_setup ? high[lbR] : na, title="Bear setup", offset=-lbR, style=shape.triangledown, location=location.absolute, color=c_bear, size=size.small)
 
 // invalidação: bull cai se fechar abaixo do fundo; bear cai se fechar acima do topo
 var float bull_iv=na, var bool bull_active=false
@@ -284,31 +304,14 @@ alertcondition(bull_inval, title="Bull Div INVALIDADA (POC MTF)",  message="{{ti
 alertcondition(bear_inval, title="Bear Div INVALIDADA (POC MTF)",  message="{{ticker}}: Bear div invalidada")
 
 // ============================================================================
-// UPGRADE — densidade de POCs (a "teia") + divergências multi-TF (5/15/30)
-// Corre o indicador/alerta num gráfico de 5m: apanha 5 (gráfico) + 15 + 30.
+// Divergências multi-TF (3 TFs explícitos, ex.: 5/15/30) — independentes do
+// TF do gráfico (via request.security). Confluência para ajuste de risco.
 // ============================================================================
-gq = "Qualidade do sinal (teia + MTF)"
-require_density = input.bool(true, "Exigir zona DENSA de POCs (teia)", group=gq, tooltip="Em vez de bastar 1 POC na banda, exige um cluster de N POCs.")
-dens_band_pct  = input.float(0.5, "Banda da densidade (%)", minval=0.1, step=0.1, group=gq, tooltip="POCs a <= esta % do preço contam para o cluster.")
-dens_min       = input.int(3, "Mín. de POCs no cluster", minval=1, group=gq)
-mtf_on         = input.bool(true, "Divergências multi-TF (15/30)", group=gq)
-tf_a           = input.timeframe("15", "TF médio", group=gq)
-tf_b           = input.timeframe("30", "TF alto", group=gq, tooltip="Têm de ser >= TF do gráfico. Corre em 5m.")
+mtf_on = input.bool(true, "Divergências multi-TF", group=gq)
+div_tf1 = input.timeframe("5",  "TF 1", inline="mtf", group=gq)
+div_tf2 = input.timeframe("15", "TF 2", inline="mtf", group=gq)
+div_tf3 = input.timeframe("30", "TF 3", inline="mtf", group=gq, tooltip="Podem ser abaixo ou acima do TF do gráfico. Confluência = quantos destes divergem.")
 
-// densidade: conta POCs (de todos os períodos) dentro da banda à volta do preço
-f_cnt(array<float> a, float ref, float tol) =>
-    int c = 0
-    if array.size(a) > 0
-        for i = 0 to array.size(a) - 1
-            float v = array.get(a, i)
-            if not na(v) and math.abs(v - ref) <= tol
-                c += 1
-    c
-float tolabs = close * dens_band_pct / 100.0
-int density = f_cnt(v1d, close, tolabs) + f_cnt(v2d, close, tolabs) + f_cnt(v3d, close, tolabs) + f_cnt(v5d, close, tolabs) + f_cnt(v1w, close, tolabs) + f_cnt(v2w, close, tolabs) + f_cnt(v1m, close, tolabs)
-bool dense_zone = density >= dens_min
-
-// divergências RSI num TF arbitrário (mesma lógica clássica da do gráfico)
 f_divs() =>
     float chg = ta.change(close)
     float u = ta.rma(math.max(chg, 0), rsi_len)
@@ -327,10 +330,11 @@ f_divs() =>
     bool bear = phh and rlh and ph
     [bull, bear]
 
-[bullA, bearA] = request.security(syminfo.tickerid, tf_a, f_divs())
-[bullB, bearB] = request.security(syminfo.tickerid, tf_b, f_divs())
-int bull_conf = (bull_div ? 1 : 0) + (mtf_on and bullA ? 1 : 0) + (mtf_on and bullB ? 1 : 0)
-int bear_conf = (bear_div ? 1 : 0) + (mtf_on and bearA ? 1 : 0) + (mtf_on and bearB ? 1 : 0)
+[b1, s1] = request.security(syminfo.tickerid, div_tf1, f_divs())
+[b2, s2] = request.security(syminfo.tickerid, div_tf2, f_divs())
+[b3, s3] = request.security(syminfo.tickerid, div_tf3, f_divs())
+int bull_conf = mtf_on ? (b1 ? 1 : 0) + (b2 ? 1 : 0) + (b3 ? 1 : 0) : (bull_div ? 1 : 0)
+int bear_conf = mtf_on ? (s1 ? 1 : 0) + (s2 ? 1 : 0) + (s3 ? 1 : 0) : (bear_div ? 1 : 0)
 
 // leitura visual no canto: densidade da teia + confluência de divergências
 var table qt = table.new(position.top_right, 1, 3, border_width=1)
@@ -339,9 +343,9 @@ if barstate.islast
     table.cell(qt, 0, 1, "bull conf: " + str.tostring(bull_conf) + "/3", text_color=color.white, bgcolor=color.new(c_bull, 35), text_size=size.small)
     table.cell(qt, 0, 2, "bear conf: " + str.tostring(bear_conf) + "/3", text_color=color.white, bgcolor=color.new(c_bear, 35), text_size=size.small)
 
-// alertas simples (webhook por alertcondition, se preferires ao alert() JSON)
-alertcondition(bull_div and dense_zone, title="Bull Div + TEIA (POC MTF)", message="{{ticker}}: Bull div em zona DENSA de POCs")
-alertcondition(bear_div and dense_zone, title="Bear Div + TEIA (POC MTF)", message="{{ticker}}: Bear div em zona DENSA de POCs")
+// alertas simples do setup completo (div + teia), se preferires ao alert() JSON
+alertcondition(bull_setup, title="Bull SETUP (div + teia)", message="{{ticker}}: Bull setup — div em zona DENSA de POCs")
+alertcondition(bear_setup, title="Bear SETUP (div + teia)", message="{{ticker}}: Bear setup — div em zona DENSA de POCs")
 
 // ============================================================================
 // WEBHOOK poc-strat — envia o MESMO payload que o MAX V2 enviava, mas agora
