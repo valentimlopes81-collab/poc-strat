@@ -558,3 +558,19 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 1. **Stop caçado por wick → move segue** — já **4 losses** com esta assinatura exata (T6, T14, T43, T48). Candidato a calibração: stop **para lá do swing** que confirma a entrada, não junto à linha do POI.
 2. **Casar-se com uma direção no pré-mkt** — custou uma short-modelo perdida (19/05) e uma short contra-bias em BE (T45, 13/05). Regra: escrever **os dois cenários** (aceitação→X / rejeição→Y) e deixar o POI/gatilho decidir.
 3. **Sistema intradiário novo (POC-hoje + VWAP)** — 2 usos (T41 +2.23, T43 −1) = +1.23R, 1W/1L. Amostra minúscula; manter à parte e reavaliar aos ~8-10 usos. Boa ferramenta específica para dias de ATH em que o value do dia anterior está esticado/inútil.
+
+---
+
+# 🔴 FUNDED LIVE — MyFundedFutures $25K Rapid
+
+*Conta real (sim-funded). Regras: target $1.500 · Max DD $1.000 (EOD na eval / RealTime na funded) · 3 contratos (30 MNQ via 10:1) · consistency 50% (eval) · sem daily loss limit · payout 90%, min $500, buffer $1.1K. Custo $25 (desconto syncdrop).*
+*Plano de sizing: 1R ≈ $120-150 (1 MNQ, stop ~70-100 pts; 2 MNQ só em stops ≤50 pts). Objetivo desta fase: validar o edge do replay em execução LIVE.*
+
+### Estado
+- **P&L: $0** · Target: falta **$1.500** · DD room: **$1.000** (intacto)
+- Trades live: 1 (0W/0L/1BE)
+
+### Registo live
+| # | Data | Dir | Gatilho | Zona | Result | R | $ | Notas |
+|---|------|-----|---------|------|--------|---|---|-------|
+| L1 | 31/08 | Short | Rejeição forte do PD POC (tipo-A ✓) | PD POC | ⚪ BE | 0R | $0 | Semana bearish (desde 28/08) continuada no open; recuperação Asia/London; pré-NY de novo **< PD value**. **Plano pré-mkt exemplar:** 2 cenários (retest extreme low → short p/ Asia low [alta prob]; OU reclaim do value = failed auction → long p/ outro extremo). Shorts = maior prob ✓. Entrou short na rejeição do POC (gatilho certo, direção certa) **mas TARDE** → RR comprometido → foi a BE em vez do TP (Asia low). Auto-diagnóstico certo: "todo o plano correto, falhei na execução (timing), o BE é justo". **1ª trade live = capital preservado, DD intacto.** |
