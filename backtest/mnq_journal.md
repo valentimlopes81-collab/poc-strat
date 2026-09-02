@@ -567,11 +567,12 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 *Plano de sizing: 1R ≈ $120-150 (1 MNQ, stop ~70-100 pts; 2 MNQ só em stops ≤50 pts). Objetivo desta fase: validar o edge do replay em execução LIVE.*
 
 ### Estado
-- **P&L: $0** · Target: falta **$1.500** · DD room: **$1.000** (intacto)
-- Trades live: 1 (0W/0L/1BE)
+- **P&L: −$136** · Target: falta **$1.636** · DD room: **~$864** (de $1.000)
+- Trades live: 3 (0W/1L/1BE + 1 no-play)
 
 ### Registo live
 | # | Data | Dir | Gatilho | Zona | Result | R | $ | Notas |
 |---|------|-----|---------|------|--------|---|---|-------|
 | L1 | 31/08 | Short (1 MNQ) | Rejeição forte do PD POC (tipo-A ✓) | PD POC | ⚪ BE | 0R | $0 | Semana bearish (desde 28/08) continuada no open; recuperação Asia/London; pré-NY de novo **< PD value**. **Plano pré-mkt exemplar:** 2 cenários (retest extreme low → short p/ Asia low [alta prob]; OU reclaim do value = failed auction → long p/ outro extremo). Shorts = maior prob ✓. Entrou short na rejeição do POC (gatilho certo, direção certa) **mas TARDE** → RR comprometido → foi a BE em vez do TP (Asia low). Auto-diagnóstico certo: "todo o plano correto, falhei na execução (timing), o BE é justo". **1ª trade live = capital preservado, DD intacto.** |
 | — | 01/09 | — | (No-play) | — | ⏸️ | — | $0 | **Bias 100% certa** (bearish, sem buyers, target PWL) → mercado fez **dump de ~500 pts (−1.49%)**. MAS **terra de ninguém** (preço < value, a derreter sem revisitar POI) → **sem entrada estrutural** → ficou de fora, como ele próprio previu no pré-mkt. **Acertou a direção e não jogou o vazio.** Numa conta de DD $1.000, evitar a short-sem-stop (armadilha da T56) vale mais que o lucro perdido. DD intacto. Disciplina ✓✓ |
+| L2 | 02/09 | Long (1 MNQ) | Reclaim do PD VAL (**contra a estrutura bearish acabada de confirmar**) | PD VAL | ❌ Loss | −1R | **−$136** | Failed auction pré-NY → reject **claro do POC**; a play A era **short na continuação**. Mas o gatilho deu-se às **14:29** (1 min antes da killzone) e ele **saltou-a por tecnicismo**; às 14:30 o preço foi **direto ao TP** sem ele. Frustrado por a perder, **flipou para um long no reclaim do VAL — contra a bias bearish confirmada** → −$136. **O erro-mãe não foi o long; foi perder a short por rigidez de 1 minuto, e depois compensar com uma trade contra-estrutura.** Sequência clássica: miss do A → frustração → força um B contra a estrutura → loss (família T45/T32) |
