@@ -567,8 +567,9 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 *Plano de sizing: 1R ≈ $120-150 (1 MNQ, stop ~70-100 pts; 2 MNQ só em stops ≤50 pts). Objetivo desta fase: validar o edge do replay em execução LIVE.*
 
 ### Estado
-- **P&L: −$136** · Target: falta **$1.636** · DD room: **~$864** (de $1.000)
-- Trades live: 3 (0W/1L/1BE + 1 no-play)
+- **P&L: −$28** · Target: falta **$1.528** · DD room: **~$972** (de $1.000)
+- Trades live (SISTEMA): 3 (0W/1L/1BE + 2 no-play)
+- ⚠️ 03/09: +$108 de uma **trade dada por um amigo (sinal externo, NÃO-sistema)** — conta para o P&L da conta, mas **não conta como validação do edge**. O próprio reconheceu "não é mérito meu". Além disso, perdeu 2 longs-A "fáceis" seguidos por hesitação na entrada (02 e 03/09) — o desgaste dessas falhas é o que o tornou recetivo ao sinal externo. Padrão a vigiar.
 
 ### Registo live
 | # | Data | Dir | Gatilho | Zona | Result | R | $ | Notas |
