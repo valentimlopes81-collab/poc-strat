@@ -227,7 +227,7 @@ gdv = "Divergências (RSI clássica)"
 show_div   = input.bool(true, "Mostrar divergências (setinhas)", group=gdv)
 show_inval = input.bool(true, "Marcar invalidação (✖)", group=gdv)
 rsi_len    = input.int(14, "RSI Length", minval=2, group=gdv)
-lbR        = input.int(5, "Pivot lookback direita", minval=1, group=gdv)
+lbR        = input.int(1, "Pivot lookback direita", minval=1, group=gdv, tooltip="Atraso do sinal em velas. 1 = deteta ~ao fecho da vela a seguir ao pivô (mais rápido, mais ruído). 2-3 = ligeiro filtro.")
 lbL        = input.int(5, "Pivot lookback esquerda", minval=1, group=gdv)
 rgU        = input.int(60, "Máx. barras entre pivôs", minval=1, group=gdv)
 rgL        = input.int(5,  "Mín. barras entre pivôs", minval=1, group=gdv)
@@ -259,9 +259,9 @@ bear_div = priceHH and rsiLH and phFound
 
 // ---- Densidade de POCs (a "teia") à volta do preço — filtro de setup completo ----
 gq = "Qualidade do sinal (teia + MTF)"
-require_density = input.bool(true, "Exigir zona DENSA de POCs (teia)", group=gq, tooltip="A seta e o webhook só disparam com um cluster de N POCs, não com qualquer div.")
-dens_band_pct  = input.float(0.5, "Banda da densidade (%)", minval=0.1, step=0.1, group=gq)
-dens_min       = input.int(3, "Mín. de POCs no cluster", minval=1, group=gq)
+require_density = input.bool(true, "Exigir POCs próximos (filtro)", group=gq, tooltip="ON = seta+alerta só quando há div E POCs por perto (tu triagens). OFF = alerta em qualquer div.")
+dens_band_pct  = input.float(0.5, "Banda de proximidade (%)", minval=0.1, step=0.1, group=gq)
+dens_min       = input.int(1, "Mín. de POCs na banda", minval=1, group=gq, tooltip="1 = basta 1 POC próximo (sensível, tu triagens). Sobe para 2-3 se quiseres só clusters densos (teia).")
 f_cnt(array<float> a, float ref, float tol) =>
     int c = 0
     if array.size(a) > 0
@@ -272,7 +272,7 @@ f_cnt(array<float> a, float ref, float tol) =>
     c
 float tolabs = close * dens_band_pct / 100.0
 int density = f_cnt(v1d, close, tolabs) + f_cnt(v2d, close, tolabs) + f_cnt(v3d, close, tolabs) + f_cnt(v5d, close, tolabs) + f_cnt(v1w, close, tolabs) + f_cnt(v2w, close, tolabs) + f_cnt(v1m, close, tolabs)
-bool dense_zone = density >= dens_min
+bool dense_zone = not require_density or density >= dens_min
 // setup completo = divergência DENTRO da teia (ou div pura se o filtro estiver OFF)
 bool bull_setup = bull_div and (dense_zone or not require_density)
 bool bear_setup = bear_div and (dense_zone or not require_density)
@@ -390,7 +390,7 @@ zj := f_json_levels(zj, v2w, k2w, close, "zone")
 zj := f_json_levels(zj, v1m, k1m, close, "zone")
 
 // zona forte válida = cluster DENSO de POCs (teia) se require_density; senão ≥1 POC naked na banda
-bool valid_strong_zone = require_density ? dense_zone : (zj != "")
+bool valid_strong_zone = dense_zone  // = a mesma condição das setas (div + POCs próximos) → seta e alerta batem certo
 bool sniper_long_setup  = enable_webhook and bull_div and valid_strong_zone
 bool sniper_short_setup = enable_webhook and bear_div and valid_strong_zone
 
