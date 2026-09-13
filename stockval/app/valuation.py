@@ -28,6 +28,14 @@ class Fundamentals:
     ebitda: float | None = None       # EBITDA (para EV/EBITDA)
     revenue_history: list[float] | None = None  # receita por ano (crescimento)
     eps_reported: float | None = None  # EPS diluído reportado (P/E direto e fiável)
+    operating_income: float | None = None  # EBIT (ROIC, interest coverage, margem op.)
+    interest_expense: float | None = None  # juros (interest coverage)
+    gross_profit: float | None = None      # lucro bruto (margem bruta)
+    sbc: float | None = None               # stock-based compensation (SBC/receita)
+    operating_income_history: list[float] | None = None  # EBIT por ano (operating leverage)
+    op_margin_history: list[float] | None = None         # margem op. por ano (tendência)
+    shares_history: list[float] | None = None            # nº ações por ano (diluição)
+    eps_history: list[float] | None = None               # EPS por ano (EPS YoY/CAGR)
 
 
 def cost_of_equity(rf: float, beta: float, erp: float) -> float:
@@ -193,6 +201,46 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
     coherence_score = c_pass / len(coherence) * 20.0
     score = value_score + quality_score + coherence_score
 
+    # --- MÉTRICAS PROFUNDAS (informativas — não entram no score) ---
+    # Criação de valor: ROIC vs WACC.
+    nopat = f.operating_income * (1.0 - tax) if f.operating_income is not None else None
+    invested_capital = f.total_debt + f.equity - f.cash
+    roic = _safe_div(nopat, invested_capital) if (nopat is not None and invested_capital > 0) else None
+    roic_wacc_spread = (roic - w) if roic is not None else None
+    # Balanço.
+    nd_ebitda = _safe_div(net_debt, f.ebitda) if (f.ebitda and f.ebitda > 0) else None
+    interest_coverage = (_safe_div(f.operating_income, f.interest_expense)
+                         if (f.operating_income is not None and f.interest_expense and f.interest_expense > 0) else None)
+    # Rendimento e diluição.
+    fcf_yield = _safe_div(f.fcf, mktcap) if mktcap > 0 else None
+    dilution = cagr(f.shares_history) if f.shares_history else None  # >0 = dilui; <0 = recompra
+    sbc_pct_rev = _safe_div(f.sbc, f.revenue) if (f.sbc is not None and f.revenue) else None
+    # Margens e alavancagem operacional.
+    gross_margin = _safe_div(f.gross_profit, f.revenue) if (f.gross_profit is not None and f.revenue) else None
+    op_margin = _safe_div(f.operating_income, f.revenue) if (f.operating_income is not None and f.revenue) else None
+    op_margin_trend = None
+    if f.op_margin_history and len(f.op_margin_history) >= 2:
+        op_margin_trend = f.op_margin_history[-1] - f.op_margin_history[0]
+    eps_growth = cagr(f.eps_history) if f.eps_history else None
+    og = cagr(f.operating_income_history) if f.operating_income_history else None
+    op_leverage = (og / rev_growth) if (og is not None and rev_growth not in (None, 0) and rev_growth > 0) else None
+
+    deep = {
+        "roic": roic, "roic_wacc_spread": roic_wacc_spread, "invested_capital": invested_capital,
+        "nd_ebitda": nd_ebitda, "interest_coverage": interest_coverage,
+        "fcf_yield": fcf_yield, "dilution": dilution, "sbc_pct_rev": sbc_pct_rev,
+        "gross_margin": gross_margin, "op_margin": op_margin, "op_margin_trend": op_margin_trend,
+        "eps_growth": eps_growth, "op_leverage": op_leverage,
+    }
+    deep_flags = [
+        ("ROIC > WACC (cria valor)", roic is not None and roic > w, roic),
+        ("Net debt/EBITDA < 3", nd_ebitda is not None and nd_ebitda < 3.0, nd_ebitda),
+        ("Interest coverage > 4×", interest_coverage is not None and interest_coverage > 4.0, interest_coverage),
+        ("Sem diluição (≤1%/ano)", dilution is not None and dilution <= 0.01, dilution),
+        ("SBC < 5% da receita", sbc_pct_rev is not None and sbc_pct_rev < 0.05, sbc_pct_rev),
+        ("Margem op. a expandir", op_margin_trend is not None and op_margin_trend > 0, op_margin_trend),
+    ]
+
     # Sinal em conflito: DCF diz barato mas os múltiplos dizem caro (ou vice-versa).
     conflict = (mos is not None and mos >= 0.30 and c_pass <= 1)
 
@@ -224,6 +272,7 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         "ratios": {"pe": pe, "pb": pb, "peg": peg, "roe": roe, "de": de, "eps": eps,
                    "bvps": bvps, "ps": ps, "ev_ebitda": ev_ebitda,
                    "net_margin": net_margin, "rev_growth": rev_growth},
+        "deep": deep, "deep_flags": deep_flags,
         "quality": quality, "coherence": coherence,
         "q_pass": q_pass, "q_total": len(quality),
         "c_pass": c_pass, "c_total": len(coherence),

@@ -134,6 +134,41 @@ def test_pe_uses_reported_eps():
     assert abs(r["ratios"]["pe"] - 20.0) < 1e-9   # 100/5
 
 
+def test_deep_metrics():
+    """ROIC, coberturas, diluição, margens e operating leverage."""
+    a = Assumptions()
+    f = Fundamentals(price=100, shares=10, fcf=100, net_income=80, equity=400,
+                     total_debt=200, cash=50, eff_tax=0.20, cost_of_debt=0.05,
+                     revenue=1000, ebitda=250, operating_income=200, interest_expense=20,
+                     gross_profit=600, sbc=30,
+                     operating_income_history=[100, 150, 200], op_margin_history=[0.15, 0.18, 0.20],
+                     shares_history=[9, 9.5, 10], eps_history=[6, 7, 8],
+                     revenue_history=[800, 900, 1000])
+    d = value_company(f, a)["deep"]
+    assert abs(d["roic"] - (160 / 550)) < 1e-6          # NOPAT 160 / invested capital 550
+    assert abs(d["nd_ebitda"] - 0.6) < 1e-9             # net debt 150 / ebitda 250
+    assert abs(d["interest_coverage"] - 10.0) < 1e-9    # EBIT 200 / juros 20
+    assert abs(d["fcf_yield"] - 0.10) < 1e-9            # FCF 100 / mktcap 1000
+    assert d["dilution"] > 0.05 and d["dilution"] < 0.06   # ~5.4%/ano a diluir
+    assert abs(d["sbc_pct_rev"] - 0.03) < 1e-9
+    assert abs(d["gross_margin"] - 0.60) < 1e-9
+    assert abs(d["op_margin"] - 0.20) < 1e-9
+    assert abs(d["op_margin_trend"] - 0.05) < 1e-9      # 20% - 15%
+    assert d["op_leverage"] > 3.0                        # EBIT cresce muito mais que a receita
+    assert d["roic_wacc_spread"] > 0                     # cria valor (ROIC > WACC)
+
+
+def test_deep_metrics_absent_when_no_data():
+    """Sem os campos novos, as métricas profundas ficam None (não rebentam)."""
+    a = Assumptions()
+    f = Fundamentals(price=50, shares=10, fcf=100, net_income=80, equity=400,
+                     total_debt=200, cash=50, eff_tax=0.21, cost_of_debt=0.05)
+    d = value_company(f, a)["deep"]
+    assert d["roic"] is None
+    assert d["interest_coverage"] is None
+    assert d["dilution"] is None
+
+
 def test_growth_from_history_is_capped():
     a = Assumptions()
     # histórico com CAGR ~30% deve ser limitado ao growth_cap (15%)

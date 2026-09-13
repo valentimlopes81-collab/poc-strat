@@ -114,11 +114,27 @@ def fetch(ticker: str) -> dict:
     opinc_m = _annual_map(facts, ["OperatingIncomeLoss"], "USD", True)
     da_m = _annual_map(facts, ["DepreciationDepletionAndAmortization", "DepreciationAndAmortization",
                                "DepreciationAmortizationAndAccretionNet"], "USD", True)
+    gp_m = _annual_map(facts, ["GrossProfit"], "USD", True)
+    sbc_m = _annual_map(facts, ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense",
+                                "ShareBasedCompensationArrangementByShareBasedPaymentAwardCompensationCost1"], "USD", True)
 
     # FCF por ano (anos comuns entre CFO e CAPEX) -> histórico p/ CAGR.
     common = sorted(set(cfo_m) & set(capex_m))
     fcf_history = [cfo_m[fy] - capex_m[fy] for fy in common]
     revenue_history = [rev_m[fy] for fy in sorted(rev_m)]
+    opinc_history = [opinc_m[fy] for fy in sorted(opinc_m)]
+    # EPS diluído reportado por ano (para EPS YoY/CAGR).
+    epsd_m_full = (_annual_map(facts, ["EarningsPerShareDiluted", "EarningsPerShareBasicAndDiluted",
+                                       "IncomeLossFromContinuingOperationsPerDilutedShare"], "USD/shares", False)
+                   or _annual_map(facts, ["EarningsPerShareBasic"], "USD/shares", False))
+    eps_history = [epsd_m_full[fy] for fy in sorted(epsd_m_full)]
+    # Nº de ações por ano derivado de lucro/EPS (imune a multi-classe) -> diluição.
+    sh_common = sorted(set(ni_m) & set(epsd_m_full))
+    shares_history = [ni_m[fy] / epsd_m_full[fy] for fy in sh_common
+                      if epsd_m_full[fy] not in (None, 0) and ni_m[fy] / epsd_m_full[fy] > 0]
+    # Margem operacional por ano (anos comuns opinc & receita) -> tendência de margem.
+    om_common = sorted(set(opinc_m) & set(rev_m))
+    op_margin_history = [opinc_m[fy] / rev_m[fy] for fy in om_common if rev_m[fy]]
 
     opinc, da = _latest(opinc_m), _latest(da_m)
     ebitda = (opinc + (da or 0.0)) if opinc is not None else None
@@ -164,5 +180,10 @@ def fetch(ticker: str) -> dict:
         "fcf_history": fcf_history,
         "revenue": _latest(rev_m) or 0.0, "ebitda": ebitda,
         "revenue_history": revenue_history,
+        "operating_income": opinc, "interest_expense": interest,
+        "gross_profit": _latest(gp_m), "sbc": _latest(sbc_m),
+        "operating_income_history": opinc_history,
+        "op_margin_history": op_margin_history,
+        "shares_history": shares_history, "eps_history": eps_history,
         "missing": missing,
     }

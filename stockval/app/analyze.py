@@ -32,5 +32,12 @@ def analyze(ticker: str, a: Assumptions):
         revenue=data.get("revenue", 0.0), ebitda=data.get("ebitda"),
         revenue_history=data.get("revenue_history"),
         eps_reported=data.get("eps"),
+        operating_income=data.get("operating_income"),
+        interest_expense=data.get("interest_expense"),
+        gross_profit=data.get("gross_profit"), sbc=data.get("sbc"),
+        operating_income_history=data.get("operating_income_history"),
+        op_margin_history=data.get("op_margin_history"),
+        shares_history=data.get("shares_history"),
+        eps_history=data.get("eps_history"),
     )
     return value_company(f, a), None, name

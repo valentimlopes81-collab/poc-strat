@@ -8,7 +8,10 @@ Stooq. Pensado para dar uma base rápida que complementas com análise técnica.
 - **DCF (2 fases):** `V0 = Σ FCF_t/(1+WACC)^t + FCF_n(1+g)/((WACC−g)(1+WACC)^n)`
 - **WACC:** `E/(E+D)·re + D/(E+D)·rd·(1−T)` · **CAPM:** `re = rf + β(rm−rf)`
 - **FCF = CFO − CAPEX** · valor da empresa → menos dívida líquida → por ação
-- **Rácios:** P/E, P/B, PEG, ROE, D/E
+- **Rácios:** P/E, P/B, PEG, ROE, D/E, P/S, EV/EBITDA, margem líquida
+- **Criação de valor & balanço:** ROIC vs WACC, net debt/EBITDA, interest coverage,
+  FCF yield, diluição (nº ações/ano) e SBC/receita, margem bruta/operacional +
+  tendência, EPS CAGR e operating leverage (informativos — não entram no score)
 
 Pressupostos com **defaults sensatos** (editáveis no site): 10 anos, crescimento
 8% (ou CAGR histórico do FCF, limitado a 15%), terminal 2.5%, rf 4%, β 1.0,

@@ -38,6 +38,13 @@ def main() -> None:
         revenue=data.get("revenue", 0.0), ebitda=data.get("ebitda"),
         revenue_history=data.get("revenue_history"),
         eps_reported=data.get("eps"),
+        operating_income=data.get("operating_income"),
+        interest_expense=data.get("interest_expense"),
+        gross_profit=data.get("gross_profit"), sbc=data.get("sbc"),
+        operating_income_history=data.get("operating_income_history"),
+        op_margin_history=data.get("op_margin_history"),
+        shares_history=data.get("shares_history"),
+        eps_history=data.get("eps_history"),
     )
     r = value_company(f, Assumptions())
     iv = r["intrinsic_per_share"]
@@ -51,6 +58,9 @@ def main() -> None:
     print("  rácios:", {k: (round(v, 3) if isinstance(v, float) else v) for k, v in r["ratios"].items()})
     print("  qualidade:", [f"{'✓' if ok else '✗'} {lbl}" for lbl, ok, _ in r["quality"]])
     print("  coerência:", [f"{'✓' if ok else '✗'} {lbl}" for lbl, ok, _ in r["coherence"]])
+    d = r["deep"]
+    print("  criação de valor & balanço:", [f"{'✓' if ok else '✗'} {lbl}" for lbl, ok, _ in r["deep_flags"]])
+    print("  métricas:", {k: (round(v, 3) if isinstance(v, float) else v) for k, v in d.items()})
 
 
 if __name__ == "__main__":

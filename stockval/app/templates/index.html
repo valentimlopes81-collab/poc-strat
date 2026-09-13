@@ -165,6 +165,38 @@
     <tr><td>EPS</td><td>{{ "%.2f"|format(r.eps) if r.eps else "—" }}</td><td class="mut">Lucro por ação</td></tr>
   </table>
 
+  {% set d = result.deep %}
+  <h2>Criação de valor &amp; balanço</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <table>
+        {% for lbl, ok, val in result.deep_flags %}
+        <tr><td class="{{ 'pos' if ok else 'mut' }}">{{ '✓' if ok else '✗' }} {{ lbl }}</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div>
+      <table>
+        <tr><td>ROIC</td><td class="{{ 'pos' if d.roic and d.roic>result.wacc else ('neg' if d.roic is not none else '') }}">{{ "%.1f"|format(d.roic*100) if d.roic is not none else "—" }}%</td></tr>
+        <tr><td>ROIC − WACC</td><td class="{{ 'pos' if d.roic_wacc_spread and d.roic_wacc_spread>0 else 'neg' }}">{{ "%+.1f"|format(d.roic_wacc_spread*100) if d.roic_wacc_spread is not none else "—" }} pp</td></tr>
+        <tr><td>FCF yield</td><td>{{ "%.1f"|format(d.fcf_yield*100) if d.fcf_yield is not none else "—" }}%</td></tr>
+        <tr><td>Net debt / EBITDA</td><td>{{ "%.1f"|format(d.nd_ebitda) ~ "×" if d.nd_ebitda is not none else "—" }}</td></tr>
+        <tr><td>Interest coverage</td><td>{{ "%.1f"|format(d.interest_coverage) ~ "×" if d.interest_coverage is not none else "—" }}</td></tr>
+        <tr><td>Diluição (ações/ano)</td><td class="{{ 'neg' if d.dilution and d.dilution>0.01 else 'pos' }}">{{ "%+.1f"|format(d.dilution*100) if d.dilution is not none else "—" }}%</td></tr>
+        <tr><td>SBC / receita</td><td class="{{ 'neg' if d.sbc_pct_rev and d.sbc_pct_rev>0.05 else '' }}">{{ "%.1f"|format(d.sbc_pct_rev*100) if d.sbc_pct_rev is not none else "—" }}%</td></tr>
+        <tr><td>Margem bruta</td><td>{{ "%.1f"|format(d.gross_margin*100) if d.gross_margin is not none else "—" }}%</td></tr>
+        <tr><td>Margem operacional</td><td>{{ "%.1f"|format(d.op_margin*100) if d.op_margin is not none else "—" }}%</td></tr>
+        <tr><td>Tendência margem op.</td><td class="{{ 'pos' if d.op_margin_trend and d.op_margin_trend>0 else ('neg' if d.op_margin_trend is not none else '') }}">{{ "%+.1f"|format(d.op_margin_trend*100) ~ " pp" if d.op_margin_trend is not none else "—" }}</td></tr>
+        <tr><td>Cresc. EPS (CAGR)</td><td class="{{ 'pos' if d.eps_growth and d.eps_growth>0 else ('neg' if d.eps_growth is not none else '') }}">{{ "%+.1f"|format(d.eps_growth*100) if d.eps_growth is not none else "—" }}%</td></tr>
+        <tr><td>Operating leverage</td><td>{{ "%.1f"|format(d.op_leverage) ~ "×" if d.op_leverage is not none else "—" }}</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="sub" style="font-size:12px;margin-top:8px">
+    ROIC &gt; WACC = a empresa cria valor no capital que investe. Diluição &gt;0 = mais ações (acionista diluído); &lt;0 = recompras.
+    Operating leverage &gt;1× = o lucro operacional cresce mais depressa que a receita.
+  </div>
+
   <details style="margin-top:16px">
     <summary class="mut" style="cursor:pointer;font-size:13px">Detalhes do DCF (WACC, crescimento, EV)</summary>
     <div class="cards" style="margin-top:12px">
