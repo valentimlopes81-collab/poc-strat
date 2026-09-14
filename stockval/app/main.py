@@ -171,3 +171,15 @@ async def screener(request: Request, tickers: str = "") -> HTMLResponse:
 @app.get("/health")
 async def health() -> dict:
     return {"status": "ok"}
+
+
+# Correr localmente:  python -m app.main   (a partir da pasta stockval/)
+# Abre sozinho o browser em http://127.0.0.1:8001.
+if __name__ == "__main__":
+    import threading
+    import webbrowser
+
+    import uvicorn
+
+    threading.Timer(1.5, lambda: webbrowser.open("http://127.0.0.1:8001")).start()
+    uvicorn.run(app, host="127.0.0.1", port=8001)

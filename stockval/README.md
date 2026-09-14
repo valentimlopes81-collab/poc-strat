@@ -17,20 +17,29 @@ Pressupostos com **defaults sensatos** (editáveis no site): 10 anos, cresciment
 8% (ou CAGR histórico do FCF, limitado a 15%), terminal 2.5%, rf 4%, β 1.0,
 prémio 5%, imposto 21%, margem de segurança 30%.
 
-## Testar rápido (precisa de internet)
+## Correr no meu PC (localhost) — a forma mais simples
+Não precisa de servidor nenhum. Só do Python instalado ([python.org](https://www.python.org/downloads/)).
+
+- **Mac/Linux:** na pasta `stockval/`, corre `./run.sh`
+  (1ª vez: `chmod +x run.sh`)
+- **Windows:** duplo-clique em `run.bat` (dentro de `stockval/`)
+
+O script cria o ambiente e instala tudo **na 1ª vez**, arranca o site e **abre
+sozinho** o browser em `http://127.0.0.1:8001`. Deixa a janela aberta enquanto
+usas; `Ctrl+C` para parar. Nas vezes seguintes arranca em segundos.
+
+Escreve um ticker (AAPL, MSFT, KO…), ajusta os pressupostos e vê o valor
+intrínseco vs preço + margem de segurança. **Precisa de internet** (puxa dados
+da SEC + preço).
+
+## Alternativa manual (se preferires)
 ```bash
 cd stockval
-python3 -m venv .venv && . .venv/bin/activate
+python3 -m venv .venv && . .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-python cli.py AAPL      # mostra fundamentais + valor intrínseco
+python -m app.main        # abre o site em http://127.0.0.1:8001
+python cli.py AAPL        # ou só o CLI: fundamentais + valor intrínseco no terminal
 ```
-
-## Correr o site
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8001
-```
-Abre `http://localhost:8001`, escreve um ticker (AAPL, MSFT, KO…), ajusta os
-pressupostos e vê o valor intrínseco vs preço + margem de segurança.
 
 ## Testes (sem rede)
 ```bash
