@@ -567,8 +567,9 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 *Plano de sizing: 1R ≈ $120-150 (1 MNQ, stop ~70-100 pts; 2 MNQ só em stops ≤50 pts). Objetivo desta fase: validar o edge do replay em execução LIVE.*
 
 ### Estado
-- **P&L: ~+$36,6** · Balance: **~$25.036,6** · Target: falta **~$1.463,4** de $1.500 · DD: **intacto** (equity acima do balance inicial pela 1ª vez)
-- Trades live (SISTEMA): 6 (1W/4L/1BE) + no-plays
+- **P&L: ~−$28,4** · Balance: **~$24.971,6** · Target: falta **~$1.528,4** de $1.500 · DD: intacto (folga larga)
+- Trades live (SISTEMA): 7 (1W/5L/1BE) + no-plays
+- Padrão a cortar: **2 trades administrativas de inatividade** já custaram **$115** (L5 −$50 provável + L7 −$65 confirmada) sem serem setups reais — usar ping-trade mínimo em vez de risco normal para isto
 - ⚠️ **Verificar regra do trailing drawdown** agora que a equity passou o balance inicial ($25K): muitas prop firms "trancam" o DD no balance inicial assim que a conta o ultrapassa (deixa de descer com o topo, fica fixo). Confirmar isto no site da MFFU — muda o risco real de perder a conta daqui em diante
 - ⚠️ 03/09: +$108 de uma **trade dada por um amigo (sinal externo, NÃO-sistema)** — conta para o P&L da conta, mas **não conta como validação do edge**. O próprio reconheceu "não é mérito meu". Além disso, perdeu 2 longs-A "fáceis" seguidos por hesitação na entrada (02 e 03/09) — o desgaste dessas falhas é o que o tornou recetivo ao sinal externo. Padrão a vigiar.
 
@@ -583,3 +584,4 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 | L4 | 09/09 | Short (1 MNQ) | Rejeição do PD VAL (stop apertado) | PD VAL | ❌ Loss | −1R (apertado) | **−$50** | Short na rejeição do VAL com **stop muito apertado** → arriscou pouco ($50). Perdeu. Loss pequena e controlada — bom dimensionamento do risco ao stop. (Bónus: reiniciou o contador de inatividade.) ⚠️ vigiar se o apertado foi wick-out (família T6/T14/T43/T48) ou leitura |
 | L5 | 15/09 | Short (1 MNQ) | (1ª trade do dia — pouco detalhe) | — | ❌ Loss | −1R | **−$50** | Loss pequena e controlada (mesmo tamanho da L4). Trocou hoje por causa do contador de inatividade (dias sem trocar) |
 | L6 | 15/09 | Short (1 MNQ) | Revisita ao PD value (viés bearish, pré-FOMC) | PD value | ✅ Win | +R | **+$244.6** | **Pré-FOMC, macro claramente bearish** → fazia sentido a revisita ao PD value p/ short. Forte selling pressure às **10:00 NY**. **Deu TP nos lows de London em vez de perseguir o move** — "para não arriscar levar roundtrip" após a força vendedora. Boa gestão: bancou o lucro num nível lógico em vez de se agarrar a um runner ganancioso. **Recupera a semana e passa o balance acima dos $25.000 pela 1ª vez** |
+| L7 | 18/09 | (1 MNQ) | **Trade puramente administrativa** — só p/ não cair na inatividade | — | ❌ Loss | −1R | **−$65** | Ele próprio: "levei loss de 65 na cena da inatividade para não ficar com isso" — **não foi um setup, foi manutenção de conta**. ⚠️ Pagou risco de trade normal ($65) por algo que devia custar quase $0 (entrar e sair no ato = ping-trade, só comissão/spread). Nota a levar: reservar as trades reais para setups A e usar um **ping-trade mínimo** quando o motivo é só o contador — não gastar $50-65 de cada vez só para "não ficar com isso" |
