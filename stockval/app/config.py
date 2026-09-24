@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Assumptions:
-    years: int = 10                 # horizonte de projeção do DCF
+    years: int = 5                   # horizonte de projeção do DCF
     growth: float = 0.08            # crescimento anual do FCF na 1ª fase (8%)
     terminal_growth: float = 0.025  # crescimento perpétuo no valor terminal (2.5%)
     erp: float = 0.05               # prémio de risco de mercado (rm - rf)

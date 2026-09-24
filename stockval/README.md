@@ -13,7 +13,7 @@ Stooq. Pensado para dar uma base rápida que complementas com análise técnica.
   FCF yield, diluição (nº ações/ano) e SBC/receita, margem bruta/operacional +
   tendência, EPS CAGR e operating leverage (informativos — não entram no score)
 
-Pressupostos com **defaults sensatos** (editáveis no site): 10 anos, crescimento
+Pressupostos com **defaults sensatos** (editáveis no site): 5 anos, crescimento
 8% (ou CAGR histórico do FCF, limitado a 15%), terminal 2.5%, rf 4%, β 1.0,
 prémio 5%, imposto 21%, margem de segurança 30%.
 
