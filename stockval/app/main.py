@@ -46,6 +46,9 @@ def _save_watchlist(text: str) -> None:
         pass
 
 
+MAX_TICKERS = 300  # limite de sanidade (evita listas absurdas/erro de cópia)
+
+
 def _parse_tickers(text: str) -> list[str]:
     seen, out = set(), []
     for t in re.split(r"[,\s]+", text.upper()):
@@ -53,7 +56,7 @@ def _parse_tickers(text: str) -> list[str]:
         if t and t not in seen:
             seen.add(t)
             out.append(t)
-    return out[:60]  # limite de sanidade
+    return out[:MAX_TICKERS]
 
 
 # Cache simples por ticker (fundamentais mudam devagar): TTL 6h.
@@ -137,7 +140,9 @@ async def screener(request: Request, tickers: str = "") -> HTMLResponse:
         wl_text = tickers.strip()
     else:
         wl_text = _load_watchlist()
+    all_tickers = [t for t in re.split(r"[,\s]+", wl_text.upper()) if t.strip()]
     lst = _parse_tickers(wl_text)
+    truncated = len(set(all_tickers)) > len(lst)
 
     rows: list[dict] = []
     if lst:
@@ -164,7 +169,7 @@ async def screener(request: Request, tickers: str = "") -> HTMLResponse:
     return templates.TemplateResponse(
         request, "screener.html",
         {"rows": rows, "watchlist": wl_text, "n_forte": n_forte, "n_vigiar": n_vigiar,
-         "n_total": len(rows)},
+         "n_total": len(rows), "truncated": truncated, "max_tickers": MAX_TICKERS},
     )
 
 

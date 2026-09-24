@@ -44,6 +44,11 @@
     <button type="submit">Avaliar watchlist</button>
   </form>
 
+  {% if truncated %}
+  <div style="background:rgba(255,152,0,.12);border:1px solid var(--orange);color:#ffcc80;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px">
+    ⚠️ A tua lista tinha mais tickers do que o limite ({{ max_tickers }}) — só os primeiros {{ max_tickers }} foram avaliados. Os restantes foram ignorados.
+  </div>
+  {% endif %}
   <div class="sub">{{ n_total }} avaliadas · 🟢 <b>{{ n_forte }}</b> fortes · 🟡 {{ n_vigiar }} a vigiar
     <span class="mut">· ordenadas por score</span></div>
 
