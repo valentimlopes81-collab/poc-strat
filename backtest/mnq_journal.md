@@ -566,6 +566,8 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 *Conta real (sim-funded). Regras: target $1.500 · Max DD $1.000 (EOD na eval / RealTime na funded) · 3 contratos (30 MNQ via 10:1) · consistency 50% (eval) · sem daily loss limit · payout 90%, min $500, buffer $1.1K. Custo $25 (desconto syncdrop).*
 *Plano de sizing: 1R ≈ $120-150 (1 MNQ, stop ~70-100 pts; 2 MNQ só em stops ≤50 pts). Objetivo desta fase: validar o edge do replay em execução LIVE.*
 
+*A partir de 24/09: cada trade regista **dois veredictos** — 🤖 **Mecânico** (a regra estrita teria entrado? só fecho confirmado no POI, zero antecipação) vs 🧠 **Discricionário** (o que foi de facto lido/feito, incl. contexto humano). Objetivo: separar erro de leitura de erro de execução, e ver se a versão mecânica supera a discricionária ao longo do tempo.*
+
 ### Estado
 - **P&L: ~−$145,5** · Balance: **~$24.854,5** · Target: falta **~$1.645,5** de $1.500 · DD: intacto (folga larga)
 - Trades live (SISTEMA): 9 (2W/6L/1BE) + no-plays
