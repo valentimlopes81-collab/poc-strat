@@ -138,7 +138,7 @@ if bull_div
     if show_div_line
         bull_line := line.new(prev_pl_bar, prev_pl_rsi, last_pl_bar, last_pl_rsi, color=c_bull_div, width=2)
     if show_div_shape
-        label.new(last_pl_bar, last_pl_rsi, "Bull", style=label.style_label_up, color=color.new(c_bull_div, 10), textcolor=color.white, size=size.small, yloc=yloc.price)
+        label.new(last_pl_bar, last_pl_rsi, "DIV:BULL " + str.tostring(last_pl_rsi, format.mintick), style=label.style_label_up, color=color.new(c_bull_div, 10), textcolor=color.white, size=size.small, yloc=yloc.price)
     bull_inval := last_pl_price   // fundo que, se perdido (fecho abaixo), invalida
     bull_on    := true
 
@@ -146,7 +146,7 @@ if bear_div
     if show_div_line
         bear_line := line.new(prev_ph_bar, prev_ph_rsi, last_ph_bar, last_ph_rsi, color=c_bear_div, width=2)
     if show_div_shape
-        label.new(last_ph_bar, last_ph_rsi, "Bear", style=label.style_label_down, color=color.new(c_bear_div, 10), textcolor=color.white, size=size.small, yloc=yloc.price)
+        label.new(last_ph_bar, last_ph_rsi, "DIV:INV " + str.tostring(last_ph_rsi, format.mintick), style=label.style_label_down, color=color.new(c_bear_div, 10), textcolor=color.white, size=size.small, yloc=yloc.price)
     bear_inval := last_ph_price   // topo que, se ultrapassado (fecho acima), invalida
     bear_on    := true
 
