@@ -154,6 +154,30 @@ f_poc_trailing(int now, int durMs) =>
         pocv := f_poc(tmpPx, tmpV, bins)
     pocv
 
+// ---- Histórico empilhado das TRAILING (uma marca por vela fechada — "teia") ----
+var array<line>  ldt1d=array.new_line(), var array<label> tdt1d=array.new_label()
+var array<line>  ldt2d=array.new_line(), var array<label> tdt2d=array.new_label()
+var array<line>  ldt3d=array.new_line(), var array<label> tdt3d=array.new_label()
+var array<line>  ldt5d=array.new_line(), var array<label> tdt5d=array.new_label()
+var array<line>  ldt1w=array.new_line(), var array<label> tdt1w=array.new_label()
+var array<line>  ldt2w=array.new_line(), var array<label> tdt2w=array.new_label()
+var array<line>  ldt1m=array.new_line(), var array<label> tdt1m=array.new_label()
+
+f_push_val(float pocv, array<line> lns, array<label> lbs, color c, string txt, int keep) =>
+    if not na(pocv)
+        ln = line.new(bar_index, pocv, bar_index + 1, pocv, color=color.new(c, 20), width=1, style=line.style_dotted, extend=extend.right)
+        lb = label.new(bar_index, pocv, "POC:" + txt + " " + str.tostring(pocv, format.mintick), style=label.style_label_right, color=color.new(c, 25), textcolor=color.white, size=size.small)
+        array.push(lns, ln)
+        array.push(lbs, lb)
+        if array.size(lns) > keep
+            line.delete(array.shift(lns))
+            label.delete(array.shift(lbs))
+
+f_anchor2(array<label> lbs) =>
+    if barstate.islast and array.size(lbs) > 0
+        for i = 0 to array.size(lbs) - 1
+            label.set_x(array.get(lbs, i), bar_index)
+
 // ---- Acumula uma amostra (preço, volume) em todos os buckets ativos ----
 f_accum(float p, float v) =>
     if show_1d
@@ -278,6 +302,29 @@ if show_1m and show_live and barstate.islast and array.size(b1m_px) > 0
         la_1m := na(la_1m) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1m,15), textcolor=color.white, size=size.small) : la_1m
         line.set_xy1(li_1m, bar_index, p), line.set_xy2(li_1m, bar_index+1, p)
         label.set_xy(la_1m, bar_index, p), label.set_text(la_1m, "POC:1M• " + str.tostring(p, format.mintick))
+
+// ---- Empilha uma "fotografia" da POC trailing sempre que nasce uma barra ----
+// ---- nova (bar_index muda) — dá a "teia" de marcas históricas do indicador ----
+// ---- de referência, sem repetir o cálculo pesado em todo o histórico: só ----
+// ---- corre quando barstate.islast, e no máximo 1x por barra (guarda de bar_index). ----
+var int stackedBar = na
+if barstate.islast and bar_index != stackedBar
+    if show_1dt
+        f_push_val(f_poc_trailing(time, 1 * 86400000),  ldt1d, tdt1d, c_1dt, "1D-T", keep_1dt)
+    if show_2dt
+        f_push_val(f_poc_trailing(time, 2 * 86400000),  ldt2d, tdt2d, c_2dt, "2D-T", keep_2dt)
+    if show_3dt
+        f_push_val(f_poc_trailing(time, 3 * 86400000),  ldt3d, tdt3d, c_3dt, "3D-T", keep_3dt)
+    if show_5dt
+        f_push_val(f_poc_trailing(time, 5 * 86400000),  ldt5d, tdt5d, c_5dt, "5D-T", keep_5dt)
+    if show_1wt
+        f_push_val(f_poc_trailing(time, 7 * 86400000),  ldt1w, tdt1w, c_1wt, "1W-T", keep_1wt)
+    if show_2wt
+        f_push_val(f_poc_trailing(time, 14 * 86400000), ldt2w, tdt2w, c_2wt, "2W-T", keep_2wt)
+    if show_1mt
+        f_push_val(f_poc_trailing(time, 30 * 86400000), ldt1m, tdt1m, c_1mt, "1M-T", keep_1mt)
+    stackedBar := bar_index
+f_anchor2(tdt1d), f_anchor2(tdt2d), f_anchor2(tdt3d), f_anchor2(tdt5d), f_anchor2(tdt1w), f_anchor2(tdt2w), f_anchor2(tdt1m)
 
 // ---- POCs TRAILING (janela rolante) — mesmo padrão "ao vivo" de cima, mas a ----
 // ---- fonte é a janela dos últimos N dias/semanas a partir de agora, não o ----
