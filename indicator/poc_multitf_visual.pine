@@ -130,13 +130,13 @@ f_mark(array<float> vals, array<bool> tst, float hi, float lo) =>
 var array<int>   rawT = array.new_int()
 var array<float> rawP = array.new_float()
 var array<float> rawV = array.new_float()
-MAX_LOOKBACK_SEC = 32 * 86400000  // ms
+MAX_LOOKBACK_MS = 32 * 86400000  // 32 dias em ms (cobre o 1M-T com folga)
 
 f_raw_push(int t, float p, float v) =>
     array.push(rawT, t), array.push(rawP, p), array.push(rawV, v)
 
 f_raw_prune(int now) =>
-    while array.size(rawT) > 0 and now - array.get(rawT, 0) > MAX_LOOKBACK_SEC
+    while array.size(rawT) > 0 and now - array.get(rawT, 0) > MAX_LOOKBACK_MS
         array.shift(rawT), array.shift(rawP), array.shift(rawV)
 
 // POC sobre a janela dos últimos `durMs` milissegundos a partir de `now`
@@ -153,30 +153,6 @@ f_poc_trailing(int now, int durMs) =>
                 array.push(tmpV, array.get(rawV, i))
         pocv := f_poc(tmpPx, tmpV, bins)
     pocv
-
-// ---- Buckets + listas de desenho das TRAILING (histórico empilhado, tipo o dele) ----
-var array<line>  ldt1d=array.new_line(), var array<label> tdt1d=array.new_label()
-var array<line>  ldt2d=array.new_line(), var array<label> tdt2d=array.new_label()
-var array<line>  ldt3d=array.new_line(), var array<label> tdt3d=array.new_label()
-var array<line>  ldt5d=array.new_line(), var array<label> tdt5d=array.new_label()
-var array<line>  ldt1w=array.new_line(), var array<label> tdt1w=array.new_label()
-var array<line>  ldt2w=array.new_line(), var array<label> tdt2w=array.new_label()
-var array<line>  ldt1m=array.new_line(), var array<label> tdt1m=array.new_label()
-
-f_push_val(float pocv, array<line> lns, array<label> lbs, color c, string txt, int keep) =>
-    if not na(pocv)
-        ln = line.new(bar_index, pocv, bar_index + 1, pocv, color=color.new(c, 20), width=1, style=line.style_dotted, extend=extend.right)
-        lb = label.new(bar_index, pocv, "POC:" + txt + " " + str.tostring(pocv, format.mintick), style=label.style_label_right, color=color.new(c, 25), textcolor=color.white, size=size.small)
-        array.push(lns, ln)
-        array.push(lbs, lb)
-        if array.size(lns) > keep
-            line.delete(array.shift(lns))
-            label.delete(array.shift(lbs))
-
-f_anchor2(array<label> lbs) =>
-    if barstate.islast and array.size(lbs) > 0
-        for i = 0 to array.size(lbs) - 1
-            label.set_x(array.get(lbs, i), bar_index)
 
 // ---- Acumula uma amostra (preço, volume) em todos os buckets ativos ----
 f_accum(float p, float v) =>
@@ -239,30 +215,9 @@ if barstate.isconfirmed
                 if not na(t)
                     f_raw_push(t, p, v)
     f_raw_prune(time)
-    // 3) empilhar as POCs TRAILING (janela rolante). Só na barra mais recente
-    //    (barstate.islast) — evita recalcular o histórico inteiro em cada bar
-    //    (o varrimento das amostras brutas, até ~32 dias, é caro para repetir
-    //    barra a barra no histórico). Cresce organicamente a partir de agora,
-    //    tal como o "ao vivo" já fazia para os períodos de calendário.
-    if barstate.islast
-        if show_1dt
-            f_push_val(f_poc_trailing(time, 1 * 86400000),  ldt1d, tdt1d, c_1dt, "1D-T", keep_1dt)
-        if show_2dt
-            f_push_val(f_poc_trailing(time, 2 * 86400000),  ldt2d, tdt2d, c_2dt, "2D-T", keep_2dt)
-        if show_3dt
-            f_push_val(f_poc_trailing(time, 3 * 86400000),  ldt3d, tdt3d, c_3dt, "3D-T", keep_3dt)
-        if show_5dt
-            f_push_val(f_poc_trailing(time, 5 * 86400000),  ldt5d, tdt5d, c_5dt, "5D-T", keep_5dt)
-        if show_1wt
-            f_push_val(f_poc_trailing(time, 7 * 86400000),  ldt1w, tdt1w, c_1wt, "1W-T", keep_1wt)
-        if show_2wt
-            f_push_val(f_poc_trailing(time, 14 * 86400000), ldt2w, tdt2w, c_2wt, "2W-T", keep_2wt)
-        if show_1mt
-            f_push_val(f_poc_trailing(time, 30 * 86400000), ldt1m, tdt1m, c_1mt, "1M-T", keep_1mt)
 
 // manter as tags encostadas ao eixo
 f_anchor(t1d), f_anchor(t2d), f_anchor(t3d), f_anchor(t5d), f_anchor(t1w), f_anchor(t2w), f_anchor(t1m)
-f_anchor2(tdt1d), f_anchor2(tdt2d), f_anchor2(tdt3d), f_anchor2(tdt5d), f_anchor2(tdt1w), f_anchor2(tdt2w), f_anchor2(tdt1m)
 
 // ---- POC do período ATUAL (ao vivo, tracejado) — um por período ----
 var line li_1d=na, var label la_1d=na
@@ -323,6 +278,68 @@ if show_1m and show_live and barstate.islast and array.size(b1m_px) > 0
         la_1m := na(la_1m) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1m,15), textcolor=color.white, size=size.small) : la_1m
         line.set_xy1(li_1m, bar_index, p), line.set_xy2(li_1m, bar_index+1, p)
         label.set_xy(la_1m, bar_index, p), label.set_text(la_1m, "POC:1M• " + str.tostring(p, format.mintick))
+
+// ---- POCs TRAILING (janela rolante) — mesmo padrão "ao vivo" de cima, mas a ----
+// ---- fonte é a janela dos últimos N dias/semanas a partir de agora, não o ----
+// ---- bucket do período de calendário. Atualiza em cada tick, sem esperar ----
+// ---- fecho de vela (por isso aparece logo, ao contrário do que fazia antes). ----
+var line lidt1d=na, var label ladt1d=na
+var line lidt2d=na, var label ladt2d=na
+var line lidt3d=na, var label ladt3d=na
+var line lidt5d=na, var label ladt5d=na
+var line lidt1w=na, var label ladt1w=na
+var line lidt2w=na, var label ladt2w=na
+var line lidt1m=na, var label ladt1m=na
+
+if show_1dt and barstate.islast
+    float p = f_poc_trailing(time, 1 * 86400000)
+    if not na(p)
+        lidt1d := na(lidt1d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1dt,0), style=line.style_dashed, extend=extend.right) : lidt1d
+        ladt1d := na(ladt1d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1dt,15), textcolor=color.white, size=size.small) : ladt1d
+        line.set_xy1(lidt1d, bar_index, p), line.set_xy2(lidt1d, bar_index+1, p)
+        label.set_xy(ladt1d, bar_index, p), label.set_text(ladt1d, "POC:1D-T " + str.tostring(p, format.mintick))
+if show_2dt and barstate.islast
+    float p = f_poc_trailing(time, 2 * 86400000)
+    if not na(p)
+        lidt2d := na(lidt2d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_2dt,0), style=line.style_dashed, extend=extend.right) : lidt2d
+        ladt2d := na(ladt2d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_2dt,15), textcolor=color.white, size=size.small) : ladt2d
+        line.set_xy1(lidt2d, bar_index, p), line.set_xy2(lidt2d, bar_index+1, p)
+        label.set_xy(ladt2d, bar_index, p), label.set_text(ladt2d, "POC:2D-T " + str.tostring(p, format.mintick))
+if show_3dt and barstate.islast
+    float p = f_poc_trailing(time, 3 * 86400000)
+    if not na(p)
+        lidt3d := na(lidt3d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_3dt,0), style=line.style_dashed, extend=extend.right) : lidt3d
+        ladt3d := na(ladt3d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_3dt,15), textcolor=color.white, size=size.small) : ladt3d
+        line.set_xy1(lidt3d, bar_index, p), line.set_xy2(lidt3d, bar_index+1, p)
+        label.set_xy(ladt3d, bar_index, p), label.set_text(ladt3d, "POC:3D-T " + str.tostring(p, format.mintick))
+if show_5dt and barstate.islast
+    float p = f_poc_trailing(time, 5 * 86400000)
+    if not na(p)
+        lidt5d := na(lidt5d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_5dt,0), style=line.style_dashed, extend=extend.right) : lidt5d
+        ladt5d := na(ladt5d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_5dt,15), textcolor=color.white, size=size.small) : ladt5d
+        line.set_xy1(lidt5d, bar_index, p), line.set_xy2(lidt5d, bar_index+1, p)
+        label.set_xy(ladt5d, bar_index, p), label.set_text(ladt5d, "POC:5D-T " + str.tostring(p, format.mintick))
+if show_1wt and barstate.islast
+    float p = f_poc_trailing(time, 7 * 86400000)
+    if not na(p)
+        lidt1w := na(lidt1w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1wt,0), style=line.style_dashed, extend=extend.right) : lidt1w
+        ladt1w := na(ladt1w) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1wt,15), textcolor=color.white, size=size.small) : ladt1w
+        line.set_xy1(lidt1w, bar_index, p), line.set_xy2(lidt1w, bar_index+1, p)
+        label.set_xy(ladt1w, bar_index, p), label.set_text(ladt1w, "POC:1W-T " + str.tostring(p, format.mintick))
+if show_2wt and barstate.islast
+    float p = f_poc_trailing(time, 14 * 86400000)
+    if not na(p)
+        lidt2w := na(lidt2w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_2wt,0), style=line.style_dashed, extend=extend.right) : lidt2w
+        ladt2w := na(ladt2w) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_2wt,15), textcolor=color.white, size=size.small) : ladt2w
+        line.set_xy1(lidt2w, bar_index, p), line.set_xy2(lidt2w, bar_index+1, p)
+        label.set_xy(ladt2w, bar_index, p), label.set_text(ladt2w, "POC:2W-T " + str.tostring(p, format.mintick))
+if show_1mt and barstate.islast
+    float p = f_poc_trailing(time, 30 * 86400000)
+    if not na(p)
+        lidt1m := na(lidt1m) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1mt,0), style=line.style_dashed, extend=extend.right) : lidt1m
+        ladt1m := na(ladt1m) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1mt,15), textcolor=color.white, size=size.small) : ladt1m
+        line.set_xy1(lidt1m, bar_index, p), line.set_xy2(lidt1m, bar_index+1, p)
+        label.set_xy(ladt1m, bar_index, p), label.set_text(ladt1m, "POC:1M-T " + str.tostring(p, format.mintick))
 
 // ============================================================================
 // DIVERGÊNCIAS (RSI) — mesma lógica do indicador RSI, agora aqui no preço.
