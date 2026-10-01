@@ -548,6 +548,27 @@ alertcondition(bear_setup_tf3, title="Bear SETUP TF3 (div+teia)", message="{{tic
 alertcondition(bull_setup_tf1 or bull_setup_tf2 or bull_setup_tf3, title="Bull SETUP — qualquer TF (5/15/30)", message="{{ticker}}: Bull setup em 5m, 15m ou 30m — div + POC perto")
 alertcondition(bear_setup_tf1 or bear_setup_tf2 or bear_setup_tf3, title="Bear SETUP — qualquer TF (5/15/30)", message="{{ticker}}: Bear setup em 5m, 15m ou 30m — div + POC perto")
 
+// ---- Versão que gasta só 1 slot de alerta (plano Essential = 20 slots) ----
+// Em vez de criares um alerta por condição, cria UM único alerta neste
+// indicador com a condição "Any alert() function call" — cobre as 6
+// combinações TF/direção acima (e, se ligares o webhook mais à frente,
+// também esses). A mensagem diz sempre qual(ais) disparou.
+string tf_alert_msg = ""
+if bull_setup_tf1
+    tf_alert_msg := tf_alert_msg + (tf_alert_msg == "" ? "" : " | ") + "BULL 5m"
+if bear_setup_tf1
+    tf_alert_msg := tf_alert_msg + (tf_alert_msg == "" ? "" : " | ") + "BEAR 5m"
+if bull_setup_tf2
+    tf_alert_msg := tf_alert_msg + (tf_alert_msg == "" ? "" : " | ") + "BULL 15m"
+if bear_setup_tf2
+    tf_alert_msg := tf_alert_msg + (tf_alert_msg == "" ? "" : " | ") + "BEAR 15m"
+if bull_setup_tf3
+    tf_alert_msg := tf_alert_msg + (tf_alert_msg == "" ? "" : " | ") + "BULL 30m"
+if bear_setup_tf3
+    tf_alert_msg := tf_alert_msg + (tf_alert_msg == "" ? "" : " | ") + "BEAR 30m"
+if tf_alert_msg != ""
+    alert(syminfo.ticker + ": " + tf_alert_msg + " — div + POC perto", alert.freq_once_per_bar_close)
+
 // ============================================================================
 // WEBHOOK poc-strat — envia o MESMO payload que o MAX V2 enviava, mas agora
 // disparado pela divergência RSI clássica DESTE indicador + preço numa zona
