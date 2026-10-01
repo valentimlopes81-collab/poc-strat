@@ -517,6 +517,38 @@ alertcondition(bull_setup, title="Bull SETUP (div + teia)", message="{{ticker}}:
 alertcondition(bear_setup, title="Bear SETUP (div + teia)", message="{{ticker}}: Bear setup — div em zona DENSA de POCs")
 
 // ============================================================================
+// SETUPS por TF explícito (5/15/30) — alertas PRÓPRIOS, independentes do TF do
+// gráfico. As POCs (density/dense_zone) já são calculadas de forma TF-agnóstica
+// (resolução fixa `ltf`, não o TF do gráfico), por isso servem tal-e-qual para
+// qualificar a divergência de QUALQUER um dos 3 TFs — nunca precisas de abrir
+// o gráfico em 5m para isto disparar.
+// ============================================================================
+bull_setup_tf1 = mtf_on and b1 and dense_zone
+bear_setup_tf1 = mtf_on and s1 and dense_zone
+bull_setup_tf2 = mtf_on and b2 and dense_zone
+bear_setup_tf2 = mtf_on and s2 and dense_zone
+bull_setup_tf3 = mtf_on and b3 and dense_zone
+bear_setup_tf3 = mtf_on and s3 and dense_zone
+
+plotshape(bull_setup_tf1 ? low  : na, title="Bull setup TF1", style=shape.triangleup,   location=location.belowbar, color=color.new(c_bull, 40), size=size.tiny, text="5")
+plotshape(bear_setup_tf1 ? high : na, title="Bear setup TF1", style=shape.triangledown, location=location.abovebar, color=color.new(c_bear, 40), size=size.tiny, text="5")
+plotshape(bull_setup_tf2 ? low  : na, title="Bull setup TF2", style=shape.triangleup,   location=location.belowbar, color=color.new(c_bull, 20), size=size.tiny, text="15")
+plotshape(bear_setup_tf2 ? high : na, title="Bear setup TF2", style=shape.triangledown, location=location.abovebar, color=color.new(c_bear, 20), size=size.tiny, text="15")
+plotshape(bull_setup_tf3 ? low  : na, title="Bull setup TF3", style=shape.triangleup,   location=location.belowbar, color=c_bull, size=size.tiny, text="30")
+plotshape(bear_setup_tf3 ? high : na, title="Bear setup TF3", style=shape.triangledown, location=location.abovebar, color=c_bear, size=size.tiny, text="30")
+
+alertcondition(bull_setup_tf1, title="Bull SETUP TF1 (div+teia)", message="{{ticker}}: Bull setup no TF1 — div + POC perto")
+alertcondition(bear_setup_tf1, title="Bear SETUP TF1 (div+teia)", message="{{ticker}}: Bear setup no TF1 — div + POC perto")
+alertcondition(bull_setup_tf2, title="Bull SETUP TF2 (div+teia)", message="{{ticker}}: Bull setup no TF2 — div + POC perto")
+alertcondition(bear_setup_tf2, title="Bear SETUP TF2 (div+teia)", message="{{ticker}}: Bear setup no TF2 — div + POC perto")
+alertcondition(bull_setup_tf3, title="Bull SETUP TF3 (div+teia)", message="{{ticker}}: Bull setup no TF3 — div + POC perto")
+alertcondition(bear_setup_tf3, title="Bear SETUP TF3 (div+teia)", message="{{ticker}}: Bear setup no TF3 — div + POC perto")
+// Um único alerta "qualquer um dos 3" — cria UM alerta no TradingView com esta
+// condição se preferires só 1 notificação em vez de 6 separadas.
+alertcondition(bull_setup_tf1 or bull_setup_tf2 or bull_setup_tf3, title="Bull SETUP — qualquer TF (5/15/30)", message="{{ticker}}: Bull setup em 5m, 15m ou 30m — div + POC perto")
+alertcondition(bear_setup_tf1 or bear_setup_tf2 or bear_setup_tf3, title="Bear SETUP — qualquer TF (5/15/30)", message="{{ticker}}: Bear setup em 5m, 15m ou 30m — div + POC perto")
+
+// ============================================================================
 // WEBHOOK poc-strat — envia o MESMO payload que o MAX V2 enviava, mas agora
 // disparado pela divergência RSI clássica DESTE indicador + preço numa zona
 // forte de POCs (naked, dentro da banda %). Server NÃO muda.
