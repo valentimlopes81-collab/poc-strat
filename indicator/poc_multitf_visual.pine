@@ -9,10 +9,11 @@ indicator("POC Multi-TF [visual]", shorttitle="POC MTF", overlay=true, max_lines
 // de AGORA (sem esperar fronteira de calendário) — mais densidade/"teia", como
 // no indicador de referência. Só linhas (sem labels de texto), roxo para as
 // calendar e cinzento para as trailing. Não envia webhooks.
-// ⚠️ A "Resolução de amostragem" tem de ser MENOR que o TF do gráfico.
+// A "Resolução de amostragem" cai sozinha para 1m se alguma vez deixar de ser
+// menor que o TF do gráfico (ex.: desceste para 5m) — não precisas de a mudar.
 // ============================================================================
 g = "POC Multi-Timeframe"
-ltf       = input.timeframe("15", "Resolução de amostragem", options=["1", "3", "5", "15", "30", "60"], group=g, tooltip="Resolução fixa do histograma. TEM de ser menor que o TF do gráfico. Menor = mais preciso, menos alcance.")
+ltf       = input.timeframe("15", "Resolução de amostragem", options=["1", "3", "5", "15", "30", "60"], group=g, tooltip="Resolução fixa do histograma. Menor = mais preciso, menos alcance de histórico. Se alguma vez deixar de ser menor que o TF do gráfico, o script usa 1m automaticamente — não precisas de mudar isto ao trocar de TF.")
 bins      = input.int(24, "Bins do perfil de volume", minval=10, maxval=50, group=g)
 show_live = input.bool(true, "Mostrar POC do período ATUAL (tracejado)", group=g)
 
@@ -177,8 +178,15 @@ f_accum(float p, float v) =>
         array.push(b1m_px, p), array.push(b1m_v, v)
 
 // ---- Amostragem à resolução fixa ----
-useChart = timeframe.in_seconds(ltf) >= timeframe.in_seconds()
-[ltfP, ltfV, ltfT] = request.security_lower_tf(syminfo.tickerid, ltf, [hlc3, volume, time])
+// Se a resolução escolhida (`ltf`) deixar de ser menor que o TF do gráfico
+// (ex.: desceste para 5m com ltf=15), request.security_lower_tf ficaria numa
+// resolução inválida e o script para de desenhar tudo, sem aviso claro.
+// Corrige-se sozinho: cai automaticamente para "1" (1 minuto), que é sempre
+// menor que qualquer TF que uses (5m, 15m, 30m, ...) — nunca mais precisas de
+// mexer na "Resolução de amostragem" ao mudar de TF do gráfico.
+bool ltf_invalid = timeframe.in_seconds(ltf) >= timeframe.in_seconds()
+effective_ltf = ltf_invalid ? "1" : ltf
+[ltfP, ltfV, ltfT] = request.security_lower_tf(syminfo.tickerid, effective_ltf, [hlc3, volume, time])
 
 if barstate.isconfirmed
     // 0) marcar POCs que a barra atual atravessou (deixam de ser naked)
@@ -200,11 +208,9 @@ if barstate.isconfirmed
     if show_1m and timeframe.change("M")  and array.size(b1m_px) > 0
         f_push(b1m_px, b1m_v, l1m, v1m, k1m, c_calendar, keep_1m)
     // 2) acumular as amostras desta barra (calendar + brutas p/ trailing)
-    if useChart
-        if not na(hlc3) and not na(volume) and volume > 0
-            f_accum(hlc3, volume)
-            f_raw_push(time, hlc3, volume)
-    else if not na(ltfP) and array.size(ltfP) > 0
+    //    effective_ltf é sempre válido (menor que o TF do gráfico), por isso
+    //    usa-se sempre o loop de amostras da resolução mais fina.
+    if not na(ltfP) and array.size(ltfP) > 0
         for i = 0 to array.size(ltfP) - 1
             float p = array.get(ltfP, i)
             float v = na(ltfV) or array.size(ltfV) <= i ? na : array.get(ltfV, i)
