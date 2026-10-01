@@ -1,5 +1,5 @@
 //@version=6
-indicator("POC Multi-TF [visual]", shorttitle="POC MTF", overlay=true, max_lines_count=500, max_labels_count=500, max_bars_back=5000)
+indicator("POC Multi-TF [visual]", shorttitle="POC MTF", overlay=true, max_lines_count=500, max_bars_back=5000)
 
 // ============================================================================
 // POC Multi-Timeframe — VISUAL. POCs iguais em QUALQUER timeframe do gráfico.
@@ -7,8 +7,8 @@ indicator("POC Multi-TF [visual]", shorttitle="POC MTF", overlay=true, max_lines
 // Períodos CALENDAR: 1D, 2D, 3D, 5D, 1W, 2W, 1M (fecham em fronteiras de calendário).
 // Períodos TRAILING (sufixo -T): mesmas durações, mas em janela rolante a partir
 // de AGORA (sem esperar fronteira de calendário) — mais densidade/"teia", como
-// no indicador de referência. Linhas pontilhadas até ao eixo + tags
-// "POC:TF preço" encostadas à direita (estilo POCKY). Não envia webhooks.
+// no indicador de referência. Só linhas (sem labels de texto), roxo para as
+// calendar e cinzento para as trailing. Não envia webhooks.
 // ⚠️ A "Resolução de amostragem" tem de ser MENOR que o TF do gráfico.
 // ============================================================================
 g = "POC Multi-Timeframe"
@@ -16,51 +16,43 @@ ltf       = input.timeframe("15", "Resolução de amostragem", options=["1", "3"
 bins      = input.int(24, "Bins do perfil de volume", minval=10, maxval=50, group=g)
 show_live = input.bool(true, "Mostrar POC do período ATUAL (tracejado)", group=g)
 
-gd = "Períodos (liga · quantos manter · cor)"
+gc = "Cores e espessura"
+c_calendar = input.color(color.rgb(156, 39, 176),  "Cor das POCs calendar (1D..1M)", group=gc)
+c_trailing = input.color(color.rgb(120, 120, 120), "Cor das POCs trailing (-T)",     group=gc)
+poc_width  = input.int(2, "Espessura das linhas", minval=1, maxval=4, group=gc)
+poc_transp = input.int(0, "Transparência (0 = opaca)", minval=0, maxval=90, group=gc)
+
+gd = "Períodos calendar (liga · quantos manter)"
 show_1d = input.bool(true, "1D", inline="1d", group=gd)
 keep_1d = input.int(15, "", inline="1d", group=gd)
-c_1d    = input.color(color.rgb(158, 158, 158), "", inline="1d", group=gd)
 show_2d = input.bool(true, "2D", inline="2d", group=gd)
 keep_2d = input.int(10, "", inline="2d", group=gd)
-c_2d    = input.color(color.rgb(120, 144, 156), "", inline="2d", group=gd)
 show_3d = input.bool(true, "3D", inline="3d", group=gd)
 keep_3d = input.int(8, "", inline="3d", group=gd)
-c_3d    = input.color(color.rgb(100, 181, 246), "", inline="3d", group=gd)
 show_5d = input.bool(true, "5D", inline="5d", group=gd)
 keep_5d = input.int(8, "", inline="5d", group=gd)
-c_5d    = input.color(color.rgb(129, 199, 132), "", inline="5d", group=gd)
 show_1w = input.bool(true, "1W", inline="1w", group=gd)
 keep_1w = input.int(8, "", inline="1w", group=gd)
-c_1w    = input.color(color.rgb(149, 117, 205), "", inline="1w", group=gd)
 show_2w = input.bool(true, "2W", inline="2w", group=gd)
 keep_2w = input.int(6, "", inline="2w", group=gd)
-c_2w    = input.color(color.rgb(186, 104, 200), "", inline="2w", group=gd)
 show_1m = input.bool(true, "1M", inline="1m", group=gd)
 keep_1m = input.int(6, "", inline="1m", group=gd)
-c_1m    = input.color(color.rgb(255, 167, 38), "", inline="1m", group=gd)
 
 gt = "Períodos TRAILING (janela rolante, sem fecho de calendário — sufixo T)"
 show_1dt = input.bool(true, "1D-T", inline="1dt", group=gt)
 keep_1dt = input.int(6, "", inline="1dt", group=gt)
-c_1dt    = input.color(color.rgb(158, 158, 158), "", inline="1dt", group=gt)
 show_2dt = input.bool(true, "2D-T", inline="2dt", group=gt)
 keep_2dt = input.int(6, "", inline="2dt", group=gt)
-c_2dt    = input.color(color.rgb(120, 144, 156), "", inline="2dt", group=gt)
 show_3dt = input.bool(true, "3D-T", inline="3dt", group=gt)
 keep_3dt = input.int(6, "", inline="3dt", group=gt)
-c_3dt    = input.color(color.rgb(100, 181, 246), "", inline="3dt", group=gt)
 show_5dt = input.bool(true, "5D-T", inline="5dt", group=gt)
 keep_5dt = input.int(6, "", inline="5dt", group=gt)
-c_5dt    = input.color(color.rgb(129, 199, 132), "", inline="5dt", group=gt)
 show_1wt = input.bool(true, "1W-T", inline="1wt", group=gt)
 keep_1wt = input.int(6, "", inline="1wt", group=gt)
-c_1wt    = input.color(color.rgb(149, 117, 205), "", inline="1wt", group=gt)
 show_2wt = input.bool(true, "2W-T", inline="2wt", group=gt)
 keep_2wt = input.int(6, "", inline="2wt", group=gt)
-c_2wt    = input.color(color.rgb(186, 104, 200), "", inline="2wt", group=gt)
 show_1mt = input.bool(true, "1M-T", inline="1mt", group=gt)
 keep_1mt = input.int(6, "", inline="1mt", group=gt)
-c_1mt    = input.color(color.rgb(255, 167, 38), "", inline="1mt", group=gt)
 
 // ---- POC de um bucket (histograma de volume) ----
 f_poc(array<float> px, array<float> vol, int nb) =>
@@ -82,13 +74,13 @@ f_poc(array<float> px, array<float> vol, int nb) =>
     poc
 
 // ---- Buckets + listas de desenhos (7 períodos) ----
-var array<float> b1d_px=array.new_float(), var array<float> b1d_v=array.new_float(), var array<line> l1d=array.new_line(), var array<label> t1d=array.new_label()
-var array<float> b2d_px=array.new_float(), var array<float> b2d_v=array.new_float(), var array<line> l2d=array.new_line(), var array<label> t2d=array.new_label()
-var array<float> b3d_px=array.new_float(), var array<float> b3d_v=array.new_float(), var array<line> l3d=array.new_line(), var array<label> t3d=array.new_label()
-var array<float> b5d_px=array.new_float(), var array<float> b5d_v=array.new_float(), var array<line> l5d=array.new_line(), var array<label> t5d=array.new_label()
-var array<float> b1w_px=array.new_float(), var array<float> b1w_v=array.new_float(), var array<line> l1w=array.new_line(), var array<label> t1w=array.new_label()
-var array<float> b2w_px=array.new_float(), var array<float> b2w_v=array.new_float(), var array<line> l2w=array.new_line(), var array<label> t2w=array.new_label()
-var array<float> b1m_px=array.new_float(), var array<float> b1m_v=array.new_float(), var array<line> l1m=array.new_line(), var array<label> t1m=array.new_label()
+var array<float> b1d_px=array.new_float(), var array<float> b1d_v=array.new_float(), var array<line> l1d=array.new_line()
+var array<float> b2d_px=array.new_float(), var array<float> b2d_v=array.new_float(), var array<line> l2d=array.new_line()
+var array<float> b3d_px=array.new_float(), var array<float> b3d_v=array.new_float(), var array<line> l3d=array.new_line()
+var array<float> b5d_px=array.new_float(), var array<float> b5d_v=array.new_float(), var array<line> l5d=array.new_line()
+var array<float> b1w_px=array.new_float(), var array<float> b1w_v=array.new_float(), var array<line> l1w=array.new_line()
+var array<float> b2w_px=array.new_float(), var array<float> b2w_v=array.new_float(), var array<line> l2w=array.new_line()
+var array<float> b1m_px=array.new_float(), var array<float> b1m_v=array.new_float(), var array<line> l1m=array.new_line()
 
 // ---- Valores dos POCs fechados + flag "testado" (para o webhook: naked = não testado) ----
 var array<float> v1d=array.new_float(), var array<bool> k1d=array.new_bool()
@@ -99,19 +91,16 @@ var array<float> v1w=array.new_float(), var array<bool> k1w=array.new_bool()
 var array<float> v2w=array.new_float(), var array<bool> k2w=array.new_bool()
 var array<float> v1m=array.new_float(), var array<bool> k1m=array.new_bool()
 
-// ---- Finaliza um período fechado: desenha POC (linha pontilhada + tag) e guarda o valor ----
-f_push(array<float> px, array<float> vol, array<line> lns, array<label> lbs, array<float> vals, array<bool> tst, color c, string txt, int keep) =>
+// ---- Finaliza um período fechado: desenha a linha da POC e guarda o valor ----
+f_push(array<float> px, array<float> vol, array<line> lns, array<float> vals, array<bool> tst, color c, int keep) =>
     float poc = f_poc(px, vol, bins)
     if not na(poc)
-        ln = line.new(bar_index, poc, bar_index + 1, poc, color=color.new(c, 20), width=1, style=line.style_dotted, extend=extend.right)
-        lb = label.new(bar_index, poc, "POC:" + txt + " " + str.tostring(poc, format.mintick), style=label.style_label_right, color=color.new(c, 25), textcolor=color.white, size=size.small)
+        ln = line.new(bar_index, poc, bar_index + 1, poc, color=color.new(c, poc_transp), width=poc_width, style=line.style_dotted, extend=extend.right)
         array.push(lns, ln)
-        array.push(lbs, lb)
         array.push(vals, poc)
         array.push(tst, false)
         if array.size(lns) > keep
             line.delete(array.shift(lns))
-            label.delete(array.shift(lbs))
             array.shift(vals)
             array.shift(tst)
     array.clear(px)
@@ -155,28 +144,20 @@ f_poc_trailing(int now, int durMs) =>
     pocv
 
 // ---- Histórico empilhado das TRAILING (uma marca por vela fechada — "teia") ----
-var array<line>  ldt1d=array.new_line(), var array<label> tdt1d=array.new_label()
-var array<line>  ldt2d=array.new_line(), var array<label> tdt2d=array.new_label()
-var array<line>  ldt3d=array.new_line(), var array<label> tdt3d=array.new_label()
-var array<line>  ldt5d=array.new_line(), var array<label> tdt5d=array.new_label()
-var array<line>  ldt1w=array.new_line(), var array<label> tdt1w=array.new_label()
-var array<line>  ldt2w=array.new_line(), var array<label> tdt2w=array.new_label()
-var array<line>  ldt1m=array.new_line(), var array<label> tdt1m=array.new_label()
+var array<line>  ldt1d=array.new_line()
+var array<line>  ldt2d=array.new_line()
+var array<line>  ldt3d=array.new_line()
+var array<line>  ldt5d=array.new_line()
+var array<line>  ldt1w=array.new_line()
+var array<line>  ldt2w=array.new_line()
+var array<line>  ldt1m=array.new_line()
 
-f_push_val(float pocv, array<line> lns, array<label> lbs, color c, string txt, int keep) =>
+f_push_val(float pocv, array<line> lns, color c, int keep) =>
     if not na(pocv)
-        ln = line.new(bar_index, pocv, bar_index + 1, pocv, color=color.new(c, 20), width=1, style=line.style_dotted, extend=extend.right)
-        lb = label.new(bar_index, pocv, "POC:" + txt + " " + str.tostring(pocv, format.mintick), style=label.style_label_right, color=color.new(c, 25), textcolor=color.white, size=size.small)
+        ln = line.new(bar_index, pocv, bar_index + 1, pocv, color=color.new(c, poc_transp), width=poc_width, style=line.style_dotted, extend=extend.right)
         array.push(lns, ln)
-        array.push(lbs, lb)
         if array.size(lns) > keep
             line.delete(array.shift(lns))
-            label.delete(array.shift(lbs))
-
-f_anchor2(array<label> lbs) =>
-    if barstate.islast and array.size(lbs) > 0
-        for i = 0 to array.size(lbs) - 1
-            label.set_x(array.get(lbs, i), bar_index)
 
 // ---- Acumula uma amostra (preço, volume) em todos os buckets ativos ----
 f_accum(float p, float v) =>
@@ -195,12 +176,6 @@ f_accum(float p, float v) =>
     if show_1m
         array.push(b1m_px, p), array.push(b1m_v, v)
 
-// ---- Reancorar as tags à direita (encostadas ao eixo) ----
-f_anchor(array<label> lbs) =>
-    if barstate.islast and array.size(lbs) > 0
-        for i = 0 to array.size(lbs) - 1
-            label.set_x(array.get(lbs, i), bar_index)
-
 // ---- Amostragem à resolução fixa ----
 useChart = timeframe.in_seconds(ltf) >= timeframe.in_seconds()
 [ltfP, ltfV, ltfT] = request.security_lower_tf(syminfo.tickerid, ltf, [hlc3, volume, time])
@@ -211,19 +186,19 @@ if barstate.isconfirmed
     f_mark(v5d, k5d, high, low), f_mark(v1w, k1w, high, low), f_mark(v2w, k2w, high, low), f_mark(v1m, k1m, high, low)
     // 1) fechar os períodos que acabaram
     if show_1d and timeframe.change("D")  and array.size(b1d_px) > 0
-        f_push(b1d_px, b1d_v, l1d, t1d, v1d, k1d, c_1d, "1D", keep_1d)
+        f_push(b1d_px, b1d_v, l1d, v1d, k1d, c_calendar, keep_1d)
     if show_2d and timeframe.change("2D") and array.size(b2d_px) > 0
-        f_push(b2d_px, b2d_v, l2d, t2d, v2d, k2d, c_2d, "2D", keep_2d)
+        f_push(b2d_px, b2d_v, l2d, v2d, k2d, c_calendar, keep_2d)
     if show_3d and timeframe.change("3D") and array.size(b3d_px) > 0
-        f_push(b3d_px, b3d_v, l3d, t3d, v3d, k3d, c_3d, "3D", keep_3d)
+        f_push(b3d_px, b3d_v, l3d, v3d, k3d, c_calendar, keep_3d)
     if show_5d and timeframe.change("5D") and array.size(b5d_px) > 0
-        f_push(b5d_px, b5d_v, l5d, t5d, v5d, k5d, c_5d, "5D", keep_5d)
+        f_push(b5d_px, b5d_v, l5d, v5d, k5d, c_calendar, keep_5d)
     if show_1w and timeframe.change("W")  and array.size(b1w_px) > 0
-        f_push(b1w_px, b1w_v, l1w, t1w, v1w, k1w, c_1w, "1W", keep_1w)
+        f_push(b1w_px, b1w_v, l1w, v1w, k1w, c_calendar, keep_1w)
     if show_2w and timeframe.change("2W") and array.size(b2w_px) > 0
-        f_push(b2w_px, b2w_v, l2w, t2w, v2w, k2w, c_2w, "2W", keep_2w)
+        f_push(b2w_px, b2w_v, l2w, v2w, k2w, c_calendar, keep_2w)
     if show_1m and timeframe.change("M")  and array.size(b1m_px) > 0
-        f_push(b1m_px, b1m_v, l1m, t1m, v1m, k1m, c_1m, "1M", keep_1m)
+        f_push(b1m_px, b1m_v, l1m, v1m, k1m, c_calendar, keep_1m)
     // 2) acumular as amostras desta barra (calendar + brutas p/ trailing)
     if useChart
         if not na(hlc3) and not na(volume) and volume > 0
@@ -240,68 +215,51 @@ if barstate.isconfirmed
                     f_raw_push(t, p, v)
     f_raw_prune(time)
 
-// manter as tags encostadas ao eixo
-f_anchor(t1d), f_anchor(t2d), f_anchor(t3d), f_anchor(t5d), f_anchor(t1w), f_anchor(t2w), f_anchor(t1m)
-
 // ---- POC do período ATUAL (ao vivo, tracejado) — um por período ----
-var line li_1d=na, var label la_1d=na
-var line li_2d=na, var label la_2d=na
-var line li_3d=na, var label la_3d=na
-var line li_5d=na, var label la_5d=na
-var line li_1w=na, var label la_1w=na
-var line li_2w=na, var label la_2w=na
-var line li_1m=na, var label la_1m=na
+var line li_1d=na
+var line li_2d=na
+var line li_3d=na
+var line li_5d=na
+var line li_1w=na
+var line li_2w=na
+var line li_1m=na
 
-// desenha/atualiza uma linha+tag "ao vivo" (inline por período, pois usa var)
+// desenha/atualiza uma linha "ao vivo" (inline por período, pois usa var)
 if show_1d and show_live and barstate.islast and array.size(b1d_px) > 0
     float p = f_poc(b1d_px, b1d_v, bins)
     if not na(p)
-        li_1d := na(li_1d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1d,0), style=line.style_dashed, extend=extend.right) : li_1d
-        la_1d := na(la_1d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1d,15), textcolor=color.white, size=size.small) : la_1d
+        li_1d := na(li_1d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_calendar,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : li_1d
         line.set_xy1(li_1d, bar_index, p), line.set_xy2(li_1d, bar_index+1, p)
-        label.set_xy(la_1d, bar_index, p), label.set_text(la_1d, "POC:1D• " + str.tostring(p, format.mintick))
 if show_2d and show_live and barstate.islast and array.size(b2d_px) > 0
     float p = f_poc(b2d_px, b2d_v, bins)
     if not na(p)
-        li_2d := na(li_2d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_2d,0), style=line.style_dashed, extend=extend.right) : li_2d
-        la_2d := na(la_2d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_2d,15), textcolor=color.white, size=size.small) : la_2d
+        li_2d := na(li_2d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_calendar,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : li_2d
         line.set_xy1(li_2d, bar_index, p), line.set_xy2(li_2d, bar_index+1, p)
-        label.set_xy(la_2d, bar_index, p), label.set_text(la_2d, "POC:2D• " + str.tostring(p, format.mintick))
 if show_3d and show_live and barstate.islast and array.size(b3d_px) > 0
     float p = f_poc(b3d_px, b3d_v, bins)
     if not na(p)
-        li_3d := na(li_3d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_3d,0), style=line.style_dashed, extend=extend.right) : li_3d
-        la_3d := na(la_3d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_3d,15), textcolor=color.white, size=size.small) : la_3d
+        li_3d := na(li_3d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_calendar,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : li_3d
         line.set_xy1(li_3d, bar_index, p), line.set_xy2(li_3d, bar_index+1, p)
-        label.set_xy(la_3d, bar_index, p), label.set_text(la_3d, "POC:3D• " + str.tostring(p, format.mintick))
 if show_5d and show_live and barstate.islast and array.size(b5d_px) > 0
     float p = f_poc(b5d_px, b5d_v, bins)
     if not na(p)
-        li_5d := na(li_5d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_5d,0), style=line.style_dashed, extend=extend.right) : li_5d
-        la_5d := na(la_5d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_5d,15), textcolor=color.white, size=size.small) : la_5d
+        li_5d := na(li_5d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_calendar,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : li_5d
         line.set_xy1(li_5d, bar_index, p), line.set_xy2(li_5d, bar_index+1, p)
-        label.set_xy(la_5d, bar_index, p), label.set_text(la_5d, "POC:5D• " + str.tostring(p, format.mintick))
 if show_1w and show_live and barstate.islast and array.size(b1w_px) > 0
     float p = f_poc(b1w_px, b1w_v, bins)
     if not na(p)
-        li_1w := na(li_1w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1w,0), style=line.style_dashed, extend=extend.right) : li_1w
-        la_1w := na(la_1w) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1w,15), textcolor=color.white, size=size.small) : la_1w
+        li_1w := na(li_1w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_calendar,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : li_1w
         line.set_xy1(li_1w, bar_index, p), line.set_xy2(li_1w, bar_index+1, p)
-        label.set_xy(la_1w, bar_index, p), label.set_text(la_1w, "POC:1W• " + str.tostring(p, format.mintick))
 if show_2w and show_live and barstate.islast and array.size(b2w_px) > 0
     float p = f_poc(b2w_px, b2w_v, bins)
     if not na(p)
-        li_2w := na(li_2w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_2w,0), style=line.style_dashed, extend=extend.right) : li_2w
-        la_2w := na(la_2w) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_2w,15), textcolor=color.white, size=size.small) : la_2w
+        li_2w := na(li_2w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_calendar,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : li_2w
         line.set_xy1(li_2w, bar_index, p), line.set_xy2(li_2w, bar_index+1, p)
-        label.set_xy(la_2w, bar_index, p), label.set_text(la_2w, "POC:2W• " + str.tostring(p, format.mintick))
 if show_1m and show_live and barstate.islast and array.size(b1m_px) > 0
     float p = f_poc(b1m_px, b1m_v, bins)
     if not na(p)
-        li_1m := na(li_1m) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1m,0), style=line.style_dashed, extend=extend.right) : li_1m
-        la_1m := na(la_1m) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1m,15), textcolor=color.white, size=size.small) : la_1m
+        li_1m := na(li_1m) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_calendar,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : li_1m
         line.set_xy1(li_1m, bar_index, p), line.set_xy2(li_1m, bar_index+1, p)
-        label.set_xy(la_1m, bar_index, p), label.set_text(la_1m, "POC:1M• " + str.tostring(p, format.mintick))
 
 // ---- Empilha uma "fotografia" da POC trailing sempre que nasce uma barra ----
 // ---- nova (bar_index muda) — dá a "teia" de marcas históricas do indicador ----
@@ -310,83 +268,68 @@ if show_1m and show_live and barstate.islast and array.size(b1m_px) > 0
 var int stackedBar = na
 if barstate.islast and bar_index != stackedBar
     if show_1dt
-        f_push_val(f_poc_trailing(time, 1 * 86400000),  ldt1d, tdt1d, c_1dt, "1D-T", keep_1dt)
+        f_push_val(f_poc_trailing(time, 1 * 86400000),  ldt1d, c_trailing, keep_1dt)
     if show_2dt
-        f_push_val(f_poc_trailing(time, 2 * 86400000),  ldt2d, tdt2d, c_2dt, "2D-T", keep_2dt)
+        f_push_val(f_poc_trailing(time, 2 * 86400000),  ldt2d, c_trailing, keep_2dt)
     if show_3dt
-        f_push_val(f_poc_trailing(time, 3 * 86400000),  ldt3d, tdt3d, c_3dt, "3D-T", keep_3dt)
+        f_push_val(f_poc_trailing(time, 3 * 86400000),  ldt3d, c_trailing, keep_3dt)
     if show_5dt
-        f_push_val(f_poc_trailing(time, 5 * 86400000),  ldt5d, tdt5d, c_5dt, "5D-T", keep_5dt)
+        f_push_val(f_poc_trailing(time, 5 * 86400000),  ldt5d, c_trailing, keep_5dt)
     if show_1wt
-        f_push_val(f_poc_trailing(time, 7 * 86400000),  ldt1w, tdt1w, c_1wt, "1W-T", keep_1wt)
+        f_push_val(f_poc_trailing(time, 7 * 86400000),  ldt1w, c_trailing, keep_1wt)
     if show_2wt
-        f_push_val(f_poc_trailing(time, 14 * 86400000), ldt2w, tdt2w, c_2wt, "2W-T", keep_2wt)
+        f_push_val(f_poc_trailing(time, 14 * 86400000), ldt2w, c_trailing, keep_2wt)
     if show_1mt
-        f_push_val(f_poc_trailing(time, 30 * 86400000), ldt1m, tdt1m, c_1mt, "1M-T", keep_1mt)
+        f_push_val(f_poc_trailing(time, 30 * 86400000), ldt1m, c_trailing, keep_1mt)
     stackedBar := bar_index
-f_anchor2(tdt1d), f_anchor2(tdt2d), f_anchor2(tdt3d), f_anchor2(tdt5d), f_anchor2(tdt1w), f_anchor2(tdt2w), f_anchor2(tdt1m)
 
 // ---- POCs TRAILING (janela rolante) — mesmo padrão "ao vivo" de cima, mas a ----
 // ---- fonte é a janela dos últimos N dias/semanas a partir de agora, não o ----
 // ---- bucket do período de calendário. Atualiza em cada tick, sem esperar ----
 // ---- fecho de vela (por isso aparece logo, ao contrário do que fazia antes). ----
-var line lidt1d=na, var label ladt1d=na
-var line lidt2d=na, var label ladt2d=na
-var line lidt3d=na, var label ladt3d=na
-var line lidt5d=na, var label ladt5d=na
-var line lidt1w=na, var label ladt1w=na
-var line lidt2w=na, var label ladt2w=na
-var line lidt1m=na, var label ladt1m=na
+var line lidt1d=na
+var line lidt2d=na
+var line lidt3d=na
+var line lidt5d=na
+var line lidt1w=na
+var line lidt2w=na
+var line lidt1m=na
 
 if show_1dt and barstate.islast
     float p = f_poc_trailing(time, 1 * 86400000)
     if not na(p)
-        lidt1d := na(lidt1d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1dt,0), style=line.style_dashed, extend=extend.right) : lidt1d
-        ladt1d := na(ladt1d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1dt,15), textcolor=color.white, size=size.small) : ladt1d
+        lidt1d := na(lidt1d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_trailing,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : lidt1d
         line.set_xy1(lidt1d, bar_index, p), line.set_xy2(lidt1d, bar_index+1, p)
-        label.set_xy(ladt1d, bar_index, p), label.set_text(ladt1d, "POC:1D-T " + str.tostring(p, format.mintick))
 if show_2dt and barstate.islast
     float p = f_poc_trailing(time, 2 * 86400000)
     if not na(p)
-        lidt2d := na(lidt2d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_2dt,0), style=line.style_dashed, extend=extend.right) : lidt2d
-        ladt2d := na(ladt2d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_2dt,15), textcolor=color.white, size=size.small) : ladt2d
+        lidt2d := na(lidt2d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_trailing,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : lidt2d
         line.set_xy1(lidt2d, bar_index, p), line.set_xy2(lidt2d, bar_index+1, p)
-        label.set_xy(ladt2d, bar_index, p), label.set_text(ladt2d, "POC:2D-T " + str.tostring(p, format.mintick))
 if show_3dt and barstate.islast
     float p = f_poc_trailing(time, 3 * 86400000)
     if not na(p)
-        lidt3d := na(lidt3d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_3dt,0), style=line.style_dashed, extend=extend.right) : lidt3d
-        ladt3d := na(ladt3d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_3dt,15), textcolor=color.white, size=size.small) : ladt3d
+        lidt3d := na(lidt3d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_trailing,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : lidt3d
         line.set_xy1(lidt3d, bar_index, p), line.set_xy2(lidt3d, bar_index+1, p)
-        label.set_xy(ladt3d, bar_index, p), label.set_text(ladt3d, "POC:3D-T " + str.tostring(p, format.mintick))
 if show_5dt and barstate.islast
     float p = f_poc_trailing(time, 5 * 86400000)
     if not na(p)
-        lidt5d := na(lidt5d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_5dt,0), style=line.style_dashed, extend=extend.right) : lidt5d
-        ladt5d := na(ladt5d) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_5dt,15), textcolor=color.white, size=size.small) : ladt5d
+        lidt5d := na(lidt5d) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_trailing,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : lidt5d
         line.set_xy1(lidt5d, bar_index, p), line.set_xy2(lidt5d, bar_index+1, p)
-        label.set_xy(ladt5d, bar_index, p), label.set_text(ladt5d, "POC:5D-T " + str.tostring(p, format.mintick))
 if show_1wt and barstate.islast
     float p = f_poc_trailing(time, 7 * 86400000)
     if not na(p)
-        lidt1w := na(lidt1w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1wt,0), style=line.style_dashed, extend=extend.right) : lidt1w
-        ladt1w := na(ladt1w) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1wt,15), textcolor=color.white, size=size.small) : ladt1w
+        lidt1w := na(lidt1w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_trailing,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : lidt1w
         line.set_xy1(lidt1w, bar_index, p), line.set_xy2(lidt1w, bar_index+1, p)
-        label.set_xy(ladt1w, bar_index, p), label.set_text(ladt1w, "POC:1W-T " + str.tostring(p, format.mintick))
 if show_2wt and barstate.islast
     float p = f_poc_trailing(time, 14 * 86400000)
     if not na(p)
-        lidt2w := na(lidt2w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_2wt,0), style=line.style_dashed, extend=extend.right) : lidt2w
-        ladt2w := na(ladt2w) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_2wt,15), textcolor=color.white, size=size.small) : ladt2w
+        lidt2w := na(lidt2w) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_trailing,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : lidt2w
         line.set_xy1(lidt2w, bar_index, p), line.set_xy2(lidt2w, bar_index+1, p)
-        label.set_xy(ladt2w, bar_index, p), label.set_text(ladt2w, "POC:2W-T " + str.tostring(p, format.mintick))
 if show_1mt and barstate.islast
     float p = f_poc_trailing(time, 30 * 86400000)
     if not na(p)
-        lidt1m := na(lidt1m) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_1mt,0), style=line.style_dashed, extend=extend.right) : lidt1m
-        ladt1m := na(ladt1m) ? label.new(bar_index, p, "", style=label.style_label_right, color=color.new(c_1mt,15), textcolor=color.white, size=size.small) : ladt1m
+        lidt1m := na(lidt1m) ? line.new(bar_index, p, bar_index+1, p, color=color.new(c_trailing,poc_transp), width=poc_width, style=line.style_dashed, extend=extend.right) : lidt1m
         line.set_xy1(lidt1m, bar_index, p), line.set_xy2(lidt1m, bar_index+1, p)
-        label.set_xy(ladt1m, bar_index, p), label.set_text(ladt1m, "POC:1M-T " + str.tostring(p, format.mintick))
 
 // ============================================================================
 // DIVERGÊNCIAS (RSI) — mesma lógica do indicador RSI, agora aqui no preço.
@@ -530,12 +473,12 @@ bear_setup_tf2 = mtf_on and s2 and dense_zone
 bull_setup_tf3 = mtf_on and b3 and dense_zone
 bear_setup_tf3 = mtf_on and s3 and dense_zone
 
-plotshape(bull_setup_tf1 ? low  : na, title="Bull setup TF1", style=shape.triangleup,   location=location.belowbar, color=color.new(c_bull, 40), size=size.tiny, text="5")
-plotshape(bear_setup_tf1 ? high : na, title="Bear setup TF1", style=shape.triangledown, location=location.abovebar, color=color.new(c_bear, 40), size=size.tiny, text="5")
-plotshape(bull_setup_tf2 ? low  : na, title="Bull setup TF2", style=shape.triangleup,   location=location.belowbar, color=color.new(c_bull, 20), size=size.tiny, text="15")
-plotshape(bear_setup_tf2 ? high : na, title="Bear setup TF2", style=shape.triangledown, location=location.abovebar, color=color.new(c_bear, 20), size=size.tiny, text="15")
-plotshape(bull_setup_tf3 ? low  : na, title="Bull setup TF3", style=shape.triangleup,   location=location.belowbar, color=c_bull, size=size.tiny, text="30")
-plotshape(bear_setup_tf3 ? high : na, title="Bear setup TF3", style=shape.triangledown, location=location.abovebar, color=c_bear, size=size.tiny, text="30")
+plotshape(bull_setup_tf1 ? low  : na, title="Bull setup TF1", style=shape.triangleup,   location=location.belowbar, color=color.new(c_bull, 40), size=size.tiny)
+plotshape(bear_setup_tf1 ? high : na, title="Bear setup TF1", style=shape.triangledown, location=location.abovebar, color=color.new(c_bear, 40), size=size.tiny)
+plotshape(bull_setup_tf2 ? low  : na, title="Bull setup TF2", style=shape.triangleup,   location=location.belowbar, color=color.new(c_bull, 20), size=size.tiny)
+plotshape(bear_setup_tf2 ? high : na, title="Bear setup TF2", style=shape.triangledown, location=location.abovebar, color=color.new(c_bear, 20), size=size.tiny)
+plotshape(bull_setup_tf3 ? low  : na, title="Bull setup TF3", style=shape.triangleup,   location=location.belowbar, color=c_bull, size=size.tiny)
+plotshape(bear_setup_tf3 ? high : na, title="Bear setup TF3", style=shape.triangledown, location=location.abovebar, color=c_bear, size=size.tiny)
 
 alertcondition(bull_setup_tf1, title="Bull SETUP TF1 (div+teia)", message="{{ticker}}: Bull setup no TF1 — div + POC perto")
 alertcondition(bear_setup_tf1, title="Bear SETUP TF1 (div+teia)", message="{{ticker}}: Bear setup no TF1 — div + POC perto")
