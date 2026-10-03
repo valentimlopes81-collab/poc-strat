@@ -349,6 +349,7 @@ lbR        = input.int(1, "Pivot lookback direita", minval=1, group=gdv, tooltip
 lbL        = input.int(5, "Pivot lookback esquerda", minval=1, group=gdv)
 rgU        = input.int(60, "Máx. barras entre pivôs", minval=1, group=gdv)
 rgL        = input.int(5,  "Mín. barras entre pivôs", minval=1, group=gdv)
+min_swing  = input.float(8.0, "Balanço mínimo do RSI entre pivôs", minval=0, group=gdv, tooltip="Filtro anti-ruído: entre os dois pivôs comparados tem de haver uma subida/descida real do RSI de pelo menos este valor (não só dois mínimos/máximos vizinhos dentro da mesma perna). 0 = desliga o filtro (comportamento antigo).")
 c_bull     = input.color(color.rgb(38, 166, 154), "Bull", group=gdv)
 c_bear     = input.color(color.rgb(239, 83, 80),  "Bear", group=gdv)
 
@@ -365,15 +366,28 @@ rsiLBR  = rsi_v[lbR]
 plFound = not na(ta.pivotlow(rsi_v, lbL, lbR))
 phFound = not na(ta.pivothigh(rsi_v, lbL, lbR))
 
-// Bullish: preço faz lower low, RSI faz higher low
-rsiHL   = rsiLBR > ta.valuewhen(plFound, rsiLBR, 1) and _inRange(plFound[1])
-priceLL = low[lbR] < ta.valuewhen(plFound, low[lbR], 1)
-bull_div = priceLL and rsiHL and plFound
+// ---- Pico/vale do RSI ENTRE o pivô anterior e o atual — exige um balanço real ----
+// Sem isto, dois mínimos/máximos vizinhos na MESMA perna (ruído) podiam passar
+// por "divergência" só por bateram matematicamente, sem existir recuo nenhum
+// entre eles (era a causa dos sinais colados uns aos outros).
+var float peakSincePL = na
+var float troughSincePH = na
+float peakBetween   = peakSincePL
+float troughBetween = troughSincePH
+peakSincePL   := plFound ? rsiLBR : (na(peakSincePL)   ? rsi_v : math.max(peakSincePL, rsi_v))
+troughSincePH := phFound ? rsiLBR : (na(troughSincePH) ? rsi_v : math.min(troughSincePH, rsi_v))
 
-// Bearish: preço faz higher high, RSI faz lower high
-rsiLH   = rsiLBR < ta.valuewhen(phFound, rsiLBR, 1) and _inRange(phFound[1])
-priceHH = high[lbR] > ta.valuewhen(phFound, high[lbR], 1)
-bear_div = priceHH and rsiLH and phFound
+// Bullish: preço faz lower low, RSI faz higher low, com uma subida real no meio
+rsiHL     = rsiLBR > ta.valuewhen(plFound, rsiLBR, 1) and _inRange(plFound[1])
+priceLL   = low[lbR] < ta.valuewhen(plFound, low[lbR], 1)
+swingOkBull = min_swing <= 0 or (not na(peakBetween) and peakBetween - math.max(rsiLBR, ta.valuewhen(plFound, rsiLBR, 1)) >= min_swing)
+bull_div = priceLL and rsiHL and plFound and swingOkBull
+
+// Bearish: preço faz higher high, RSI faz lower high, com uma descida real no meio
+rsiLH     = rsiLBR < ta.valuewhen(phFound, rsiLBR, 1) and _inRange(phFound[1])
+priceHH   = high[lbR] > ta.valuewhen(phFound, high[lbR], 1)
+swingOkBear = min_swing <= 0 or (not na(troughBetween) and math.min(rsiLBR, ta.valuewhen(phFound, rsiLBR, 1)) - troughBetween >= min_swing)
+bear_div = priceHH and rsiLH and phFound and swingOkBear
 
 // ---- Densidade de POCs (a "teia") à volta do preço — filtro de setup completo ----
 gq = "Qualidade do sinal (teia + MTF)"
@@ -440,12 +454,21 @@ f_divs() =>
     bool ph = not na(ta.pivothigh(r, lbL, lbR))
     int bpl = ta.barssince(pl[1])
     int bph = ta.barssince(ph[1])
+    // mesmo filtro de balanço mínimo do bloco principal, para os TFs explícitos
+    var float peakSincePLm = na
+    var float troughSincePHm = na
+    float peakBetweenm   = peakSincePLm
+    float troughBetweenm = troughSincePHm
+    peakSincePLm   := pl ? rlbr : (na(peakSincePLm)   ? r : math.max(peakSincePLm, r))
+    troughSincePHm := ph ? rlbr : (na(troughSincePHm) ? r : math.min(troughSincePHm, r))
     bool rhl = rlbr > ta.valuewhen(pl, rlbr, 1) and bpl >= rgL and bpl <= rgU
     bool pll = low[lbR] < ta.valuewhen(pl, low[lbR], 1)
-    bool bull = pll and rhl and pl
+    bool swingOkBullM = min_swing <= 0 or (not na(peakBetweenm) and peakBetweenm - math.max(rlbr, ta.valuewhen(pl, rlbr, 1)) >= min_swing)
+    bool bull = pll and rhl and pl and swingOkBullM
     bool rlh = rlbr < ta.valuewhen(ph, rlbr, 1) and bph >= rgL and bph <= rgU
     bool phh = high[lbR] > ta.valuewhen(ph, high[lbR], 1)
-    bool bear = phh and rlh and ph
+    bool swingOkBearM = min_swing <= 0 or (not na(troughBetweenm) and math.min(rlbr, ta.valuewhen(ph, rlbr, 1)) - troughBetweenm >= min_swing)
+    bool bear = phh and rlh and ph and swingOkBearM
     [bull, bear]
 
 [b1, s1] = request.security(syminfo.tickerid, div_tf1, f_divs())
