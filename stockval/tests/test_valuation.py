@@ -75,6 +75,38 @@ def test_bank_like_excludes_leverage_ratios_from_score():
     assert bank["c_total"] < normal["c_total"]
 
 
+def test_leveraged_by_design_only_excludes_debt_equity():
+    # Utility/leasing: alavancagem alta é normal (ativos de longa duração
+    # financiados a dívida por desenho), mas EV/EBITDA, net debt/EBITDA e
+    # interest coverage continuam a ser métricas-padrão do setor — só o
+    # Dívida líq./Equity deve sair, ao contrário do tratamento dos bancos.
+    a = Assumptions()
+    f = Fundamentals(
+        price=50, shares=10, fcf=100, net_income=80, equity=400,
+        total_debt=5000, cash=50, eff_tax=0.21, cost_of_debt=0.05,
+        revenue=1000, ebitda=150, operating_income=120, interest_expense=50,
+    )
+    utility = value_company(f, a, "DUK")
+    normal = value_company(f, a, "AAPL")
+
+    assert utility["bank_like"] is False
+    assert utility["leveraged_like"] is True
+
+    utility_quality_labels = [lbl for lbl, _, _ in utility["quality"]]
+    assert "Dívida líq./Equity < 1" not in utility_quality_labels
+
+    # Ao contrário do banco, EV/EBITDA e os deep flags de alavancagem
+    # continuam presentes (são métricas válidas para utilities).
+    utility_coherence_labels = [lbl for lbl, _, _ in utility["coherence"]]
+    utility_deep_labels = [lbl for lbl, _, _ in utility["deep_flags"]]
+    assert "EV/EBITDA < 15" in utility_coherence_labels
+    for lbl in ("ROIC > WACC (cria valor)", "Net debt/EBITDA < 3", "Interest coverage > 4×"):
+        assert lbl in utility_deep_labels
+
+    assert utility["q_total"] < normal["q_total"]
+    assert utility["c_total"] == normal["c_total"]
+
+
 def test_value_company_end_to_end():
     a = Assumptions()  # defaults
     f = Fundamentals(price=50, shares=10, fcf=100, net_income=80, equity=400,

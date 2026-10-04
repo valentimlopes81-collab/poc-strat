@@ -68,7 +68,7 @@
       {% else %}
       <tr>
         <td class="mut">{{ loop.index }}</td>
-        <td><b>{{ r.ticker }}</b>{% if r.bank_like %} <span title="Financeira de balanço pesado — EV/EBITDA e rácios de alavancagem excluídos do score">🏦</span>{% endif %}</td>
+        <td><b>{{ r.ticker }}</b>{% if r.bank_like %} <span title="Financeira de balanço pesado — EV/EBITDA e rácios de alavancagem excluídos do score">🏦</span>{% elif r.leveraged_like %} <span title="Capital-intensivo alavancado por desenho — só o rácio Dívida líq./Equity foi excluído do score">⚡</span>{% endif %}</td>
         <td class="mut">{{ r.sector }}</td>
         <td class="sc-{{ r.opportunity }}">{{ r.emoji }} {{ r.opportunity }}{% if r.conflict %} <span title="DCF barato mas múltiplos caros">⚠️</span>{% endif %}</td>
         <td class="sc-{{ r.opportunity }}">{{ r.score }}</td>
@@ -94,6 +94,7 @@
     "—" numa métrica = dado em falta na SEC (comum em empresas estrangeiras/20-F).
     <b>vs setor</b> = P/E face à mediana do setor na tua watchlist (verde = mais barata que os pares; precisa de ≥2 pares).
     🏦 = financeira de balanço pesado (banco/cartão/seguradora) — EV/EBITDA e rácios de alavancagem excluídos do score (ver detalhe do ticker).
+    ⚡ = capital-intensivo alavancado por desenho (utility/leasing) — só a Dívida líq./Equity foi excluída, o resto mantém-se.
   </div>
 </div>
 </body>

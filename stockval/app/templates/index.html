@@ -134,6 +134,10 @@
   <div style="background:rgba(100,181,246,.1);border:1px solid var(--border);color:#90caf9;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px">
     🏦 Financeira de balanço pesado (banco/cartão/seguradora) — a "dívida" é o próprio negócio (depósitos/apólices/crédito a clientes), por isso <b>EV/EBITDA, Net debt/EBITDA, interest coverage e ROIC vs WACC</b> foram excluídos do score e dos checks (ficam sempre distorcidos nestas empresas). O resto (ROE, margem, P/E, P/B, PEG) mantém-se igual.
   </div>
+  {% elif result.leveraged_like %}
+  <div style="background:rgba(255,167,38,.1);border:1px solid var(--border);color:#ffcc80;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px">
+    ⚡ Capital-intensivo alavancado por desenho (utility/leasing) — ativos de longa duração financiados a dívida é o modelo normal deste setor, por isso só <b>Dívida líq./Equity</b> foi excluído do score. EV/EBITDA, net debt/EBITDA e interest coverage mantêm-se (são métricas-padrão e úteis aqui).
+  </div>
   {% endif %}
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">

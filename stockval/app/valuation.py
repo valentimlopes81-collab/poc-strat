@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .config import Assumptions
-from .sectors import is_balance_sheet_heavy
+from .sectors import is_balance_sheet_heavy, leverage_ratio_exempt
 
 
 @dataclass
@@ -107,6 +107,7 @@ def _safe_div(a: float, b: float) -> float | None:
 def value_company(f: Fundamentals, a: Assumptions, ticker: str = "") -> dict:
     """Aplica o DCF + rácios e devolve tudo o que o site mostra."""
     bank_like = is_balance_sheet_heavy(ticker)
+    leverage_exempt = leverage_ratio_exempt(ticker)
     net_debt = f.total_debt - f.cash
     mktcap = f.price * f.shares
     tax = f.eff_tax if f.eff_tax is not None else a.tax
@@ -185,9 +186,12 @@ def value_company(f: Fundamentals, a: Assumptions, ticker: str = "") -> dict:
         ("Margem líquida > 5%", net_margin is not None and net_margin > 0.05, net_margin),
         ("Receita a crescer", rev_growth is not None and rev_growth > 0, rev_growth),
     ]
-    if not bank_like:
+    if not leverage_exempt:
         # Para bancos/cartões/seguradoras, net debt é o próprio negócio
-        # (depósitos/apólices/crédito a clientes) — não alavancagem industrial.
+        # (depósitos/apólices/crédito a clientes); para utilities/leasing de
+        # navios, alavancagem alta é normal/saudável (ativos de longa duração
+        # financiados a dívida por desenho) — em ambos os casos não é
+        # alavancagem industrial no sentido do rácio.
         quality.insert(3, ("Dívida líq./Equity < 1", de is not None and f.equity > 0 and de < 1.0, de))
     q_pass = sum(1 for _, ok, _ in quality if ok)
 
@@ -298,4 +302,5 @@ def value_company(f: Fundamentals, a: Assumptions, ticker: str = "") -> dict:
         "opportunity": opportunity, "opportunity_emoji": opp_emoji,
         "conflict": conflict, "dcf_note": dcf_note,
         "bank_like": bank_like,
+        "leveraged_like": leverage_exempt and not bank_like,
     }
