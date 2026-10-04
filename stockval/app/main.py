@@ -80,7 +80,7 @@ def _row_for(ticker: str) -> dict:
             "upside": result["upside"], "conflict": result["conflict"],
             "implied_growth": result["implied_growth"],
             "pe": result["ratios"]["pe"], "ev_ebitda": result["ratios"]["ev_ebitda"],
-            "roe": result["ratios"]["roe"],
+            "roe": result["ratios"]["roe"], "bank_like": result["bank_like"],
         }
     _cache[ticker] = (now, row)
     return row

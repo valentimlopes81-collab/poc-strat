@@ -27,6 +27,54 @@ def test_two_stage_dcf_invalid_when_wacc_le_terminal():
     assert two_stage_dcf(100.0, 0.08, 10, 0.05, 0.05) is None  # wacc == g terminal
 
 
+def test_bank_like_excludes_leverage_ratios_from_score():
+    # Perfil tipo-banco: dívida enorme face ao equity (é o próprio negócio,
+    # não alavancagem), o que faria EV/EBITDA, Net debt/EBITDA, interest
+    # coverage e ROIC vs WACC falharem sempre, mesmo sendo saudável.
+    a = Assumptions()
+    f = Fundamentals(
+        price=50, shares=10, fcf=100, net_income=80, equity=400,
+        total_debt=5000, cash=50, eff_tax=0.21, cost_of_debt=0.05,
+        revenue=1000, ebitda=150, operating_income=120, interest_expense=50,
+    )
+    bank = value_company(f, a, "JPM")
+    normal = value_company(f, a, "AAPL")
+
+    assert bank["bank_like"] is True
+    assert normal["bank_like"] is False
+
+    bank_quality_labels = [lbl for lbl, _, _ in bank["quality"]]
+    normal_quality_labels = [lbl for lbl, _, _ in normal["quality"]]
+    assert "Dívida líq./Equity < 1" not in bank_quality_labels
+    assert "Dívida líq./Equity < 1" in normal_quality_labels
+
+    bank_coherence_labels = [lbl for lbl, _, _ in bank["coherence"]]
+    normal_coherence_labels = [lbl for lbl, _, _ in normal["coherence"]]
+    assert "EV/EBITDA < 15" not in bank_coherence_labels
+    assert "EV/EBITDA < 15" in normal_coherence_labels
+
+    bank_deep_labels = [lbl for lbl, _, _ in bank["deep_flags"]]
+    normal_deep_labels = [lbl for lbl, _, _ in normal["deep_flags"]]
+    for lbl in ("ROIC > WACC (cria valor)", "Net debt/EBITDA < 3", "Interest coverage > 4×"):
+        assert lbl not in bank_deep_labels
+        assert lbl in normal_deep_labels
+
+    # A empresa "normal" com este perfil de dívida deve mesmo falhar estes
+    # checks (não é só "ausência de dados") — confirma que excluir é uma
+    # decisão ativa, não um efeito colateral de dados em falta.
+    normal_de_ok = next(ok for lbl, ok, _ in normal["quality"] if lbl == "Dívida líq./Equity < 1")
+    normal_evebitda_ok = next(ok for lbl, ok, _ in normal["coherence"] if lbl == "EV/EBITDA < 15")
+    assert normal_de_ok is False
+    assert normal_evebitda_ok is False
+
+    # O score do banco não deve ser penalizado pelos checks excluídos; os
+    # totais dos checklists (denominadores) encolhem em conformidade.
+    assert bank["q_total"] == len(bank["quality"])
+    assert bank["c_total"] == len(bank["coherence"])
+    assert bank["q_total"] < normal["q_total"]
+    assert bank["c_total"] < normal["c_total"]
+
+
 def test_value_company_end_to_end():
     a = Assumptions()  # defaults
     f = Fundamentals(price=50, shares=10, fcf=100, net_income=80, equity=400,

@@ -130,6 +130,12 @@
   </div>
   {% endif %}
 
+  {% if result.bank_like %}
+  <div style="background:rgba(100,181,246,.1);border:1px solid var(--border);color:#90caf9;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px">
+    🏦 Financeira de balanço pesado (banco/cartão/seguradora) — a "dívida" é o próprio negócio (depósitos/apólices/crédito a clientes), por isso <b>EV/EBITDA, Net debt/EBITDA, interest coverage e ROIC vs WACC</b> foram excluídos do score e dos checks (ficam sempre distorcidos nestas empresas). O resto (ROE, margem, P/E, P/B, PEG) mantém-se igual.
+  </div>
+  {% endif %}
+
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
     <div>
       <h2>Qualidade ({{ result.q_pass }}/{{ result.q_total }})</h2>

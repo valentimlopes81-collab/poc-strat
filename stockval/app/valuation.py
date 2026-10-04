@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .config import Assumptions
+from .sectors import is_balance_sheet_heavy
 
 
 @dataclass
@@ -103,8 +104,9 @@ def _safe_div(a: float, b: float) -> float | None:
     return (a / b) if b else None
 
 
-def value_company(f: Fundamentals, a: Assumptions) -> dict:
+def value_company(f: Fundamentals, a: Assumptions, ticker: str = "") -> dict:
     """Aplica o DCF + rácios e devolve tudo o que o site mostra."""
+    bank_like = is_balance_sheet_heavy(ticker)
     net_debt = f.total_debt - f.cash
     mktcap = f.price * f.shares
     tax = f.eff_tax if f.eff_tax is not None else a.tax
@@ -181,18 +183,24 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         ("ROE ≥ 12%", roe is not None and roe >= 0.12, roe),
         ("FCF positivo", f.fcf > 0, f.fcf),
         ("Margem líquida > 5%", net_margin is not None and net_margin > 0.05, net_margin),
-        ("Dívida líq./Equity < 1", de is not None and f.equity > 0 and de < 1.0, de),
         ("Receita a crescer", rev_growth is not None and rev_growth > 0, rev_growth),
     ]
+    if not bank_like:
+        # Para bancos/cartões/seguradoras, net debt é o próprio negócio
+        # (depósitos/apólices/crédito a clientes) — não alavancagem industrial.
+        quality.insert(3, ("Dívida líq./Equity < 1", de is not None and f.equity > 0 and de < 1.0, de))
     q_pass = sum(1 for _, ok, _ in quality if ok)
 
     # --- Pilar COERÊNCIA DE PREÇO (múltiplos não gritam "caro") ---
     coherence = [
         ("PEG < 1.5", peg is not None and 0 < peg < 1.5, peg),
-        ("EV/EBITDA < 15", ev_ebitda is not None and 0 < ev_ebitda < 15, ev_ebitda),
         ("P/S < 10", ps is not None and ps < 10, ps),
         ("P/E < 30", pe is not None and 0 < pe < 30, pe),
     ]
+    if not bank_like:
+        # EV/EBITDA distorce-se da mesma forma nestas financeiras (o "EV"
+        # inclui o livro de crédito/depósitos, não é capital investido real).
+        coherence.insert(1, ("EV/EBITDA < 15", ev_ebitda is not None and 0 < ev_ebitda < 15, ev_ebitda))
     c_pass = sum(1 for _, ok, _ in coherence if ok)
 
     # --- Score de Oportunidade (0-100): Valor 50 + Qualidade 30 + Coerência 20 ---
@@ -233,13 +241,20 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         "eps_growth": eps_growth, "op_leverage": op_leverage,
     }
     deep_flags = [
-        ("ROIC > WACC (cria valor)", roic is not None and roic > w, roic),
-        ("Net debt/EBITDA < 3", nd_ebitda is not None and nd_ebitda < 3.0, nd_ebitda),
-        ("Interest coverage > 4×", interest_coverage is not None and interest_coverage > 4.0, interest_coverage),
         ("Sem diluição (≤1%/ano)", dilution is not None and dilution <= 0.01, dilution),
         ("SBC < 5% da receita", sbc_pct_rev is not None and sbc_pct_rev < 0.05, sbc_pct_rev),
         ("Margem op. a expandir", op_margin_trend is not None and op_margin_trend > 0, op_margin_trend),
     ]
+    if not bank_like:
+        # ROIC/WACC, Net debt/EBITDA e interest coverage partem de "capital
+        # investido"/"EBITDA" que não descrevem bem um banco/emissora de
+        # cartão — ficam sempre a parecer alavancados/sem cobertura mesmo
+        # quando saudáveis (ver nota em sectors.BALANCE_SHEET_HEAVY).
+        deep_flags = [
+            ("ROIC > WACC (cria valor)", roic is not None and roic > w, roic),
+            ("Net debt/EBITDA < 3", nd_ebitda is not None and nd_ebitda < 3.0, nd_ebitda),
+            ("Interest coverage > 4×", interest_coverage is not None and interest_coverage > 4.0, interest_coverage),
+        ] + deep_flags
 
     # Sinal em conflito: DCF diz barato mas os múltiplos dizem caro (ou vice-versa).
     conflict = (mos is not None and mos >= 0.30 and c_pass <= 1)
@@ -282,4 +297,5 @@ def value_company(f: Fundamentals, a: Assumptions) -> dict:
         "coherence_score": round(coherence_score, 1),
         "opportunity": opportunity, "opportunity_emoji": opp_emoji,
         "conflict": conflict, "dcf_note": dcf_note,
+        "bank_like": bank_like,
     }

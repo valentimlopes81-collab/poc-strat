@@ -40,4 +40,4 @@ def analyze(ticker: str, a: Assumptions):
         shares_history=data.get("shares_history"),
         eps_history=data.get("eps_history"),
     )
-    return value_company(f, a), None, name
+    return value_company(f, a, ticker), None, name

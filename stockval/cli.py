@@ -46,7 +46,7 @@ def main() -> None:
         shares_history=data.get("shares_history"),
         eps_history=data.get("eps_history"),
     )
-    r = value_company(f, Assumptions())
+    r = value_company(f, Assumptions(), ticker)
     iv = r["intrinsic_per_share"]
     print(f"\n  {r['opportunity_emoji']} OPORTUNIDADE: {r['opportunity'].upper()}   score {r['score']}/100 "
           f"(valor {r['value_score']} + qualidade {r['quality_score']} + coerência {r['coherence_score']})")

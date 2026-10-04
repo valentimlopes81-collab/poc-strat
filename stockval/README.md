@@ -12,6 +12,13 @@ Stooq. Pensado para dar uma base rápida que complementas com análise técnica.
 - **Criação de valor & balanço:** ROIC vs WACC, net debt/EBITDA, interest coverage,
   FCF yield, diluição (nº ações/ano) e SBC/receita, margem bruta/operacional +
   tendência, EPS CAGR e operating leverage (informativos — não entram no score)
+- **Financeiras de balanço pesado** (bancos, cartões/crédito, seguradoras
+  subscritoras — ex.: JPM, GS, MS, BAC, C, WFC, AXP, SOFI, CB): o EV/EBITDA, net
+  debt/EBITDA, interest coverage e ROIC vs WACC ficam sempre distorcidos nestas
+  empresas (a "dívida" é o próprio negócio — depósitos/apólices/crédito a
+  clientes), por isso são excluídos do score e dos checklists (marcadas com 🏦
+  no screener). O resto (ROE, margem, P/E, P/B, PEG) mantém-se igual. Lista em
+  `app/sectors.py` (`BALANCE_SHEET_HEAVY`).
 
 Pressupostos com **defaults sensatos** (editáveis no site): 5 anos, crescimento
 8% (ou CAGR histórico do FCF, limitado a 15%), terminal 2.5%, rf 4%, β 1.0,
