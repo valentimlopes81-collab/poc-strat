@@ -5,15 +5,15 @@
 5/15/30) confirmada dentro de uma zona densa de POCs ("teia"). P&L em €.*
 
 ### Estado
-- **P&L acumulado: +16€ confirmado** (C1) + **C2 em curso** (TP1 batido, resto em BE — valor final por confirmar)
-- Trades: 2 (1W confirmado/0L/0BE + 1 em curso)
-- **Mudança de processo anunciada (05/10):** passar a usar **stop loss mais manual**, gerido pela invalidação real do setup (ex.: falta de força vendedora/compradora a confirmar), em vez de só confiar no stop automático inicial — mantém-se como boa prática mesmo depois da correção da C2 abaixo.
+- **P&L acumulado: +70,5€** (C1 +16€ + C2 +54,5€)
+- Trades: 2 (2W/0L/0BE)
+- **Mudança de processo anunciada (05/10):** passar a usar **stop loss mais manual**, gerido pela invalidação real do setup (ex.: falta de força vendedora/compradora a confirmar), em vez de só confiar no stop automático inicial — mantém-se como boa prática independentemente do resultado de cada trade.
 
 ### Registo live
 | # | Data | Par | Dir | Gatilho | Result | € | Notas |
 |---|------|-----|-----|---------|--------|---|-------|
 | C1 | 02/10 | LTCUSDT | Short | Divergência confirmada no TF de 30m + zona forte de POCs + **golden pocket da Fib** (tripla confluência) | ✅ Parcial | **+16€** | Entrada com **2 ordens limit** escalonadas perto do topo (~71.0-71.75), dentro do golden pocket (0.618-0.65) do retracement Fib. Só a 1ª bateu **TP1**; a 2ª acabou em **BE**. Resultado líquido pequeno mas positivo. Primeira trade real a validar o setup que acabámos de construir no script (div + POC, agora também com alerta próprio por TF) — boa confirmação inicial, amostra ainda mínima para tirar conclusões sobre o edge |
-| C2 | 05/10 | HYPEUSDT | Short | Setup validado pelo sistema (div + POC) | ⏳ Em curso | **TP1 ✓ + BE no resto** | **Correção (06/10):** o relato inicial de loss de −25€ estava errado — não foi stopped (falhou por poucos cêntimos), e entretanto já bateu **TP1** e o resto ficou em BE. P&L final por confirmar quando fechar. Lição do processo (SL manual por invalidação) mantém-se válida como boa prática, só o resultado desta trade específica é que estava mal registado |
+| C2 | 05/10 | HYPEUSDT | Short | Setup validado pelo sistema (div + POC) | ✅ Win (fechado) | **+54,5€** | Trade escalonada: quase stopped por poucos cêntimos, recuperou, bateu TP1, depois mais um TP no 0,5 da Fib (91,40) com saída de 75% da posição, e fechou o resto com **full TP** em 07/10. Correção de percurso registada (relato inicial de loss estava errado). Boa trade a validar o setup div+POC numa sequência de exits escalonados |
 
 ### Notas gerais
 - Journal começado a 02/10 — sem histórico anterior a resumir.
