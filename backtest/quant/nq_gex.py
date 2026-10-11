@@ -44,6 +44,7 @@ def build_rows(cookiejar, crumb, max_days=45):
     exp_dates = [e for e in result["expirationDates"] if (datetime.datetime.utcfromtimestamp(e) - now).days <= max_days]
 
     rows = []
+    zero_dte_rows = []
     for i, exp in enumerate(exp_dates):
         d = fetch_chain("QQQ", cookiejar, crumb, date=exp) if i > 0 else d0
         opts = d["optionChain"]["result"][0]["options"][0]
@@ -51,17 +52,24 @@ def build_rows(cookiejar, crumb, max_days=45):
         T = (expiry_dt - now).total_seconds() / (365.25 * 24 * 3600)
         if T <= 0:
             continue
+        is_0dte = datetime.datetime.utcfromtimestamp(exp).date() == now.date()
         for c in opts["calls"]:
             iv = c.get("impliedVolatility")
             oi = c.get("openInterest") or 0
             if iv and oi > 0:
-                rows.append({"strike": c["strike"], "T": T, "iv": iv, "oi": oi, "cp": "C"})
+                row = {"strike": c["strike"], "T": T, "iv": iv, "oi": oi, "cp": "C"}
+                rows.append(row)
+                if is_0dte:
+                    zero_dte_rows.append(row)
         for p in opts["puts"]:
             iv = p.get("impliedVolatility")
             oi = p.get("openInterest") or 0
             if iv and oi > 0:
-                rows.append({"strike": p["strike"], "T": T, "iv": iv, "oi": oi, "cp": "P"})
-    return rows, spot
+                row = {"strike": p["strike"], "T": T, "iv": iv, "oi": oi, "cp": "P"}
+                rows.append(row)
+                if is_0dte:
+                    zero_dte_rows.append(row)
+    return rows, zero_dte_rows, spot
 
 
 def main():
@@ -69,7 +77,7 @@ def main():
     with tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as tf:
         cookiejar = tf.name
     crumb = get_crumb_and_cookies(cookiejar)
-    rows, qqq_spot = build_rows(cookiejar, crumb)
+    rows, zero_dte_rows, qqq_spot = build_rows(cookiejar, crumb)
     ratio = (nq_price / qqq_spot) if nq_price else None
 
     print(f"QQQ spot: {qqq_spot}")
@@ -93,10 +101,27 @@ def main():
     else:
         print("Sem cruzamento de zero-gamma na janela testada (+/-30%).")
 
-    print("\nStrikes com maior |GEX| (paredes de gamma mais fortes):")
+    print("\nStrikes com maior |GEX| (paredes de gamma mais fortes, todas as expiracoes <=45d):")
     for strike, val in strikes_by_abs_gex(rows, qqq_spot):
         tag = "resistencia/pin (call-heavy)" if val > 0 else "suporte/acelerador (put-heavy)"
         print(f"  {fmt_level(strike)}  GEX={val:>14,.0f}  {tag}")
+
+    if zero_dte_rows:
+        print(f"\n--- 0DTE (so opcoes que expiram HOJE, n={len(zero_dte_rows)}) ---")
+        gex_0dte = total_gex_at_spot(zero_dte_rows, qqq_spot, MULTIPLIER)
+        print(f"GEX 0DTE ao preco atual: {gex_0dte:,.0f}")
+        walls_0dte = strikes_by_abs_gex(zero_dte_rows, qqq_spot, top_n=5)
+        call_res = max((w for w in walls_0dte if w[1] > 0), key=lambda w: w[1], default=None)
+        put_sup = min((w for w in walls_0dte if w[1] < 0), key=lambda w: w[1], default=None)
+        gamma_wall = walls_0dte[0] if walls_0dte else None
+        if call_res:
+            print(f"Call Resistance 0DTE: {fmt_level(call_res[0])}  GEX={call_res[1]:,.0f}")
+        if put_sup:
+            print(f"Put Support 0DTE: {fmt_level(put_sup[0])}  GEX={put_sup[1]:,.0f}")
+        if gamma_wall:
+            print(f"Gamma Wall 0DTE (maior |GEX|): {fmt_level(gamma_wall[0])}  GEX={gamma_wall[1]:,.0f}")
+    else:
+        print("\n--- 0DTE: sem expiracao a terminar hoje (ou mercado fechado) ---")
 
 
 if __name__ == "__main__":
