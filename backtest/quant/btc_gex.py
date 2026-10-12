@@ -8,7 +8,7 @@ import json
 import re
 import subprocess
 
-from gex_common import total_gex_at_spot, find_zero_gamma, strikes_by_abs_gex
+from gex_common import total_gex_at_spot, find_zero_gamma, strikes_by_abs_gex, call_put_walls
 
 URL = "https://www.deribit.com/api/v2/public/get_book_summary_by_currency?currency=BTC&kind=option"
 
@@ -55,6 +55,12 @@ def main():
 
     gex_now = total_gex_at_spot(rows, spot)
     print(f"\nGEX total ao preco atual: {gex_now:,.0f} (positivo=regime de pin/baixa vol; negativo=regime de maior vol)")
+
+    call_wall, put_wall = call_put_walls(rows, spot)
+    if call_wall:
+        print(f"CALL WALL: {call_wall[0]:,.0f}  (GEX={call_wall[1]:,.0f})")
+    if put_wall:
+        print(f"PUT WALL:  {put_wall[0]:,.0f}  (GEX={put_wall[1]:,.0f})")
 
     flips = find_zero_gamma(rows, spot)
     if flips:

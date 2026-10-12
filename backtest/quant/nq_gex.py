@@ -9,7 +9,7 @@ import subprocess
 import sys
 import tempfile
 
-from gex_common import total_gex_at_spot, find_zero_gamma, strikes_by_abs_gex
+from gex_common import total_gex_at_spot, find_zero_gamma, strikes_by_abs_gex, call_put_walls
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 MULTIPLIER = 100.0  # 100 acoes por contrato (equity options standard)
@@ -92,6 +92,12 @@ def main():
 
     gex_now = total_gex_at_spot(rows, qqq_spot, MULTIPLIER)
     print(f"\nGEX total ao preco atual: {gex_now:,.0f} (positivo=regime de pin/baixa vol; negativo=regime de maior vol)")
+
+    call_wall, put_wall = call_put_walls(rows, qqq_spot, MULTIPLIER)
+    if call_wall:
+        print(f"CALL WALL: {fmt_level(call_wall[0])}  (GEX={call_wall[1]:,.0f})")
+    if put_wall:
+        print(f"PUT WALL:  {fmt_level(put_wall[0])}  (GEX={put_wall[1]:,.0f})")
 
     flips = find_zero_gamma(rows, qqq_spot, MULTIPLIER)
     if flips:

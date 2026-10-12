@@ -62,3 +62,17 @@ def strikes_by_abs_gex(rows, spot, multiplier=1.0, top_n=8):
         val = sign * g * r["oi"] * spot * spot * 0.01 * multiplier
         agg[r["strike"]] = agg.get(r["strike"], 0.0) + val
     return sorted(agg.items(), key=lambda kv: -abs(kv[1]))[:top_n]
+
+
+def call_put_walls(rows, spot, multiplier=1.0):
+    """Devolve (call_wall, put_wall) — o strike com maior GEX positivo (call-heavy)
+    e o strike com maior |GEX| negativo (put-heavy), cada um como (strike, valor)."""
+    agg = {}
+    for r in rows:
+        g = bs_gamma(spot, r["strike"], r["T"], r["iv"])
+        sign = 1.0 if r["cp"] == "C" else -1.0
+        val = sign * g * r["oi"] * spot * spot * 0.01 * multiplier
+        agg[r["strike"]] = agg.get(r["strike"], 0.0) + val
+    call_wall = max(agg.items(), key=lambda kv: kv[1], default=None)
+    put_wall = min(agg.items(), key=lambda kv: kv[1], default=None)
+    return call_wall, put_wall
