@@ -56,7 +56,7 @@ def build_rows(cookiejar, crumb, max_days=45):
         for c in opts["calls"]:
             iv = c.get("impliedVolatility")
             oi = c.get("openInterest") or 0
-            if iv and oi > 0:
+            if iv and iv > 0.01 and oi > 0:
                 row = {"strike": c["strike"], "T": T, "iv": iv, "oi": oi, "cp": "C"}
                 rows.append(row)
                 if is_0dte:
@@ -64,11 +64,14 @@ def build_rows(cookiejar, crumb, max_days=45):
         for p in opts["puts"]:
             iv = p.get("impliedVolatility")
             oi = p.get("openInterest") or 0
-            if iv and oi > 0:
+            if iv and iv > 0.01 and oi > 0:
                 row = {"strike": p["strike"], "T": T, "iv": iv, "oi": oi, "cp": "P"}
                 rows.append(row)
                 if is_0dte:
                     zero_dte_rows.append(row)
+    if len(rows) < 200:
+        print(f"AVISO: só {len(rows)} contratos validos (normal e >1000) - dados possivelmente"
+              f" desatualizados (ex.: antes da abertura do mercado de opcoes, 13:30 UTC). Resultados pouco fiaveis.", file=sys.stderr)
     return rows, zero_dte_rows, spot
 
 
