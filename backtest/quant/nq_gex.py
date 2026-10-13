@@ -15,6 +15,20 @@ UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 MULTIPLIER = 100.0  # 100 acoes por contrato (equity options standard)
 
 
+def fetch_nq_price():
+    """Busca o ultimo preco do futuro NQ=F via Yahoo (sem crumb, endpoint de chart)."""
+    try:
+        raw = sh(["curl", "-s", "-A", UA,
+                   "https://query1.finance.yahoo.com/v8/finance/chart/NQ=F?range=1d&interval=1m",
+                   "--max-time", "15"])
+        d = json.loads(raw)
+        r = d["chart"]["result"][0]
+        closes = [c for c in r["indicators"]["quote"][0]["close"] if c is not None]
+        return closes[-1] if closes else None
+    except Exception:
+        return None
+
+
 def sh(cmd):
     out = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
     if out.returncode != 0:
@@ -81,14 +95,20 @@ def main():
         cookiejar = tf.name
     crumb = get_crumb_and_cookies(cookiejar)
     rows, zero_dte_rows, qqq_spot = build_rows(cookiejar, crumb)
+
+    auto_fetched = False
+    if not nq_price:
+        nq_price = fetch_nq_price()
+        auto_fetched = nq_price is not None
     ratio = (nq_price / qqq_spot) if nq_price else None
 
     print(f"QQQ spot: {qqq_spot}")
     print(f"n contratos usados (expiracoes <=45 dias, IV/OI validos): {len(rows)}")
     if ratio:
-        print(f"Racio NQ/QQQ: {ratio:.4f}")
+        tag = " (auto, NQ=F)" if auto_fetched else ""
+        print(f"Preco NQ: {nq_price}{tag}  ->  Racio NQ/QQQ: {ratio:.4f}")
     else:
-        print("Sem preco NQ fornecido - resultados so em termos QQQ.")
+        print("Sem preco NQ (nem argumento nem auto-fetch) - resultados so em termos QQQ.")
 
     def fmt_level(qqq_level):
         return f"{qqq_level:,.1f} QQQ" + (f"  (~{qqq_level*ratio:,.0f} NQ)" if ratio else "")

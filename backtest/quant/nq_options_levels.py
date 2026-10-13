@@ -40,6 +40,20 @@ def fetch_chain(symbol, cookiejar, crumb, date=None):
     return json.loads(raw)
 
 
+def fetch_nq_price():
+    """Busca o ultimo preco do futuro NQ=F via Yahoo (sem crumb, endpoint de chart)."""
+    try:
+        raw = sh(["curl", "-s", "-A", UA,
+                   "https://query1.finance.yahoo.com/v8/finance/chart/NQ=F?range=1d&interval=1m",
+                   "--max-time", "15"])
+        d = json.loads(raw)
+        r = d["chart"]["result"][0]
+        closes = [c for c in r["indicators"]["quote"][0]["close"] if c is not None]
+        return closes[-1] if closes else None
+    except Exception:
+        return None
+
+
 def max_pain(calls, puts):
     strikes = sorted(set(c["strike"] for c in calls) | set(p["strike"] for p in puts))
     call_oi = {c["strike"]: c.get("openInterest") or 0 for c in calls}
@@ -64,12 +78,17 @@ def main():
     qqq_price = result["quote"]["regularMarketPrice"]
     exp_dates = result["expirationDates"][:6]  # proximas ~6 expiracoes (daily/weekly QQQ)
 
+    auto_fetched = False
+    if not nq_price_arg:
+        nq_price_arg = fetch_nq_price()
+        auto_fetched = nq_price_arg is not None
     ratio = (nq_price_arg / qqq_price) if nq_price_arg else None
     print(f"QQQ price: {qqq_price}")
     if ratio:
-        print(f"NQ price fornecido: {nq_price_arg} -> racio NQ/QQQ: {ratio:.4f}")
+        tag = " (auto, NQ=F)" if auto_fetched else ""
+        print(f"NQ price: {nq_price_arg}{tag} -> racio NQ/QQQ: {ratio:.4f}")
     else:
-        print("Sem preco NQ fornecido (passa como argumento) - estrikes so em termos QQQ.")
+        print("Sem preco NQ (nem argumento nem auto-fetch) - estrikes so em termos QQQ.")
 
     agg_oi = defaultdict(float)
     near_calls, near_puts = None, None
