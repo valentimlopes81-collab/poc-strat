@@ -20,7 +20,13 @@ def norm_pdf(x):
     return math.exp(-0.5 * x * x) / math.sqrt(2 * math.pi)
 
 
+MIN_T_YEARS = 2.0 / 24.0 / 365.0  # piso de 2h — evita a divergencia matematica do
+# gamma Black-Scholes quando T->0 perto da expiracao (limitacao conhecida da formula,
+# nao corrigida pela maioria das implementacoes publicas de GEX sem este piso)
+
+
 def bs_gamma(S, K, T, sigma, r=0.04):
+    T = max(T, MIN_T_YEARS)
     if T <= 0 or sigma <= 0 or S <= 0 or K <= 0:
         return 0.0
     d1 = (math.log(S / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * math.sqrt(T))
