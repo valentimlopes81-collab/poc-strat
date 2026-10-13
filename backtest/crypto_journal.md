@@ -5,8 +5,8 @@
 5/15/30) confirmada dentro de uma zona densa de POCs ("teia"). P&L em €.*
 
 ### Estado
-- **P&L acumulado: +66,5€** (C1 +16€ + C2 +54,5€ + C3 0€ + C4 −4€ + C5 0€)
-- Trades: 5 (2W/1L/2BE)
+- **P&L acumulado: +49,5€** (C1 +16€ + C2 +54,5€ + C3 0€ + C4 −4€ + C5 0€ + C6 0€ + C7 −17€)
+- Trades: 7 (2W/2L/3BE)
 - **Mudança de processo anunciada (05/10):** passar a usar **stop loss mais manual**, gerido pela invalidação real do setup (ex.: falta de força vendedora/compradora a confirmar), em vez de só confiar no stop automático inicial — mantém-se como boa prática independentemente do resultado de cada trade.
 
 ### Registo live
@@ -17,6 +17,8 @@
 | C3 | 07/10 | BTCUSD | Long (div bullish em zona de POCs, estratégia por zona — vários POCs, não um ponto único) | Divergência bullish em zona de POCs | ⚪ BE | 0R | **0€** | Entrada com **DCA planeado** (normal nesta estratégia: as POCs formam zonas com vários níveis, não um ponto exato, por isso escalona entradas pela zona). Reação forte a favor logo a seguir à abertura → moveu para **BE**, e ao fazê-lo cancelou corretamente os limits do DCA mais abaixo (manter DCA aberto depois de já seguro em BE reintroduziria risco desnecessário). **Clarificação:** isto não é a mesma dinâmica da lição de 05/10 no MNQ (BE precipitado por desconforto) — é gestão coerente e por desenho desta estratégia de zona/DCA: reação forte → protege em BE → fecha a porta ao risco adicional do DCA. Resultado: sem loss |
 | C4 | 08/10 | LINKUSDT | Long | Setup do sistema (div + zona de POCs em 30m) | ❌ Loss (mínima) | **−4€** | **Invalidação predefinida clara e cumprida:** regra era sair se houvesse **fecho de 30m abaixo da zona de POCs**; isso aconteceu, cortou cedo, praticamente a BE. Se tivesse fechado acima da zona, mantinha aberta. **Exatamente o processo anunciado a 05/10** a funcionar como previsto — gerir pela invalidação predefinida, não pelo "sentir". Boa execução, mesmo sendo uma loss pequena |
 | C5 | 08/10 | HYPEUSDT | — | Zona de POCs (30m, teia 3 POCs) | ⚪ BE | — | **0€** | Detalhe não aprofundado — dia pesado emocionalmente (sequência do dia: L16/L17 no NQ + sessão de troubleshooting longa da plataforma). Registo mínimo por pedido do próprio: resultado BE, sem drama, conta intacta |
+| C6 | ~11/10 | BTCUSD | Long (scalp) | V-shape após spike de baixo, reação na zona de POCs | ⚪ BE | — | **0€** | Já seguro em BE quando reportado ("estou long scalp em btc já BE, v shape looking good"), tese era fecho de 4h a reconquistar o VAL. Fechou BE no fim — gestão protegida desde cedo, sem drama no resultado |
+| C7 | 12/10 | PUMPUSDT | — | Entrada a limit na **0,786 da Fib** + confluência de POCs | ❌ Loss | — | **−17€** | Detalhe não aprofundado. Mesmo dia do bank holiday em que ficou de fora do MNQ por liquidez mais fina — vale a pena vigiar se isso também pesou aqui |
 
 ### Notas gerais
 - Journal começado a 02/10 — sem histórico anterior a resumir.
