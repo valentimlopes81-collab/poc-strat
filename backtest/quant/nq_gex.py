@@ -54,7 +54,20 @@ def build_rows(cookiejar, crumb, max_days=45):
     now = datetime.datetime.utcnow()
     d0 = fetch_chain("QQQ", cookiejar, crumb)
     result = d0["optionChain"]["result"][0]
-    spot = result["quote"]["regularMarketPrice"]
+    quote = result["quote"]
+    spot = quote["regularMarketPrice"]
+
+    market_state = quote.get("marketState")
+    quote_time = quote.get("regularMarketTime")
+    if quote_time:
+        quote_dt = datetime.datetime.utcfromtimestamp(quote_time)
+        staleness = (now - quote_dt).total_seconds() / 3600.0
+        if market_state != "REGULAR" or staleness > 1.0:
+            print(f"AVISO: cotacao QQQ (e portanto a cadeia de opcoes) tem {staleness:.1f}h "
+                  f"(marketState={market_state}, timestamp={quote_dt} UTC) - mercado de opcoes "
+                  f"provavelmente fechado/pre-market, dados nao refletem o preco NQ atual. "
+                  f"Resultados pouco fiaveis ate o mercado abrir (13:30 UTC).", file=sys.stderr)
+
     exp_dates = [e for e in result["expirationDates"] if (datetime.datetime.utcfromtimestamp(e) - now).days <= max_days]
 
     rows = []
