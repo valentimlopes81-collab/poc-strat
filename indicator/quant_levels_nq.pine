@@ -1,8 +1,9 @@
 //@version=5
-indicator("Quant Levels (GEX) - NQ", overlay=true, max_lines_count=10, max_labels_count=10)
+indicator("Quant Levels (GEX) - NQ", overlay=true, max_lines_count=10, max_labels_count=10, max_boxes_count=10)
 
-// Cola aqui os niveis que o Claude te der (equivalente NQ, nao QQQ) e a linha desenha-se sozinha.
+// Cola aqui os niveis que o Claude te der (equivalente NQ, nao QQQ) e a zona desenha-se sozinha.
 // Deixa a 0 para esconder um nivel que nao tenhas hoje.
+// Zonas, nao linhas exatas -- a incerteza real do calculo e tipicamente +/-15 a 30pts em NQ.
 
 call_wall      = input.float(0, "Call Wall",             group="Niveis GEX (full dataset)")
 put_wall       = input.float(0, "Put Wall",               group="Niveis GEX (full dataset)")
@@ -11,23 +12,37 @@ zero_gamma     = input.float(0, "Zero-Gamma",             group="Niveis GEX (ful
 call_res_0dte  = input.float(0, "Call Resistance 0DTE",   group="Niveis 0DTE")
 put_sup_0dte   = input.float(0, "Put Support 0DTE",       group="Niveis 0DTE")
 
+zone_width     = input.int(20, "Largura da zona (+/- pts)", minval=5, maxval=100, group="Estilo")
 show_labels    = input.bool(true, "Mostrar labels", group="Estilo")
-line_width     = input.int(1, "Espessura", minval=1, maxval=4, group="Estilo")
+box_opacity    = input.int(70, "Opacidade da zona (0=solido, 100=invisivel)", minval=0, maxval=100, group="Estilo")
 
-col_call  = color.new(color.red, 0)
-col_put   = color.new(color.red, 0)
-col_zero  = color.new(color.orange, 0)
-col_0dte  = color.new(color.purple, 0)
+col_call  = color.red
+col_put   = color.red
+col_zero  = color.orange
+col_0dte  = color.purple
 
-plot_level(level, col, txt, style) =>
+var box[]   zone_boxes  = array.new_box()
+var label[] zone_labels = array.new_label()
+
+plot_zone(level, col, txt) =>
     if level != 0
-        line.new(bar_index[1], level, bar_index, level, extend=extend.right, color=col, width=line_width, style=style)
+        b = box.new(bar_index[1], level + zone_width, bar_index + 500, level - zone_width,
+                     border_color=col, border_width=2, bgcolor=color.new(col, box_opacity), extend=extend.right)
+        array.push(zone_boxes, b)
         if show_labels
-            label.new(bar_index, level, txt, style=label.style_label_left, color=color.new(col, 85), textcolor=col, size=size.small)
+            l = label.new(bar_index + 2, level, txt, style=label.style_label_left, color=color.new(col, 20), textcolor=color.white, size=size.normal)
+            array.push(zone_labels, l)
 
 if barstate.islast
-    plot_level(call_wall,     col_call, "call wall",       line.style_solid)
-    plot_level(put_wall,      col_put,  "put wall",         line.style_solid)
-    plot_level(zero_gamma,    col_zero, "zero",             line.style_dashed)
-    plot_level(call_res_0dte, col_0dte, "call res 0dte",    line.style_dotted)
-    plot_level(put_sup_0dte,  col_0dte, "put supp 0dte",    line.style_dotted)
+    for b in zone_boxes
+        box.delete(b)
+    array.clear(zone_boxes)
+    for l in zone_labels
+        label.delete(l)
+    array.clear(zone_labels)
+
+    plot_zone(call_wall,     col_call, "CALL WALL")
+    plot_zone(put_wall,      col_put,  "PUT WALL")
+    plot_zone(zero_gamma,    col_zero, "ZERO-GAMMA")
+    plot_zone(call_res_0dte, col_0dte, "CALL RES 0DTE")
+    plot_zone(put_sup_0dte,  col_0dte, "PUT SUPP 0DTE")
