@@ -1,6 +1,10 @@
 //@version=5
 indicator("Quant Levels (GEX) - NQ", overlay=true, max_lines_count=10, max_labels_count=30, max_boxes_count=30)
 
+// NOTA: nem todos os niveis sao "zonas" (incerteza/largura). Paredes GEX, HVL e put
+// supports sao zonas (box). Alvos bullish (preco-alvo simples, so um ponto de referencia)
+// sao linhas finas, sem largura -- usa plot_zone() para os primeiros, plot_line() para os alvos.
+
 // Cola aqui os niveis (nossos ou de outras fontes) e a zona desenha-se sozinha.
 // Deixa a 0 para esconder um nivel que nao tenhas hoje.
 // Zonas, nao linhas exatas -- a incerteza real do calculo e tipicamente +/-15 a 30pts em NQ.
@@ -42,12 +46,22 @@ col_0dte  = color.purple
 
 var box[]   zone_boxes  = array.new_box()
 var label[] zone_labels = array.new_label()
+var line[]  zone_lines  = array.new_line()
 
 plot_zone(level, col, txt) =>
     if level != 0
         b = box.new(bar_index[1], level + zone_width, bar_index + 500, level - zone_width,
                      border_color=col, border_width=2, bgcolor=color.new(col, box_opacity), extend=extend.right)
         array.push(zone_boxes, b)
+        if show_labels
+            l = label.new(bar_index + 2, level, txt, style=label.style_label_left, color=color.new(col, 20), textcolor=color.white, size=size.normal)
+            array.push(zone_labels, l)
+
+// nivel pontual simples (alvo), sem largura -- so uma linha, nao um box
+plot_line(level, col, txt) =>
+    if level != 0
+        ln = line.new(bar_index[1], level, bar_index + 500, level, color=col, width=2, style=line.style_dashed, extend=extend.right)
+        array.push(zone_lines, ln)
         if show_labels
             l = label.new(bar_index + 2, level, txt, style=label.style_label_left, color=color.new(col, 20), textcolor=color.white, size=size.normal)
             array.push(zone_labels, l)
@@ -69,7 +83,11 @@ if barstate.islast
     for l in zone_labels
         label.delete(l)
     array.clear(zone_labels)
+    for ln in zone_lines
+        line.delete(ln)
+    array.clear(zone_lines)
 
+    // ---- Zonas (walls/suportes/HVL) -- largura real, desenhadas como box ----
     plot_zone(call_wall,     col_call, "CALL WALL")
     plot_zone(put_wall,      col_put,  "PUT WALL")
     plot_zone(zero_gamma,    col_zero, "ZERO-GAMMA")
@@ -83,8 +101,10 @@ if barstate.islast
     plot_zone(put_sup2_ext,   col_ext, "PUT SUPPORT 2")
     plot_zone(put_sup3_ext,   col_ext, "PUT SUPPORT 3")
     plot_zone(put_sup4_ext,   col_ext, "PUT SUPPORT 4")
-    plot_zone(call_tgt1_ext,  col_ext, "ALVO BULLISH 1")
-    plot_zone(call_tgt2_ext,  col_ext, "ALVO BULLISH 2")
-    plot_zone(call_tgt3_ext,  col_ext, "ALVO BULLISH 3")
-    plot_zone(call_tgt4_ext,  col_ext, "ALVO BULLISH 4")
     plot_zone_range(zona_lo_ext, zona_hi_ext, col_ext, "ZONA FORTE")
+
+    // ---- Alvos (so um preco de referencia) -- linha fina, sem largura ----
+    plot_line(call_tgt1_ext,  col_ext, "ALVO BULLISH 1")
+    plot_line(call_tgt2_ext,  col_ext, "ALVO BULLISH 2")
+    plot_line(call_tgt3_ext,  col_ext, "ALVO BULLISH 3")
+    plot_line(call_tgt4_ext,  col_ext, "ALVO BULLISH 4")
