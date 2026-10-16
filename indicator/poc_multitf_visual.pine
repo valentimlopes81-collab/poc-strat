@@ -625,3 +625,125 @@ if sniper_long_setup or sniper_short_setup
     string payload = '{"ticker":"' + syminfo.ticker + '","side":"' + side_str + '","price":' + str.tostring(close, format.mintick) + ',"zone_pocs":[' + zj + '],"targets_up":[' + up + '],"targets_down":[' + dn + '],"zone_break":' + str.tostring(zb, format.mintick) + ',"density":' + str.tostring(density) + ',"confluence":' + str.tostring(conf) + ',"secret":"' + webhook_secret + '"}'
 
     alert(payload, alert.freq_once_per_bar_close)
+
+// ============================================================================
+// VALUE AREAS POR SESSAO (Asia / London / NY) — bloco novo, independente do
+// resto do indicador. Nao toca em nenhuma variavel/logica acima; reutiliza
+// so as amostras ltfP/ltfV/ltfT ja obtidas mais acima (mesma resolucao fixa).
+// Cada sessao fecha o seu Value Area (POC + VAH + VAL, 70% do volume por
+// omissao) quando a janela horaria termina, e fica marcado para a sessao
+// seguinte reagir a ele — nao e para trocar a Asia/London, so contexto extra
+// para a tua killzone de NY.
+// Horas em UTC (nao Lisboa) — confere o teu fuso ao preencher os inputs.
+// ============================================================================
+gva = "Value Areas por Sessao (Asia/London/NY)"
+show_va_asia   = input.bool(true, "Mostrar Value Area Asia",   group=gva)
+show_va_london = input.bool(true, "Mostrar Value Area London", group=gva)
+show_va_ny     = input.bool(true, "Mostrar Value Area NY",     group=gva)
+
+asia_start   = input.int(0,  "Asia inicio (h UTC)",   minval=0, maxval=23, group=gva)
+asia_end     = input.int(7,  "Asia fim (h UTC)",       minval=0, maxval=23, group=gva)
+london_start = input.int(7,  "London inicio (h UTC)",  minval=0, maxval=23, group=gva)
+london_end   = input.int(13, "London fim (h UTC)",     minval=0, maxval=23, group=gva)
+ny_start     = input.int(13, "NY inicio (h UTC)",      minval=0, maxval=23, group=gva)
+ny_end       = input.int(21, "NY fim (h UTC)",         minval=0, maxval=23, group=gva)
+
+va_pct   = input.float(0.70, "% de volume no Value Area", minval=0.5, maxval=0.95, step=0.05, group=gva)
+keep_va  = input.int(3, "Quantas sessoes manter (cada)", minval=1, maxval=10, group=gva)
+
+c_va_asia   = input.color(color.rgb(255, 193, 7),  "Cor Asia",   group=gva)
+c_va_london = input.color(color.rgb(0, 150, 136),  "Cor London", group=gva)
+c_va_ny     = input.color(color.rgb(233, 30, 99),  "Cor NY",     group=gva)
+
+// ---- Value area completo (POC + VAH + VAL) a partir de preco/volume brutos ----
+f_value_area(array<float> px, array<float> vol, int nb, float pct) =>
+    float poc = na
+    float vah = na
+    float val = na
+    int n = array.size(px)
+    if n > 0
+        float lo = array.min(px)
+        float hi = array.max(px)
+        float rng = hi - lo
+        if rng <= 0
+            poc := array.get(px, 0)
+            vah := poc
+            val := poc
+        else
+            bv = array.new_float(nb, 0.0)
+            float bw = rng / nb
+            float totalVol = 0.0
+            for i = 0 to n - 1
+                int idx = math.min(nb - 1, math.max(0, int((array.get(px, i) - lo) / bw)))
+                array.set(bv, idx, array.get(bv, idx) + array.get(vol, i))
+                totalVol += array.get(vol, i)
+            int pocIdx = array.indexof(bv, array.max(bv))
+            poc := lo + (pocIdx + 0.5) * bw
+            float accVol = array.get(bv, pocIdx)
+            int upIdx = pocIdx
+            int dnIdx = pocIdx
+            while accVol < totalVol * pct and (upIdx < nb - 1 or dnIdx > 0)
+                float volUp = upIdx < nb - 1 ? array.get(bv, upIdx + 1) : -1.0
+                float volDn = dnIdx > 0 ? array.get(bv, dnIdx - 1) : -1.0
+                if volUp >= volDn
+                    upIdx += 1
+                    accVol += array.get(bv, upIdx)
+                else
+                    dnIdx -= 1
+                    accVol += array.get(bv, dnIdx)
+            vah := lo + (upIdx + 1) * bw
+            val := lo + dnIdx * bw
+    [poc, vah, val]
+
+var array<float> bva_px=array.new_float(), var array<float> bva_v=array.new_float()
+var array<float> bvl_px=array.new_float(), var array<float> bvl_v=array.new_float()
+var array<float> bvn_px=array.new_float(), var array<float> bvn_v=array.new_float()
+
+var array<line> lva_poc=array.new_line(), var array<line> lva_vah=array.new_line(), var array<line> lva_val=array.new_line()
+var array<line> lvl_poc=array.new_line(), var array<line> lvl_vah=array.new_line(), var array<line> lvl_val=array.new_line()
+var array<line> lvn_poc=array.new_line(), var array<line> lvn_vah=array.new_line(), var array<line> lvn_val=array.new_line()
+var array<label> lbl_va = array.new_label()
+
+f_va_push(array<float> px, array<float> vol, array<line> lp, array<line> lh, array<line> ll, color c, string tag, int keep) =>
+    [poc, vah, val] = f_value_area(px, vol, bins, va_pct)
+    if not na(poc)
+        p = line.new(bar_index, poc, bar_index + 1, poc, color=color.new(c, 0), width=2, style=line.style_solid, extend=extend.right)
+        h = line.new(bar_index, vah, bar_index + 1, vah, color=color.new(c, 40), width=1, style=line.style_dashed, extend=extend.right)
+        l = line.new(bar_index, val, bar_index + 1, val, color=color.new(c, 40), width=1, style=line.style_dashed, extend=extend.right)
+        array.push(lp, p), array.push(lh, h), array.push(ll, l)
+        if array.size(lp) > keep
+            line.delete(array.shift(lp)), line.delete(array.shift(lh)), line.delete(array.shift(ll))
+        lbl = label.new(bar_index + 2, poc, tag + " POC " + str.tostring(poc, format.mintick), style=label.style_label_left, color=color.new(c, 70), textcolor=c, size=size.tiny)
+        array.push(lbl_va, lbl)
+        if array.size(lbl_va) > keep * 3
+            label.delete(array.shift(lbl_va))
+    array.clear(px)
+    array.clear(vol)
+
+bool inAsia   = hour(time, "UTC") >= asia_start   and hour(time, "UTC") < asia_end
+bool inLondon = hour(time, "UTC") >= london_start and hour(time, "UTC") < london_end
+bool inNY     = hour(time, "UTC") >= ny_start     and hour(time, "UTC") < ny_end
+
+if barstate.isconfirmed
+    if not na(ltfP) and array.size(ltfP) > 0
+        for i = 0 to array.size(ltfP) - 1
+            float p = array.get(ltfP, i)
+            float v = na(ltfV) or array.size(ltfV) <= i ? na : array.get(ltfV, i)
+            int   t = na(ltfT) or array.size(ltfT) <= i ? na : array.get(ltfT, i)
+            if not na(p) and not na(v) and v > 0 and not na(t)
+                bool tAsia   = hour(t, "UTC") >= asia_start   and hour(t, "UTC") < asia_end
+                bool tLondon = hour(t, "UTC") >= london_start and hour(t, "UTC") < london_end
+                bool tNY     = hour(t, "UTC") >= ny_start     and hour(t, "UTC") < ny_end
+                if show_va_asia and tAsia
+                    array.push(bva_px, p), array.push(bva_v, v)
+                if show_va_london and tLondon
+                    array.push(bvl_px, p), array.push(bvl_v, v)
+                if show_va_ny and tNY
+                    array.push(bvn_px, p), array.push(bvn_v, v)
+    // fecha a sessao quando a janela horaria termina (transicao true->false)
+    if show_va_asia and inAsia[1] and not inAsia and array.size(bva_px) > 0
+        f_va_push(bva_px, bva_v, lva_poc, lva_vah, lva_val, c_va_asia, "ASIA", keep_va)
+    if show_va_london and inLondon[1] and not inLondon and array.size(bvl_px) > 0
+        f_va_push(bvl_px, bvl_v, lvl_poc, lvl_vah, lvl_val, c_va_london, "LONDON", keep_va)
+    if show_va_ny and inNY[1] and not inNY and array.size(bvn_px) > 0
+        f_va_push(bvn_px, bvn_v, lvn_poc, lvn_vah, lvn_val, c_va_ny, "NY", keep_va)
