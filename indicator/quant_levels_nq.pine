@@ -1,20 +1,39 @@
 //@version=5
-indicator("Quant Levels (GEX) - NQ", overlay=true, max_lines_count=10, max_labels_count=10, max_boxes_count=10)
+indicator("Quant Levels (GEX) - NQ", overlay=true, max_lines_count=10, max_labels_count=30, max_boxes_count=30)
 
-// Cola aqui os niveis que o Claude te der (equivalente NQ, nao QQQ) e a zona desenha-se sozinha.
+// Cola aqui os niveis (nossos ou de outras fontes) e a zona desenha-se sozinha.
 // Deixa a 0 para esconder um nivel que nao tenhas hoje.
 // Zonas, nao linhas exatas -- a incerteza real do calculo e tipicamente +/-15 a 30pts em NQ.
 
-call_wall      = input.float(0, "Call Wall",             group="Niveis GEX (full dataset)")
-put_wall       = input.float(0, "Put Wall",               group="Niveis GEX (full dataset)")
-zero_gamma     = input.float(0, "Zero-Gamma",             group="Niveis GEX (full dataset)")
+call_wall      = input.float(0, "Call Wall",             group="Niveis GEX (nossos, full dataset)")
+put_wall       = input.float(0, "Put Wall",               group="Niveis GEX (nossos, full dataset)")
+zero_gamma     = input.float(0, "Zero-Gamma",             group="Niveis GEX (nossos, full dataset)")
 
-call_res_0dte  = input.float(0, "Call Resistance 0DTE",   group="Niveis 0DTE")
-put_sup_0dte   = input.float(0, "Put Support 0DTE",       group="Niveis 0DTE")
+call_res_0dte  = input.float(0, "Call Resistance 0DTE",   group="Niveis 0DTE (nossos)")
+put_sup_0dte   = input.float(0, "Put Support 0DTE",       group="Niveis 0DTE (nossos)")
 
-zone_width     = input.int(20, "Largura da zona (+/- pts)", minval=5, maxval=100, group="Estilo")
+// ---- Niveis de outra fonte (ex.: colega) -- mesma ideia, para comparar lado a lado ----
+hvl_ext        = input.float(0, "HVL",                    group="Niveis - outra fonte (colega)")
+hvl_0dte_ext   = input.float(0, "HVL 0DTE",                group="Niveis - outra fonte (colega)")
+gwall_0dte_ext = input.float(0, "Gamma Wall / Call Res 0DTE", group="Niveis - outra fonte (colega)")
+
+put_sup1_ext   = input.float(0, "Put Support (principal)", group="Niveis - outra fonte (colega)")
+put_sup2_ext   = input.float(0, "Put Support 2",           group="Niveis - outra fonte (colega)")
+put_sup3_ext   = input.float(0, "Put Support 3",           group="Niveis - outra fonte (colega)")
+put_sup4_ext   = input.float(0, "Put Support 4",           group="Niveis - outra fonte (colega)")
+
+call_tgt1_ext  = input.float(0, "Alvo bullish 1",          group="Niveis - outra fonte (colega)")
+call_tgt2_ext  = input.float(0, "Alvo bullish 2",          group="Niveis - outra fonte (colega)")
+call_tgt3_ext  = input.float(0, "Alvo bullish 3",          group="Niveis - outra fonte (colega)")
+call_tgt4_ext  = input.float(0, "Alvo bullish 4",          group="Niveis - outra fonte (colega)")
+
+zona_lo_ext    = input.float(0, "Zona forte - low",        group="Niveis - outra fonte (colega)")
+zona_hi_ext    = input.float(0, "Zona forte - high",       group="Niveis - outra fonte (colega)")
+
+zone_width     = input.int(20, "Largura da zona (+/- pts, niveis pontuais)", minval=5, maxval=100, group="Estilo")
 show_labels    = input.bool(true, "Mostrar labels", group="Estilo")
 box_opacity    = input.int(70, "Opacidade da zona (0=solido, 100=invisivel)", minval=0, maxval=100, group="Estilo")
+col_ext        = input.color(color.blue, "Cor dos niveis da outra fonte", group="Estilo")
 
 col_call  = color.red
 col_put   = color.red
@@ -33,6 +52,16 @@ plot_zone(level, col, txt) =>
             l = label.new(bar_index + 2, level, txt, style=label.style_label_left, color=color.new(col, 20), textcolor=color.white, size=size.normal)
             array.push(zone_labels, l)
 
+// zona com limites explicitos (low/high), em vez de ponto +/- largura
+plot_zone_range(lo, hi, col, txt) =>
+    if lo != 0 and hi != 0
+        b = box.new(bar_index[1], math.max(lo, hi), bar_index + 500, math.min(lo, hi),
+                     border_color=col, border_width=2, bgcolor=color.new(col, box_opacity), extend=extend.right)
+        array.push(zone_boxes, b)
+        if show_labels
+            l = label.new(bar_index + 2, (lo + hi) / 2, txt, style=label.style_label_left, color=color.new(col, 20), textcolor=color.white, size=size.normal)
+            array.push(zone_labels, l)
+
 if barstate.islast
     for b in zone_boxes
         box.delete(b)
@@ -46,3 +75,16 @@ if barstate.islast
     plot_zone(zero_gamma,    col_zero, "ZERO-GAMMA")
     plot_zone(call_res_0dte, col_0dte, "CALL RES 0DTE")
     plot_zone(put_sup_0dte,  col_0dte, "PUT SUPP 0DTE")
+
+    plot_zone(hvl_ext,        col_ext, "HVL")
+    plot_zone(hvl_0dte_ext,   col_ext, "HVL 0DTE")
+    plot_zone(gwall_0dte_ext, col_ext, "GAMMA WALL 0DTE")
+    plot_zone(put_sup1_ext,   col_ext, "PUT SUPPORT")
+    plot_zone(put_sup2_ext,   col_ext, "PUT SUPPORT 2")
+    plot_zone(put_sup3_ext,   col_ext, "PUT SUPPORT 3")
+    plot_zone(put_sup4_ext,   col_ext, "PUT SUPPORT 4")
+    plot_zone(call_tgt1_ext,  col_ext, "ALVO BULLISH 1")
+    plot_zone(call_tgt2_ext,  col_ext, "ALVO BULLISH 2")
+    plot_zone(call_tgt3_ext,  col_ext, "ALVO BULLISH 3")
+    plot_zone(call_tgt4_ext,  col_ext, "ALVO BULLISH 4")
+    plot_zone_range(zona_lo_ext, zona_hi_ext, col_ext, "ZONA FORTE")
