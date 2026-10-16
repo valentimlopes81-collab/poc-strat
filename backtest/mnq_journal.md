@@ -569,7 +569,7 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 *A partir de 24/09: cada trade regista **dois veredictos** — 🤖 **Mecânico** (a regra estrita teria entrado? só fecho confirmado no POI, zero antecipação) vs 🧠 **Discricionário** (o que foi de facto lido/feito, incl. contexto humano). Objetivo: separar erro de leitura de erro de execução, e ver se a versão mecânica supera a discricionária ao longo do tempo.*
 
 ### Estado
-- **P&L: ~−$298,0** · Balance: **~$24.702,0** · Target: falta **~$1.798,0** de $1.500 · DD: intacto, a recuperar
+- **P&L: ~−$311,10** · Balance: **~$24.688,90** · Target: falta **~$1.811,10** de $1.500 · DD: intacto, a recuperar
 - Trades live (SISTEMA): 23 (4W/10L/9BE) + no-plays
 - ⚠️ **Padrão confirmado (16/10): "VWAP giveback"** — 3 ocorrências em 2 dias (L20 +1,30R→BE, L21 +1,96R→BE, L22 +1R→BE), todas sem loss mas a devolver lucro flutuante significativo na reação da VWAP. Já passou de "vigiar" para ajuste de processo ativo: ao atingir ≥1R com a VWAP a favor, mover o stop para proteger uma fração (~+0,5R) em vez de ficar só no BE.
 - ✅ **16/10 — dia de OPEX, 3 trades (L21-L23), todas BE/sem loss no preço** (L20 foi no dia anterior, 15/10 — correção). Sessão fechada pelo próprio depois do L23, com boa leitura de qualidade de price action a travar a última trade antes de qualquer risco desnecessário. Dia de PA difícil ("imensas wicks") gerido com disciplina. **Nota:** mesmo BE no preço, as taxas de 3 trades fecharam fazem mossa real na conta — confirmar com o utilizador o valor exato de impacto.
