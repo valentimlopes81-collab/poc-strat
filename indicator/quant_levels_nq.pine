@@ -1,9 +1,12 @@
 //@version=5
-indicator("Quant Levels (GEX) - NQ", overlay=true, max_lines_count=10, max_labels_count=30, max_boxes_count=30)
+indicator("Quant Levels (GEX) - NQ", overlay=true, max_lines_count=20, max_labels_count=30, max_boxes_count=30)
 
-// NOTA: nem todos os niveis sao "zonas" (incerteza/largura). Paredes GEX, HVL e put
-// supports sao zonas (box). Alvos bullish (preco-alvo simples, so um ponto de referencia)
-// sao linhas finas, sem largura -- usa plot_zone() para os primeiros, plot_line() para os alvos.
+// NOTA: so as "walls" reais (Call Wall, Put Wall, Gamma Wall 0DTE) sao zonas
+// (box, com largura) -- sao os unicos niveis com fundamento para serem lidos como
+// zona de imã/absorcao. Tudo o resto (Zero-Gamma, HVL, Call Res/Put Supp 0DTE,
+// Put Supports do colega, alvos) e um preco de referencia pontual -- linha fina,
+// sem largura, para nao empilhar opacidade e virar um bloco solido ilegivel
+// quando varios niveis ficam proximos (ja aconteceu com o GEX atual).
 
 // Cola aqui os niveis (nossos ou de outras fontes) e a zona desenha-se sozinha.
 // Deixa a 0 para esconder um nivel que nao tenhas hoje.
@@ -87,20 +90,22 @@ if barstate.islast
         line.delete(ln)
     array.clear(zone_lines)
 
-    // ---- Zonas (walls/suportes/HVL) -- largura real, desenhadas como box ----
+    // ---- Walls reais -- unicas com largura, desenhadas como box ----
     plot_zone(call_wall,     col_call, "CALL WALL")
     plot_zone(put_wall,      col_put,  "PUT WALL")
-    plot_zone(zero_gamma,    col_zero, "ZERO-GAMMA")
-    plot_zone(call_res_0dte, col_0dte, "CALL RES 0DTE")
-    plot_zone(put_sup_0dte,  col_0dte, "PUT SUPP 0DTE")
-
-    plot_zone(hvl_ext,        col_ext, "HVL")
-    plot_zone(hvl_0dte_ext,   col_ext, "HVL 0DTE")
     plot_zone(gwall_0dte_ext, col_ext, "GAMMA WALL 0DTE")
-    plot_zone(put_sup1_ext,   col_ext, "PUT SUPPORT")
-    plot_zone(put_sup2_ext,   col_ext, "PUT SUPPORT 2")
-    plot_zone(put_sup3_ext,   col_ext, "PUT SUPPORT 3")
-    plot_zone(put_sup4_ext,   col_ext, "PUT SUPPORT 4")
+
+    // ---- Niveis pontuais (nao sao "wall") -- linha fina, sem largura ----
+    plot_line(zero_gamma,    col_zero, "ZERO-GAMMA")
+    plot_line(call_res_0dte, col_0dte, "CALL RES 0DTE")
+    plot_line(put_sup_0dte,  col_0dte, "PUT SUPP 0DTE")
+
+    plot_line(hvl_ext,        col_ext, "HVL")
+    plot_line(hvl_0dte_ext,   col_ext, "HVL 0DTE")
+    plot_line(put_sup1_ext,   col_ext, "PUT SUPPORT")
+    plot_line(put_sup2_ext,   col_ext, "PUT SUPPORT 2")
+    plot_line(put_sup3_ext,   col_ext, "PUT SUPPORT 3")
+    plot_line(put_sup4_ext,   col_ext, "PUT SUPPORT 4")
     plot_zone_range(zona_lo_ext, zona_hi_ext, col_ext, "ZONA FORTE")
 
     // ---- Alvos (so um preco de referencia) -- linha fina, sem largura ----
