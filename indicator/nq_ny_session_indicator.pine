@@ -28,6 +28,22 @@ rth_sess  = input.session("0930-1600", "RTH (value area / PDH-PDL / VWAP)", grou
 win_sess  = input.session("0930-1130", "Janela de trade (sombreado)", group=gs)
 asia_sess = input.session("1800-0300", "Sessão asiática (Asia H/L)", group=gs)
 
+// ---------------- PD Value Area Asia/London (UTC nativo, não NY tz) ----------------
+// Limites em UTC fixo (não hora de NY) para não desviar com o DST dos EUA.
+// Mesma convenção usada no poc_multitf_visual.pine: Asia 00:00-07:00, London 07:00-13:30 UTC.
+gu = "PD Value Area Asia/London (UTC)"
+show_va_asia   = input.bool(true, "Mostrar PD POC/VAH/VAL Asia", group=gu)
+asia_va_sh = input.int(0, "Asia início - hora (UTC)",  minval=0, maxval=23, group=gu)
+asia_va_sm = input.int(0, "Asia início - minuto (UTC)", minval=0, maxval=59, group=gu)
+asia_va_eh = input.int(7, "Asia fim - hora (UTC)",      minval=0, maxval=23, group=gu)
+asia_va_em = input.int(0, "Asia fim - minuto (UTC)",    minval=0, maxval=59, group=gu)
+show_va_london = input.bool(true, "Mostrar PD POC/VAH/VAL London", group=gu)
+lon_va_sh  = input.int(7,  "London início - hora (UTC)",  minval=0, maxval=23, group=gu)
+lon_va_sm  = input.int(0,  "London início - minuto (UTC)", minval=0, maxval=59, group=gu)
+lon_va_eh  = input.int(13, "London fim - hora (UTC)",      minval=0, maxval=23, group=gu)
+lon_va_em  = input.int(30, "London fim - minuto (UTC)",    minval=0, maxval=59, group=gu,
+     tooltip="Defaults: Asia 00:00-07:00 UTC, London 07:00-13:30 UTC (= fim de Asia). Equivalente Lisboa atual (WEST, UTC+1): Asia 01:00-08:00, London 08:00-14:30 — muda 1h quando o horário de verão terminar.")
+
 // ---------------- Amostragem / perfil ----------------
 gp = "Perfil (resolução fixa)"
 sample_tf = input.timeframe("1", "Resolução de amostragem", options=["1","3","5"], group=gp, tooltip="Fixa. Torna os POIs iguais em qualquer TF do gráfico. 1 min = mais preciso.")
@@ -57,9 +73,14 @@ c_on   = input.color(color.purple, "ON POC", group=gc)
 c_vw   = input.color(color.blue, "VWAP", group=gc)
 c_dev  = input.color(color.teal, "POC hoje", group=gc)
 c_asia = input.color(color.new(color.aqua,20), "Asia H/L", group=gc)
+c_poc_a = input.color(color.fuchsia, "PD POC Asia", group=gc)
+c_va_a  = input.color(color.new(color.fuchsia,45), "PD VAH/VAL Asia", group=gc)
+c_poc_l = input.color(color.yellow, "PD POC London", group=gc)
+c_va_l  = input.color(color.new(color.yellow,45), "PD VAH/VAL London", group=gc)
 
 // ---------------- Helpers de horário ----------------
 f_mins(int t) => hour(t, tz) * 60 + minute(t, tz)
+f_minsUTC(int t) => hour(t, "UTC") * 60 + minute(t, "UTC")
 f_parse(string s) =>
     int sh = math.round(str.tonumber(str.substring(s,0,2)))
     int sm = math.round(str.tonumber(str.substring(s,2,4)))
@@ -71,6 +92,11 @@ f_in(int m, int s, int e) => s < e ? (m >= s and m < e) : (m >= s or m < e)
 [rth_s, rth_e]   = f_parse(rth_sess)
 [win_s, win_e]   = f_parse(win_sess)
 [asia_s, asia_e] = f_parse(asia_sess)
+
+asiaVA_s = asia_va_sh * 60 + asia_va_sm
+asiaVA_e = asia_va_eh * 60 + asia_va_em
+lonVA_s  = lon_va_sh * 60 + lon_va_sm
+lonVA_e  = lon_va_eh * 60 + lon_va_em
 
 // ---------------- Perfil: POC + Value Area ----------------
 f_profile(array<float> px, array<float> w, int nb, float vap) =>
@@ -117,6 +143,11 @@ var float pd_high=na, var float pd_low=na
 var float on_poc=na, var float dev_poc=na, var float vwap_v=na
 var float asia_high=na, var float asia_low=na
 
+var array<float> asiaVA_px = array.new_float(), var array<float> asiaVA_w = array.new_float()
+var array<float> lonVA_px  = array.new_float(), var array<float> lonVA_w  = array.new_float()
+var float pd_poc_a=na, var float pd_vah_a=na, var float pd_val_a=na
+var float pd_poc_l=na, var float pd_vah_l=na, var float pd_val_l=na
+
 // amostras à resolução fixa
 useChart = timeframe.in_seconds(sample_tf) >= timeframe.in_seconds()
 [ltfH3, ltfV, ltfT, ltfHi, ltfLo] = request.security_lower_tf(syminfo.tickerid, sample_tf, [hlc3, volume, time, high, low])
@@ -127,6 +158,12 @@ inA  = f_in(nowM, asia_s, asia_e)
 rth_open  = inR and not inR[1]
 rth_close = not inR and inR[1]
 asia_open = inA and not inA[1]
+
+nowM_utc = f_minsUTC(time)
+inAsiaVA   = f_in(nowM_utc, asiaVA_s, asiaVA_e)
+inLondonVA = f_in(nowM_utc, lonVA_s, lonVA_e)
+asiaVA_close   = not inAsiaVA and inAsiaVA[1]
+londonVA_close = not inLondonVA and inLondonVA[1]
 
 if barstate.isconfirmed
     if asia_open
@@ -162,6 +199,11 @@ if barstate.isconfirmed
             if f_in(m, asia_s, asia_e)
                 asia_hi := na(asia_hi) ? hi : math.max(asia_hi, hi)
                 asia_lo := na(asia_lo) ? lo : math.min(asia_lo, lo)
+            int mu = f_minsUTC(t)
+            if f_in(mu, asiaVA_s, asiaVA_e)
+                array.push(asiaVA_px, p), array.push(asiaVA_w, w)
+            if f_in(mu, lonVA_s, lonVA_e)
+                array.push(lonVA_px, p), array.push(lonVA_w, w)
     // fim da RTH → fixar dia anterior
     if rth_close and array.size(rth_px) > 0
         [pc, vh, vl] = f_profile(rth_px, rth_w, bins, va_pct)
@@ -169,6 +211,16 @@ if barstate.isconfirmed
         pd_high := rth_hi, pd_low := rth_lo
         array.clear(rth_px), array.clear(rth_w)
         rth_hi := na, rth_lo := na, pv_sum := 0.0, v_sum := 0.0
+    // fim de Asia (UTC) → fixar PD Value Area Asia
+    if asiaVA_close and array.size(asiaVA_px) > 0
+        [apc, avh, avl] = f_profile(asiaVA_px, asiaVA_w, bins, va_pct)
+        pd_poc_a := apc, pd_vah_a := avh, pd_val_a := avl
+        array.clear(asiaVA_px), array.clear(asiaVA_w)
+    // fim de London (UTC) → fixar PD Value Area London
+    if londonVA_close and array.size(lonVA_px) > 0
+        [lpc, lvh, lvl] = f_profile(lonVA_px, lonVA_w, bins, va_pct)
+        pd_poc_l := lpc, pd_vah_l := lvh, pd_val_l := lvl
+        array.clear(lonVA_px), array.clear(lonVA_w)
     // abertura RTH → fixar ON POC
     if rth_open and array.size(on_px) > 0
         [opc, _a, _b] = f_profile(on_px, on_w, bins, va_pct)
@@ -192,6 +244,12 @@ plot(z_vwap and inR and not na(vwap_v) ? vwap_v : na, "VWAP", c_vw, 1, plot.styl
 plot(z_dev and inR and not na(dev_poc) ? dev_poc : na, "POC hoje", c_dev, 1, plot.style_linebr)
 plot(z_asia and not na(asia_high) ? asia_high : na, "Asia H", c_asia, 1, plot.style_linebr)
 plot(z_asia and not na(asia_low)  ? asia_low  : na, "Asia L", c_asia, 1, plot.style_linebr)
+plot(show_va_asia and not na(pd_poc_a) ? pd_poc_a : na, "PD POC Asia", c_poc_a, 2, plot.style_linebr)
+plot(show_va_asia and not na(pd_vah_a) ? pd_vah_a : na, "PD VAH Asia", c_va_a, 1, plot.style_linebr)
+plot(show_va_asia and not na(pd_val_a) ? pd_val_a : na, "PD VAL Asia", c_va_a, 1, plot.style_linebr)
+plot(show_va_london and not na(pd_poc_l) ? pd_poc_l : na, "PD POC London", c_poc_l, 2, plot.style_linebr)
+plot(show_va_london and not na(pd_vah_l) ? pd_vah_l : na, "PD VAH London", c_va_l, 1, plot.style_linebr)
+plot(show_va_london and not na(pd_val_l) ? pd_val_l : na, "PD VAL London", c_va_l, 1, plot.style_linebr)
 
 bgcolor(f_in(nowM, win_s, win_e) ? color.new(color.green, 92) : na, title="Janela de trade")
 
@@ -212,6 +270,8 @@ var label L_poc=label.new(na,na,""), var label L_vah=label.new(na,na,""), var la
 var label L_pdh=label.new(na,na,""), var label L_pdl=label.new(na,na,"")
 var label L_on=label.new(na,na,""),  var label L_vw=label.new(na,na,"")
 var label L_dev=label.new(na,na,""), var label L_ah=label.new(na,na,""), var label L_al=label.new(na,na,"")
+var label L_poc_a=label.new(na,na,""), var label L_vah_a=label.new(na,na,""), var label L_val_a=label.new(na,na,"")
+var label L_poc_l=label.new(na,na,""), var label L_vah_l=label.new(na,na,""), var label L_val_l=label.new(na,na,"")
 
 f_lab(L_poc, z_pdva, pd_poc, "PD POC", c_poc)
 f_lab(L_vah, z_pdva, pd_vah, "PD VAH", c_va)
@@ -223,6 +283,12 @@ f_lab(L_vw,  z_vwap and inR, vwap_v, "VWAP", c_vw)
 f_lab(L_dev, z_dev and inR,  dev_poc, "POC hoje", c_dev)
 f_lab(L_ah,  z_asia, asia_high, "Asia H", c_asia)
 f_lab(L_al,  z_asia, asia_low, "Asia L", c_asia)
+f_lab(L_poc_a, show_va_asia, pd_poc_a, "PD POC Asia", c_poc_a)
+f_lab(L_vah_a, show_va_asia, pd_vah_a, "PD VAH Asia", c_va_a)
+f_lab(L_val_a, show_va_asia, pd_val_a, "PD VAL Asia", c_va_a)
+f_lab(L_poc_l, show_va_london, pd_poc_l, "PD POC London", c_poc_l)
+f_lab(L_vah_l, show_va_london, pd_vah_l, "PD VAH London", c_va_l)
+f_lab(L_val_l, show_va_london, pd_val_l, "PD VAL London", c_va_l)
 
 // ============================================================================
 // ACEITAÇÃO / RECUSA / ABSORÇÃO  (proxy de preço+volume — NÃO é order flow real)
