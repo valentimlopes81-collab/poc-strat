@@ -30,9 +30,9 @@ call_tgt4_ext  = input.float(0, "Alvo bullish 4",          group="Niveis - outra
 zona_lo_ext    = input.float(0, "Zona forte - low",        group="Niveis - outra fonte (colega)")
 zona_hi_ext    = input.float(0, "Zona forte - high",       group="Niveis - outra fonte (colega)")
 
-zone_width     = input.int(20, "Largura da zona (+/- pts, niveis pontuais)", minval=5, maxval=100, group="Estilo")
+zone_width     = input.int(25, "Largura da zona (+/- pts, niveis pontuais)", minval=5, maxval=100, group="Estilo")
 show_labels    = input.bool(true, "Mostrar labels", group="Estilo")
-box_opacity    = input.int(70, "Opacidade da zona (0=solido, 100=invisivel)", minval=0, maxval=100, group="Estilo")
+box_opacity    = input.int(45, "Opacidade da zona (0=solido, 100=invisivel)", minval=0, maxval=100, group="Estilo")
 col_ext        = input.color(color.blue, "Cor dos niveis da outra fonte", group="Estilo")
 
 col_call  = color.red
