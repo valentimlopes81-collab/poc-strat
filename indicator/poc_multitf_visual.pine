@@ -641,12 +641,24 @@ show_va_asia   = input.bool(true, "Mostrar Value Area Asia",   group=gva)
 show_va_london = input.bool(true, "Mostrar Value Area London", group=gva)
 show_va_ny     = input.bool(true, "Mostrar Value Area NY",     group=gva)
 
-asia_start   = input.int(0,  "Asia inicio (h UTC)",   minval=0, maxval=23, group=gva)
-asia_end     = input.int(7,  "Asia fim (h UTC)",       minval=0, maxval=23, group=gva)
-london_start = input.int(7,  "London inicio (h UTC)",  minval=0, maxval=23, group=gva)
-london_end   = input.int(13, "London fim (h UTC)",     minval=0, maxval=23, group=gva)
-ny_start     = input.int(13, "NY inicio (h UTC)",      minval=0, maxval=23, group=gva)
-ny_end       = input.int(21, "NY fim (h UTC)",         minval=0, maxval=23, group=gva)
+// IMPORTANTE: tudo aqui e em UTC, nao em hora de Lisboa -- os tooltips dao
+// o equivalente em Lisboa (UTC+1 agora, em horario de verao/DST). Quando
+// Portugal mudar para hora de inverno (ultimo domingo de outubro), o
+// equivalente Lisboa destes UTCs desce 1h (ex.: NY passa a abrir as 13:30
+// Lisboa em vez de 14:30) -- os valores UTC em si nao mudam.
+// NY abre as 9:30 ET = 13:30 UTC (confirmado com o utilizador = 14:30 Lisboa agora).
+asia_start_h   = input.int(0,  "Asia inicio - hora (UTC)",   minval=0, maxval=23, group=gva, tooltip="Agora em Lisboa (UTC+1, horario de verao): soma 1h")
+asia_start_m   = input.int(0,  "Asia inicio - minuto",       minval=0, maxval=59, group=gva)
+asia_end_h     = input.int(7,  "Asia fim - hora (UTC)",      minval=0, maxval=23, group=gva)
+asia_end_m     = input.int(0,  "Asia fim - minuto",          minval=0, maxval=59, group=gva)
+london_start_h = input.int(7,  "London inicio - hora (UTC)", minval=0, maxval=23, group=gva, tooltip="08:00 Lisboa agora (UTC+1)")
+london_start_m = input.int(0,  "London inicio - minuto",     minval=0, maxval=59, group=gva)
+london_end_h   = input.int(13, "London fim - hora (UTC)",    minval=0, maxval=23, group=gva, tooltip="13:30 UTC = fecha quando NY abre, para nao sobrepor sessoes")
+london_end_m   = input.int(30, "London fim - minuto",        minval=0, maxval=59, group=gva)
+ny_start_h     = input.int(13, "NY inicio - hora (UTC)",     minval=0, maxval=23, group=gva, tooltip="13:30 UTC = 9:30 ET = 14:30 Lisboa agora (UTC+1) -- confirmado com o utilizador")
+ny_start_m     = input.int(30, "NY inicio - minuto",         minval=0, maxval=59, group=gva)
+ny_end_h       = input.int(21, "NY fim - hora (UTC)",        minval=0, maxval=23, group=gva, tooltip="22:00 Lisboa agora (UTC+1)")
+ny_end_m       = input.int(0,  "NY fim - minuto",            minval=0, maxval=59, group=gva)
 
 va_pct   = input.float(0.70, "% de volume no Value Area", minval=0.5, maxval=0.95, step=0.05, group=gva)
 keep_va  = input.int(3, "Quantas sessoes manter (cada)", minval=1, maxval=10, group=gva)
@@ -720,9 +732,21 @@ f_va_push(array<float> px, array<float> vol, array<line> lp, array<line> lh, arr
     array.clear(px)
     array.clear(vol)
 
-bool inAsia   = hour(time, "UTC") >= asia_start   and hour(time, "UTC") < asia_end
-bool inLondon = hour(time, "UTC") >= london_start and hour(time, "UTC") < london_end
-bool inNY     = hour(time, "UTC") >= ny_start     and hour(time, "UTC") < ny_end
+// comparacao em minutos-desde-meia-noite UTC, para precisao de meia-hora (ex.: 13:30)
+f_minOfDayUTC(int t) =>
+    hour(t, "UTC") * 60 + minute(t, "UTC")
+
+int nowMin        = f_minOfDayUTC(time)
+int asiaStartMin   = asia_start_h * 60 + asia_start_m
+int asiaEndMin     = asia_end_h * 60 + asia_end_m
+int londonStartMin = london_start_h * 60 + london_start_m
+int londonEndMin   = london_end_h * 60 + london_end_m
+int nyStartMin      = ny_start_h * 60 + ny_start_m
+int nyEndMin        = ny_end_h * 60 + ny_end_m
+
+bool inAsia   = nowMin >= asiaStartMin   and nowMin < asiaEndMin
+bool inLondon = nowMin >= londonStartMin and nowMin < londonEndMin
+bool inNY     = nowMin >= nyStartMin     and nowMin < nyEndMin
 
 if barstate.isconfirmed
     if not na(ltfP) and array.size(ltfP) > 0
@@ -731,9 +755,10 @@ if barstate.isconfirmed
             float v = na(ltfV) or array.size(ltfV) <= i ? na : array.get(ltfV, i)
             int   t = na(ltfT) or array.size(ltfT) <= i ? na : array.get(ltfT, i)
             if not na(p) and not na(v) and v > 0 and not na(t)
-                bool tAsia   = hour(t, "UTC") >= asia_start   and hour(t, "UTC") < asia_end
-                bool tLondon = hour(t, "UTC") >= london_start and hour(t, "UTC") < london_end
-                bool tNY     = hour(t, "UTC") >= ny_start     and hour(t, "UTC") < ny_end
+                int tMin = f_minOfDayUTC(t)
+                bool tAsia   = tMin >= asiaStartMin   and tMin < asiaEndMin
+                bool tLondon = tMin >= londonStartMin and tMin < londonEndMin
+                bool tNY     = tMin >= nyStartMin     and tMin < nyEndMin
                 if show_va_asia and tAsia
                     array.push(bva_px, p), array.push(bva_v, v)
                 if show_va_london and tLondon
