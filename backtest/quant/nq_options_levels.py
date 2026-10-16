@@ -13,9 +13,11 @@ import json
 import subprocess
 import sys
 import tempfile
+import time
 from collections import defaultdict
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+RETRY_DELAYS = [5, 15, 30]  # segundos entre tentativas automaticas em caso de rate-limit
 
 
 def sh(cmd):
@@ -26,10 +28,21 @@ def sh(cmd):
 
 
 def get_crumb_and_cookies(cookiejar):
+    """Pede cookie+crumb com retry automatico se a Yahoo responder rate-limit
+    ("Too Many Requests" no proprio corpo do crumb, em vez de JSON de opcoes)."""
     sh(["curl", "-s", "-c", cookiejar, "-A", UA, "https://fc.yahoo.com", "-o", "/dev/null", "--max-time", "15"])
-    crumb = sh(["curl", "-s", "-b", cookiejar, "-c", cookiejar, "-A", UA,
-                "https://query2.finance.yahoo.com/v1/test/getcrumb", "--max-time", "15"]).strip()
-    return crumb
+    last_crumb = ""
+    for attempt, delay in enumerate([0] + RETRY_DELAYS):
+        if delay:
+            print(f"AVISO: Yahoo rate-limit no crumb, a tentar outra vez em {delay}s "
+                  f"(tentativa {attempt+1}/{len(RETRY_DELAYS)+1})...", file=sys.stderr)
+            time.sleep(delay)
+        crumb = sh(["curl", "-s", "-b", cookiejar, "-c", cookiejar, "-A", UA,
+                    "https://query2.finance.yahoo.com/v1/test/getcrumb", "--max-time", "15"]).strip()
+        if "Too Many Requests" not in crumb and crumb:
+            return crumb
+        last_crumb = crumb
+    raise RuntimeError(f"Yahoo continua em rate-limit apos {len(RETRY_DELAYS)+1} tentativas: {last_crumb[:100]}")
 
 
 def fetch_chain(symbol, cookiejar, crumb, date=None):

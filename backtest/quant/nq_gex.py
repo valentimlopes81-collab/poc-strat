@@ -8,11 +8,13 @@ import json
 import subprocess
 import sys
 import tempfile
+import time
 
 from gex_common import total_gex_at_spot, find_zero_gamma, strikes_by_abs_gex, call_put_walls
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 MULTIPLIER = 100.0  # 100 acoes por contrato (equity options standard)
+RETRY_DELAYS = [5, 15, 30]  # segundos entre tentativas automaticas em caso de rate-limit
 
 
 def fetch_nq_price():
@@ -37,9 +39,21 @@ def sh(cmd):
 
 
 def get_crumb_and_cookies(cookiejar):
+    """Pede cookie+crumb com retry automatico se a Yahoo responder rate-limit
+    ("Too Many Requests" no proprio corpo do crumb, em vez de JSON de opcoes)."""
     sh(["curl", "-s", "-c", cookiejar, "-A", UA, "https://fc.yahoo.com", "-o", "/dev/null", "--max-time", "15"])
-    return sh(["curl", "-s", "-b", cookiejar, "-c", cookiejar, "-A", UA,
-               "https://query2.finance.yahoo.com/v1/test/getcrumb", "--max-time", "15"]).strip()
+    last_crumb = ""
+    for attempt, delay in enumerate([0] + RETRY_DELAYS):
+        if delay:
+            print(f"AVISO: Yahoo rate-limit no crumb, a tentar outra vez em {delay}s "
+                  f"(tentativa {attempt+1}/{len(RETRY_DELAYS)+1})...", file=sys.stderr)
+            time.sleep(delay)
+        crumb = sh(["curl", "-s", "-b", cookiejar, "-c", cookiejar, "-A", UA,
+                    "https://query2.finance.yahoo.com/v1/test/getcrumb", "--max-time", "15"]).strip()
+        if "Too Many Requests" not in crumb and crumb:
+            return crumb
+        last_crumb = crumb
+    raise RuntimeError(f"Yahoo continua em rate-limit apos {len(RETRY_DELAYS)+1} tentativas: {last_crumb[:100]}")
 
 
 def fetch_chain(symbol, cookiejar, crumb, date=None):
@@ -50,7 +64,7 @@ def fetch_chain(symbol, cookiejar, crumb, date=None):
     return json.loads(raw)
 
 
-def build_rows(cookiejar, crumb, max_days=45):
+def build_rows(cookiejar, crumb, max_days=21):
     now = datetime.datetime.utcnow()
     d0 = fetch_chain("QQQ", cookiejar, crumb)
     result = d0["optionChain"]["result"][0]
@@ -116,7 +130,7 @@ def main():
     ratio = (nq_price / qqq_spot) if nq_price else None
 
     print(f"QQQ spot: {qqq_spot}")
-    print(f"n contratos usados (expiracoes <=45 dias, IV/OI validos): {len(rows)}")
+    print(f"n contratos usados (expiracoes <=21 dias, IV/OI validos): {len(rows)}")
     if ratio:
         tag = " (auto, NQ=F)" if auto_fetched else ""
         print(f"Preco NQ: {nq_price}{tag}  ->  Racio NQ/QQQ: {ratio:.4f}")
@@ -143,7 +157,7 @@ def main():
     else:
         print("Sem cruzamento de zero-gamma na janela testada (+/-30%).")
 
-    print("\nStrikes com maior |GEX| (paredes de gamma mais fortes, todas as expiracoes <=45d):")
+    print("\nStrikes com maior |GEX| (paredes de gamma mais fortes, todas as expiracoes <=21d):")
     for strike, val in strikes_by_abs_gex(rows, qqq_spot):
         tag = "resistencia/pin (call-heavy)" if val > 0 else "suporte/acelerador (put-heavy)"
         print(f"  {fmt_level(strike)}  GEX={val:>14,.0f}  {tag}")
