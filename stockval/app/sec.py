@@ -79,6 +79,22 @@ def _latest(m: dict[int, float]) -> float | None:
     return m[max(m)] if m else None
 
 
+def _trailing_contiguous_years(fys) -> list[int]:
+    """Dado um conjunto/dict de anos fiscais disponíveis, devolve só a sequência
+    CONTÍNUA mais recente (sem buracos), do mais antigo ao mais recente. Ver
+    nota em fetch() -- necessário para qualquer histórico usado em cagr()."""
+    if not fys:
+        return []
+    ys = sorted(set(fys))
+    run = [ys[-1]]
+    for y in reversed(ys[:-1]):
+        if run[0] - y == 1:
+            run.insert(0, y)
+        else:
+            break
+    return run
+
+
 def fetch(ticker: str) -> dict:
     """Puxa e organiza os fundamentais de que o valuation precisa."""
     try:
@@ -99,8 +115,12 @@ def fetch(ticker: str) -> dict:
     name = facts.get("entityName", ticker.upper())
     cfo_m = _annual_map(facts, ["NetCashProvidedByUsedInOperatingActivities",
                                 "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations"], "USD", True)
+    # Algumas empresas (ex.: LLY) nunca reportam a tag "normal" no 10-K anual --
+    # só trimestral, sem agregado anual -- e o capex real fica só sob a tag
+    # "Other" (decomposição por categoria em vez de um total único).
     capex_m = _annual_map(facts, ["PaymentsToAcquirePropertyPlantAndEquipment",
-                                  "PaymentsToAcquireProductiveAssets"], "USD", True)
+                                  "PaymentsToAcquireProductiveAssets",
+                                  "PaymentsToAcquireOtherPropertyPlantAndEquipment"], "USD", True)
     ni_m = _annual_map(facts, ["NetIncomeLoss"], "USD", True)
     eq_m = _annual_map(facts, ["StockholdersEquity",
                                "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"], "USD", False)
@@ -118,29 +138,46 @@ def fetch(ticker: str) -> dict:
                                "EntityCommonStockSharesOutstanding"], "shares", False)
     rev_m = _annual_map(facts, ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax",
                                 "SalesRevenueNet"], "USD", True)
-    opinc_m = _annual_map(facts, ["OperatingIncomeLoss"], "USD", True)
+    # Bancos/corretoras (ex.: HOOD) tipicamente não reportam "OperatingIncomeLoss"
+    # -- a receita de juros é core business, não "não-operacional", por isso não
+    # há uma linha separada de resultado operacional. Fallback: pre-tax income
+    # (já usado para a taxa efetiva) é a melhor aproximação disponível p/ EBITDA.
+    opinc_m = _annual_map(facts, ["OperatingIncomeLoss"], "USD", True) or pretax_m
     da_m = _annual_map(facts, ["DepreciationDepletionAndAmortization", "DepreciationAndAmortization",
                                "DepreciationAmortizationAndAccretionNet"], "USD", True)
     gp_m = _annual_map(facts, ["GrossProfit"], "USD", True)
+    if not gp_m:
+        # Algumas empresas (ex.: LLY) não reportam "GrossProfit" como tag própria,
+        # só o custo de vendas -- a margem bruta dá para derivar de Receita - COGS.
+        cogs_m = _annual_map(facts, ["CostOfGoodsAndServicesSold", "CostOfRevenue",
+                                     "CostOfServices", "CostOfGoodsSold"], "USD", True)
+        gp_m = {fy: rev_m[fy] - cogs_m[fy] for fy in sorted(set(rev_m) & set(cogs_m))}
     sbc_m = _annual_map(facts, ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense",
                                 "ShareBasedCompensationArrangementByShareBasedPaymentAwardCompensationCost1"], "USD", True)
 
     # FCF por ano (anos comuns entre CFO e CAPEX) -> histórico p/ CAGR.
-    common = sorted(set(cfo_m) & set(capex_m))
+    # IMPORTANTE: cagr() assume que cada elemento da lista é 1 ano consecutivo
+    # (usa len(serie)-1 como nº de períodos). Se uma empresa mudou de tag XBRL a
+    # meio do histórico (ex.: NVDA só tem 1 ponto residual de 2011 sob a tag
+    # antiga de capex, e o resto, contínuo, só a partir de 2024 sob a tag nova),
+    # juntar os dois sem filtrar cria um "buraco" de anos tratado como 1 único
+    # ano de crescimento composto -> CAGR absurdamente inflacionado. Por isso
+    # usa-se sempre só a sequência CONTÍNUA mais recente (sem buracos).
+    common = _trailing_contiguous_years(set(cfo_m) & set(capex_m))
     fcf_history = [cfo_m[fy] - capex_m[fy] for fy in common]
-    revenue_history = [rev_m[fy] for fy in sorted(rev_m)]
-    opinc_history = [opinc_m[fy] for fy in sorted(opinc_m)]
+    revenue_history = [rev_m[fy] for fy in _trailing_contiguous_years(rev_m)]
+    opinc_history = [opinc_m[fy] for fy in _trailing_contiguous_years(opinc_m)]
     # EPS diluído reportado por ano (para EPS YoY/CAGR).
     epsd_m_full = (_annual_map(facts, ["EarningsPerShareDiluted", "EarningsPerShareBasicAndDiluted",
                                        "IncomeLossFromContinuingOperationsPerDilutedShare"], "USD/shares", False)
                    or _annual_map(facts, ["EarningsPerShareBasic"], "USD/shares", False))
-    eps_history = [epsd_m_full[fy] for fy in sorted(epsd_m_full)]
+    eps_history = [epsd_m_full[fy] for fy in _trailing_contiguous_years(epsd_m_full)]
     # Nº de ações por ano derivado de lucro/EPS (imune a multi-classe) -> diluição.
-    sh_common = sorted(set(ni_m) & set(epsd_m_full))
+    sh_common = _trailing_contiguous_years(set(ni_m) & set(epsd_m_full))
     shares_history = [ni_m[fy] / epsd_m_full[fy] for fy in sh_common
                       if epsd_m_full[fy] not in (None, 0) and ni_m[fy] / epsd_m_full[fy] > 0]
     # Margem operacional por ano (anos comuns opinc & receita) -> tendência de margem.
-    om_common = sorted(set(opinc_m) & set(rev_m))
+    om_common = _trailing_contiguous_years(set(opinc_m) & set(rev_m))
     op_margin_history = [opinc_m[fy] / rev_m[fy] for fy in om_common if rev_m[fy]]
 
     opinc, da = _latest(opinc_m), _latest(da_m)
