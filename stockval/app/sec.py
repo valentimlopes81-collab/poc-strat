@@ -41,6 +41,15 @@ def _annual_map(facts: dict, tags: list[str], unit: str, is_flow: bool) -> dict[
     Prefere valores "framed" (não-dimensionais) — evita apanhar linhas por
     classe de ações / segmentos, que davam nº de ações e rácios errados.
     """
+    # NOTA (bug corrigido): muitas empresas migraram de tag a meio do historico
+    # (ex.: "Revenues" -> "RevenueFromContractWithCustomerExcludingAssessedTax"
+    # apos adotarem a norma ASC 606, ~2018-2019). Um "return" assim que o
+    # primeiro tag da lista desse QUALQUER resultado deixava office presa a
+    # dados antigos e congelados (ex.: AVGO ficava no ultimo ano reportado sob
+    # "Revenues", 2018, ignorando anos muito mais recentes só porque estavam
+    # sob o tag novo). Por isso agora acumulam-se TODOS os tags/namespaces no
+    # mesmo dict por ano fiscal, usando o mesmo criterio de desempate (framed,
+    # depois data mais recente) -- o tag certo ganha por ano, nao por ordem.
     out: dict[int, tuple[str, float, bool]] = {}  # fy -> (end, val, framed)
     for ns in ("us-gaap", "dei"):
         for tag in tags:
@@ -63,9 +72,7 @@ def _annual_map(facts: dict, tags: list[str], unit: str, is_flow: bool) -> dict[
                     # prefere entradas com 'frame'; entre iguais, a de data mais recente.
                     if cur is None or (framed and not cur[2]) or (framed == cur[2] and end > cur[0]):
                         out[fy] = (end, float(val), framed)
-            if out:
-                return {fy: v for fy, (_, v, _) in out.items()}
-    return {}
+    return {fy: v for fy, (_, v, _) in out.items()}
 
 
 def _latest(m: dict[int, float]) -> float | None:
