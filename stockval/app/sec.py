@@ -69,8 +69,18 @@ def _annual_map(facts: dict, tags: list[str], unit: str, is_flow: bool) -> dict[
                         continue
                     framed = "frame" in e
                     cur = out.get(fy)
-                    # prefere entradas com 'frame'; entre iguais, a de data mais recente.
-                    if cur is None or (framed and not cur[2]) or (framed == cur[2] and end > cur[0]):
+                    # A data (end) manda sempre primeiro -- "fy" é o ano fiscal DO FILING,
+                    # não necessariamente do período: um 10-K traz o ano corrente + 2 anos
+                    # comparativos, todos sob o MESMO "fy", distinguidos só por start/end.
+                    # BUG REAL (encontrado via NVDA): a SEC às vezes marca com 'frame' um
+                    # período comparativo ANTIGO (ex.: frame=CY2021 num start/end que é na
+                    # verdade o ano fiscal 2022 da NVDA, fiscal year termina em janeiro) --
+                    # com "framed ganha sempre" isso ficava preso ao valor antigo para
+                    # sempre, ignorando o valor correto e mais recente do mesmo filing
+                    # (FCF da NVDA saía ~8B/3.8B em vez de ~27B/61B em 2 anos). 'framed' só
+                    # deve desempatar quando os PERÍODOS são o mesmo (ex.: nº de ações por
+                    # classe vs. total consolidado), nunca substituir um período mais recente.
+                    if cur is None or end > cur[0] or (end == cur[0] and framed and not cur[2]):
                         out[fy] = (end, float(val), framed)
     return {fy: v for fy, (_, v, _) in out.items()}
 
