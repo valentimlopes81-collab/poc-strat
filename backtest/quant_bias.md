@@ -16,8 +16,14 @@ mesmo pedindo "hoje". Por isso o desenho é híbrido:
 
 - **Camada lenta (eu trago, via pesquisa):** posicionamento COT (Nasdaq futures, atualiza sexta-feira
   com dados de terça), postura da Fed/trajetória de taxas (só muda em FOMC), calendário macro da semana
-  (CPI, NFP, FOMC), regime histórico de correlação BTC-Nasdaq-DXY, fluxos de ETF BTC (tendência, não
-  valor exato do dia).
+  — lista completa de catalisadores a vigiar (expandida 18/10, via material de order flow): **CPI**
+  (inflação ao consumidor, headline/core), **FOMC** (decisão de taxa + conferência Powell, o tom conta
+  mais que a taxa em si), **NFP** (emprego não-agrícola, mercado de trabalho), **FOMC Minutes** (revela
+  tom hawkish/dovish escondido), **PPI** (inflação ao produtor, tende a antecipar o CPI), **Retail
+  Sales** (consumo ≈ 70% do PIB), **ISM Manufacturing PMI** (>50 expansão, <50 contração, indicador
+  antecedente), **GDP** (advance/second/final), **Unemployment Claims** (semanal, leitura em tempo
+  real do mercado de trabalho entre NFPs) — regime histórico de correlação BTC-Nasdaq-DXY, fluxos de
+  ETF BTC (tendência, não valor exato do dia).
 - **Camada quant (eu trago, via `backtest/quant/*.py`, dados reais):** acesso à rede desbloqueado em
   11/10 (ambiente mudado para "Full"). Scripts, todos sem dependências externas:
   - `regime.py` — regime trending vs mean-reverting (NQ proxy QQQ, BTC Kraken) via Hurst exponent (R/S)
