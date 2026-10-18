@@ -31,6 +31,19 @@ mesmo pedindo "hoje". Por isso o desenho é híbrido:
     sobretudo quando perto do preço atual.
   - Esta camada usa dados reais, não pesquisa — maior confiança que a camada macro abaixo. Dá níveis
     concretos (não só bias direcional) para cruzar com as confluências técnicas de POC/VAL.
+  - **`vix.py`** (adicionado 18/10) — nível do VIX, variação do dia, vs média 20d, leitura categórica
+    (baixo/normal/elevado/stress). Camada de contexto complementar ao GEX: GEX mede posicionamento
+    *estrutural* dos dealers, VIX mede medo/complacência *agregado* do mercado de opções do SPX —
+    relacionados mas não a mesma coisa (ex.: GEX negativo com VIX ainda baixo é uma leitura diferente
+    de GEX negativo com VIX já elevado). Dados Yahoo, sem crumb, alta confiança.
+  - **`net_premium_flow.py`** (adicionado 18/10) — ⚠️ **proxy, não o dado real.** Net premium flow "a
+    sério" precisa de dados de trade-flow classificados por agressor (comprador vs vendedor),
+    tipicamente pagos (ex.: Unusual Whales, FlowAlgo) — não temos acesso a isso. O que o script faz:
+    variação diária de Open Interest × prémio nas opções QQQ, separada calls/puts — mede "onde cresceu
+    posicionamento desde ontem", não fluxo de ordens real (uma call OI a subir pode ser compra de calls
+    OU venda de calls cobertas; o script não distingue). Guarda snapshots diários em
+    `premium_flow_history.json` e compara com o snapshot anterior disponível. Tratar sempre como
+    contexto a acumular, nunca como sinal — e reportar sempre com este aviso, nunca como "fluxo real".
 - **Camada rápida (tu trazes, do teu terminal):** preço atual NQ e BTC, range overnight, qualquer
   contexto de sessão que já estejas a ver. Sem isto, o bias fica mais genérico/estrutural.
 - **Output:** Bias (Bullish/Bearish/Neutral) + Confiança (Baixa/Média/Alta) + catalisadores/riscos a
