@@ -389,6 +389,20 @@ priceHH   = high[lbR] > ta.valuewhen(phFound, high[lbR], 1)
 swingOkBear = min_swing <= 0 or (not na(troughBetween) and math.min(rsiLBR, ta.valuewhen(phFound, rsiLBR, 1)) - troughBetween >= min_swing)
 bear_div = priceHH and rsiLH and phFound and swingOkBear
 
+// ---- Volume relativo — filtro de setup completo (não altera as setinhas base) ----
+// Auto-normalizado por moeda: compara sempre o volume DESTE ativo com a média
+// recente DELE PRÓPRIO, por isso não é preciso saber "bom volume" em absoluto
+// nem ajustar por market cap -- uma altcoin pequena e o BTC usam a mesma regra,
+// cada um contra o seu próprio histórico.
+gvol = "Filtro de volume (relativo, por moeda)"
+require_volume = input.bool(true, "Exigir volume mínimo para o setup/alerta", group=gvol, tooltip="Compara o volume da vela do sinal com a média das últimas N velas DESSA MESMA moeda. Não mexe nas setinhas de divergência pura, só no 'setup completo' (alertas/webhook) -- mesmo espírito do filtro de densidade de POCs.")
+vol_lookback  = input.int(20, "Nº de velas para a média de volume", minval=5, group=gvol)
+min_vol_ratio = input.float(0.8, "Volume mínimo (x vezes a média)", minval=0.1, step=0.1, group=gvol, tooltip="1.0 = exige volume >= média recente. <1 deixa passar um pouco abaixo (ex.: 0.8 = 80% da média). >1 é mais estrito (só sinais com volume ACIMA do normal).")
+vol_avg_main  = ta.sma(volume, vol_lookback)
+// usa o volume/média NA VELA DO PIVÔ (lbR atrás), não na vela de confirmação --
+// é aí que a "força" do movimento que gerou a divergência realmente aconteceu.
+vol_ok = not require_volume or (vol_avg_main[lbR] > 0 and volume[lbR] >= vol_avg_main[lbR] * min_vol_ratio)
+
 // ---- Densidade de POCs (a "teia") à volta do preço — filtro de setup completo ----
 gq = "Qualidade do sinal (teia + MTF)"
 require_density = input.bool(true, "Exigir POCs próximos (filtro)", group=gq, tooltip="ON = seta+alerta só quando há div E POCs por perto (tu triagens). OFF = alerta em qualquer div.")
@@ -405,9 +419,9 @@ f_cnt(array<float> a, float ref, float tol) =>
 float tolabs = close * dens_band_pct / 100.0
 int density = f_cnt(v1d, close, tolabs) + f_cnt(v2d, close, tolabs) + f_cnt(v3d, close, tolabs) + f_cnt(v5d, close, tolabs) + f_cnt(v1w, close, tolabs) + f_cnt(v2w, close, tolabs) + f_cnt(v1m, close, tolabs)
 bool dense_zone = not require_density or density >= dens_min
-// setup completo = divergência DENTRO da teia (ou div pura se o filtro estiver OFF)
-bool bull_setup = bull_div and (dense_zone or not require_density)
-bool bear_setup = bear_div and (dense_zone or not require_density)
+// setup completo = divergência DENTRO da teia E com volume real por trás
+bool bull_setup = bull_div and (dense_zone or not require_density) and vol_ok
+bool bear_setup = bear_div and (dense_zone or not require_density) and vol_ok
 
 // setinhas no preço (no pivô, lbR barras atrás) — SÓ no setup completo
 plotshape(show_div and bull_setup ? low[lbR]  : na, title="Bull setup", offset=-lbR, style=shape.triangleup,   location=location.absolute, color=c_bull, size=size.small)
@@ -469,11 +483,14 @@ f_divs() =>
     bool phh = high[lbR] > ta.valuewhen(ph, high[lbR], 1)
     bool swingOkBearM = min_swing <= 0 or (not na(troughBetweenm) and math.min(rlbr, ta.valuewhen(ph, rlbr, 1)) - troughBetweenm >= min_swing)
     bool bear = phh and rlh and ph and swingOkBearM
-    [bull, bear]
+    // volume relativo DESTE TF (volume aqui já é o do TF pedido via request.security)
+    float volAvgM = ta.sma(volume, vol_lookback)
+    bool volOkM = not require_volume or (volAvgM[lbR] > 0 and volume[lbR] >= volAvgM[lbR] * min_vol_ratio)
+    [bull, bear, volOkM]
 
-[b1, s1] = request.security(syminfo.tickerid, div_tf1, f_divs())
-[b2, s2] = request.security(syminfo.tickerid, div_tf2, f_divs())
-[b3, s3] = request.security(syminfo.tickerid, div_tf3, f_divs())
+[b1, s1, v1ok] = request.security(syminfo.tickerid, div_tf1, f_divs())
+[b2, s2, v2ok] = request.security(syminfo.tickerid, div_tf2, f_divs())
+[b3, s3, v3ok] = request.security(syminfo.tickerid, div_tf3, f_divs())
 int bull_conf = mtf_on ? (b1 ? 1 : 0) + (b2 ? 1 : 0) + (b3 ? 1 : 0) : (bull_div ? 1 : 0)
 int bear_conf = mtf_on ? (s1 ? 1 : 0) + (s2 ? 1 : 0) + (s3 ? 1 : 0) : (bear_div ? 1 : 0)
 
@@ -495,12 +512,12 @@ alertcondition(bear_setup, title="Bear SETUP (div + teia)", message="{{ticker}}:
 // qualificar a divergência de QUALQUER um dos 3 TFs — nunca precisas de abrir
 // o gráfico em 5m para isto disparar.
 // ============================================================================
-bull_setup_tf1 = mtf_on and b1 and dense_zone
-bear_setup_tf1 = mtf_on and s1 and dense_zone
-bull_setup_tf2 = mtf_on and b2 and dense_zone
-bear_setup_tf2 = mtf_on and s2 and dense_zone
-bull_setup_tf3 = mtf_on and b3 and dense_zone
-bear_setup_tf3 = mtf_on and s3 and dense_zone
+bull_setup_tf1 = mtf_on and b1 and dense_zone and v1ok
+bear_setup_tf1 = mtf_on and s1 and dense_zone and v1ok
+bull_setup_tf2 = mtf_on and b2 and dense_zone and v2ok
+bear_setup_tf2 = mtf_on and s2 and dense_zone and v2ok
+bull_setup_tf3 = mtf_on and b3 and dense_zone and v3ok
+bear_setup_tf3 = mtf_on and s3 and dense_zone and v3ok
 
 plotshape(bull_setup_tf1 ? low  : na, title="Bull setup TF1", style=shape.triangleup,   location=location.belowbar, color=color.new(c_bull, 40), size=size.tiny)
 plotshape(bear_setup_tf1 ? high : na, title="Bear setup TF1", style=shape.triangledown, location=location.abovebar, color=color.new(c_bear, 40), size=size.tiny)
@@ -585,8 +602,8 @@ zj := f_json_levels(zj, v1m, k1m, close, "zone")
 
 // zona forte válida = cluster DENSO de POCs (teia) se require_density; senão ≥1 POC naked na banda
 bool valid_strong_zone = dense_zone  // = a mesma condição das setas (div + POCs próximos) → seta e alerta batem certo
-bool sniper_long_setup  = enable_webhook and bull_div and valid_strong_zone
-bool sniper_short_setup = enable_webhook and bear_div and valid_strong_zone
+bool sniper_long_setup  = enable_webhook and bull_div and valid_strong_zone and vol_ok
+bool sniper_short_setup = enable_webhook and bear_div and valid_strong_zone and vol_ok
 
 if sniper_long_setup or sniper_short_setup
     string side_str = sniper_long_setup ? "long" : "short"
