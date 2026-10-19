@@ -137,6 +137,11 @@ def fetch(ticker: str) -> dict:
     cash_m = _annual_map(facts, ["CashAndCashEquivalentsAtCarryingValue"], "USD", False)
     ltd_m = _annual_map(facts, ["LongTermDebtNoncurrent", "LongTermDebt"], "USD", False)
     curd_m = _annual_map(facts, ["LongTermDebtCurrent", "DebtCurrent"], "USD", False)
+    # Algumas empresas (ex.: ORCL) nao separam divida corrente/nao-corrente em tags
+    # distintas -- reportam um unico valor combinado. Sem isto, ltd_m fica vazio e
+    # total_debt = so a parte corrente (curd_m), subestimando a divida real em
+    # dezenas de mil milhoes (caso real: ORCL saia ~$7B em vez de ~$125B).
+    combined_debt_m = _annual_map(facts, ["DebtLongtermAndShorttermCombinedAmount"], "USD", False)
     tax_m = _annual_map(facts, ["IncomeTaxExpenseBenefit"], "USD", True)
     pretax_m = _annual_map(facts, ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
                                    "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments"], "USD", True)
@@ -196,7 +201,10 @@ def fetch(ticker: str) -> dict:
     cfo, capex = _latest(cfo_m), _latest(capex_m)
     fcf = (cfo - capex) if (cfo is not None and capex is not None) else None
     ltd, curd = _latest(ltd_m) or 0.0, _latest(curd_m) or 0.0
-    total_debt = ltd + curd
+    combined_debt = _latest(combined_debt_m)
+    # Se nao ha divida nao-corrente separada mas ha tag combinada, usa-a (mais
+    # completa que so a parte corrente). Caso contrario soma as duas partes.
+    total_debt = combined_debt if (ltd == 0.0 and combined_debt) else ltd + curd
     tax, pretax = _latest(tax_m), _latest(pretax_m)
     eff_tax = (tax / pretax) if (tax is not None and pretax not in (None, 0)) else None
     if eff_tax is not None:
