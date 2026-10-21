@@ -6,6 +6,7 @@ devolvemos o que existir, marcando o que faltou (útil para depurar no CLI).
 """
 from __future__ import annotations
 
+import datetime
 import os
 
 import httpx
@@ -67,6 +68,24 @@ def _annual_map(facts: dict, tags: list[str], unit: str, is_flow: bool) -> dict[
                     fy, end, val = e.get("fy"), e.get("end"), e.get("val")
                     if fy is None or val is None or end is None:
                         continue
+                    # BUG REAL (encontrado via NFLX): fp="FY" não garante que o período
+                    # medido tem ~12 meses -- um 10-K também embute dados trimestrais
+                    # (ex.: nota de "selected quarterly data") sob fp="FY" só porque
+                    # pertencem ao contexto desse ano fiscal, não porque o próprio
+                    # start/end cubra o ano todo. Isto fazia o GrossProfit da Netflix
+                    # ficar preso a um valor de Q4 2020 (3 meses) tratado como se fosse
+                    # anual, por não haver tag "GrossProfit" mais recente -- margem
+                    # bruta saía ~5% em vez de ~40%. Exigir duração >= ~330 dias para
+                    # flows anuais evita isto sem afetar as frequências corretas.
+                    if is_flow:
+                        start = e.get("start")
+                        if start:
+                            try:
+                                days = (datetime.date.fromisoformat(end) - datetime.date.fromisoformat(start)).days
+                            except ValueError:
+                                days = None
+                            if days is not None and days < 330:
+                                continue
                     framed = "frame" in e
                     cur = out.get(fy)
                     # A data (end) manda sempre primeiro -- "fy" é o ano fiscal DO FILING,
@@ -161,7 +180,14 @@ def fetch(ticker: str) -> dict:
     da_m = _annual_map(facts, ["DepreciationDepletionAndAmortization", "DepreciationAndAmortization",
                                "DepreciationAmortizationAndAccretionNet"], "USD", True)
     gp_m = _annual_map(facts, ["GrossProfit"], "USD", True)
-    if not gp_m:
+    # BUG REAL (encontrado via NFLX): "GrossProfit" pode existir no histórico sem
+    # estar vazio -- mas só nos anos mais antigos (a empresa parou de a reportar
+    # como tag própria a dada altura, ex.: NFLX só a tag até 2011). "if not gp_m"
+    # não apanha isto, porque o dict não está vazio, só desatualizado -- _latest()
+    # ficava preso a um ano de há 15 anos (margem bruta saía ~3% em vez de ~40%).
+    # Exigir que o ano mais recente de gp_m acompanhe o ano mais recente de rev_m
+    # (tolerância de 1 ano) evita isto sem quebrar empresas que nunca tiveram a tag.
+    if not gp_m or (rev_m and max(gp_m) < max(rev_m) - 1):
         # Algumas empresas (ex.: LLY) não reportam "GrossProfit" como tag própria,
         # só o custo de vendas -- a margem bruta dá para derivar de Receita - COGS.
         cogs_m = _annual_map(facts, ["CostOfGoodsAndServicesSold", "CostOfRevenue",
