@@ -5,8 +5,8 @@
 5/15/30) confirmada dentro de uma zona densa de POCs ("teia"). P&L em €.*
 
 ### Estado
-- **P&L acumulado: +144,5€** (C1 +16€ + C2 +54,5€ + C3 0€ + C4 −4€ + C5 0€ + C6 0€ + C7 −17€ + C8 −11€ + C9 +106€)
-- Trades: 9 (3W/3L/3BE)
+- **P&L acumulado: +135,5€** (C1 +16€ + C2 +54,5€ + C3 0€ + C4 −4€ + C5 0€ + C6 0€ + C7 −17€ + C8 −11€ + C9 +106€ + C10 −9€)
+- Trades: 10 (3W/4L/3BE) + 2 longs ainda abertos (pares não especificados, flutuantes em profit "nada de especial", não registados ainda)
 - **Mudança de processo anunciada (05/10):** passar a usar **stop loss mais manual**, gerido pela invalidação real do setup (ex.: falta de força vendedora/compradora a confirmar), em vez de só confiar no stop automático inicial — mantém-se como boa prática independentemente do resultado de cada trade.
 
 ### Registo live
@@ -21,6 +21,7 @@
 | C7 | 12/10 | PUMPUSDT | — | Entrada a limit na **0,786 da Fib** + confluência de POCs | ❌ Loss | — | **−17€** | Detalhe não aprofundado. Mesmo dia do bank holiday em que ficou de fora do MNQ por liquidez mais fina — vale a pena vigiar se isso também pesou aqui |
 | C8 | 22/10 | ETHUSDT | — | Setup parecido ao C9 (div + zona de POCs) | ❌ Loss (pequena) | — | **−11€** | Detalhe não aprofundado — reportado em conjunto com o C9 como contexto ("depois de levar uma small loss... esta win"). Loss pequena, dentro do normal |
 | C9 | 22/10 | BNBUSDT | Short | **Divergência bearish confirmada num topo duplo**, dentro de uma teia de **4 POCs** (zona densa, visível no gráfico) | ✅ Win (3 TPs) | — | **+106€** | **"Banger", muito bom setup** segundo o próprio. Topo rejeitado por 2x com sinais de divergência bearish marcados antes da queda, preço caiu através de vários níveis de POC com força até aos 3 TPs. Melhor trade individual do journal até agora. **Nota à parte:** não chegou a ter entry em BTC por **$50** — teria sido outra win grande segundo o próprio, mas sem entry não conta como trade, só registo do "quase" |
+| C10 | 23/10 | LTCUSDT | Long | Uma de 3 longs abertas durante o dump forte em cripto (ligado às notícias de AI/NQ) | ❌ Loss (pequena) | — | **−9€** | Detalhe não aprofundado. Uma das 3 posições long abertas durante a queda generalizada — esta fechou em loss pequena, as outras 2 continuam abertas em profit flutuante "nada de especial" (ainda por registar quando fecharem) |
 
 ### Notas gerais
 - Journal começado a 02/10 — sem histórico anterior a resumir.
