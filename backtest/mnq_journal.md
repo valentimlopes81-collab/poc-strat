@@ -571,7 +571,8 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 *A partir de 24/09: cada trade regista **dois veredictos** — 🤖 **Mecânico** (a regra estrita teria entrado? só fecho confirmado no POI, zero antecipação) vs 🧠 **Discricionário** (o que foi de facto lido/feito, incl. contexto humano). Objetivo: separar erro de leitura de erro de execução, e ver se a versão mecânica supera a discricionária ao longo do tempo.*
 
 ### Estado
-- **P&L: ~−$434,00** · Balance: **~$24.566,00** · Target: falta **~$1.934,00** de $1.500 · DD: intacto, semana difícil mas gestão a melhorar
+- **P&L: ~−$482,00** · Balance: **~$24.518,00** · Target: falta **~$1.982,00** de $1.500 · DD: intacto, semana difícil mas gestão a melhorar
+- ⚠️ **02/11 — balance atualizado pelo utilizador para $24.518** (vinha de $24.566 após a L33), sem trade nova reportada — diferença de -$48 não explicada por nenhuma trade conhecida. Possível fonte: fees/juros de fim de semana, ou absorção dos valores aproximados do L31/L32 (já tinham sido flagged como estimativas, não exatos). Registado tal como reportado, sem inventar causa.
 - Trades live (SISTEMA, linhas registadas): 33 (8W/16L/9BE) + no-plays
 - ⚠️ **30/10 — L33, long na absorção dos 690, chegou a +1,5R mas reverteu para loss de -$39** — moeda confirmada pelo utilizador. Padrão "VWAP giveback" a repetir-se, desta vez com justificação explícita de swing — ver nota na linha para o que vigiar da próxima vez.
 - ✅ **28/10 — L31/L32, dia de FOMC, win+loss líquido +$7,70** — valores individuais aproximados (ver notas das linhas), ordem não confirmada. Boa gestão de risco consciente no dia (proteger o verde face a FOMC/Warsh ainda por falar), mesmo com menos profit do que o pico flutuante.
