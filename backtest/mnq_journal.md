@@ -570,6 +570,8 @@ Cada filtro sozinho é fraco. **Os três em confluência** produzem o setup type
 
 *A partir de 24/09: cada trade regista **dois veredictos** — 🤖 **Mecânico** (a regra estrita teria entrado? só fecho confirmado no POI, zero antecipação) vs 🧠 **Discricionário** (o que foi de facto lido/feito, incl. contexto humano). Objetivo: separar erro de leitura de erro de execução, e ver se a versão mecânica supera a discricionária ao longo do tempo.*
 
+*A partir de 04/11 (princípio articulado pelo próprio, pós-L35): como a tese de entrada é baseada em **aceitação/rejeição de níveis de opções (GEX)**, não em swing highs/lows fixos, faz sentido gerir **stop E take profit de forma dinâmica**, ajustados a cada novo nível aceite/rejeitado — não só mover para BE uma vez, mas apertar o stop sempre que um fecho de 5m confirmar aceitação de um nível a favor (ex.: fecho de 5m acima dos 693 → BE sobe para aí), e ajustar o alvo à medida que paredes mais fracas são ultrapassadas. Coerente com a própria lógica de entrada — vale a pena aplicar e testar nas próximas trades, com o aviso honesto de que apertar demais o stop a cada nível pode custar saídas prematuras em consolidação normal dentro de um movimento ainda válido (o mesmo trade-off que já existia com o alvo fixo, só visto do outro lado).*
+
 ### Estado
 - **P&L: ~−$436,38** · Balance: **~$24.563,62** · Target: falta **~$1.936,38** de $1.500 · DD: intacto, semana difícil mas gestão a melhorar
 - ✅ **04/11 — L35, long perto do 690 (cluster ruidoso 691-695), stop trailed ativamente, fechou em win de +$100,62** — dia de rally de alívio pós-eleições (Democratas ganharam Câmara e Senado). Ótima gestão: BE rápido + trail ativo em vez de alvo fixo, mesmo numa zona sinalizada como "ruído" sem parede forte individual.
