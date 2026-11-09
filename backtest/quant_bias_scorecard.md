@@ -60,16 +60,26 @@ reportou), e só depois dou a bias de hoje.
   leve) até 09/11, sem reversão rápida.
 
 ### 09/11
-- Pendente — dia em curso, revisão no próximo briefing.
+- **NQ:** "Recuperação a consolidar-se, melhor leitura da semana" (Média-Alta) → **✅ Confirmado, e
+  com clareza.** O cenário 1 do briefing ("rompe o 665 com fecho confirmado → caminho até ao
+  zero-gamma 674,7") materializou-se de forma limpa: preço rompeu o 665 a meio da manhã, atravessou
+  o zero-gamma, e consolidou um pin forte em 677-678 durante a tarde. Fechou a sessão ainda mais
+  acima (~679,35 QQQ / NQ ~28.073), sem nunca testar os cenários de rejeição ou perda do 650. GEX
+  continuou a melhorar ao longo de todo o dia (-1,37B no briefing → -1,01B → -1,23B → fecho). Dia
+  redondo para a bias — direção, nível de rompimento e magnitude todos corretos.
+- **BTC:** "GEX ainda negativo mas leve, VIX a normalizar" (Média) → **✅ Confirmado.** GEX continuou
+  a melhorar ao longo do dia (-45,4M no briefing → -10,15M ao fim da tarde), cada vez mais perto de
+  neutro, consistente com a leitura "leve" dada de manhã. Spot subiu ligeiramente (~74.933 → ~75.250).
+  Sem surpresas — e, notavelmente, confiança Média (não Alta) desta vez, exatamente a lição tirada do
+  erro de 05/11.
 
 ---
 
-## Resumo da semana (6 dias, 12 bias no total: NQ+BTC)
+## Resumo da semana (7 dias, 14 bias no total: NQ+BTC)
 
-- **✅ Confirmado:** 9
+- **✅ Confirmado:** 12
 - **⚠️ Parcial:** 1 (NQ 03/11 — limite correto da informação disponível, não erro)
 - **❌ Falhou:** 1 (BTC 05/11 — o caso a reter)
-- **Pendente:** 1 (09/11, por resolver)
 
 **Leitura honesta:** a bias do NQ teve uma semana sólida — mesmo nos dias errados na direção
 superficial (03/11), o raciocínio declarado estava correto dado o que era conhecido no momento. O
