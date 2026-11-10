@@ -37,7 +37,22 @@ def export_qqq(days_back=2):
     print(f"QQQ: {len(rows)} candles de 5m (ultimos {days_back}d), com volume + calls/puts volume")
 
 
-def export_btc(bars=200, interval_min=15):
+def export_qqq_daily(days_back=120):
+    df = obb.equity.price.historical("QQQ", interval="1d", provider="cboe").to_dataframe()
+    df = df[["open", "high", "low", "close", "volume"]].copy()
+    df.index = pd.to_datetime(df.index)
+    df = df.tail(days_back)
+    rows = [
+        {"time": int(ts.timestamp()), "open": round(r.open, 2), "high": round(r.high, 2),
+         "low": round(r.low, 2), "close": round(r.close, 2), "volume": int(r.volume)}
+        for ts, r in df.iterrows()
+    ]
+    with open(f"{OUT_DIR}/price_nq_daily.json", "w") as f:
+        json.dump(rows, f)
+    print(f"QQQ diario: {len(rows)} candles (ultimos {days_back}d)")
+
+
+def export_btc(bars=720, interval_min=60):
     raw = subprocess.run(
         ["curl", "-sS", "--max-time", "20",
          f"https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval={interval_min}"],
@@ -74,5 +89,6 @@ def export_vix(days_back=60):
 
 if __name__ == "__main__":
     export_qqq()
+    export_qqq_daily()
     export_btc()
     export_vix()

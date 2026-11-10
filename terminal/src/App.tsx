@@ -43,7 +43,9 @@ export default function App() {
   const trades = useJson<TradeRow[]>('/data/trades.json')
   const econ = useJson<EconEvent[]>('/data/econ_calendar.json')
   const priceNq = useJson<Candle[]>('/data/price_nq.json')
+  const priceNqDaily = useJson<Candle[]>('/data/price_nq_daily.json')
   const priceBtc = useJson<Candle[]>('/data/price_btc.json')
+  const [nqTimeframe, setNqTimeframe] = useState<'intraday' | 'daily'>('intraday')
   const vixHistory = useJson<{ time: number; value: number }[]>('/data/vix_history.json')
   const heatmapNq = useJson<HeatmapData>('/data/gex_heatmap_nq.json')
   const heatmapBtc = useJson<HeatmapData>('/data/gex_heatmap_btc.json')
@@ -105,10 +107,29 @@ export default function App() {
       {tab === 'hoje' && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-term-border border border-term-border mb-px">
-            {nq && priceNq.data && (
-              <Panel title="NQ · Preço + Confluências" src="QQQ 5m · Call Wall / Put Wall / Zero-gamma">
+            {nq && priceNq.data && priceNqDaily.data && (
+              <Panel
+                title="NQ · Preço + Confluências"
+                src={`${nqTimeframe === 'intraday' ? 'QQQ 5m (hoje)' : 'QQQ 1D (120d)'} · Call Wall / Put Wall / Zero-gamma`}
+                right={
+                  <div className="flex border border-term-border text-[10px]">
+                    <button
+                      onClick={() => setNqTimeframe('intraday')}
+                      className={`px-2 py-0.5 ${nqTimeframe === 'intraday' ? 'bg-term-amber text-black font-bold' : 'text-term-muted'}`}
+                    >
+                      Intradiário
+                    </button>
+                    <button
+                      onClick={() => setNqTimeframe('daily')}
+                      className={`px-2 py-0.5 border-l border-term-border ${nqTimeframe === 'daily' ? 'bg-term-amber text-black font-bold' : 'text-term-muted'}`}
+                    >
+                      Diário
+                    </button>
+                  </div>
+                }
+              >
                 <PriceChart
-                  candles={priceNq.data}
+                  candles={nqTimeframe === 'intraday' ? priceNq.data : priceNqDaily.data}
                   levels={
                     [
                       nq.call_wall_qqq != null && { value: nq.call_wall_qqq, color: '#00d964', title: 'Call Wall' },
@@ -119,25 +140,29 @@ export default function App() {
                 />
                 <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Volume</div>
                 <VolumeChart
-                  data={priceNq.data.map((c) => ({
+                  data={(nqTimeframe === 'intraday' ? priceNq.data : priceNqDaily.data).map((c) => ({
                     time: c.time,
                     value: c.volume ?? 0,
                     color: c.close >= c.open ? '#00d96488' : '#ff3b3088',
                   }))}
                   height={56}
                 />
-                <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Order flow opções (calls − puts)</div>
-                <VolumeChart
-                  data={priceNq.data.map((c) => {
-                    const delta = (c.calls_volume ?? 0) - (c.puts_volume ?? 0)
-                    return { time: c.time, value: delta, color: delta >= 0 ? '#00d964' : '#ff3b30' }
-                  })}
-                  height={56}
-                />
+                {nqTimeframe === 'intraday' && (
+                  <>
+                    <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Order flow opções (calls − puts)</div>
+                    <VolumeChart
+                      data={priceNq.data.map((c) => {
+                        const delta = (c.calls_volume ?? 0) - (c.puts_volume ?? 0)
+                        return { time: c.time, value: delta, color: delta >= 0 ? '#00d964' : '#ff3b30' }
+                      })}
+                      height={56}
+                    />
+                  </>
+                )}
               </Panel>
             )}
             {btc && priceBtc.data && (
-              <Panel title="BTC · Preço + Confluências" src="15m · Call Wall / Put Wall / Zero-gamma">
+              <Panel title="BTC · Preço + Confluências" src="1h (30d) · Call Wall / Put Wall / Zero-gamma">
                 <PriceChart
                   candles={priceBtc.data}
                   levels={[
