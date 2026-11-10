@@ -1,0 +1,19 @@
+[
+  {"asset": "NQ", "strike": 640.0, "gex": -1926912},
+  {"asset": "NQ", "strike": 650.0, "gex": -4505476},
+  {"asset": "NQ", "strike": 655.0, "gex": -1355117},
+  {"asset": "NQ", "strike": 660.0, "gex": -2691585},
+  {"asset": "NQ", "strike": 670.0, "gex": -2138267},
+  {"asset": "NQ", "strike": 675.0, "gex": -3314211},
+  {"asset": "NQ", "strike": 680.0, "gex": -3424904},
+  {"asset": "NQ", "strike": 685.0, "gex": -2638383},
+  {"asset": "NQ", "strike": 700.0, "gex": 104896055},
+  {"asset": "BTC", "strike": 69000, "gex": -7063722},
+  {"asset": "BTC", "strike": 70000, "gex": -18654353},
+  {"asset": "BTC", "strike": 72000, "gex": -31770659},
+  {"asset": "BTC", "strike": 73000, "gex": -19208617},
+  {"asset": "BTC", "strike": 74000, "gex": -30737355},
+  {"asset": "BTC", "strike": 75000, "gex": -14056968},
+  {"asset": "BTC", "strike": 80000, "gex": 11588967},
+  {"asset": "BTC", "strike": 88000, "gex": 5824523}
+]

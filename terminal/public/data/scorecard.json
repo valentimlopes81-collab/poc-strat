@@ -1,0 +1,93 @@
+[
+  {
+    "date": "02/11",
+    "asset": "NQ",
+    "bias": "Neutro/em recuperacao, risco real ainda a frente",
+    "confidence": "Media",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "02/11",
+    "asset": "BTC",
+    "bias": "Pin leve, choque do hack a esbater-se",
+    "confidence": "Media",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "03/11",
+    "asset": "NQ",
+    "bias": "Negativo a aprofundar, dia de risco real (eleicoes)",
+    "confidence": "Media",
+    "verdict": "Parcial"
+  },
+  {
+    "date": "03/11",
+    "asset": "BTC",
+    "bias": "Estabilizacao a continuar",
+    "confidence": "Media-Alta",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "04/11",
+    "asset": "NQ",
+    "bias": "Cauteloso, divergencia GEX vs VIX",
+    "confidence": "Baixa-Media",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "04/11",
+    "asset": "BTC",
+    "bias": "Estabilizacao a reforcar-se",
+    "confidence": "Media-Alta",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "05/11",
+    "asset": "NQ",
+    "bias": "Negativo a aprofundar, sem catalisador confirmado",
+    "confidence": "Media",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "05/11",
+    "asset": "BTC",
+    "bias": "Estabilizacao forte a continuar, GEX positivo robusto",
+    "confidence": "Alta",
+    "verdict": "Falhou"
+  },
+  {
+    "date": "06/11",
+    "asset": "NQ",
+    "bias": "Recuperacao parcial pos-bloodbath",
+    "confidence": "Media",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "06/11",
+    "asset": "BTC",
+    "bias": "GEX negativo, ainda fragil",
+    "confidence": "Media",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "09/11",
+    "asset": "NQ",
+    "bias": "Recuperacao a consolidar-se, melhor leitura da semana",
+    "confidence": "Media-Alta",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "09/11",
+    "asset": "BTC",
+    "bias": "GEX ainda negativo mas leve, VIX a normalizar",
+    "confidence": "Media",
+    "verdict": "Confirmado"
+  },
+  {
+    "date": "resumo",
+    "asset": "Semana 02-09/11",
+    "bias": "12 confirmados / 1 parcial / 1 falhou (14 total). Licao-chave: nunca dar confianca Alta a BTC so com GEX — erro do dia 05/11 (cascata de liquidacao que o GEX nao viu).",
+    "confidence": "—",
+    "verdict": "Resumo"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2026-10-28",
+    "doc_type": "monetary_policy",
+    "label": "Ultimo comunicado de politica monetaria",
+    "url": "https://www.federalreserve.gov/monetarypolicy/files/monetary20261028a1.pdf"
+  },
+  {
+    "date": "2026-10-28",
+    "doc_type": "press_conference",
+    "label": "Press conference (Powell)",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomcpresconf20261028.htm"
+  },
+  {
+    "date": "2026-10-14",
+    "doc_type": "beige_book",
+    "label": "Beige Book",
+    "url": "https://www.federalreserve.gov/monetarypolicy/files/BeigeBook_20261014.pdf"
+  },
+  {
+    "date": "2026-09-16",
+    "doc_type": "minutes",
+    "label": "Ultimas minutas publicadas",
+    "url": "https://www.federalreserve.gov/monetarypolicy/files/fomcminutes20260916.pdf"
+  }
+]

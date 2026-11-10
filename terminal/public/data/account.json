@@ -1,0 +1,32 @@
+[
+  {
+    "metric": "starting_balance",
+    "value": 25000.0,
+    "label": "Balance inicial"
+  },
+  {
+    "metric": "current_balance",
+    "value": 24000.0,
+    "label": "Balance final (conta encerrada 06/11)"
+  },
+  {
+    "metric": "pnl",
+    "value": -1000.0,
+    "label": "P&L final"
+  },
+  {
+    "metric": "target",
+    "value": 1500.0,
+    "label": "Target (payout)"
+  },
+  {
+    "metric": "max_dd",
+    "value": 1000.0,
+    "label": "Max Drawdown (limite) — atingido deliberadamente"
+  },
+  {
+    "metric": "remaining_to_target",
+    "value": 2500.0,
+    "label": "Falta para o target (conta encerrada — nao aplicavel)"
+  }
+]
