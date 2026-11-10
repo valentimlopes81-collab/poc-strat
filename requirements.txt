@@ -5,3 +5,8 @@ sqlmodel==0.0.22
 ccxt>=4.4,<5
 jinja2==3.1.4
 httpx==0.27.2
+openbb-core==2.0.1
+openbb-cboe==2.0.0
+openbb-cftc==2.0.0
+openbb-federal-reserve==2.0.0
+openbb-derivatives==2.0.0

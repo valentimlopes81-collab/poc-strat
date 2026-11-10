@@ -29,12 +29,28 @@ mesmo pedindo "hoje". Por isso o desenho é híbrido:
   - `regime.py` — regime trending vs mean-reverting (NQ proxy QQQ, BTC Kraken) via Hurst exponent (R/S)
     + Variance Ratio, janelas 1y/90d/30d.
   - `btc_options_levels.py` / `nq_options_levels.py` — max pain, put/call OI ratio, paredes de open
-    interest por strike (Deribit nativo para BTC — alta confiança; QQQ/Yahoo proxy para NQ — menor
-    confiança estrutural, traduzido para equivalente NQ via rácio de preço).
+    interest por strike (Deribit nativo para BTC — alta confiança; QQQ via Cboe/OpenBB para NQ, desde
+    10/11 — ver nota abaixo — traduzido para equivalente NQ via rácio de preço).
   - `gex_common.py` + `btc_gex.py` / `nq_gex.py` — GEX (gamma exposure) aproximado via Black-Scholes
     gamma × OI por strike (metodologia pública standard, não proprietária). Dá o **ponto de zero-gamma**
     (fronteira entre regime de pin/baixa vol e regime volátil) — o nível mais acionável desta camada,
     sobretudo quando perto do preço atual.
+  - **Mudança de fonte de dados (10/11):** `nq_gex.py` e `nq_options_levels.py` deixaram de usar o
+    endpoint de opções da Yahoo (cookie+crumb, rate-limit quase diário, dezenas de falhas ao longo
+    deste mês) e passaram a usar a chain de opções QQQ via **Cboe através do OpenBB Platform**
+    (`openbb-cboe`, sem credencial — ver `openbb_data.py`). Validado lado-a-lado no dia da troca: os
+    números de OI por strike saíram **idênticos** aos que a Yahoo dava horas antes (ex.: 650 QQQ
+    OI=72.874 em ambas as fontes) — confirma que é a mesma informação de origem (OCC/OPRA), só sem o
+    rate-limit. GEX e níveis continuam calculados com a nossa própria metodologia (`gex_common.py`),
+    só a fonte dos dados brutos (strike/IV/OI) mudou.
+  - **`cot_nq.py`** (novo, 10/11) — COT real do Nasdaq-100 (NASDAQ MINI, CFTC_209742) via **CFTC
+    através do OpenBB** (`openbb-cftc`, sem credencial), atualizado semanalmente com ~1 semana de
+    atraso normal (não o "preso em julho/agosto" que a pesquisa web dava). Substitui a pesquisa web
+    para esta camada, que nunca conseguiu trazer dado mais recente que agosto.
+  - **`fomc_fed.py`** (novo, 10/11) — documentos oficiais do FOMC (minutas, comunicados, press
+    conference, beige book) direto da **Federal Reserve através do OpenBB** (`openbb-federal-reserve`,
+    sem credencial). Substitui a pesquisa web sobre a postura da Fed/Warsh, que ficava sistematicamente
+    desatualizada (várias vezes esta semana "pesquisa não devolveu nada posterior a junho").
   - Esta camada usa dados reais, não pesquisa — maior confiança que a camada macro abaixo. Dá níveis
     concretos (não só bias direcional) para cruzar com as confluências técnicas de POC/VAL.
   - **`vix.py`** (adicionado 18/10) — nível do VIX, variação do dia, vs média 20d, leitura categórica

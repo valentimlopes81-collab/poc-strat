@@ -1,23 +1,22 @@
-"""Extrai niveis de liquidez/posicionamento a partir das opcoes QQQ (proxy de NQ)
-via Yahoo Finance: concentracao de open interest por strike (paredes), max pain
-da proxima expiracao. Estrike de QQQ e traduzido para "equivalente NQ" usando o
-racio de preco atual entre os dois (aproximado, nao e o mesmo instrumento).
+"""Extrai niveis de liquidez/posicionamento a partir das opcoes QQQ (proxy de NQ):
+concentracao de open interest por strike (paredes), max pain da proxima
+expiracao. Estrike de QQQ e traduzido para "equivalente NQ" usando o racio de
+preco atual entre os dois (aproximado, nao e o mesmo instrumento).
 
-Yahoo exige cookie + crumb (CSRF) para este endpoint - o script trata disso.
+Chain via Cboe (OpenBB) desde 10/11 — substitui o fetch por crumb a Yahoo, que
+sofria rate-limit quase todos os dias (ver quant_bias.md 10/11).
 
 Uso: python3 backtest/quant/nq_options_levels.py [nq_price_atual]
-Se nq_price_atual nao for dado, tenta obter o do proprio QQQ (chart endpoint)
-e aplica um racio generico documentado no codigo (ajustar se desatualizado).
+Se nq_price_atual nao for dado, tenta obter o do proprio NQ=F (chart endpoint).
 """
-import json
 import subprocess
 import sys
-import tempfile
-import time
+import json
 from collections import defaultdict
 
+from openbb_data import fetch_qqq_chain_df
+
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-RETRY_DELAYS = [5, 15, 30]  # segundos entre tentativas automaticas em caso de rate-limit
 
 
 def sh(cmd):
@@ -25,32 +24,6 @@ def sh(cmd):
     if out.returncode != 0:
         raise RuntimeError(f"cmd failed: {cmd} stderr={out.stderr[:300]}")
     return out.stdout
-
-
-def get_crumb_and_cookies(cookiejar):
-    """Pede cookie+crumb com retry automatico se a Yahoo responder rate-limit
-    ("Too Many Requests" no proprio corpo do crumb, em vez de JSON de opcoes)."""
-    sh(["curl", "-s", "-c", cookiejar, "-A", UA, "https://fc.yahoo.com", "-o", "/dev/null", "--max-time", "15"])
-    last_crumb = ""
-    for attempt, delay in enumerate([0] + RETRY_DELAYS):
-        if delay:
-            print(f"AVISO: Yahoo rate-limit no crumb, a tentar outra vez em {delay}s "
-                  f"(tentativa {attempt+1}/{len(RETRY_DELAYS)+1})...", file=sys.stderr)
-            time.sleep(delay)
-        crumb = sh(["curl", "-s", "-b", cookiejar, "-c", cookiejar, "-A", UA,
-                    "https://query2.finance.yahoo.com/v1/test/getcrumb", "--max-time", "15"]).strip()
-        if "Too Many Requests" not in crumb and crumb:
-            return crumb
-        last_crumb = crumb
-    raise RuntimeError(f"Yahoo continua em rate-limit apos {len(RETRY_DELAYS)+1} tentativas: {last_crumb[:100]}")
-
-
-def fetch_chain(symbol, cookiejar, crumb, date=None):
-    url = f"https://query1.finance.yahoo.com/v7/finance/options/{symbol}?crumb={crumb}"
-    if date:
-        url += f"&date={date}"
-    raw = sh(["curl", "-s", "-b", cookiejar, "-A", UA, url, "--max-time", "20"])
-    return json.loads(raw)
 
 
 def fetch_nq_price():
@@ -82,14 +55,8 @@ def max_pain(calls, puts):
 
 def main():
     nq_price_arg = float(sys.argv[1]) if len(sys.argv) > 1 else None
-    with tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as tf:
-        cookiejar = tf.name
-    crumb = get_crumb_and_cookies(cookiejar)
-
-    d0 = fetch_chain("QQQ", cookiejar, crumb)
-    result = d0["optionChain"]["result"][0]
-    qqq_price = result["quote"]["regularMarketPrice"]
-    exp_dates = result["expirationDates"][:6]  # proximas ~6 expiracoes (daily/weekly QQQ)
+    df, qqq_price = fetch_qqq_chain_df()
+    exp_dates = sorted(e for e in df["expiration"].unique())[:6]  # proximas ~6 expiracoes
 
     auto_fetched = False
     if not nq_price_arg:
@@ -103,22 +70,22 @@ def main():
     else:
         print("Sem preco NQ (nem argumento nem auto-fetch) - estrikes so em termos QQQ.")
 
+    near = df[df["expiration"] == exp_dates[0]]
+    near_calls = [{"strike": s, "openInterest": oi} for s, oi in
+                  zip(near.loc[near["option_type"] == "call", "strike"],
+                      near.loc[near["option_type"] == "call", "open_interest"])]
+    near_puts = [{"strike": s, "openInterest": oi} for s, oi in
+                 zip(near.loc[near["option_type"] == "put", "strike"],
+                     near.loc[near["option_type"] == "put", "open_interest"])]
+
+    band_df = df[df["expiration"].isin(exp_dates)]
     agg_oi = defaultdict(float)
-    near_calls, near_puts = None, None
-    for i, exp in enumerate(exp_dates):
-        d = fetch_chain("QQQ", cookiejar, crumb, date=exp) if i > 0 else d0
-        opts = d["optionChain"]["result"][0]["options"][0]
-        calls, puts = opts["calls"], opts["puts"]
-        if i == 0:
-            near_calls, near_puts = calls, puts
-        for c in calls:
-            agg_oi[c["strike"]] += c.get("openInterest") or 0
-        for p in puts:
-            agg_oi[p["strike"]] += p.get("openInterest") or 0
+    for strike, oi in zip(band_df["strike"], band_df["open_interest"]):
+        agg_oi[strike] += oi or 0
 
     mp = max_pain(near_calls, near_puts)
-    calls_oi_total = sum(c.get("openInterest") or 0 for c in near_calls)
-    puts_oi_total = sum(p.get("openInterest") or 0 for p in near_puts)
+    calls_oi_total = sum(c["openInterest"] or 0 for c in near_calls)
+    puts_oi_total = sum(p["openInterest"] or 0 for p in near_puts)
     pc_ratio = puts_oi_total / calls_oi_total if calls_oi_total else None
 
     print(f"\nMax pain (expiracao mais proxima): {mp} QQQ" + (f"  (~{mp*ratio:.0f} NQ)" if ratio else ""))

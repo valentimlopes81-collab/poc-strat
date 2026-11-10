@@ -1,5 +1,7 @@
 """Calcula GEX (gamma exposure) aproximado para NQ via opcoes QQQ (proxy).
-Ver gex_common.py para a metodologia e avisos. Yahoo exige cookie+crumb.
+Ver gex_common.py para a metodologia e avisos. Chain via Cboe (OpenBB) desde
+10/11 — substitui o fetch por crumb a Yahoo, que sofria rate-limit quase todos
+os dias (ver quant_bias.md 10/11 para o historico da decisao).
 
 Uso: python3 backtest/quant/nq_gex.py [nq_price_atual]
 """
@@ -7,18 +9,17 @@ import datetime
 import json
 import subprocess
 import sys
-import tempfile
-import time
 
 from gex_common import total_gex_at_spot, find_zero_gamma, strikes_by_abs_gex, call_put_walls
+from openbb_data import fetch_qqq_chain_df
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 MULTIPLIER = 100.0  # 100 acoes por contrato (equity options standard)
-RETRY_DELAYS = [5, 15, 30]  # segundos entre tentativas automaticas em caso de rate-limit
 
 
 def fetch_nq_price():
-    """Busca o ultimo preco do futuro NQ=F via Yahoo (sem crumb, endpoint de chart)."""
+    """Busca o ultimo preco do futuro NQ=F via Yahoo (sem crumb, endpoint de chart
+    — nao e o endpoint de opcoes que sofria rate-limit, este sempre funcionou bem)."""
     try:
         raw = sh(["curl", "-s", "-A", UA,
                    "https://query1.finance.yahoo.com/v8/finance/chart/NQ=F?range=1d&interval=1m",
@@ -38,90 +39,38 @@ def sh(cmd):
     return out.stdout
 
 
-def get_crumb_and_cookies(cookiejar):
-    """Pede cookie+crumb com retry automatico se a Yahoo responder rate-limit
-    ("Too Many Requests" no proprio corpo do crumb, em vez de JSON de opcoes)."""
-    sh(["curl", "-s", "-c", cookiejar, "-A", UA, "https://fc.yahoo.com", "-o", "/dev/null", "--max-time", "15"])
-    last_crumb = ""
-    for attempt, delay in enumerate([0] + RETRY_DELAYS):
-        if delay:
-            print(f"AVISO: Yahoo rate-limit no crumb, a tentar outra vez em {delay}s "
-                  f"(tentativa {attempt+1}/{len(RETRY_DELAYS)+1})...", file=sys.stderr)
-            time.sleep(delay)
-        crumb = sh(["curl", "-s", "-b", cookiejar, "-c", cookiejar, "-A", UA,
-                    "https://query2.finance.yahoo.com/v1/test/getcrumb", "--max-time", "15"]).strip()
-        if "Too Many Requests" not in crumb and crumb:
-            return crumb
-        last_crumb = crumb
-    raise RuntimeError(f"Yahoo continua em rate-limit apos {len(RETRY_DELAYS)+1} tentativas: {last_crumb[:100]}")
-
-
-def fetch_chain(symbol, cookiejar, crumb, date=None):
-    url = f"https://query1.finance.yahoo.com/v7/finance/options/{symbol}?crumb={crumb}"
-    if date:
-        url += f"&date={date}"
-    raw = sh(["curl", "-s", "-b", cookiejar, "-A", UA, url, "--max-time", "20"])
-    return json.loads(raw)
-
-
-def build_rows(cookiejar, crumb, max_days=21):
+def build_rows(max_days=21):
+    df, spot = fetch_qqq_chain_df()
     now = datetime.datetime.utcnow()
-    d0 = fetch_chain("QQQ", cookiejar, crumb)
-    result = d0["optionChain"]["result"][0]
-    quote = result["quote"]
-    spot = quote["regularMarketPrice"]
-
-    market_state = quote.get("marketState")
-    quote_time = quote.get("regularMarketTime")
-    if quote_time:
-        quote_dt = datetime.datetime.utcfromtimestamp(quote_time)
-        staleness = (now - quote_dt).total_seconds() / 3600.0
-        if market_state != "REGULAR" or staleness > 1.0:
-            print(f"AVISO: cotacao QQQ (e portanto a cadeia de opcoes) tem {staleness:.1f}h "
-                  f"(marketState={market_state}, timestamp={quote_dt} UTC) - mercado de opcoes "
-                  f"provavelmente fechado/pre-market, dados nao refletem o preco NQ atual. "
-                  f"Resultados pouco fiaveis ate o mercado abrir (13:30 UTC).", file=sys.stderr)
-
-    exp_dates = [e for e in result["expirationDates"] if (datetime.datetime.utcfromtimestamp(e) - now).days <= max_days]
+    today = now.date()
 
     rows = []
     zero_dte_rows = []
-    for i, exp in enumerate(exp_dates):
-        d = fetch_chain("QQQ", cookiejar, crumb, date=exp) if i > 0 else d0
-        opts = d["optionChain"]["result"][0]["options"][0]
-        expiry_dt = datetime.datetime.utcfromtimestamp(exp) + datetime.timedelta(hours=21)
+    for r in df.itertuples():
+        dte = (r.expiration - today).days
+        if dte < 0 or dte > max_days:
+            continue
+        iv, oi = r.implied_volatility, r.open_interest
+        if not iv or iv <= 0.01 or not oi or oi <= 0:
+            continue
+        expiry_dt = datetime.datetime.combine(r.expiration, datetime.time(21, 0))
         T = (expiry_dt - now).total_seconds() / (365.25 * 24 * 3600)
         if T <= 0:
             continue
-        is_0dte = datetime.datetime.utcfromtimestamp(exp).date() == now.date()
-        for c in opts["calls"]:
-            iv = c.get("impliedVolatility")
-            oi = c.get("openInterest") or 0
-            if iv and iv > 0.01 and oi > 0:
-                row = {"strike": c["strike"], "T": T, "iv": iv, "oi": oi, "cp": "C"}
-                rows.append(row)
-                if is_0dte:
-                    zero_dte_rows.append(row)
-        for p in opts["puts"]:
-            iv = p.get("impliedVolatility")
-            oi = p.get("openInterest") or 0
-            if iv and iv > 0.01 and oi > 0:
-                row = {"strike": p["strike"], "T": T, "iv": iv, "oi": oi, "cp": "P"}
-                rows.append(row)
-                if is_0dte:
-                    zero_dte_rows.append(row)
+        row = {"strike": float(r.strike), "T": T, "iv": float(iv), "oi": float(oi),
+               "cp": "C" if r.option_type == "call" else "P"}
+        rows.append(row)
+        if dte == 0:
+            zero_dte_rows.append(row)
     if len(rows) < 200:
         print(f"AVISO: só {len(rows)} contratos validos (normal e >1000) - dados possivelmente"
-              f" desatualizados (ex.: antes da abertura do mercado de opcoes, 13:30 UTC). Resultados pouco fiaveis.", file=sys.stderr)
+              f" desatualizados ou mercado de opcoes fechado. Resultados pouco fiaveis.", file=sys.stderr)
     return rows, zero_dte_rows, spot
 
 
 def main():
     nq_price = float(sys.argv[1]) if len(sys.argv) > 1 else None
-    with tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as tf:
-        cookiejar = tf.name
-    crumb = get_crumb_and_cookies(cookiejar)
-    rows, zero_dte_rows, qqq_spot = build_rows(cookiejar, crumb)
+    rows, zero_dte_rows, qqq_spot = build_rows()
 
     auto_fetched = False
     if not nq_price:
