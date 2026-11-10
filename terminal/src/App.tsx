@@ -12,6 +12,8 @@ import { TradeLog } from './components/TradeLog'
 import { EconCalendar } from './components/EconCalendar'
 import { PriceChart, type Candle, type PriceLevel } from './components/PriceChart'
 import { VixChart } from './components/VixChart'
+import { VolumeChart } from './components/VolumeChart'
+import { GexHeatmap, type HeatmapData } from './components/GexHeatmap'
 import type { LevelRow, GexStrikeRow, CotRow, FomcRow, ScorecardRow, AccountRow, TradeRow, EconEvent } from './types'
 
 type Tab = 'hoje' | 'quant' | 'perf'
@@ -43,6 +45,8 @@ export default function App() {
   const priceNq = useJson<Candle[]>('/data/price_nq.json')
   const priceBtc = useJson<Candle[]>('/data/price_btc.json')
   const vixHistory = useJson<{ time: number; value: number }[]>('/data/vix_history.json')
+  const heatmapNq = useJson<HeatmapData>('/data/gex_heatmap_nq.json')
+  const heatmapBtc = useJson<HeatmapData>('/data/gex_heatmap_btc.json')
 
   const nq = levels.data?.find((r) => r.asset === 'NQ') ?? null
   const btc = levels.data?.find((r) => r.asset === 'BTC') ?? null
@@ -79,7 +83,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-term-bg text-term-text font-mono text-[13px] p-3 md:p-4 max-w-[1400px] mx-auto">
       <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-term-border pb-2 mb-3">
-        <div className="text-base font-bold tracking-wide">
+        <div className="text-base font-bold tracking-wide flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-term-green animate-pulse" />
           <span className="text-term-amber">NQ</span>/<span className="text-term-amber">BTC</span> TERMINAL
         </div>
         <TickerTape levels={levels.data} cot={cot.data} />
@@ -112,6 +117,23 @@ export default function App() {
                     ].filter(Boolean) as PriceLevel[]
                   }
                 />
+                <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Volume</div>
+                <VolumeChart
+                  data={priceNq.data.map((c) => ({
+                    time: c.time,
+                    value: c.volume ?? 0,
+                    color: c.close >= c.open ? '#00d96488' : '#ff3b3088',
+                  }))}
+                  height={56}
+                />
+                <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Order flow opções (calls − puts)</div>
+                <VolumeChart
+                  data={priceNq.data.map((c) => {
+                    const delta = (c.calls_volume ?? 0) - (c.puts_volume ?? 0)
+                    return { time: c.time, value: delta, color: delta >= 0 ? '#00d964' : '#ff3b30' }
+                  })}
+                  height={56}
+                />
               </Panel>
             )}
             {btc && priceBtc.data && (
@@ -123,6 +145,15 @@ export default function App() {
                     { value: btc.zero_gamma, color: '#ff9f1c', title: 'Zero-γ', dashed: true },
                     { value: btc.put_wall, color: '#ff3b30', title: 'Put Wall' },
                   ]}
+                />
+                <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Volume</div>
+                <VolumeChart
+                  data={priceBtc.data.map((c) => ({
+                    time: c.time,
+                    value: c.volume ?? 0,
+                    color: c.close >= c.open ? '#00d96488' : '#ff3b3088',
+                  }))}
+                  height={56}
                 />
               </Panel>
             )}
@@ -206,6 +237,21 @@ export default function App() {
           {scorecard.data && (
             <Panel title="Scorecard da bias diária" src="quant_bias_scorecard.md" span2>
               <ScorecardTable rows={scorecard.data} />
+            </Panel>
+          )}
+        </div>
+      )}
+
+      {tab === 'quant' && (heatmapNq.data || heatmapBtc.data) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-term-border border border-term-border mt-px">
+          {heatmapNq.data && (
+            <Panel title="NQ · GEX Heatmap" src="strike × expiração · Cboe/OpenBB">
+              <GexHeatmap data={heatmapNq.data} fmtStrike={(s) => s.toFixed(0)} />
+            </Panel>
+          )}
+          {heatmapBtc.data && (
+            <Panel title="BTC · GEX Heatmap" src="strike × expiração · Deribit">
+              <GexHeatmap data={heatmapBtc.data} fmtStrike={(s) => `$${s.toLocaleString('en-US')}`} />
             </Panel>
           )}
         </div>

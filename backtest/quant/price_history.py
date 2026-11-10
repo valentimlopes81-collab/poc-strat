@@ -17,20 +17,24 @@ OUT_DIR = "terminal/public/data"
 
 def export_qqq(days_back=2):
     df = obb.equity.price.historical("QQQ", interval="1m", provider="cboe").to_dataframe()
-    df = df[["open", "high", "low", "close"]].copy()
+    df = df[["open", "high", "low", "close", "volume", "calls_volume", "puts_volume"]].copy()
     df.index = pd.to_datetime(df.index)
     cutoff = df.index.max() - pd.Timedelta(days=days_back)
     df = df[df.index >= cutoff]
     # resample para 5m (menos ruido, mais legivel, estilo grafico intradiario)
-    agg = df.resample("5min").agg({"open": "first", "high": "max", "low": "min", "close": "last"}).dropna()
+    agg = df.resample("5min").agg({
+        "open": "first", "high": "max", "low": "min", "close": "last",
+        "volume": "sum", "calls_volume": "sum", "puts_volume": "sum",
+    }).dropna()
     rows = [
         {"time": int(ts.timestamp()), "open": round(r.open, 2), "high": round(r.high, 2),
-         "low": round(r.low, 2), "close": round(r.close, 2)}
+         "low": round(r.low, 2), "close": round(r.close, 2), "volume": int(r.volume),
+         "calls_volume": int(r.calls_volume), "puts_volume": int(r.puts_volume)}
         for ts, r in agg.iterrows()
     ]
     with open(f"{OUT_DIR}/price_nq.json", "w") as f:
         json.dump(rows, f)
-    print(f"QQQ: {len(rows)} candles de 5m (ultimos {days_back}d)")
+    print(f"QQQ: {len(rows)} candles de 5m (ultimos {days_back}d), com volume + calls/puts volume")
 
 
 def export_btc(bars=200, interval_min=15):
@@ -44,7 +48,7 @@ def export_btc(bars=200, interval_min=15):
     raw_rows = d["result"][key][-bars:]
     rows = [
         {"time": int(r[0]), "open": round(float(r[1]), 1), "high": round(float(r[2]), 1),
-         "low": round(float(r[3]), 1), "close": round(float(r[4]), 1)}
+         "low": round(float(r[3]), 1), "close": round(float(r[4]), 1), "volume": round(float(r[6]), 2)}
         for r in raw_rows
     ]
     with open(f"{OUT_DIR}/price_btc.json", "w") as f:

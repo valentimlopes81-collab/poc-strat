@@ -41,7 +41,8 @@ def build_rows(instruments, max_days=60):
         oi = inst.get("open_interest") or 0.0
         if not iv or oi <= 0:
             continue
-        rows.append({"strike": strike, "T": T, "iv": iv / 100.0, "oi": oi, "cp": cp})
+        rows.append({"strike": strike, "T": T, "iv": iv / 100.0, "oi": oi, "cp": cp,
+                     "expiry": expiry_dt.date().isoformat()})
         if inst.get("underlying_price"):
             underlying = inst["underlying_price"]
     return rows, underlying
