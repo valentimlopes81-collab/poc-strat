@@ -8,10 +8,13 @@ export interface LevelRow {
   gex_regime: string
   call_wall: number
   call_wall_ref: string | null
+  call_wall_qqq?: number
   put_wall: number
   put_wall_ref: string | null
+  put_wall_qqq?: number
   zero_gamma: number
   zero_gamma_ref: string | null
+  zero_gamma_qqq?: number
   dte0_dominant: number | null
   dte0_dominant_ref: string | null
   vix: number | null

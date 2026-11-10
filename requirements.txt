@@ -10,3 +10,5 @@ openbb-cboe==2.0.0
 openbb-cftc==2.0.0
 openbb-federal-reserve==2.0.0
 openbb-derivatives==2.0.0
+openbb-equity==2.0.0
+pandas

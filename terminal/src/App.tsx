@@ -10,6 +10,8 @@ import { FomcList } from './components/FomcList'
 import { ScorecardTable } from './components/ScorecardTable'
 import { TradeLog } from './components/TradeLog'
 import { EconCalendar } from './components/EconCalendar'
+import { PriceChart, type Candle, type PriceLevel } from './components/PriceChart'
+import { VixChart } from './components/VixChart'
 import type { LevelRow, GexStrikeRow, CotRow, FomcRow, ScorecardRow, AccountRow, TradeRow, EconEvent } from './types'
 
 type Tab = 'hoje' | 'quant' | 'perf'
@@ -38,6 +40,9 @@ export default function App() {
   const account = useJson<AccountRow[]>('/data/account.json')
   const trades = useJson<TradeRow[]>('/data/trades.json')
   const econ = useJson<EconEvent[]>('/data/econ_calendar.json')
+  const priceNq = useJson<Candle[]>('/data/price_nq.json')
+  const priceBtc = useJson<Candle[]>('/data/price_btc.json')
+  const vixHistory = useJson<{ time: number; value: number }[]>('/data/vix_history.json')
 
   const nq = levels.data?.find((r) => r.asset === 'NQ') ?? null
   const btc = levels.data?.find((r) => r.asset === 'BTC') ?? null
@@ -94,6 +99,41 @@ export default function App() {
 
       {tab === 'hoje' && (
         <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-term-border border border-term-border mb-px">
+            {nq && priceNq.data && (
+              <Panel title="NQ · Preço + Confluências" src="QQQ 5m · Call Wall / Put Wall / Zero-gamma">
+                <PriceChart
+                  candles={priceNq.data}
+                  levels={
+                    [
+                      nq.call_wall_qqq != null && { value: nq.call_wall_qqq, color: '#00d964', title: 'Call Wall' },
+                      nq.zero_gamma_qqq != null && { value: nq.zero_gamma_qqq, color: '#ff9f1c', title: 'Zero-γ', dashed: true },
+                      nq.put_wall_qqq != null && { value: nq.put_wall_qqq, color: '#ff3b30', title: 'Put Wall' },
+                    ].filter(Boolean) as PriceLevel[]
+                  }
+                />
+              </Panel>
+            )}
+            {btc && priceBtc.data && (
+              <Panel title="BTC · Preço + Confluências" src="15m · Call Wall / Put Wall / Zero-gamma">
+                <PriceChart
+                  candles={priceBtc.data}
+                  levels={[
+                    { value: btc.call_wall, color: '#00d964', title: 'Call Wall' },
+                    { value: btc.zero_gamma, color: '#ff9f1c', title: 'Zero-γ', dashed: true },
+                    { value: btc.put_wall, color: '#ff3b30', title: 'Put Wall' },
+                  ]}
+                />
+              </Panel>
+            )}
+          </div>
+          {vixHistory.data && (
+            <div className="grid grid-cols-1 gap-px bg-term-border border border-term-border mb-px">
+              <Panel title="VIX · Volatilidade" src="60 dias · linhas de referência em 20 e 30">
+                <VixChart data={vixHistory.data} height={110} />
+              </Panel>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-term-border border border-term-border mb-px">
             {nq && (
               <Panel
