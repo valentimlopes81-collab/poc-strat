@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { createChart, type IChartApi, type ISeriesApi, LineStyle } from 'lightweight-charts'
 import type { TradeRow } from '../types'
+import { usePanelFullscreen } from '../lib/panelFullscreen'
 
 export function EquityChart({ trades }: { trades: TradeRow[] }) {
+  const isFull = usePanelFullscreen()
   const ref = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Area'> | null>(null)
@@ -57,5 +59,5 @@ export function EquityChart({ trades }: { trades: TradeRow[] }) {
     chartRef.current?.timeScale().fitContent()
   }, [trades])
 
-  return <div ref={ref} className="w-full" style={{ height: 220 }} />
+  return <div ref={ref} className="w-full" style={{ height: isFull ? '65vh' : 220 }} />
 }

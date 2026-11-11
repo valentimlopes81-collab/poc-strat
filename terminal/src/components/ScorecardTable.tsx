@@ -1,10 +1,12 @@
 import { Badge } from './Panel'
+import { usePanelFullscreen } from '../lib/panelFullscreen'
 import type { ScorecardRow } from '../types'
 
 export function ScorecardTable({ rows }: { rows: ScorecardRow[] }) {
+  const isFull = usePanelFullscreen()
   const tone = (v: ScorecardRow['verdict']) => (v === 'Confirmado' ? 'ok' : v === 'Parcial' ? 'warn' : v === 'Falhou' ? 'bad' : null)
   return (
-    <div className="max-h-[280px] overflow-auto">
+    <div className="overflow-auto" style={{ maxHeight: isFull ? '75vh' : 280 }}>
       <table className="w-full text-[11px] border-collapse">
         <thead>
           <tr className="text-term-muted uppercase text-[10px] tracking-wide">

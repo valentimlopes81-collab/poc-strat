@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createChart, type IChartApi, type ISeriesApi, type UTCTimestamp, LineStyle } from 'lightweight-charts'
+import { usePanelFullscreen } from '../lib/panelFullscreen'
 
 export interface Candle {
   time: number
@@ -39,6 +40,8 @@ export function PriceChart({
   height?: number
   volumeProfile?: boolean
 }) {
+  const isFull = usePanelFullscreen()
+  const effectiveHeight = isFull ? '52vh' : `${height ?? 280}px`
   const wrapRef = useRef<HTMLDivElement>(null)
   const chartDivRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
@@ -169,7 +172,7 @@ export function PriceChart({
   }, [])
 
   return (
-    <div ref={wrapRef} className="relative w-full" style={{ height: height ?? 280 }}>
+    <div ref={wrapRef} className="relative w-full" style={{ height: effectiveHeight }}>
       <div ref={chartDivRef} className="absolute inset-0" />
       <div className="absolute top-0 right-0 z-[60] flex gap-0.5">
         <button

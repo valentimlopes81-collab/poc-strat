@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { TradeRow } from '../types'
 import { fmtUsd } from '../lib/useJson'
+import { usePanelFullscreen } from '../lib/panelFullscreen'
 
 function seqOf(id: string): number {
   const m = /L(\d+)/.exec(id)
@@ -8,6 +9,7 @@ function seqOf(id: string): number {
 }
 
 export function TradeLog({ trades }: { trades: TradeRow[] }) {
+  const isFull = usePanelFullscreen()
   const [sort, setSort] = useState<{ field: keyof TradeRow | 'id'; dir: 1 | -1 }>({ field: 'id', dir: 1 })
 
   const sorted = useMemo(() => {
@@ -35,7 +37,7 @@ export function TradeLog({ trades }: { trades: TradeRow[] }) {
   ]
 
   return (
-    <div className="max-h-[420px] overflow-auto">
+    <div className="overflow-auto" style={{ maxHeight: isFull ? '75vh' : 420 }}>
       <table className="w-full text-[11px] border-collapse">
         <thead>
           <tr className="text-term-muted uppercase text-[10px] tracking-wide">

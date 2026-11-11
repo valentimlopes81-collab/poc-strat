@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { fmtCompact } from '../lib/useJson'
+import { usePanelFullscreen } from '../lib/panelFullscreen'
 
 export interface HeatmapData {
   spot: number
@@ -8,6 +9,7 @@ export interface HeatmapData {
 }
 
 export function GexHeatmap({ data, fmtStrike }: { data: HeatmapData; fmtStrike: (s: number) => string }) {
+  const isFull = usePanelFullscreen()
   const [hover, setHover] = useState<{ expiry: string; strike: number; gex: number } | null>(null)
 
   const { strikes, cellMap, maxAbs, expiries } = useMemo(() => {
@@ -35,7 +37,7 @@ export function GexHeatmap({ data, fmtStrike }: { data: HeatmapData; fmtStrike: 
 
   return (
     <div className="relative">
-      <div className="overflow-auto max-h-[440px]">
+      <div className="overflow-auto" style={{ maxHeight: isFull ? '75vh' : 440 }}>
         <table className="border-collapse text-[10px] w-full">
           <thead>
             <tr>

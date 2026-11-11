@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { createChart, type IChartApi, type ISeriesApi, type UTCTimestamp, LineStyle } from 'lightweight-charts'
+import { usePanelFullscreen } from '../lib/panelFullscreen'
 
 export function VixChart({ data, height }: { data: Array<{ time: number; value: number }>; height?: number }) {
+  const isFull = usePanelFullscreen()
   const ref = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Line'> | null>(null)
@@ -47,5 +49,5 @@ export function VixChart({ data, height }: { data: Array<{ time: number; value: 
     chartRef.current?.timeScale().fitContent()
   }, [data])
 
-  return <div ref={ref} className="w-full" style={{ height: height ?? 120 }} />
+  return <div ref={ref} className="w-full" style={{ height: isFull ? '65vh' : height ?? 120 }} />
 }

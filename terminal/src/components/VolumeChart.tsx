@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { createChart, type IChartApi, type ISeriesApi, type UTCTimestamp } from 'lightweight-charts'
+import { usePanelFullscreen } from '../lib/panelFullscreen'
 
 export interface VolumeBar {
   time: number
@@ -8,6 +9,7 @@ export interface VolumeBar {
 }
 
 export function VolumeChart({ data, height }: { data: VolumeBar[]; height?: number }) {
+  const isFull = usePanelFullscreen()
   const ref = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Histogram'> | null>(null)
@@ -33,5 +35,5 @@ export function VolumeChart({ data, height }: { data: VolumeBar[]; height?: numb
     chartRef.current?.timeScale().fitContent()
   }, [data])
 
-  return <div ref={ref} className="w-full" style={{ height: height ?? 70 }} />
+  return <div ref={ref} className="w-full" style={{ height: isFull ? 140 : height ?? 70 }} />
 }
