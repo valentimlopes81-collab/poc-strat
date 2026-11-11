@@ -202,7 +202,7 @@ def update_fomc():
     rows = []
     labels = {
         "monetary_policy": "Ultimo comunicado de politica monetaria",
-        "press_conference": "Press conference (Powell)",
+        "press_conference": "Press conference (Fed chair)",
         "beige_book": "Beige Book",
         "minutes": "Ultimas minutas publicadas",
     }

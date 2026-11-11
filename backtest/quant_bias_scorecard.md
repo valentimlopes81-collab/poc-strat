@@ -87,3 +87,17 @@ ponto fraco real foi o BTC a 05/11: confiança Alta associada a "estabilização
 a um choque de liquidez fora do radar do GEX. Padrão a vigiar: GEX positivo/robusto não é garantia
 contra eventos de alavancagem — talvez valha a pena nunca dar confiança "Alta" a uma leitura de
 BTC baseada só em GEX, dado que já se provou insuficiente uma vez.
+
+---
+
+## 10/11
+- **NQ:** "Cauteloso/negativo leve, pullback de digestão pós-recuperação" (Média) → **✅ Confirmado**
+  durante a sessão — GEX manteve-se negativo a maior parte do dia (briefing -3,63B → piorou até
+  -3,99B a meio da tarde → estabilizou -3,92B ao fim do dia), preço recuou de ~674 para ~670 QQQ como
+  esperado, sem perder o Put Wall estrutural (650). **Nota:** a sessão seguinte (11/11) trouxe um gap
+  overnight forte (670→688 QQQ) que reverteu completamente a leitura — mas isso é desenvolvimento do
+  dia seguinte, não invalida a leitura correta sobre o que aconteceu no próprio 10/11.
+- **BTC:** "GEX reverteu para negativo, preço frágil entre Put Wall (72k) e zero-gamma (75,6k)"
+  (Baixa-Média) → **✅ Confirmado** — manteve-se exatamente nessa mesma zona frágil sem rompimento
+  limpo, e continuou lá no dia seguinte também (11/11). Confiança baixa-média foi apropriada, sem
+  surpresas.
