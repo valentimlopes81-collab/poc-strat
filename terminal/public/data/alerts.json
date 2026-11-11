@@ -1,5 +1,12 @@
 [
   {
+    "time": "2026-11-11T18:34:00Z",
+    "asset": "NQ",
+    "severity": "notable",
+    "title": "Gamma Wall 0DTE mudou de 690 para 695, preço a ~28,75pts dela",
+    "detail": "Preço NQ ~28.682,25 (QQQ 694,295), subiu ligeiramente. O Gamma Wall 0DTE dominante mudou de 690 para 695 QQQ (~28.711 NQ, call-heavy) — preço agora ~28,75pts abaixo dela. GEX total +1,62B, continua a reforçar-se (era +997M há 2h)."
+  },
+  {
     "time": "2026-11-11T16:34:00Z",
     "asset": "NQ",
     "severity": "critical",
