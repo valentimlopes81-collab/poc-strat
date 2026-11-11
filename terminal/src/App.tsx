@@ -14,7 +14,8 @@ import { PriceChart, type Candle, type PriceLevel } from './components/PriceChar
 import { VixChart } from './components/VixChart'
 import { VolumeChart } from './components/VolumeChart'
 import { GexHeatmap, type HeatmapData } from './components/GexHeatmap'
-import type { LevelRow, GexStrikeRow, CotRow, FomcRow, ScorecardRow, AccountRow, TradeRow, EconEvent } from './types'
+import { AlertsFeed } from './components/AlertsFeed'
+import type { LevelRow, GexStrikeRow, CotRow, FomcRow, ScorecardRow, AccountRow, TradeRow, EconEvent, AlertRow } from './types'
 
 type Tab = 'hoje' | 'quant' | 'perf'
 
@@ -49,6 +50,7 @@ export default function App() {
   const vixHistory = useJson<{ time: number; value: number }[]>('/data/vix_history.json')
   const heatmapNq = useJson<HeatmapData>('/data/gex_heatmap_nq.json')
   const heatmapBtc = useJson<HeatmapData>('/data/gex_heatmap_btc.json')
+  const alerts = useJson<AlertRow[]>('/data/alerts.json')
 
   const nq = levels.data?.find((r) => r.asset === 'NQ') ?? null
   const btc = levels.data?.find((r) => r.asset === 'BTC') ?? null
@@ -106,6 +108,13 @@ export default function App() {
 
       {tab === 'hoje' && (
         <>
+          {alerts.data && (
+            <div className="grid grid-cols-1 gap-px bg-term-border border border-term-border mb-px">
+              <Panel title="Alertas · Killzone" src="GEX/níveis — notável quando muda estrutura ou preço se aproxima">
+                <AlertsFeed alerts={alerts.data} />
+              </Panel>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-term-border border border-term-border mb-px">
             {nq && priceNq.data && priceNqDaily.data && (
               <Panel
@@ -330,7 +339,7 @@ export default function App() {
       )}
 
       <footer className="mt-4 pt-2 border-t border-term-border text-[10px] text-term-muted">
-        NQ/BTC Terminal · dados estáticos, republicados manualmente a cada check · poc-strat
+        NQ/BTC Terminal · preços/GEX/VIX/calendário auto-atualizados (GitHub Action) · bias, scorecard e alertas continuam a ser julgamento manual · poc-strat
       </footer>
     </div>
   )

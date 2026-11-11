@@ -78,6 +78,14 @@ export interface TradeRow {
   notes_short: string
 }
 
+export interface AlertRow {
+  time: string
+  asset: string
+  severity: 'info' | 'notable' | 'critical' | 'system'
+  title: string
+  detail: string
+}
+
 export interface EconEvent {
   title: string
   country: string

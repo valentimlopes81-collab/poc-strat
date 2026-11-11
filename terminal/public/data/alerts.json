@@ -1,0 +1,23 @@
+[
+  {
+    "time": "2026-11-11T10:30:00Z",
+    "asset": "SISTEMA",
+    "severity": "system",
+    "title": "Alertas de killzone agora no terminal",
+    "detail": "Os alertas horários de GEX/níveis (NQ/BTC) passam a ser escritos aqui, além do log em quant_bias.md — feed fica visível direto no terminal."
+  },
+  {
+    "time": "2026-11-10T18:34:00Z",
+    "asset": "NQ",
+    "severity": "notable",
+    "title": "Preço estabilizou ~670, mas o 670 dissolveu-se como Put Wall",
+    "detail": "Preço NQ ~27.597,25 (QQQ 670,34), praticamente estável. Put Wall estrutural voltou para 650 QQQ (~26.760 NQ), ~837pts do preço. 0DTE fraco em 675. GEX total -3,92B, estável (parou de piorar pela 1ª vez no dia)."
+  },
+  {
+    "time": "2026-11-10T17:34:00Z",
+    "asset": "NQ",
+    "severity": "critical",
+    "title": "Preço a ~13pts do novo Put Wall em 670",
+    "detail": "Preço NQ ~27.642,75 (QQQ 670,32), cruzou o 675 e aproximou-se do novo Put Wall estrutural 670 QQQ (~27.630 NQ, reforçado). Gamma Wall 0DTE dominante também, muito mais forte. GEX total -3,99B, 4º check seguido a piorar."
+  }
+]
