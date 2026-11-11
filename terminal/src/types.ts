@@ -88,6 +88,35 @@ export interface AlertRow {
   detail: string
 }
 
+export interface IvTermRow {
+  expiry: string
+  dte: number
+  atm_iv: number
+}
+
+export interface IvTermData {
+  spot: number
+  rows: IvTermRow[]
+}
+
+export interface IvSkewRow {
+  strike: number
+  moneyness_pct: number
+  iv: number
+  cp: 'C' | 'P'
+}
+
+export interface IvSkewData {
+  spot: number
+  expiry: string
+  rows: IvSkewRow[]
+}
+
+export interface VolCompareData {
+  realized: Array<{ time: number; value: number }>
+  implied_atm_now: IvTermRow | null
+}
+
 export interface EconEvent {
   title: string
   country: string

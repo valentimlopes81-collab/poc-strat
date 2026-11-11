@@ -10,16 +10,47 @@ import { FomcList } from './components/FomcList'
 import { ScorecardTable } from './components/ScorecardTable'
 import { TradeLog } from './components/TradeLog'
 import { EconCalendar } from './components/EconCalendar'
-import { PriceChart, type Candle, type PriceLevel } from './components/PriceChart'
+import { PriceChart, type Candle, type PriceLevel, type TradeMarker } from './components/PriceChart'
 import { VixChart } from './components/VixChart'
 import { VolumeChart } from './components/VolumeChart'
 import { GexHeatmap, type HeatmapData } from './components/GexHeatmap'
 import { GammaByExpiry } from './components/GammaByExpiry'
 import { AlertsFeed } from './components/AlertsFeed'
 import { PlanoDoDia } from './components/PlanoDoDia'
-import type { LevelRow, GexStrikeRow, CotRow, FomcRow, ScorecardRow, AccountRow, TradeRow, EconEvent, AlertRow } from './types'
+import { IvTermStructure } from './components/IvTermStructure'
+import { IvSkew } from './components/IvSkew'
+import { VolCompare } from './components/VolCompare'
+import type {
+  LevelRow,
+  GexStrikeRow,
+  CotRow,
+  FomcRow,
+  ScorecardRow,
+  AccountRow,
+  TradeRow,
+  EconEvent,
+  AlertRow,
+  IvTermData,
+  IvSkewData,
+  VolCompareData,
+} from './types'
 
 type Tab = 'hoje' | 'quant' | 'perf'
+
+function buildTradeMarkers(trades: TradeRow[] | null, dailyCandles: Candle[] | null): TradeMarker[] {
+  if (!trades || !dailyCandles || !dailyCandles.length) return []
+  const byDate = new Map(dailyCandles.map((c) => [new Date(c.time * 1000).toISOString().slice(5, 10), c.time]))
+  const markers: TradeMarker[] = []
+  for (const t of trades) {
+    const [dd, mm] = t.date.split('/')
+    if (!dd || !mm) continue
+    const key = `${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`
+    const time = byDate.get(key)
+    if (time == null) continue
+    markers.push({ time, result: t.result, label: `${t.id} ${t.pnl_usd >= 0 ? '+' : ''}${t.pnl_usd.toFixed(0)}` })
+  }
+  return markers
+}
 
 function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: string }) {
   return (
@@ -52,11 +83,15 @@ export default function App() {
   const vixHistory = useJson<{ time: number; value: number }[]>('/data/vix_history.json')
   const heatmapNq = useJson<HeatmapData>('/data/gex_heatmap_nq.json')
   const heatmapBtc = useJson<HeatmapData>('/data/gex_heatmap_btc.json')
+  const ivTermNq = useJson<IvTermData>('/data/iv_term_nq.json')
+  const ivSkewNq = useJson<IvSkewData>('/data/iv_skew_nq.json')
+  const volCompareNq = useJson<VolCompareData>('/data/vol_compare_nq.json')
   const alerts = useJson<AlertRow[]>('/data/alerts.json')
 
   const nq = levels.data?.find((r) => r.asset === 'NQ') ?? null
   const btc = levels.data?.find((r) => r.asset === 'BTC') ?? null
   const nqStrikes = gexStrikes.data?.filter((r) => r.asset === 'NQ') ?? []
+  const tradeMarkers = buildTradeMarkers(trades.data, priceNqDaily.data)
   const btcStrikes = gexStrikes.data?.filter((r) => r.asset === 'BTC') ?? []
 
   const stats = (() => {
@@ -155,6 +190,7 @@ export default function App() {
                       nq.put_wall_qqq != null && { value: nq.put_wall_qqq, color: '#ff3b30', title: 'Put Wall' },
                     ].filter(Boolean) as PriceLevel[]
                   }
+                  tradeMarkers={nqTimeframe === 'daily' ? tradeMarkers : undefined}
                 />
                 <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Volume</div>
                 <VolumeChart
@@ -293,6 +329,26 @@ export default function App() {
             <Panel title="BTC · GEX Heatmap" src="strike × expiração · Deribit">
               <GammaByExpiry data={heatmapBtc.data} />
               <GexHeatmap data={heatmapBtc.data} fmtStrike={(s) => `$${s.toLocaleString('en-US')}`} />
+            </Panel>
+          )}
+        </div>
+      )}
+
+      {tab === 'quant' && (ivTermNq.data || ivSkewNq.data || volCompareNq.data) && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-term-border border border-term-border mt-px">
+          {ivTermNq.data && (
+            <Panel title="NQ · IV Term Structure" src="QQQ · ATM por expiração">
+              <IvTermStructure data={ivTermNq.data} />
+            </Panel>
+          )}
+          {ivSkewNq.data && (
+            <Panel title="NQ · IV Skew" src={`QQQ · exp. ${ivSkewNq.data.expiry.slice(5)}`}>
+              <IvSkew data={ivSkewNq.data} />
+            </Panel>
+          )}
+          {volCompareNq.data && (
+            <Panel title="NQ · Realized vs Implied Vol" src="QQQ">
+              <VolCompare data={volCompareNq.data} />
             </Panel>
           )}
         </div>

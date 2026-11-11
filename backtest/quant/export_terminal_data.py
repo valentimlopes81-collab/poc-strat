@@ -8,6 +8,7 @@ O que este script ATUALIZA (puramente numerico, sem opiniao):
   - econ_calendar.json: calendario ForexFactory
   - price_nq.json, price_nq_daily.json, price_btc.json, vix_history.json
   - gex_heatmap_nq.json, gex_heatmap_btc.json
+  - iv_term_nq.json, iv_skew_nq.json, vol_compare_nq.json
 
 O que este script NAO toca (journal/narrativa, continuam manuais):
   scorecard.json, account.json, trades.json, alerts.json
@@ -23,6 +24,8 @@ from openbb import obb
 
 import btc_gex
 import econ_calendar
+import iv_surface
+import vol_compare
 import gex_heatmap
 import nq_gex
 import price_history
@@ -253,6 +256,8 @@ if __name__ == "__main__":
     run_step("vix_history", price_history.export_vix)
     run_step("gex_heatmap_nq", gex_heatmap.export_nq)
     run_step("gex_heatmap_btc", gex_heatmap.export_btc)
+    run_step("iv_surface_nq", iv_surface.main)
+    run_step("vol_compare_nq", vol_compare.main)
 
     # COT/FOMC/calendario mudam pouco (semanal/raro) e o feed do calendario
     # tem rate-limit agressivo -- so correm ~1x/hora mesmo que o script seja

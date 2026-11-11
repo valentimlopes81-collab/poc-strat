@@ -2,6 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { createChart, type IChartApi, type ISeriesApi, type UTCTimestamp, LineStyle } from 'lightweight-charts'
 import { usePanelFullscreen } from '../lib/panelFullscreen'
 
+export interface TradeMarker {
+  time: number
+  result: 'Win' | 'Loss' | 'BE'
+  label: string
+}
+
 export interface Candle {
   time: number
   open: number
@@ -34,11 +40,13 @@ export function PriceChart({
   levels,
   height,
   volumeProfile = true,
+  tradeMarkers,
 }: {
   candles: Candle[]
   levels: PriceLevel[]
   height?: number
   volumeProfile?: boolean
+  tradeMarkers?: TradeMarker[]
 }) {
   const isFull = usePanelFullscreen()
   const effectiveHeight = isFull ? '52vh' : `${height ?? 280}px`
@@ -161,6 +169,27 @@ export function PriceChart({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [levels])
+
+  useEffect(() => {
+    const series = seriesRef.current
+    if (!series) return
+    if (!tradeMarkers || !tradeMarkers.length) {
+      series.setMarkers([])
+      return
+    }
+    const colorFor = { Win: '#00d964', Loss: '#ff3b30', BE: '#7a7a7a' } as const
+    const shapeFor = { Win: 'arrowUp', Loss: 'arrowDown', BE: 'circle' } as const
+    const markers = [...tradeMarkers]
+      .sort((a, b) => a.time - b.time)
+      .map((m) => ({
+        time: m.time as UTCTimestamp,
+        position: (m.result === 'Loss' ? 'aboveBar' : 'belowBar') as 'aboveBar' | 'belowBar',
+        color: colorFor[m.result],
+        shape: shapeFor[m.result],
+        text: m.label,
+      }))
+    series.setMarkers(markers)
+  }, [tradeMarkers])
 
   const zoom = useCallback((factor: number) => {
     const ts = chartRef.current?.timeScale()
