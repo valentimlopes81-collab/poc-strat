@@ -14,7 +14,9 @@ import { PriceChart, type Candle, type PriceLevel } from './components/PriceChar
 import { VixChart } from './components/VixChart'
 import { VolumeChart } from './components/VolumeChart'
 import { GexHeatmap, type HeatmapData } from './components/GexHeatmap'
+import { GammaByExpiry } from './components/GammaByExpiry'
 import { AlertsFeed } from './components/AlertsFeed'
+import { PlanoDoDia } from './components/PlanoDoDia'
 import type { LevelRow, GexStrikeRow, CotRow, FomcRow, ScorecardRow, AccountRow, TradeRow, EconEvent, AlertRow } from './types'
 
 type Tab = 'hoje' | 'quant' | 'perf'
@@ -108,6 +110,13 @@ export default function App() {
 
       {tab === 'hoje' && (
         <>
+          {levels.data && (
+            <div className="grid grid-cols-1 gap-px bg-term-border border border-term-border mb-px">
+              <Panel title="Plano do Dia" src="bias + cenários — julgamento manual, nunca sinal de entrada">
+                <PlanoDoDia levels={levels.data} />
+              </Panel>
+            </div>
+          )}
           {alerts.data && (
             <div className="grid grid-cols-1 gap-px bg-term-border border border-term-border mb-px">
               <Panel title="Alertas · Killzone" src="GEX/níveis — notável quando muda estrutura ou preço se aproxima">
@@ -214,8 +223,6 @@ export default function App() {
                 <div className="mt-2">
                   <GexDepthChart rows={nqStrikes} priceVal={nq.price_qqq ?? null} fmtStrike={(s) => `${s.toFixed(0)} QQQ`} />
                 </div>
-                <p className="mt-2 pt-2 border-t border-term-border text-[12px] leading-relaxed">{nq.bias}</p>
-                <p className="mt-1 text-[11px] text-term-muted">{nq.note}</p>
               </Panel>
             )}
             {btc && (
@@ -235,8 +242,6 @@ export default function App() {
                 <div className="mt-2">
                   <GexDepthChart rows={btcStrikes} priceVal={btc.price} fmtStrike={(s) => `$${s.toLocaleString('en-US')}`} />
                 </div>
-                <p className="mt-2 pt-2 border-t border-term-border text-[12px] leading-relaxed">{btc.bias}</p>
-                <p className="mt-1 text-[11px] text-term-muted">{btc.note}</p>
               </Panel>
             )}
           </div>
@@ -280,11 +285,13 @@ export default function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-term-border border border-term-border mt-px">
           {heatmapNq.data && (
             <Panel title="NQ · GEX Heatmap" src="strike × expiração · Cboe/OpenBB">
+              <GammaByExpiry data={heatmapNq.data} />
               <GexHeatmap data={heatmapNq.data} fmtStrike={(s) => s.toFixed(0)} />
             </Panel>
           )}
           {heatmapBtc.data && (
             <Panel title="BTC · GEX Heatmap" src="strike × expiração · Deribit">
+              <GammaByExpiry data={heatmapBtc.data} />
               <GexHeatmap data={heatmapBtc.data} fmtStrike={(s) => `$${s.toLocaleString('en-US')}`} />
             </Panel>
           )}
