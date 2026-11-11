@@ -104,12 +104,12 @@ export function PriceChart({
       autoSize: true,
     })
     const series = chart.addCandlestickSeries({
-      upColor: '#00d964',
-      downColor: '#ff3b30',
-      borderUpColor: '#00d964',
-      borderDownColor: '#ff3b30',
-      wickUpColor: '#00d96499',
-      wickDownColor: '#ff3b3099',
+      upColor: '#636363',
+      downColor: '#000000',
+      borderUpColor: '#636363',
+      borderDownColor: '#4a4a4a',
+      wickUpColor: '#636363',
+      wickDownColor: '#4a4a4a',
     })
     chartRef.current = chart
     seriesRef.current = series
