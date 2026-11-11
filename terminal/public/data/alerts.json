@@ -1,5 +1,12 @@
 [
   {
+    "time": "2026-11-11T16:34:00Z",
+    "asset": "NQ",
+    "severity": "critical",
+    "title": "Rompeu o 690 (Gamma Wall 0DTE), Put Wall subiu de 650 para 680",
+    "detail": "Preço NQ ~28.529,5 (QQQ 690,57), rally forte desde o check anterior. Cruzou de forma limpa o 690 QQQ (~28.506 NQ) que era o Gamma Wall 0DTE dominante — agora ~23,5pts abaixo dele. Put Wall estrutural subiu de 650 para 680 QQQ (~28.093 NQ), muito mais perto do preço. GEX total +997,3M, reforçou-se bastante (era +118,0M há 1h)."
+  },
+  {
     "time": "2026-11-11T15:34:00Z",
     "asset": "NQ",
     "severity": "critical",
