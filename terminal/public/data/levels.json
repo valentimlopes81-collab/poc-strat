@@ -22,7 +22,13 @@
     "vix_change_pct": -5.8,
     "vix_reading": "Normal",
     "bias": "Cauteloso-otimista: GEX reverteu para positivo (regime de pin) apos gap overnight (670->688 NQ), mas preco esta mesmo em cima do zero-gamma (686,5 QQQ) — pivot fragil, sem catalisador de noticia confirmado para o gap",
-    "note": "Fed: Warsh confirmado como chair (pesquisa 11/11), mercado a precificar hike (nao corte) em dezembro ~88% segundo fontes secundarias — fonte nao primaria, tratar como contexto direcional hawkish, nao certeza"
+    "note": "Fed: Warsh confirmado como chair (pesquisa 11/11), mercado a precificar hike (nao corte) em dezembro ~88% segundo fontes secundarias — fonte nao primaria, tratar como contexto direcional hawkish, nao certeza",
+    "scenarios": [
+      "Fecho de 5m confirmado acima do zero-gamma e a aguentar → regime de pin reforça-se, próximo teste é o 690 (0DTE), depois o 700 (Call Wall)",
+      "Reversão abaixo do zero-gamma → GEX volta vulnerável a negativo, espaço até ao Put Wall (650), caminho bem mais longo/volátil",
+      "Lateralização sem definir lado → segue o padrão mean-reverting leve da semana (Hurst 90d 0,67)"
+    ],
+    "confirmation": "Fecho de 5m claramente de um dos lados do zero-gamma (686,5 QQQ / ~28.316 NQ) — nunca sinal de entrada isolado."
   },
   {
     "asset": "BTC",

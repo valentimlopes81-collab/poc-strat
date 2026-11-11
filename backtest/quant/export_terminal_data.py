@@ -152,6 +152,10 @@ def update_levels():
         prev = existing.get(row["asset"], {})
         row["bias"] = prev.get("bias", "")
         row["note"] = prev.get("note", "")
+        if "scenarios" in prev:
+            row["scenarios"] = prev["scenarios"]
+        if "confirmation" in prev:
+            row["confirmation"] = prev["confirmation"]
 
     with open(LEVELS_PATH, "w") as f:
         json.dump([nq, btc], f, indent=2, ensure_ascii=False)

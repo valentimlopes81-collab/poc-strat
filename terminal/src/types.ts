@@ -22,6 +22,8 @@ export interface LevelRow {
   vix_reading: string | null
   bias: string
   note: string
+  scenarios?: string[]
+  confirmation?: string
 }
 
 export interface GexStrikeRow {
