@@ -1,5 +1,12 @@
 [
   {
+    "time": "2026-11-11T15:34:00Z",
+    "asset": "NQ",
+    "severity": "critical",
+    "title": "Preço a ~19,5pts do zero-gamma (era ~60pts no briefing)",
+    "detail": "Preço NQ ~28.290,5 (QQQ 686,03), recuou desde o briefing (28.376). Zero-gamma 685,6 QQQ (~28.271 NQ), ainda acima mas muito mais perto. GEX total +118,0M, mais fraco que no briefing (+336M) — regime de pin a perder força perto do pivot."
+  },
+  {
     "time": "2026-11-11T10:30:00Z",
     "asset": "SISTEMA",
     "severity": "system",
