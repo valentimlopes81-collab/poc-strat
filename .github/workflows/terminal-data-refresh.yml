@@ -28,7 +28,15 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: python -m pip install -r requirements.txt --ignore-installed PyJWT -q
+        # so os pacotes que o export_terminal_data.py precisa -- nao usamos
+        # -r requirements.txt porque esse ficheiro tambem fixa fastapi/uvicorn
+        # de outra parte do repo, com versoes que entram em conflito com as
+        # dependencias do openbb-core num ambiente CI limpo.
+        run: |
+          python -m pip install -q \
+            openbb-core==2.0.1 openbb-cboe==2.0.0 openbb-cftc==2.0.0 \
+            openbb-federal-reserve==2.0.0 openbb-derivatives==2.0.0 \
+            openbb-equity==2.0.0 pandas
 
       - name: Export terminal data
         run: python backtest/quant/export_terminal_data.py
