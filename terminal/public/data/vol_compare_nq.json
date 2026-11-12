@@ -404,6 +404,6 @@
   "implied_atm_now": {
     "expiry": "2026-12-11",
     "dte": 29,
-    "atm_iv": 23.89
+    "atm_iv": 24.0
   }
 }
