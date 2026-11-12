@@ -1,5 +1,12 @@
 [
   {
+    "time": "2026-11-12T17:34:00Z",
+    "asset": "NQ",
+    "severity": "critical",
+    "title": "Preço a ~5,5pts do Gamma Wall 0DTE (690), 4ª reversão de regime",
+    "detail": "Preço NQ ~28.450,5 (QQQ 689,86), recuou. Cruzou de volta para baixo do zero-gamma — GEX -1,12B, reverteu para negativo outra vez (era +414M há 1h, 4ª reversão em <24h). Preço quase exatamente em cima do Gamma Wall 0DTE (Put Support, 690 QQQ). Put Wall estrutural mudou de 680 para 685."
+  },
+  {
     "time": "2026-11-12T16:34:00Z",
     "asset": "NQ",
     "severity": "critical",
