@@ -1,5 +1,12 @@
 [
   {
+    "time": "2026-11-12T16:34:00Z",
+    "asset": "NQ",
+    "severity": "critical",
+    "title": "Cruzou o zero-gamma outra vez, GEX voltou a positivo (3ª reversão em <24h)",
+    "detail": "Preço NQ ~28.610,5 (QQQ 693,73), continuou a subir forte. Cruzou o zero-gamma (692,7 QQQ, ~28.570 NQ) — GEX total +414,2M, voltou a positivo depois de -2,32B há 1h e -3,03B no briefing. Gamma Wall 0DTE dominante mudou de Put Support (685) para Call Resistance (698 QQQ)."
+  },
+  {
     "time": "2026-11-12T15:34:00Z",
     "asset": "NQ",
     "severity": "notable",
