@@ -1,1241 +1,1307 @@
 {
-  "spot": 690.88,
-  "expiry": "2026-11-12",
+  "spot": 684.55,
+  "expiry": "2026-11-13",
   "rows": [
     {
+      "strike": 617.0,
+      "moneyness_pct": -9.87,
+      "iv": 76.19,
+      "cp": "C"
+    },
+    {
+      "strike": 617.0,
+      "moneyness_pct": -9.87,
+      "iv": 62.43,
+      "cp": "P"
+    },
+    {
+      "strike": 618.0,
+      "moneyness_pct": -9.72,
+      "iv": 75.24,
+      "cp": "C"
+    },
+    {
+      "strike": 618.0,
+      "moneyness_pct": -9.72,
+      "iv": 62.11,
+      "cp": "P"
+    },
+    {
+      "strike": 619.0,
+      "moneyness_pct": -9.58,
+      "iv": 75.0,
+      "cp": "C"
+    },
+    {
+      "strike": 619.0,
+      "moneyness_pct": -9.58,
+      "iv": 60.82,
+      "cp": "P"
+    },
+    {
+      "strike": 620.0,
+      "moneyness_pct": -9.43,
+      "iv": 73.69,
+      "cp": "C"
+    },
+    {
+      "strike": 620.0,
+      "moneyness_pct": -9.43,
+      "iv": 59.56,
+      "cp": "P"
+    },
+    {
+      "strike": 621.0,
+      "moneyness_pct": -9.28,
+      "iv": 73.42,
+      "cp": "C"
+    },
+    {
+      "strike": 621.0,
+      "moneyness_pct": -9.28,
+      "iv": 60.13,
+      "cp": "P"
+    },
+    {
       "strike": 622.0,
-      "moneyness_pct": -9.97,
-      "iv": 111.33,
+      "moneyness_pct": -9.14,
+      "iv": 71.77,
       "cp": "C"
     },
     {
       "strike": 622.0,
-      "moneyness_pct": -9.97,
-      "iv": 69.46,
+      "moneyness_pct": -9.14,
+      "iv": 59.74,
       "cp": "P"
     },
     {
       "strike": 623.0,
-      "moneyness_pct": -9.83,
-      "iv": 113.06,
+      "moneyness_pct": -8.99,
+      "iv": 70.11,
       "cp": "C"
     },
     {
       "strike": 623.0,
-      "moneyness_pct": -9.83,
-      "iv": 68.49,
+      "moneyness_pct": -8.99,
+      "iv": 59.33,
       "cp": "P"
     },
     {
       "strike": 624.0,
-      "moneyness_pct": -9.68,
-      "iv": 109.85,
+      "moneyness_pct": -8.85,
+      "iv": 69.34,
       "cp": "C"
     },
     {
       "strike": 624.0,
-      "moneyness_pct": -9.68,
-      "iv": 69.39,
+      "moneyness_pct": -8.85,
+      "iv": 58.11,
       "cp": "P"
     },
     {
       "strike": 625.0,
-      "moneyness_pct": -9.54,
-      "iv": 106.23,
+      "moneyness_pct": -8.7,
+      "iv": 69.24,
       "cp": "C"
     },
     {
       "strike": 625.0,
-      "moneyness_pct": -9.54,
-      "iv": 66.56,
+      "moneyness_pct": -8.7,
+      "iv": 58.06,
       "cp": "P"
     },
     {
       "strike": 626.0,
-      "moneyness_pct": -9.39,
-      "iv": 108.11,
+      "moneyness_pct": -8.55,
+      "iv": 68.93,
       "cp": "C"
     },
     {
       "strike": 626.0,
-      "moneyness_pct": -9.39,
-      "iv": 67.4,
+      "moneyness_pct": -8.55,
+      "iv": 57.24,
       "cp": "P"
     },
     {
       "strike": 627.0,
-      "moneyness_pct": -9.25,
-      "iv": 107.29,
+      "moneyness_pct": -8.41,
+      "iv": 67.32,
       "cp": "C"
     },
     {
       "strike": 627.0,
-      "moneyness_pct": -9.25,
-      "iv": 67.9,
+      "moneyness_pct": -8.41,
+      "iv": 56.78,
       "cp": "P"
     },
     {
       "strike": 628.0,
-      "moneyness_pct": -9.1,
-      "iv": 101.85,
+      "moneyness_pct": -8.26,
+      "iv": 66.84,
       "cp": "C"
     },
     {
       "strike": 628.0,
-      "moneyness_pct": -9.1,
-      "iv": 65.43,
+      "moneyness_pct": -8.26,
+      "iv": 55.6,
       "cp": "P"
     },
     {
       "strike": 629.0,
-      "moneyness_pct": -8.96,
-      "iv": 103.8,
+      "moneyness_pct": -8.11,
+      "iv": 65.72,
       "cp": "C"
     },
     {
       "strike": 629.0,
-      "moneyness_pct": -8.96,
-      "iv": 65.88,
+      "moneyness_pct": -8.11,
+      "iv": 56.09,
       "cp": "P"
     },
     {
       "strike": 630.0,
-      "moneyness_pct": -8.81,
-      "iv": 65.67,
-      "cp": "C"
-    },
-    {
-      "strike": 630.0,
-      "moneyness_pct": -8.81,
-      "iv": 64.88,
+      "moneyness_pct": -7.97,
+      "iv": 54.63,
       "cp": "P"
     },
     {
       "strike": 631.0,
-      "moneyness_pct": -8.67,
-      "iv": 97.8,
+      "moneyness_pct": -7.82,
+      "iv": 63.8,
       "cp": "C"
     },
     {
       "strike": 631.0,
-      "moneyness_pct": -8.67,
-      "iv": 63.87,
+      "moneyness_pct": -7.82,
+      "iv": 54.73,
       "cp": "P"
     },
     {
       "strike": 632.0,
-      "moneyness_pct": -8.52,
-      "iv": 96.23,
+      "moneyness_pct": -7.68,
+      "iv": 62.84,
       "cp": "C"
     },
     {
       "strike": 632.0,
-      "moneyness_pct": -8.52,
-      "iv": 62.86,
+      "moneyness_pct": -7.68,
+      "iv": 53.59,
       "cp": "P"
     },
     {
       "strike": 633.0,
-      "moneyness_pct": -8.38,
-      "iv": 96.4,
+      "moneyness_pct": -7.53,
+      "iv": 62.76,
       "cp": "C"
     },
     {
       "strike": 633.0,
-      "moneyness_pct": -8.38,
-      "iv": 61.85,
+      "moneyness_pct": -7.53,
+      "iv": 53.03,
       "cp": "P"
     },
     {
       "strike": 634.0,
-      "moneyness_pct": -8.23,
-      "iv": 96.02,
+      "moneyness_pct": -7.38,
+      "iv": 61.36,
       "cp": "C"
     },
     {
       "strike": 634.0,
-      "moneyness_pct": -8.23,
-      "iv": 60.85,
+      "moneyness_pct": -7.38,
+      "iv": 52.76,
       "cp": "P"
     },
     {
       "strike": 635.0,
-      "moneyness_pct": -8.09,
-      "iv": 72.23,
+      "moneyness_pct": -7.24,
+      "iv": 60.39,
       "cp": "C"
     },
     {
       "strike": 635.0,
-      "moneyness_pct": -8.09,
-      "iv": 59.84,
+      "moneyness_pct": -7.24,
+      "iv": 51.64,
       "cp": "P"
     },
     {
       "strike": 636.0,
-      "moneyness_pct": -7.94,
-      "iv": 96.32,
+      "moneyness_pct": -7.09,
+      "iv": 59.57,
       "cp": "C"
     },
     {
       "strike": 636.0,
-      "moneyness_pct": -7.94,
-      "iv": 58.84,
+      "moneyness_pct": -7.09,
+      "iv": 51.83,
       "cp": "P"
     },
     {
       "strike": 637.0,
-      "moneyness_pct": -7.8,
-      "iv": 92.98,
+      "moneyness_pct": -6.95,
+      "iv": 58.74,
       "cp": "C"
     },
     {
       "strike": 637.0,
-      "moneyness_pct": -7.8,
-      "iv": 57.83,
+      "moneyness_pct": -6.95,
+      "iv": 50.47,
       "cp": "P"
     },
     {
       "strike": 638.0,
-      "moneyness_pct": -7.65,
-      "iv": 91.93,
+      "moneyness_pct": -6.8,
+      "iv": 57.77,
       "cp": "C"
     },
     {
       "strike": 638.0,
-      "moneyness_pct": -7.65,
-      "iv": 56.82,
+      "moneyness_pct": -6.8,
+      "iv": 50.57,
       "cp": "P"
     },
     {
       "strike": 639.0,
-      "moneyness_pct": -7.51,
-      "iv": 76.83,
+      "moneyness_pct": -6.65,
+      "iv": 56.52,
       "cp": "C"
     },
     {
       "strike": 639.0,
-      "moneyness_pct": -7.51,
-      "iv": 55.82,
+      "moneyness_pct": -6.65,
+      "iv": 49.48,
       "cp": "P"
     },
     {
       "strike": 640.0,
-      "moneyness_pct": -7.36,
-      "iv": 54.81,
+      "moneyness_pct": -6.51,
+      "iv": 49.28,
       "cp": "P"
     },
     {
       "strike": 641.0,
-      "moneyness_pct": -7.22,
-      "iv": 87.16,
+      "moneyness_pct": -6.36,
+      "iv": 55.38,
       "cp": "C"
     },
     {
       "strike": 641.0,
-      "moneyness_pct": -7.22,
-      "iv": 55.79,
+      "moneyness_pct": -6.36,
+      "iv": 47.98,
       "cp": "P"
     },
     {
       "strike": 642.0,
-      "moneyness_pct": -7.08,
-      "iv": 82.99,
+      "moneyness_pct": -6.22,
+      "iv": 54.53,
       "cp": "C"
     },
     {
       "strike": 642.0,
-      "moneyness_pct": -7.08,
-      "iv": 54.76,
+      "moneyness_pct": -6.22,
+      "iv": 47.54,
       "cp": "P"
     },
     {
       "strike": 643.0,
-      "moneyness_pct": -6.93,
-      "iv": 83.86,
+      "moneyness_pct": -6.07,
+      "iv": 53.3,
       "cp": "C"
     },
     {
       "strike": 643.0,
-      "moneyness_pct": -6.93,
-      "iv": 53.72,
+      "moneyness_pct": -6.07,
+      "iv": 47.27,
       "cp": "P"
     },
     {
       "strike": 644.0,
-      "moneyness_pct": -6.79,
-      "iv": 80.55,
+      "moneyness_pct": -5.92,
+      "iv": 53.29,
       "cp": "C"
     },
     {
       "strike": 644.0,
-      "moneyness_pct": -6.79,
-      "iv": 52.68,
+      "moneyness_pct": -5.92,
+      "iv": 46.39,
       "cp": "P"
     },
     {
       "strike": 645.0,
-      "moneyness_pct": -6.64,
-      "iv": 80.69,
+      "moneyness_pct": -5.78,
+      "iv": 51.46,
       "cp": "C"
     },
     {
       "strike": 645.0,
-      "moneyness_pct": -6.64,
-      "iv": 51.65,
+      "moneyness_pct": -5.78,
+      "iv": 45.69,
       "cp": "P"
     },
     {
       "strike": 646.0,
-      "moneyness_pct": -6.5,
-      "iv": 83.15,
+      "moneyness_pct": -5.63,
+      "iv": 51.19,
       "cp": "C"
     },
     {
       "strike": 646.0,
-      "moneyness_pct": -6.5,
-      "iv": 50.61,
+      "moneyness_pct": -5.63,
+      "iv": 45.17,
       "cp": "P"
     },
     {
       "strike": 647.0,
-      "moneyness_pct": -6.35,
-      "iv": 78.51,
+      "moneyness_pct": -5.49,
+      "iv": 50.42,
       "cp": "C"
     },
     {
       "strike": 647.0,
-      "moneyness_pct": -6.35,
-      "iv": 49.57,
-      "cp": "P"
-    },
-    {
-      "strike": 648.0,
-      "moneyness_pct": -6.21,
-      "iv": 71.64,
-      "cp": "C"
-    },
-    {
-      "strike": 648.0,
-      "moneyness_pct": -6.21,
-      "iv": 48.53,
-      "cp": "P"
-    },
-    {
-      "strike": 649.0,
-      "moneyness_pct": -6.06,
-      "iv": 75.68,
-      "cp": "C"
-    },
-    {
-      "strike": 649.0,
-      "moneyness_pct": -6.06,
-      "iv": 47.49,
-      "cp": "P"
-    },
-    {
-      "strike": 650.0,
-      "moneyness_pct": -5.92,
-      "iv": 71.01,
-      "cp": "C"
-    },
-    {
-      "strike": 650.0,
-      "moneyness_pct": -5.92,
-      "iv": 46.46,
-      "cp": "P"
-    },
-    {
-      "strike": 651.0,
-      "moneyness_pct": -5.77,
-      "iv": 72.26,
-      "cp": "C"
-    },
-    {
-      "strike": 651.0,
-      "moneyness_pct": -5.77,
-      "iv": 46.78,
-      "cp": "P"
-    },
-    {
-      "strike": 652.0,
-      "moneyness_pct": -5.63,
-      "iv": 68.76,
-      "cp": "C"
-    },
-    {
-      "strike": 652.0,
-      "moneyness_pct": -5.63,
-      "iv": 45.71,
-      "cp": "P"
-    },
-    {
-      "strike": 653.0,
-      "moneyness_pct": -5.48,
-      "iv": 69.87,
-      "cp": "C"
-    },
-    {
-      "strike": 653.0,
-      "moneyness_pct": -5.48,
-      "iv": 44.65,
-      "cp": "P"
-    },
-    {
-      "strike": 654.0,
-      "moneyness_pct": -5.34,
-      "iv": 66.21,
-      "cp": "C"
-    },
-    {
-      "strike": 654.0,
-      "moneyness_pct": -5.34,
-      "iv": 44.68,
-      "cp": "P"
-    },
-    {
-      "strike": 655.0,
-      "moneyness_pct": -5.19,
-      "iv": 68.47,
-      "cp": "C"
-    },
-    {
-      "strike": 655.0,
-      "moneyness_pct": -5.19,
-      "iv": 43.59,
-      "cp": "P"
-    },
-    {
-      "strike": 656.0,
-      "moneyness_pct": -5.05,
-      "iv": 63.63,
-      "cp": "C"
-    },
-    {
-      "strike": 656.0,
-      "moneyness_pct": -5.05,
-      "iv": 42.5,
-      "cp": "P"
-    },
-    {
-      "strike": 657.0,
-      "moneyness_pct": -4.9,
-      "iv": 59.45,
-      "cp": "C"
-    },
-    {
-      "strike": 657.0,
-      "moneyness_pct": -4.9,
-      "iv": 42.32,
-      "cp": "P"
-    },
-    {
-      "strike": 658.0,
-      "moneyness_pct": -4.76,
-      "iv": 63.1,
-      "cp": "C"
-    },
-    {
-      "strike": 658.0,
-      "moneyness_pct": -4.76,
-      "iv": 41.21,
-      "cp": "P"
-    },
-    {
-      "strike": 659.0,
-      "moneyness_pct": -4.61,
-      "iv": 57.17,
-      "cp": "C"
-    },
-    {
-      "strike": 659.0,
-      "moneyness_pct": -4.61,
-      "iv": 40.88,
-      "cp": "P"
-    },
-    {
-      "strike": 660.0,
-      "moneyness_pct": -4.47,
-      "iv": 50.51,
-      "cp": "C"
-    },
-    {
-      "strike": 660.0,
-      "moneyness_pct": -4.47,
-      "iv": 39.75,
-      "cp": "P"
-    },
-    {
-      "strike": 661.0,
-      "moneyness_pct": -4.32,
-      "iv": 41.07,
-      "cp": "C"
-    },
-    {
-      "strike": 661.0,
-      "moneyness_pct": -4.32,
-      "iv": 39.3,
-      "cp": "P"
-    },
-    {
-      "strike": 662.0,
-      "moneyness_pct": -4.18,
-      "iv": 40.14,
-      "cp": "C"
-    },
-    {
-      "strike": 662.0,
-      "moneyness_pct": -4.18,
-      "iv": 38.78,
-      "cp": "P"
-    },
-    {
-      "strike": 663.0,
-      "moneyness_pct": -4.04,
-      "iv": 39.43,
-      "cp": "C"
-    },
-    {
-      "strike": 663.0,
-      "moneyness_pct": -4.04,
-      "iv": 38.18,
-      "cp": "P"
-    },
-    {
-      "strike": 664.0,
-      "moneyness_pct": -3.89,
-      "iv": 38.2,
-      "cp": "C"
-    },
-    {
-      "strike": 664.0,
-      "moneyness_pct": -3.89,
-      "iv": 37.52,
-      "cp": "P"
-    },
-    {
-      "strike": 665.0,
-      "moneyness_pct": -3.75,
-      "iv": 37.86,
-      "cp": "C"
-    },
-    {
-      "strike": 665.0,
-      "moneyness_pct": -3.75,
-      "iv": 36.8,
-      "cp": "P"
-    },
-    {
-      "strike": 666.0,
-      "moneyness_pct": -3.6,
-      "iv": 37.02,
-      "cp": "C"
-    },
-    {
-      "strike": 666.0,
-      "moneyness_pct": -3.6,
-      "iv": 36.03,
-      "cp": "P"
-    },
-    {
-      "strike": 667.0,
-      "moneyness_pct": -3.46,
-      "iv": 36.51,
-      "cp": "C"
-    },
-    {
-      "strike": 667.0,
-      "moneyness_pct": -3.46,
-      "iv": 35.62,
-      "cp": "P"
-    },
-    {
-      "strike": 668.0,
-      "moneyness_pct": -3.31,
-      "iv": 35.74,
-      "cp": "C"
-    },
-    {
-      "strike": 668.0,
-      "moneyness_pct": -3.31,
-      "iv": 34.73,
-      "cp": "P"
-    },
-    {
-      "strike": 669.0,
-      "moneyness_pct": -3.17,
-      "iv": 34.92,
-      "cp": "C"
-    },
-    {
-      "strike": 669.0,
-      "moneyness_pct": -3.17,
-      "iv": 34.15,
-      "cp": "P"
-    },
-    {
-      "strike": 670.0,
-      "moneyness_pct": -3.02,
-      "iv": 34.48,
-      "cp": "C"
-    },
-    {
-      "strike": 670.0,
-      "moneyness_pct": -3.02,
-      "iv": 33.49,
-      "cp": "P"
-    },
-    {
-      "strike": 671.0,
-      "moneyness_pct": -2.88,
-      "iv": 33.66,
-      "cp": "C"
-    },
-    {
-      "strike": 671.0,
-      "moneyness_pct": -2.88,
-      "iv": 33.03,
-      "cp": "P"
-    },
-    {
-      "strike": 672.0,
-      "moneyness_pct": -2.73,
-      "iv": 32.91,
-      "cp": "C"
-    },
-    {
-      "strike": 672.0,
-      "moneyness_pct": -2.73,
-      "iv": 32.46,
-      "cp": "P"
-    },
-    {
-      "strike": 673.0,
-      "moneyness_pct": -2.59,
-      "iv": 32.43,
-      "cp": "C"
-    },
-    {
-      "strike": 673.0,
-      "moneyness_pct": -2.59,
-      "iv": 31.79,
-      "cp": "P"
-    },
-    {
-      "strike": 674.0,
-      "moneyness_pct": -2.44,
-      "iv": 31.82,
-      "cp": "C"
-    },
-    {
-      "strike": 674.0,
-      "moneyness_pct": -2.44,
-      "iv": 31.46,
-      "cp": "P"
-    },
-    {
-      "strike": 675.0,
-      "moneyness_pct": -2.3,
-      "iv": 31.39,
-      "cp": "C"
-    },
-    {
-      "strike": 675.0,
-      "moneyness_pct": -2.3,
-      "iv": 30.97,
-      "cp": "P"
-    },
-    {
-      "strike": 676.0,
-      "moneyness_pct": -2.15,
-      "iv": 30.91,
-      "cp": "C"
-    },
-    {
-      "strike": 676.0,
-      "moneyness_pct": -2.15,
-      "iv": 30.53,
-      "cp": "P"
-    },
-    {
-      "strike": 677.0,
-      "moneyness_pct": -2.01,
-      "iv": 30.36,
-      "cp": "C"
-    },
-    {
-      "strike": 677.0,
-      "moneyness_pct": -2.01,
-      "iv": 29.94,
-      "cp": "P"
-    },
-    {
-      "strike": 678.0,
-      "moneyness_pct": -1.86,
-      "iv": 29.9,
-      "cp": "C"
-    },
-    {
-      "strike": 678.0,
-      "moneyness_pct": -1.86,
-      "iv": 29.51,
-      "cp": "P"
-    },
-    {
-      "strike": 679.0,
-      "moneyness_pct": -1.72,
-      "iv": 29.41,
-      "cp": "C"
-    },
-    {
-      "strike": 679.0,
-      "moneyness_pct": -1.72,
-      "iv": 29.13,
-      "cp": "P"
-    },
-    {
-      "strike": 680.0,
-      "moneyness_pct": -1.57,
-      "iv": 29.06,
-      "cp": "C"
-    },
-    {
-      "strike": 680.0,
-      "moneyness_pct": -1.57,
-      "iv": 28.69,
-      "cp": "P"
-    },
-    {
-      "strike": 681.0,
-      "moneyness_pct": -1.43,
-      "iv": 28.53,
-      "cp": "C"
-    },
-    {
-      "strike": 681.0,
-      "moneyness_pct": -1.43,
-      "iv": 28.35,
-      "cp": "P"
-    },
-    {
-      "strike": 682.0,
-      "moneyness_pct": -1.29,
-      "iv": 28.19,
-      "cp": "C"
-    },
-    {
-      "strike": 682.0,
-      "moneyness_pct": -1.29,
-      "iv": 27.92,
-      "cp": "P"
-    },
-    {
-      "strike": 683.0,
-      "moneyness_pct": -1.14,
-      "iv": 27.78,
-      "cp": "C"
-    },
-    {
-      "strike": 683.0,
-      "moneyness_pct": -1.14,
-      "iv": 27.58,
-      "cp": "P"
-    },
-    {
-      "strike": 684.0,
-      "moneyness_pct": -1.0,
-      "iv": 27.36,
-      "cp": "C"
-    },
-    {
-      "strike": 684.0,
-      "moneyness_pct": -1.0,
-      "iv": 27.21,
-      "cp": "P"
-    },
-    {
-      "strike": 685.0,
-      "moneyness_pct": -0.85,
-      "iv": 26.97,
-      "cp": "C"
-    },
-    {
-      "strike": 685.0,
-      "moneyness_pct": -0.85,
-      "iv": 26.83,
-      "cp": "P"
-    },
-    {
-      "strike": 686.0,
-      "moneyness_pct": -0.71,
-      "iv": 26.63,
-      "cp": "C"
-    },
-    {
-      "strike": 686.0,
-      "moneyness_pct": -0.71,
-      "iv": 26.47,
-      "cp": "P"
-    },
-    {
-      "strike": 687.0,
-      "moneyness_pct": -0.56,
-      "iv": 26.21,
-      "cp": "C"
-    },
-    {
-      "strike": 687.0,
-      "moneyness_pct": -0.56,
-      "iv": 26.09,
-      "cp": "P"
-    },
-    {
-      "strike": 688.0,
-      "moneyness_pct": -0.42,
-      "iv": 25.8,
-      "cp": "C"
-    },
-    {
-      "strike": 688.0,
-      "moneyness_pct": -0.42,
-      "iv": 25.72,
-      "cp": "P"
-    },
-    {
-      "strike": 689.0,
-      "moneyness_pct": -0.27,
-      "iv": 25.44,
-      "cp": "C"
-    },
-    {
-      "strike": 689.0,
-      "moneyness_pct": -0.27,
-      "iv": 25.33,
-      "cp": "P"
-    },
-    {
-      "strike": 690.0,
-      "moneyness_pct": -0.13,
-      "iv": 25.06,
-      "cp": "C"
-    },
-    {
-      "strike": 690.0,
-      "moneyness_pct": -0.13,
-      "iv": 24.95,
-      "cp": "P"
-    },
-    {
-      "strike": 691.0,
-      "moneyness_pct": 0.02,
-      "iv": 24.7,
-      "cp": "C"
-    },
-    {
-      "strike": 691.0,
-      "moneyness_pct": 0.02,
-      "iv": 24.59,
-      "cp": "P"
-    },
-    {
-      "strike": 692.0,
-      "moneyness_pct": 0.16,
-      "iv": 24.28,
-      "cp": "C"
-    },
-    {
-      "strike": 692.0,
-      "moneyness_pct": 0.16,
-      "iv": 24.2,
-      "cp": "P"
-    },
-    {
-      "strike": 693.0,
-      "moneyness_pct": 0.31,
-      "iv": 23.88,
-      "cp": "C"
-    },
-    {
-      "strike": 693.0,
-      "moneyness_pct": 0.31,
-      "iv": 23.81,
-      "cp": "P"
-    },
-    {
-      "strike": 694.0,
-      "moneyness_pct": 0.45,
-      "iv": 23.51,
-      "cp": "C"
-    },
-    {
-      "strike": 694.0,
-      "moneyness_pct": 0.45,
-      "iv": 23.4,
-      "cp": "P"
-    },
-    {
-      "strike": 695.0,
-      "moneyness_pct": 0.6,
-      "iv": 23.17,
-      "cp": "C"
-    },
-    {
-      "strike": 695.0,
-      "moneyness_pct": 0.6,
-      "iv": 23.04,
-      "cp": "P"
-    },
-    {
-      "strike": 696.0,
-      "moneyness_pct": 0.74,
-      "iv": 22.85,
-      "cp": "C"
-    },
-    {
-      "strike": 696.0,
-      "moneyness_pct": 0.74,
-      "iv": 22.67,
-      "cp": "P"
-    },
-    {
-      "strike": 697.0,
-      "moneyness_pct": 0.89,
-      "iv": 22.57,
-      "cp": "C"
-    },
-    {
-      "strike": 697.0,
-      "moneyness_pct": 0.89,
-      "iv": 22.37,
-      "cp": "P"
-    },
-    {
-      "strike": 698.0,
-      "moneyness_pct": 1.03,
-      "iv": 22.33,
-      "cp": "C"
-    },
-    {
-      "strike": 698.0,
-      "moneyness_pct": 1.03,
-      "iv": 22.08,
-      "cp": "P"
-    },
-    {
-      "strike": 699.0,
-      "moneyness_pct": 1.18,
-      "iv": 22.15,
-      "cp": "C"
-    },
-    {
-      "strike": 699.0,
-      "moneyness_pct": 1.18,
-      "iv": 21.79,
-      "cp": "P"
-    },
-    {
-      "strike": 700.0,
-      "moneyness_pct": 1.32,
-      "iv": 22.0,
-      "cp": "C"
-    },
-    {
-      "strike": 700.0,
-      "moneyness_pct": 1.32,
-      "iv": 21.53,
-      "cp": "P"
-    },
-    {
-      "strike": 701.0,
-      "moneyness_pct": 1.46,
-      "iv": 21.84,
-      "cp": "C"
-    },
-    {
-      "strike": 701.0,
-      "moneyness_pct": 1.46,
-      "iv": 21.23,
-      "cp": "P"
-    },
-    {
-      "strike": 702.0,
-      "moneyness_pct": 1.61,
-      "iv": 21.77,
-      "cp": "C"
-    },
-    {
-      "strike": 702.0,
-      "moneyness_pct": 1.61,
-      "iv": 20.93,
-      "cp": "P"
-    },
-    {
-      "strike": 703.0,
-      "moneyness_pct": 1.75,
-      "iv": 21.88,
-      "cp": "C"
-    },
-    {
-      "strike": 703.0,
-      "moneyness_pct": 1.75,
-      "iv": 20.59,
-      "cp": "P"
-    },
-    {
-      "strike": 704.0,
-      "moneyness_pct": 1.9,
-      "iv": 21.9,
-      "cp": "C"
-    },
-    {
-      "strike": 704.0,
-      "moneyness_pct": 1.9,
-      "iv": 20.17,
-      "cp": "P"
-    },
-    {
-      "strike": 705.0,
-      "moneyness_pct": 2.04,
-      "iv": 21.81,
-      "cp": "C"
-    },
-    {
-      "strike": 705.0,
-      "moneyness_pct": 2.04,
-      "iv": 19.21,
-      "cp": "P"
-    },
-    {
-      "strike": 706.0,
-      "moneyness_pct": 2.19,
-      "iv": 22.03,
-      "cp": "C"
-    },
-    {
-      "strike": 706.0,
-      "moneyness_pct": 2.19,
-      "iv": 17.93,
-      "cp": "P"
-    },
-    {
-      "strike": 707.0,
-      "moneyness_pct": 2.33,
-      "iv": 22.41,
-      "cp": "C"
-    },
-    {
-      "strike": 708.0,
-      "moneyness_pct": 2.48,
-      "iv": 22.58,
-      "cp": "C"
-    },
-    {
-      "strike": 709.0,
-      "moneyness_pct": 2.62,
-      "iv": 23.1,
-      "cp": "C"
-    },
-    {
-      "strike": 710.0,
-      "moneyness_pct": 2.77,
-      "iv": 23.5,
-      "cp": "C"
-    },
-    {
-      "strike": 711.0,
-      "moneyness_pct": 2.91,
-      "iv": 24.54,
-      "cp": "C"
-    },
-    {
-      "strike": 712.0,
-      "moneyness_pct": 3.06,
-      "iv": 24.74,
-      "cp": "C"
-    },
-    {
-      "strike": 713.0,
-      "moneyness_pct": 3.2,
-      "iv": 24.69,
-      "cp": "C"
-    },
-    {
-      "strike": 713.0,
-      "moneyness_pct": 3.2,
-      "iv": 35.39,
-      "cp": "P"
-    },
-    {
-      "strike": 714.0,
-      "moneyness_pct": 3.35,
-      "iv": 25.65,
-      "cp": "C"
-    },
-    {
-      "strike": 714.0,
-      "moneyness_pct": 3.35,
-      "iv": 37.22,
-      "cp": "P"
-    },
-    {
-      "strike": 715.0,
-      "moneyness_pct": 3.49,
-      "iv": 26.61,
-      "cp": "C"
-    },
-    {
-      "strike": 716.0,
-      "moneyness_pct": 3.64,
-      "iv": 26.02,
-      "cp": "C"
-    },
-    {
-      "strike": 716.0,
-      "moneyness_pct": 3.64,
-      "iv": 40.45,
-      "cp": "P"
-    },
-    {
-      "strike": 717.0,
-      "moneyness_pct": 3.78,
-      "iv": 26.93,
-      "cp": "C"
-    },
-    {
-      "strike": 717.0,
-      "moneyness_pct": 3.78,
-      "iv": 29.51,
-      "cp": "P"
-    },
-    {
-      "strike": 718.0,
-      "moneyness_pct": 3.93,
-      "iv": 27.83,
-      "cp": "C"
-    },
-    {
-      "strike": 718.0,
-      "moneyness_pct": 3.93,
-      "iv": 42.2,
-      "cp": "P"
-    },
-    {
-      "strike": 719.0,
-      "moneyness_pct": 4.07,
-      "iv": 28.73,
-      "cp": "C"
-    },
-    {
-      "strike": 719.0,
-      "moneyness_pct": 4.07,
-      "iv": 43.26,
-      "cp": "P"
-    },
-    {
-      "strike": 720.0,
-      "moneyness_pct": 4.21,
-      "iv": 29.62,
-      "cp": "C"
-    },
-    {
-      "strike": 720.0,
-      "moneyness_pct": 4.21,
+      "moneyness_pct": -5.49,
       "iv": 44.79,
       "cp": "P"
     },
     {
-      "strike": 721.0,
-      "moneyness_pct": 4.36,
-      "iv": 30.51,
+      "strike": 648.0,
+      "moneyness_pct": -5.34,
+      "iv": 49.76,
       "cp": "C"
     },
     {
-      "strike": 721.0,
-      "moneyness_pct": 4.36,
-      "iv": 35.54,
+      "strike": 648.0,
+      "moneyness_pct": -5.34,
+      "iv": 44.05,
       "cp": "P"
     },
     {
-      "strike": 722.0,
-      "moneyness_pct": 4.5,
-      "iv": 28.26,
+      "strike": 649.0,
+      "moneyness_pct": -5.19,
+      "iv": 48.86,
       "cp": "C"
     },
     {
-      "strike": 722.0,
-      "moneyness_pct": 4.5,
-      "iv": 46.36,
+      "strike": 649.0,
+      "moneyness_pct": -5.19,
+      "iv": 43.46,
       "cp": "P"
     },
     {
-      "strike": 723.0,
-      "moneyness_pct": 4.65,
-      "iv": 29.07,
+      "strike": 650.0,
+      "moneyness_pct": -5.05,
+      "iv": 48.07,
       "cp": "C"
     },
     {
-      "strike": 723.0,
-      "moneyness_pct": 4.65,
-      "iv": 47.9,
+      "strike": 650.0,
+      "moneyness_pct": -5.05,
+      "iv": 43.14,
       "cp": "P"
     },
     {
-      "strike": 724.0,
-      "moneyness_pct": 4.79,
+      "strike": 651.0,
+      "moneyness_pct": -4.9,
+      "iv": 47.67,
+      "cp": "C"
+    },
+    {
+      "strike": 651.0,
+      "moneyness_pct": -4.9,
+      "iv": 42.23,
+      "cp": "P"
+    },
+    {
+      "strike": 652.0,
+      "moneyness_pct": -4.75,
+      "iv": 46.84,
+      "cp": "C"
+    },
+    {
+      "strike": 652.0,
+      "moneyness_pct": -4.75,
+      "iv": 41.99,
+      "cp": "P"
+    },
+    {
+      "strike": 653.0,
+      "moneyness_pct": -4.61,
+      "iv": 45.91,
+      "cp": "C"
+    },
+    {
+      "strike": 653.0,
+      "moneyness_pct": -4.61,
+      "iv": 41.32,
+      "cp": "P"
+    },
+    {
+      "strike": 654.0,
+      "moneyness_pct": -4.46,
+      "iv": 45.07,
+      "cp": "C"
+    },
+    {
+      "strike": 654.0,
+      "moneyness_pct": -4.46,
+      "iv": 40.87,
+      "cp": "P"
+    },
+    {
+      "strike": 655.0,
+      "moneyness_pct": -4.32,
+      "iv": 44.49,
+      "cp": "C"
+    },
+    {
+      "strike": 655.0,
+      "moneyness_pct": -4.32,
+      "iv": 40.27,
+      "cp": "P"
+    },
+    {
+      "strike": 656.0,
+      "moneyness_pct": -4.17,
+      "iv": 34.28,
+      "cp": "C"
+    },
+    {
+      "strike": 656.0,
+      "moneyness_pct": -4.17,
+      "iv": 39.65,
+      "cp": "P"
+    },
+    {
+      "strike": 657.0,
+      "moneyness_pct": -4.02,
+      "iv": 26.27,
+      "cp": "C"
+    },
+    {
+      "strike": 657.0,
+      "moneyness_pct": -4.02,
+      "iv": 39.33,
+      "cp": "P"
+    },
+    {
+      "strike": 658.0,
+      "moneyness_pct": -3.88,
+      "iv": 38.75,
+      "cp": "P"
+    },
+    {
+      "strike": 659.0,
+      "moneyness_pct": -3.73,
+      "iv": 38.33,
+      "cp": "P"
+    },
+    {
+      "strike": 660.0,
+      "moneyness_pct": -3.59,
+      "iv": 37.78,
+      "cp": "P"
+    },
+    {
+      "strike": 661.0,
+      "moneyness_pct": -3.44,
+      "iv": 37.36,
+      "cp": "P"
+    },
+    {
+      "strike": 662.0,
+      "moneyness_pct": -3.29,
+      "iv": 30.16,
+      "cp": "C"
+    },
+    {
+      "strike": 662.0,
+      "moneyness_pct": -3.29,
+      "iv": 36.82,
+      "cp": "P"
+    },
+    {
+      "strike": 663.0,
+      "moneyness_pct": -3.15,
+      "iv": 36.31,
+      "cp": "P"
+    },
+    {
+      "strike": 664.0,
+      "moneyness_pct": -3.0,
+      "iv": 35.98,
+      "cp": "P"
+    },
+    {
+      "strike": 665.0,
+      "moneyness_pct": -2.86,
+      "iv": 30.33,
+      "cp": "C"
+    },
+    {
+      "strike": 665.0,
+      "moneyness_pct": -2.86,
+      "iv": 35.39,
+      "cp": "P"
+    },
+    {
+      "strike": 666.0,
+      "moneyness_pct": -2.71,
+      "iv": 27.67,
+      "cp": "C"
+    },
+    {
+      "strike": 666.0,
+      "moneyness_pct": -2.71,
+      "iv": 35.01,
+      "cp": "P"
+    },
+    {
+      "strike": 667.0,
+      "moneyness_pct": -2.56,
+      "iv": 28.05,
+      "cp": "C"
+    },
+    {
+      "strike": 667.0,
+      "moneyness_pct": -2.56,
+      "iv": 34.82,
+      "cp": "P"
+    },
+    {
+      "strike": 668.0,
+      "moneyness_pct": -2.42,
+      "iv": 28.62,
+      "cp": "C"
+    },
+    {
+      "strike": 668.0,
+      "moneyness_pct": -2.42,
+      "iv": 34.31,
+      "cp": "P"
+    },
+    {
+      "strike": 669.0,
+      "moneyness_pct": -2.27,
+      "iv": 28.87,
+      "cp": "C"
+    },
+    {
+      "strike": 669.0,
+      "moneyness_pct": -2.27,
+      "iv": 33.92,
+      "cp": "P"
+    },
+    {
+      "strike": 670.0,
+      "moneyness_pct": -2.13,
+      "iv": 29.64,
+      "cp": "C"
+    },
+    {
+      "strike": 670.0,
+      "moneyness_pct": -2.13,
+      "iv": 33.51,
+      "cp": "P"
+    },
+    {
+      "strike": 671.0,
+      "moneyness_pct": -1.98,
+      "iv": 29.4,
+      "cp": "C"
+    },
+    {
+      "strike": 671.0,
+      "moneyness_pct": -1.98,
+      "iv": 33.13,
+      "cp": "P"
+    },
+    {
+      "strike": 672.0,
+      "moneyness_pct": -1.83,
+      "iv": 29.17,
+      "cp": "C"
+    },
+    {
+      "strike": 672.0,
+      "moneyness_pct": -1.83,
+      "iv": 32.73,
+      "cp": "P"
+    },
+    {
+      "strike": 673.0,
+      "moneyness_pct": -1.69,
+      "iv": 31.03,
+      "cp": "C"
+    },
+    {
+      "strike": 673.0,
+      "moneyness_pct": -1.69,
+      "iv": 32.34,
+      "cp": "P"
+    },
+    {
+      "strike": 674.0,
+      "moneyness_pct": -1.54,
+      "iv": 29.76,
+      "cp": "C"
+    },
+    {
+      "strike": 674.0,
+      "moneyness_pct": -1.54,
+      "iv": 32.0,
+      "cp": "P"
+    },
+    {
+      "strike": 675.0,
+      "moneyness_pct": -1.4,
+      "iv": 33.67,
+      "cp": "C"
+    },
+    {
+      "strike": 675.0,
+      "moneyness_pct": -1.4,
+      "iv": 31.7,
+      "cp": "P"
+    },
+    {
+      "strike": 676.0,
+      "moneyness_pct": -1.25,
+      "iv": 28.58,
+      "cp": "C"
+    },
+    {
+      "strike": 676.0,
+      "moneyness_pct": -1.25,
+      "iv": 31.34,
+      "cp": "P"
+    },
+    {
+      "strike": 677.0,
+      "moneyness_pct": -1.1,
+      "iv": 28.99,
+      "cp": "C"
+    },
+    {
+      "strike": 677.0,
+      "moneyness_pct": -1.1,
+      "iv": 30.93,
+      "cp": "P"
+    },
+    {
+      "strike": 678.0,
+      "moneyness_pct": -0.96,
+      "iv": 28.7,
+      "cp": "C"
+    },
+    {
+      "strike": 678.0,
+      "moneyness_pct": -0.96,
+      "iv": 30.44,
+      "cp": "P"
+    },
+    {
+      "strike": 679.0,
+      "moneyness_pct": -0.81,
+      "iv": 28.5,
+      "cp": "C"
+    },
+    {
+      "strike": 679.0,
+      "moneyness_pct": -0.81,
+      "iv": 30.23,
+      "cp": "P"
+    },
+    {
+      "strike": 680.0,
+      "moneyness_pct": -0.66,
+      "iv": 30.5,
+      "cp": "C"
+    },
+    {
+      "strike": 680.0,
+      "moneyness_pct": -0.66,
       "iv": 29.88,
+      "cp": "P"
+    },
+    {
+      "strike": 681.0,
+      "moneyness_pct": -0.52,
+      "iv": 27.63,
+      "cp": "C"
+    },
+    {
+      "strike": 681.0,
+      "moneyness_pct": -0.52,
+      "iv": 29.46,
+      "cp": "P"
+    },
+    {
+      "strike": 682.0,
+      "moneyness_pct": -0.37,
+      "iv": 28.84,
+      "cp": "C"
+    },
+    {
+      "strike": 682.0,
+      "moneyness_pct": -0.37,
+      "iv": 29.17,
+      "cp": "P"
+    },
+    {
+      "strike": 683.0,
+      "moneyness_pct": -0.23,
+      "iv": 28.65,
+      "cp": "C"
+    },
+    {
+      "strike": 683.0,
+      "moneyness_pct": -0.23,
+      "iv": 28.74,
+      "cp": "P"
+    },
+    {
+      "strike": 684.0,
+      "moneyness_pct": -0.08,
+      "iv": 28.29,
+      "cp": "C"
+    },
+    {
+      "strike": 684.0,
+      "moneyness_pct": -0.08,
+      "iv": 28.4,
+      "cp": "P"
+    },
+    {
+      "strike": 685.0,
+      "moneyness_pct": 0.07,
+      "iv": 27.89,
+      "cp": "C"
+    },
+    {
+      "strike": 685.0,
+      "moneyness_pct": 0.07,
+      "iv": 27.94,
+      "cp": "P"
+    },
+    {
+      "strike": 686.0,
+      "moneyness_pct": 0.21,
+      "iv": 27.59,
+      "cp": "C"
+    },
+    {
+      "strike": 686.0,
+      "moneyness_pct": 0.21,
+      "iv": 27.63,
+      "cp": "P"
+    },
+    {
+      "strike": 687.0,
+      "moneyness_pct": 0.36,
+      "iv": 27.18,
+      "cp": "C"
+    },
+    {
+      "strike": 687.0,
+      "moneyness_pct": 0.36,
+      "iv": 27.24,
+      "cp": "P"
+    },
+    {
+      "strike": 688.0,
+      "moneyness_pct": 0.5,
+      "iv": 26.8,
+      "cp": "C"
+    },
+    {
+      "strike": 688.0,
+      "moneyness_pct": 0.5,
+      "iv": 26.84,
+      "cp": "P"
+    },
+    {
+      "strike": 689.0,
+      "moneyness_pct": 0.65,
+      "iv": 26.48,
+      "cp": "C"
+    },
+    {
+      "strike": 689.0,
+      "moneyness_pct": 0.65,
+      "iv": 26.49,
+      "cp": "P"
+    },
+    {
+      "strike": 690.0,
+      "moneyness_pct": 0.8,
+      "iv": 26.08,
+      "cp": "C"
+    },
+    {
+      "strike": 690.0,
+      "moneyness_pct": 0.8,
+      "iv": 26.21,
+      "cp": "P"
+    },
+    {
+      "strike": 691.0,
+      "moneyness_pct": 0.94,
+      "iv": 25.75,
+      "cp": "C"
+    },
+    {
+      "strike": 691.0,
+      "moneyness_pct": 0.94,
+      "iv": 25.76,
+      "cp": "P"
+    },
+    {
+      "strike": 692.0,
+      "moneyness_pct": 1.09,
+      "iv": 25.42,
+      "cp": "C"
+    },
+    {
+      "strike": 692.0,
+      "moneyness_pct": 1.09,
+      "iv": 25.41,
+      "cp": "P"
+    },
+    {
+      "strike": 693.0,
+      "moneyness_pct": 1.23,
+      "iv": 25.13,
+      "cp": "C"
+    },
+    {
+      "strike": 693.0,
+      "moneyness_pct": 1.23,
+      "iv": 25.12,
+      "cp": "P"
+    },
+    {
+      "strike": 694.0,
+      "moneyness_pct": 1.38,
+      "iv": 24.83,
+      "cp": "C"
+    },
+    {
+      "strike": 694.0,
+      "moneyness_pct": 1.38,
+      "iv": 24.79,
+      "cp": "P"
+    },
+    {
+      "strike": 695.0,
+      "moneyness_pct": 1.53,
+      "iv": 24.59,
+      "cp": "C"
+    },
+    {
+      "strike": 695.0,
+      "moneyness_pct": 1.53,
+      "iv": 24.48,
+      "cp": "P"
+    },
+    {
+      "strike": 696.0,
+      "moneyness_pct": 1.67,
+      "iv": 24.29,
+      "cp": "C"
+    },
+    {
+      "strike": 696.0,
+      "moneyness_pct": 1.67,
+      "iv": 24.18,
+      "cp": "P"
+    },
+    {
+      "strike": 697.0,
+      "moneyness_pct": 1.82,
+      "iv": 24.07,
+      "cp": "C"
+    },
+    {
+      "strike": 697.0,
+      "moneyness_pct": 1.82,
+      "iv": 22.72,
+      "cp": "P"
+    },
+    {
+      "strike": 698.0,
+      "moneyness_pct": 1.96,
+      "iv": 23.86,
+      "cp": "C"
+    },
+    {
+      "strike": 698.0,
+      "moneyness_pct": 1.96,
+      "iv": 22.81,
+      "cp": "P"
+    },
+    {
+      "strike": 699.0,
+      "moneyness_pct": 2.11,
+      "iv": 23.72,
+      "cp": "C"
+    },
+    {
+      "strike": 699.0,
+      "moneyness_pct": 2.11,
+      "iv": 23.33,
+      "cp": "P"
+    },
+    {
+      "strike": 700.0,
+      "moneyness_pct": 2.26,
+      "iv": 23.54,
+      "cp": "C"
+    },
+    {
+      "strike": 700.0,
+      "moneyness_pct": 2.26,
+      "iv": 23.29,
+      "cp": "P"
+    },
+    {
+      "strike": 701.0,
+      "moneyness_pct": 2.4,
+      "iv": 23.4,
+      "cp": "C"
+    },
+    {
+      "strike": 701.0,
+      "moneyness_pct": 2.4,
+      "iv": 20.29,
+      "cp": "P"
+    },
+    {
+      "strike": 702.0,
+      "moneyness_pct": 2.55,
+      "iv": 23.43,
+      "cp": "C"
+    },
+    {
+      "strike": 702.0,
+      "moneyness_pct": 2.55,
+      "iv": 19.7,
+      "cp": "P"
+    },
+    {
+      "strike": 703.0,
+      "moneyness_pct": 2.7,
+      "iv": 23.16,
+      "cp": "C"
+    },
+    {
+      "strike": 704.0,
+      "moneyness_pct": 2.84,
+      "iv": 23.18,
+      "cp": "C"
+    },
+    {
+      "strike": 704.0,
+      "moneyness_pct": 2.84,
+      "iv": 14.1,
+      "cp": "P"
+    },
+    {
+      "strike": 705.0,
+      "moneyness_pct": 2.99,
+      "iv": 23.24,
+      "cp": "C"
+    },
+    {
+      "strike": 705.0,
+      "moneyness_pct": 2.99,
+      "iv": 16.5,
+      "cp": "P"
+    },
+    {
+      "strike": 706.0,
+      "moneyness_pct": 3.13,
+      "iv": 23.13,
+      "cp": "C"
+    },
+    {
+      "strike": 707.0,
+      "moneyness_pct": 3.28,
+      "iv": 23.34,
+      "cp": "C"
+    },
+    {
+      "strike": 708.0,
+      "moneyness_pct": 3.43,
+      "iv": 23.35,
+      "cp": "C"
+    },
+    {
+      "strike": 709.0,
+      "moneyness_pct": 3.57,
+      "iv": 23.42,
+      "cp": "C"
+    },
+    {
+      "strike": 710.0,
+      "moneyness_pct": 3.72,
+      "iv": 23.43,
+      "cp": "C"
+    },
+    {
+      "strike": 711.0,
+      "moneyness_pct": 3.86,
+      "iv": 23.47,
+      "cp": "C"
+    },
+    {
+      "strike": 712.0,
+      "moneyness_pct": 4.01,
+      "iv": 23.47,
+      "cp": "C"
+    },
+    {
+      "strike": 713.0,
+      "moneyness_pct": 4.16,
+      "iv": 23.43,
+      "cp": "C"
+    },
+    {
+      "strike": 714.0,
+      "moneyness_pct": 4.3,
+      "iv": 23.51,
+      "cp": "C"
+    },
+    {
+      "strike": 715.0,
+      "moneyness_pct": 4.45,
+      "iv": 23.99,
+      "cp": "C"
+    },
+    {
+      "strike": 716.0,
+      "moneyness_pct": 4.59,
+      "iv": 24.23,
+      "cp": "C"
+    },
+    {
+      "strike": 717.0,
+      "moneyness_pct": 4.74,
+      "iv": 24.38,
+      "cp": "C"
+    },
+    {
+      "strike": 718.0,
+      "moneyness_pct": 4.89,
+      "iv": 24.66,
+      "cp": "C"
+    },
+    {
+      "strike": 719.0,
+      "moneyness_pct": 5.03,
+      "iv": 24.88,
+      "cp": "C"
+    },
+    {
+      "strike": 720.0,
+      "moneyness_pct": 5.18,
+      "iv": 25.0,
+      "cp": "C"
+    },
+    {
+      "strike": 721.0,
+      "moneyness_pct": 5.32,
+      "iv": 25.71,
+      "cp": "C"
+    },
+    {
+      "strike": 722.0,
+      "moneyness_pct": 5.47,
+      "iv": 26.06,
+      "cp": "C"
+    },
+    {
+      "strike": 723.0,
+      "moneyness_pct": 5.62,
+      "iv": 26.76,
       "cp": "C"
     },
     {
       "strike": 724.0,
-      "moneyness_pct": 4.79,
-      "iv": 51.23,
-      "cp": "P"
-    },
-    {
-      "strike": 725.0,
-      "moneyness_pct": 4.94,
-      "iv": 30.68,
+      "moneyness_pct": 5.76,
+      "iv": 26.63,
       "cp": "C"
     },
     {
       "strike": 725.0,
-      "moneyness_pct": 4.94,
-      "iv": 49.89,
-      "cp": "P"
+      "moneyness_pct": 5.91,
+      "iv": 27.31,
+      "cp": "C"
+    },
+    {
+      "strike": 726.0,
+      "moneyness_pct": 6.06,
+      "iv": 27.98,
+      "cp": "C"
+    },
+    {
+      "strike": 727.0,
+      "moneyness_pct": 6.2,
+      "iv": 28.14,
+      "cp": "C"
+    },
+    {
+      "strike": 728.0,
+      "moneyness_pct": 6.35,
+      "iv": 28.8,
+      "cp": "C"
+    },
+    {
+      "strike": 729.0,
+      "moneyness_pct": 6.49,
+      "iv": 29.46,
+      "cp": "C"
     },
     {
       "strike": 730.0,
-      "moneyness_pct": 5.66,
-      "iv": 34.65,
+      "moneyness_pct": 6.64,
+      "iv": 29.51,
+      "cp": "C"
+    },
+    {
+      "strike": 731.0,
+      "moneyness_pct": 6.79,
+      "iv": 30.15,
+      "cp": "C"
+    },
+    {
+      "strike": 732.0,
+      "moneyness_pct": 6.93,
+      "iv": 30.78,
+      "cp": "C"
+    },
+    {
+      "strike": 733.0,
+      "moneyness_pct": 7.08,
+      "iv": 31.42,
+      "cp": "C"
+    },
+    {
+      "strike": 734.0,
+      "moneyness_pct": 7.22,
+      "iv": 31.31,
       "cp": "C"
     },
     {
       "strike": 735.0,
-      "moneyness_pct": 6.39,
-      "iv": 38.56,
+      "moneyness_pct": 7.37,
+      "iv": 31.93,
+      "cp": "C"
+    },
+    {
+      "strike": 736.0,
+      "moneyness_pct": 7.52,
+      "iv": 32.54,
+      "cp": "C"
+    },
+    {
+      "strike": 737.0,
+      "moneyness_pct": 7.66,
+      "iv": 33.94,
+      "cp": "C"
+    },
+    {
+      "strike": 738.0,
+      "moneyness_pct": 7.81,
+      "iv": 33.77,
+      "cp": "C"
+    },
+    {
+      "strike": 739.0,
+      "moneyness_pct": 7.95,
+      "iv": 33.44,
       "cp": "C"
     },
     {
       "strike": 740.0,
-      "moneyness_pct": 7.11,
-      "iv": 42.41,
+      "moneyness_pct": 8.1,
+      "iv": 34.04,
+      "cp": "C"
+    },
+    {
+      "strike": 741.0,
+      "moneyness_pct": 8.25,
+      "iv": 34.63,
+      "cp": "C"
+    },
+    {
+      "strike": 742.0,
+      "moneyness_pct": 8.39,
+      "iv": 35.22,
+      "cp": "C"
+    },
+    {
+      "strike": 743.0,
+      "moneyness_pct": 8.54,
+      "iv": 36.81,
+      "cp": "C"
+    },
+    {
+      "strike": 744.0,
+      "moneyness_pct": 8.68,
+      "iv": 37.44,
       "cp": "C"
     },
     {
       "strike": 745.0,
-      "moneyness_pct": 7.83,
-      "iv": 46.21,
+      "moneyness_pct": 8.83,
+      "iv": 33.55,
+      "cp": "C"
+    },
+    {
+      "strike": 746.0,
+      "moneyness_pct": 8.98,
+      "iv": 37.54,
+      "cp": "C"
+    },
+    {
+      "strike": 747.0,
+      "moneyness_pct": 9.12,
+      "iv": 38.13,
+      "cp": "C"
+    },
+    {
+      "strike": 748.0,
+      "moneyness_pct": 9.27,
+      "iv": 37.3,
+      "cp": "C"
+    },
+    {
+      "strike": 749.0,
+      "moneyness_pct": 9.41,
+      "iv": 39.29,
       "cp": "C"
     },
     {
       "strike": 750.0,
-      "moneyness_pct": 8.56,
-      "iv": 49.95,
+      "moneyness_pct": 9.56,
+      "iv": 38.42,
       "cp": "C"
     },
     {
-      "strike": 755.0,
-      "moneyness_pct": 9.28,
-      "iv": 53.65,
+      "strike": 751.0,
+      "moneyness_pct": 9.71,
+      "iv": 38.98,
+      "cp": "C"
+    },
+    {
+      "strike": 752.0,
+      "moneyness_pct": 9.85,
+      "iv": 39.54,
+      "cp": "C"
+    },
+    {
+      "strike": 753.0,
+      "moneyness_pct": 10.0,
+      "iv": 41.59,
       "cp": "C"
     }
   ]
