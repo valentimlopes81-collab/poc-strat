@@ -33,7 +33,7 @@ def export_term_structure(df, spot, max_expiries=25):
     print(f"IV term structure NQ: {len(rows)} expiracoes")
 
 
-def export_skew(df, spot, pct_band=0.1):
+def export_skew(df, spot, pct_band=0.1, min_oi=50):
     today = datetime.datetime.utcnow().date()
     exps = sorted(e for e in df["expiration"].unique() if (e - today).days > 0)
     if not exps:
@@ -44,9 +44,17 @@ def export_skew(df, spot, pct_band=0.1):
     lo, hi = spot * (1 - pct_band), spot * (1 + pct_band)
     sub = sub[(sub["strike"] >= lo) & (sub["strike"] <= hi)]
     rows = []
+    skipped_thin = 0
     for r in sub.itertuples():
         iv = r.implied_volatility
         if not iv or iv <= 0:
+            continue
+        # strikes com pouco OI têm IV ruidosa (pouca liquidez, cotações largas)
+        # -- cortamos para a curva ficar com a forma de "smile" limpa, como se
+        # ve num terminal profissional, em vez de picos nas pontas.
+        oi = r.open_interest or 0
+        if oi < min_oi:
+            skipped_thin += 1
             continue
         rows.append({
             "strike": float(r.strike),
@@ -55,6 +63,8 @@ def export_skew(df, spot, pct_band=0.1):
             "cp": "C" if r.option_type == "call" else "P",
         })
     rows.sort(key=lambda r: r["strike"])
+    if skipped_thin:
+        print(f"  ({skipped_thin} strikes com OI < {min_oi} excluidos da skew, ruido de liquidez)")
     with open(f"{OUT_DIR}/iv_skew_nq.json", "w") as f:
         json.dump({"spot": spot, "expiry": exp.isoformat(), "rows": rows}, f, indent=2)
     print(f"IV skew NQ: {len(rows)} contratos, expiracao {exp.isoformat()}")
