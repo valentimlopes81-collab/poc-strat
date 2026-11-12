@@ -101,3 +101,16 @@ BTC baseada só em GEX, dado que já se provou insuficiente uma vez.
   (Baixa-Média) → **✅ Confirmado** — manteve-se exatamente nessa mesma zona frágil sem rompimento
   limpo, e continuou lá no dia seguinte também (11/11). Confiança baixa-média foi apropriada, sem
   surpresas.
+
+### 11/11
+- **NQ:** "Cauteloso-otimista: GEX positivo mas preço em cima do zero-gamma, pivot frágil" (Média),
+  com cenário 1 explícito ("fecho acima do zero-gamma e a aguentar → regime de pin reforça-se,
+  próximo teste 690 depois 700") → **✅ Confirmado, e com clareza, dentro da própria sessão.** Preço
+  rompeu o zero-gamma, cruzou o 690, o Gamma Wall 0DTE dominante subiu para 695, e o GEX reforçou-se
+  ao longo de todo o dia (+336M → +997M → +1,41B → +1,68B no fecho). O cenário 1 materializou-se de
+  forma limpa. **Nota importante:** a sessão seguinte (12/11) trouxe uma reversão brusca que
+  materializou o cenário 2 ("reversão abaixo do zero-gamma reabre vulnerabilidade a negativo") — mas
+  isso é desenvolvimento da sessão seguinte, não invalida a leitura correta do que aconteceu no
+  próprio 11/11.
+- **BTC:** "Sem mudança de regime, ainda entre Put Wall (72k) e zero-gamma (75,8k)" (Baixa-Média) →
+  **✅ Confirmado** — manteve-se na mesma zona até ao fecho, sem surpresas.
