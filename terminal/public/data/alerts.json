@@ -1,5 +1,12 @@
 [
   {
+    "time": "2026-11-12T15:34:00Z",
+    "asset": "NQ",
+    "severity": "notable",
+    "title": "Recuperou do Put Wall (680), cruzou o 685 (0DTE dominante)",
+    "detail": "Preço NQ ~28.291,0 (QQQ 685,37), recuperou forte desde o briefing (28.059,5). Cruzou de baixo para cima o 685 QQQ (~28.276 NQ), Put Support/Gamma Wall 0DTE dominante — agora ~15pts acima dele. GEX total -2,32B, melhorou vs briefing (-3,03B) mas continua profundamente negativo."
+  },
+  {
     "time": "2026-11-11T18:34:00Z",
     "asset": "NQ",
     "severity": "notable",
