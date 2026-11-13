@@ -1,5 +1,12 @@
 [
   {
+    "time": "2026-11-13T15:34:00Z",
+    "asset": "NQ",
+    "severity": "critical",
+    "title": "Quebra forte, rompeu o Put Wall (685→680), GEX despencou para -3,98B",
+    "detail": "Preço NQ ~27.756,5 (QQQ 674,545), queda forte desde o briefing (28.454), ~700 NQ pts. Rompeu de forma limpa o Put Wall, que recalculou mais baixo (680 QQQ, ~27.981 NQ) — preço já está ~224,5pts abaixo até desse novo nível. GEX total -3,98B, mais de 5x pior que no briefing (-756M). Próximo nível real: 650 QQQ (~26.747 NQ), ainda longe."
+  },
+  {
     "time": "2026-11-12T17:34:00Z",
     "asset": "NQ",
     "severity": "critical",
