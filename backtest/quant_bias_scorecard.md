@@ -114,3 +114,19 @@ BTC baseada só em GEX, dado que já se provou insuficiente uma vez.
   próprio 11/11.
 - **BTC:** "Sem mudança de regime, ainda entre Put Wall (72k) e zero-gamma (75,8k)" (Baixa-Média) →
   **✅ Confirmado** — manteve-se na mesma zona até ao fecho, sem surpresas.
+
+### 12/11
+- **NQ:** "Reversão brusca overnight, GEX negativo profundo, preço no novo Put Wall (680)" (Média),
+  com cenário 1 ("Put Wall segura, fecho a confirmar → recuperação de curto prazo, mas não é
+  reversão de tendência maior") → **✅ Confirmado no essencial** — o 680 nunca foi perdido de forma
+  limpa (cenário 2 não se materializou), e houve recuperação. **Mas o dia foi mais caótico do que o
+  cenário previa:** em vez de uma recuperação simples, o preço fez **4 reversões de regime completas
+  em poucas horas** (negativo → positivo → negativo → fechou perto do 690) — o "não é sinal de
+  reversão de tendência maior" do cenário 1 captou bem o espírito (chop, não direção), mas a
+  intensidade do whipsaw não foi antecipada. Chamar isto de confirmado é justo; chamar-lhe "preciso"
+  seria exagerar.
+- **BTC:** "Preço sentado exatamente no Put Wall (72k), teste crítico" (Baixa-Média) →
+  **⚠️ Parcial, resolvido no dia seguinte.** Não houve reação clara no próprio 12/11, mas o teste
+  acabou por falhar — o Put Wall foi perdido e desceu de 72k para 70k durante a sessão de 13/11.
+  A leitura "teste crítico" estava certa sobre a importância do nível, mas o desfecho (perda, não
+  defesa) só ficou claro depois.
