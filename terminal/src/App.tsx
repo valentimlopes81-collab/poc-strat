@@ -19,6 +19,7 @@ import { AlertsFeed } from './components/AlertsFeed'
 import { PlanoDoDia } from './components/PlanoDoDia'
 import { IvTermStructure } from './components/IvTermStructure'
 import { IvSkew } from './components/IvSkew'
+import { IvSurface3D } from './components/IvSurface3D'
 import { VolCompare } from './components/VolCompare'
 import type {
   LevelRow,
@@ -32,6 +33,7 @@ import type {
   AlertRow,
   IvTermData,
   IvSkewData,
+  IvSurfaceData,
   VolCompareData,
 } from './types'
 
@@ -85,6 +87,7 @@ export default function App() {
   const heatmapBtc = useJson<HeatmapData>('/data/gex_heatmap_btc.json')
   const ivTermNq = useJson<IvTermData>('/data/iv_term_nq.json')
   const ivSkewNq = useJson<IvSkewData>('/data/iv_skew_nq.json')
+  const ivSurfaceNq = useJson<IvSurfaceData>('/data/iv_surface_nq.json')
   const volCompareNq = useJson<VolCompareData>('/data/vol_compare_nq.json')
   const alerts = useJson<AlertRow[]>('/data/alerts.json')
 
@@ -331,6 +334,14 @@ export default function App() {
               <GexHeatmap data={heatmapBtc.data} fmtStrike={(s) => `$${s.toLocaleString('en-US')}`} />
             </Panel>
           )}
+        </div>
+      )}
+
+      {tab === 'quant' && ivSurfaceNq.data && (
+        <div className="grid grid-cols-1 gap-px bg-term-border border border-term-border mt-px">
+          <Panel title="NQ · IV Surface 3D" src="QQQ · strike × expiração · lado OTM">
+            <IvSurface3D data={ivSurfaceNq.data} />
+          </Panel>
         </div>
       )}
 

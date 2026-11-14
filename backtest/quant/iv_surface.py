@@ -70,10 +70,46 @@ def export_skew(df, spot, pct_band=0.1, min_oi=50):
     print(f"IV skew NQ: {len(rows)} contratos, expiracao {exp.isoformat()}")
 
 
+def export_surface(df, spot, max_expiries=8, pct_band=0.08, min_oi=30):
+    """Grid (expiracao x strike) para a superficie 3D -- so o lado OTM de cada
+    strike (put abaixo do spot, call acima), que e o que da a superficie
+    lisa que se ve num terminal a serio, em vez de duas folhas call/put
+    sobrepostas. Mesmo filtro de liquidez da skew."""
+    today = datetime.datetime.utcnow().date()
+    exps = sorted(e for e in df["expiration"].unique() if (e - today).days >= 0)[:max_expiries]
+    lo, hi = spot * (1 - pct_band), spot * (1 + pct_band)
+    rows = []
+    expiries_meta = []
+    for exp in exps:
+        dte = (exp - today).days
+        expiries_meta.append({"expiry": exp.isoformat(), "dte": dte})
+        sub = df[(df["expiration"] == exp) & (df["strike"] >= lo) & (df["strike"] <= hi)]
+        by_strike = {}
+        for r in sub.itertuples():
+            iv = r.implied_volatility
+            oi = r.open_interest or 0
+            if not iv or iv <= 0 or oi < min_oi:
+                continue
+            otm_put = r.strike <= spot and r.option_type == "put"
+            otm_call = r.strike > spot and r.option_type == "call"
+            if not (otm_put or otm_call):
+                continue
+            by_strike[float(r.strike)] = float(iv) * 100
+        for strike, iv in sorted(by_strike.items()):
+            rows.append({
+                "expiry": exp.isoformat(), "dte": dte, "strike": strike,
+                "moneyness_pct": round((strike / spot - 1) * 100, 2), "iv": round(iv, 2),
+            })
+    with open(f"{OUT_DIR}/iv_surface_nq.json", "w") as f:
+        json.dump({"spot": spot, "expiries": expiries_meta, "rows": rows}, f, indent=2)
+    print(f"IV surface NQ: {len(rows)} pontos, {len(exps)} expiracoes")
+
+
 def main():
     df, spot = fetch_qqq_chain_df()
     export_term_structure(df, spot)
     export_skew(df, spot)
+    export_surface(df, spot)
 
 
 if __name__ == "__main__":

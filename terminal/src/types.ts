@@ -112,6 +112,20 @@ export interface IvSkewData {
   rows: IvSkewRow[]
 }
 
+export interface IvSurfaceRow {
+  expiry: string
+  dte: number
+  strike: number
+  moneyness_pct: number
+  iv: number
+}
+
+export interface IvSurfaceData {
+  spot: number
+  expiries: Array<{ expiry: string; dte: number }>
+  rows: IvSurfaceRow[]
+}
+
 export interface VolCompareData {
   realized: Array<{ time: number; value: number }>
   implied_atm_now: IvTermRow | null
