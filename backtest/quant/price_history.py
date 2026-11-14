@@ -15,10 +15,21 @@ from openbb import obb
 OUT_DIR = "terminal/public/data"
 
 
+def _to_utc_index(idx):
+    # dados da Cboe vem com timestamp naive em horario de Nova Iorque (bolsa
+    # dos EUA); sem isto, .timestamp() interpretava-os como UTC e todo o
+    # grafico (e o cruzamento com killzones/eventos macro, que sao UTC de
+    # verdade) ficava desalinhado pelas 4-5h de offset ET/UTC.
+    idx = pd.to_datetime(idx)
+    if idx.tz is None:
+        idx = idx.tz_localize("America/New_York")
+    return idx.tz_convert("UTC")
+
+
 def export_qqq(days_back=2):
     df = obb.equity.price.historical("QQQ", interval="1m", provider="cboe").to_dataframe()
     df = df[["open", "high", "low", "close", "volume", "calls_volume", "puts_volume"]].copy()
-    df.index = pd.to_datetime(df.index)
+    df.index = _to_utc_index(df.index)
     cutoff = df.index.max() - pd.Timedelta(days=days_back)
     df = df[df.index >= cutoff]
     # resample para 5m (menos ruido, mais legivel, estilo grafico intradiario)
@@ -40,7 +51,7 @@ def export_qqq(days_back=2):
 def export_qqq_daily(days_back=120):
     df = obb.equity.price.historical("QQQ", interval="1d", provider="cboe").to_dataframe()
     df = df[["open", "high", "low", "close", "volume"]].copy()
-    df.index = pd.to_datetime(df.index)
+    df.index = _to_utc_index(df.index)
     df = df.tail(days_back)
     rows = [
         {"time": int(ts.timestamp()), "open": round(r.open, 2), "high": round(r.high, 2),

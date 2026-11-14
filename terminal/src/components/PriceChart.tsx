@@ -32,12 +32,6 @@ export interface EconMarker {
   impact: 'High' | 'Medium'
 }
 
-interface ProfileBar {
-  y: number
-  h: number
-  w: number // 0..1, share of max bucket volume
-}
-
 interface SessionBand {
   x: number
   w: number
@@ -51,9 +45,6 @@ interface EventMark {
   impact: string
   row: number
 }
-
-const PROFILE_BUCKETS = 28
-const PROFILE_WIDTH_PCT = 22 // max width of a profile bar, % of chart width
 
 // Killzones ICT (horas UTC, repete todos os dias) -- janelas convencionais
 // amplamente citadas, nao uma definicao exata unica (variam +/-1h entre
@@ -69,18 +60,18 @@ export function PriceChart({
   candles,
   levels,
   height,
-  volumeProfile = true,
   tradeMarkers,
   killzones = false,
   econEvents,
+  onChartApi,
 }: {
   candles: Candle[]
   levels: PriceLevel[]
   height?: number
-  volumeProfile?: boolean
   tradeMarkers?: TradeMarker[]
   killzones?: boolean
   econEvents?: EconMarker[]
+  onChartApi?: (chart: IChartApi) => void
 }) {
   const isFull = usePanelFullscreen()
   const effectiveHeight = isFull ? '52vh' : `${height ?? 280}px`
@@ -88,43 +79,8 @@ export function PriceChart({
   const chartDivRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
-  const [profileBars, setProfileBars] = useState<ProfileBar[]>([])
   const [sessionBands, setSessionBands] = useState<SessionBand[]>([])
   const [eventMarks, setEventMarks] = useState<EventMark[]>([])
-
-  const recomputeProfile = useCallback(() => {
-    if (!seriesRef.current || !candles.length || !volumeProfile) {
-      setProfileBars([])
-      return
-    }
-    const highs = candles.map((c) => c.high)
-    const lows = candles.map((c) => c.low)
-    const maxP = Math.max(...highs)
-    const minP = Math.min(...lows)
-    if (!(maxP > minP)) return
-    const bucketSize = (maxP - minP) / PROFILE_BUCKETS
-    const vols = new Array(PROFILE_BUCKETS).fill(0)
-    for (const c of candles) {
-      const vol = c.volume ?? 0
-      if (!vol) continue
-      const loB = Math.max(0, Math.min(PROFILE_BUCKETS - 1, Math.floor((c.low - minP) / bucketSize)))
-      const hiB = Math.max(0, Math.min(PROFILE_BUCKETS - 1, Math.floor((c.high - minP) / bucketSize)))
-      const span = Math.max(1, hiB - loB + 1)
-      for (let b = loB; b <= hiB; b++) vols[b] += vol / span
-    }
-    const maxVol = Math.max(...vols, 1)
-    const bars: ProfileBar[] = []
-    for (let b = 0; b < PROFILE_BUCKETS; b++) {
-      if (vols[b] <= 0) continue
-      const priceLo = minP + b * bucketSize
-      const priceHi = priceLo + bucketSize
-      const yHi = seriesRef.current.priceToCoordinate(priceHi)
-      const yLo = seriesRef.current.priceToCoordinate(priceLo)
-      if (yHi == null || yLo == null) continue
-      bars.push({ y: Math.min(yHi, yLo), h: Math.max(1, Math.abs(yLo - yHi) - 1), w: vols[b] / maxVol })
-    }
-    setProfileBars(bars)
-  }, [candles, volumeProfile])
 
   const recomputeOverlays = useCallback(() => {
     const chart = chartRef.current
@@ -225,9 +181,9 @@ export function PriceChart({
     })
     chartRef.current = chart
     seriesRef.current = series
+    onChartApi?.(chart)
 
     const handler = () => {
-      recomputeProfile()
       recomputeOverlays()
     }
     chart.timeScale().subscribeVisibleLogicalRangeChange(handler)
@@ -252,10 +208,9 @@ export function PriceChart({
     seriesRef.current.setData(data)
     chartRef.current?.timeScale().fitContent()
     requestAnimationFrame(() => {
-      recomputeProfile()
       recomputeOverlays()
     })
-  }, [candles, recomputeProfile, recomputeOverlays])
+  }, [candles, recomputeOverlays])
 
   useEffect(() => {
     requestAnimationFrame(() => recomputeOverlays())
@@ -274,7 +229,6 @@ export function PriceChart({
         title: lvl.title,
       })
     )
-    requestAnimationFrame(() => recomputeProfile())
     return () => {
       priceLines.forEach((pl) => series.removePriceLine(pl))
     }
@@ -361,20 +315,6 @@ export function PriceChart({
           </span>
         </div>
       ))}
-      {volumeProfile && profileBars.length > 0 && (
-        <div
-          className="absolute inset-y-0 right-[58px] pointer-events-none z-50"
-          style={{ width: `${PROFILE_WIDTH_PCT}%` }}
-        >
-          {profileBars.map((b, i) => (
-            <div
-              key={i}
-              className="absolute right-0 bg-term-blue/25"
-              style={{ top: b.y, height: b.h, width: `${Math.max(2, b.w * 100)}%` }}
-            />
-          ))}
-        </div>
-      )}
     </div>
   )
 }

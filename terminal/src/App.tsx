@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { IChartApi } from 'lightweight-charts'
 import { useJson, fmtUsd } from './lib/useJson'
 import { Panel, StatRow, Badge } from './components/Panel'
 import { TickerTape } from './components/TickerTape'
@@ -95,6 +96,8 @@ export default function App() {
   const priceNqDaily = useJson<Candle[]>('/data/price_nq_daily.json')
   const priceBtc = useJson<Candle[]>('/data/price_btc.json')
   const [nqTimeframe, setNqTimeframe] = useState<'intraday' | 'daily'>('intraday')
+  const [nqChartApi, setNqChartApi] = useState<IChartApi | null>(null)
+  const [btcChartApi, setBtcChartApi] = useState<IChartApi | null>(null)
   const vixHistory = useJson<{ time: number; value: number }[]>('/data/vix_history.json')
   const heatmapNq = useJson<HeatmapData>('/data/gex_heatmap_nq.json')
   const heatmapBtc = useJson<HeatmapData>('/data/gex_heatmap_btc.json')
@@ -212,6 +215,7 @@ export default function App() {
                   tradeMarkers={nqTimeframe === 'daily' ? tradeMarkers : undefined}
                   killzones={nqTimeframe === 'intraday'}
                   econEvents={nqTimeframe === 'intraday' ? econMarkers : undefined}
+                  onChartApi={setNqChartApi}
                 />
                 <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Volume</div>
                 <VolumeChart
@@ -221,6 +225,7 @@ export default function App() {
                     color: c.close >= c.open ? '#00d96488' : '#ff3b3088',
                   }))}
                   height={56}
+                  syncWith={nqChartApi}
                 />
                 {nqTimeframe === 'intraday' && (
                   <>
@@ -231,6 +236,7 @@ export default function App() {
                         return { time: c.time, value: delta, color: delta >= 0 ? '#00d964' : '#ff3b30' }
                       })}
                       height={56}
+                      syncWith={nqChartApi}
                     />
                   </>
                 )}
@@ -245,6 +251,7 @@ export default function App() {
                     { value: btc.zero_gamma, color: '#ff9f1c', title: 'Zero-γ', dashed: true },
                     { value: btc.put_wall, color: '#ff3b30', title: 'Put Wall' },
                   ]}
+                  onChartApi={setBtcChartApi}
                 />
                 <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Volume</div>
                 <VolumeChart
@@ -254,6 +261,7 @@ export default function App() {
                     color: c.close >= c.open ? '#00d96488' : '#ff3b3088',
                   }))}
                   height={56}
+                  syncWith={btcChartApi}
                 />
               </Panel>
             )}
