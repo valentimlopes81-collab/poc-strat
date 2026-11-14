@@ -38,7 +38,16 @@ export function TradeLog({ trades }: { trades: TradeRow[] }) {
 
   return (
     <div className="overflow-auto" style={{ maxHeight: isFull ? '75vh' : 420 }}>
-      <table className="w-full text-[11px] border-collapse">
+      <table className="w-full table-fixed text-[11px] border-collapse">
+        <colgroup>
+          <col className="w-[7%]" />
+          <col className="w-[9%]" />
+          <col className="w-[14%]" />
+          <col className="w-[10%]" />
+          <col className="w-[8%]" />
+          <col className="w-[11%]" />
+          <col className="w-[41%]" />
+        </colgroup>
         <thead>
           <tr className="text-term-muted uppercase text-[10px] tracking-wide">
             {cols.map((c) => (
@@ -59,16 +68,16 @@ export function TradeLog({ trades }: { trades: TradeRow[] }) {
             const pnlColor = t.pnl_usd < 0 ? 'text-term-red' : t.pnl_usd > 0 ? 'text-term-green' : 'text-term-muted'
             return (
               <tr key={t.id} className="border-t border-term-border hover:bg-white/[0.03]">
-                <td className="py-1 pr-2 whitespace-nowrap">{t.id}</td>
-                <td className="py-1 pr-2 whitespace-nowrap">{t.date}</td>
-                <td className="py-1 pr-2 whitespace-nowrap">{t.direction || '—'}</td>
-                <td className={`py-1 pr-2 whitespace-nowrap ${resultColor}`}>{t.result}</td>
-                <td className="py-1 pr-2 text-right tabular-nums whitespace-nowrap">{t.r_multiple || '—'}</td>
-                <td className={`py-1 pr-2 text-right tabular-nums whitespace-nowrap ${pnlColor}`}>
+                <td className="py-1 pr-1 truncate">{t.id}</td>
+                <td className="py-1 pr-1 truncate">{t.date}</td>
+                <td className="py-1 pr-1 truncate">{t.direction || '—'}</td>
+                <td className={`py-1 pr-1 truncate ${resultColor}`}>{t.result}</td>
+                <td className="py-1 pr-1 text-right tabular-nums truncate">{t.r_multiple || '—'}</td>
+                <td className={`py-1 pr-1 text-right tabular-nums truncate ${pnlColor}`}>
                   {t.pnl_approx ? '~' : ''}
                   {fmtUsd(t.pnl_usd)}
                 </td>
-                <td className="py-1 text-term-muted max-w-[26rem]">{t.notes_short}</td>
+                <td className="py-1 text-term-muted break-words line-clamp-2">{t.notes_short}</td>
               </tr>
             )
           })}
