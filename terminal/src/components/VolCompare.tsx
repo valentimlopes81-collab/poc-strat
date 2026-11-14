@@ -60,7 +60,7 @@ export function VolCompare({ data }: { data: VolCompareData }) {
     <div>
       <div ref={ref} className="w-full" style={{ height: isFull ? '65vh' : 160 }} />
       <p className="mt-1 text-[10px] text-term-muted">
-        Azul: vol realizada 20d (do preço real). Laranja: IV implied ~30d atual. Implied acima do realizado = opções mais caras que o movimento recente justificaria.
+        Azul: vol realizada EWMA (do preço real, memória ~17 dias). Laranja: IV implied ~30d atual. Implied acima do realizado = opções mais caras que o movimento recente justificaria.
       </p>
     </div>
   )
