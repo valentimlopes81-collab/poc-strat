@@ -10,7 +10,7 @@ import { FomcList } from './components/FomcList'
 import { ScorecardTable } from './components/ScorecardTable'
 import { TradeLog } from './components/TradeLog'
 import { EconCalendar } from './components/EconCalendar'
-import { PriceChart, type Candle, type PriceLevel, type TradeMarker } from './components/PriceChart'
+import { PriceChart, type Candle, type PriceLevel, type TradeMarker, type EconMarker } from './components/PriceChart'
 import { VixChart } from './components/VixChart'
 import { VolumeChart } from './components/VolumeChart'
 import { GexHeatmap, type HeatmapData } from './components/GexHeatmap'
@@ -52,6 +52,18 @@ function buildTradeMarkers(trades: TradeRow[] | null, dailyCandles: Candle[] | n
     markers.push({ time, result: t.result, label: `${t.id} ${t.pnl_usd >= 0 ? '+' : ''}${t.pnl_usd.toFixed(0)}` })
   }
   return markers
+}
+
+function buildEconMarkers(events: EconEvent[] | null): EconMarker[] {
+  if (!events) return []
+  const marks: EconMarker[] = []
+  for (const e of events) {
+    if (e.impact !== 'High' && e.impact !== 'Medium') continue
+    const time = Math.floor(new Date(e.date).getTime() / 1000)
+    if (Number.isNaN(time)) continue
+    marks.push({ time, label: e.title, impact: e.impact })
+  }
+  return marks
 }
 
 function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: string }) {
@@ -96,6 +108,7 @@ export default function App() {
   const btc = levels.data?.find((r) => r.asset === 'BTC') ?? null
   const nqStrikes = gexStrikes.data?.filter((r) => r.asset === 'NQ') ?? []
   const tradeMarkers = buildTradeMarkers(trades.data, priceNqDaily.data)
+  const econMarkers = buildEconMarkers(econ.data)
   const btcStrikes = gexStrikes.data?.filter((r) => r.asset === 'BTC') ?? []
   const nqDexStrikes = dexStrikes.data?.filter((r) => r.asset === 'NQ') ?? []
   const btcDexStrikes = dexStrikes.data?.filter((r) => r.asset === 'BTC') ?? []
@@ -169,7 +182,7 @@ export default function App() {
             {nq && priceNq.data && priceNqDaily.data && (
               <Panel
                 title="NQ · Preço + Confluências"
-                src={`${nqTimeframe === 'intraday' ? 'QQQ 5m (hoje)' : 'QQQ 1D (120d)'} · Call Wall / Put Wall / Zero-gamma`}
+                src={`${nqTimeframe === 'intraday' ? 'QQQ 5m (hoje) · killzones + eventos macro' : 'QQQ 1D (120d)'} · Call Wall / Put Wall / Zero-gamma`}
                 right={
                   <div className="flex border border-term-border text-[10px]">
                     <button
@@ -197,6 +210,8 @@ export default function App() {
                     ].filter(Boolean) as PriceLevel[]
                   }
                   tradeMarkers={nqTimeframe === 'daily' ? tradeMarkers : undefined}
+                  killzones={nqTimeframe === 'intraday'}
+                  econEvents={nqTimeframe === 'intraday' ? econMarkers : undefined}
                 />
                 <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Volume</div>
                 <VolumeChart

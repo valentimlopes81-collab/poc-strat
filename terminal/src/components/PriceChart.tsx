@@ -26,14 +26,44 @@ export interface PriceLevel {
   dashed?: boolean
 }
 
+export interface EconMarker {
+  time: number
+  label: string
+  impact: 'High' | 'Medium'
+}
+
 interface ProfileBar {
   y: number
   h: number
   w: number // 0..1, share of max bucket volume
 }
 
+interface SessionBand {
+  x: number
+  w: number
+  label: string
+  color: string
+}
+
+interface EventMark {
+  x: number
+  label: string
+  impact: string
+  row: number
+}
+
 const PROFILE_BUCKETS = 28
 const PROFILE_WIDTH_PCT = 22 // max width of a profile bar, % of chart width
+
+// Killzones ICT (horas UTC, repete todos os dias) -- janelas convencionais
+// amplamente citadas, nao uma definicao exata unica (variam +/-1h entre
+// fontes), so para dar contexto visual de sessao, nunca um sinal.
+const KILLZONES = [
+  { label: 'Ásia', startH: 0, endH: 6, color: 'rgba(79,195,247,0.05)' },
+  { label: 'Londres', startH: 7, endH: 10, color: 'rgba(255,159,28,0.06)' },
+  { label: 'NY', startH: 12, endH: 15, color: 'rgba(0,217,100,0.05)' },
+]
+const DAY_S = 86400
 
 export function PriceChart({
   candles,
@@ -41,12 +71,16 @@ export function PriceChart({
   height,
   volumeProfile = true,
   tradeMarkers,
+  killzones = false,
+  econEvents,
 }: {
   candles: Candle[]
   levels: PriceLevel[]
   height?: number
   volumeProfile?: boolean
   tradeMarkers?: TradeMarker[]
+  killzones?: boolean
+  econEvents?: EconMarker[]
 }) {
   const isFull = usePanelFullscreen()
   const effectiveHeight = isFull ? '52vh' : `${height ?? 280}px`
@@ -55,6 +89,8 @@ export function PriceChart({
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
   const [profileBars, setProfileBars] = useState<ProfileBar[]>([])
+  const [sessionBands, setSessionBands] = useState<SessionBand[]>([])
+  const [eventMarks, setEventMarks] = useState<EventMark[]>([])
 
   const recomputeProfile = useCallback(() => {
     if (!seriesRef.current || !candles.length || !volumeProfile) {
@@ -89,6 +125,71 @@ export function PriceChart({
     }
     setProfileBars(bars)
   }, [candles, volumeProfile])
+
+  const recomputeOverlays = useCallback(() => {
+    const chart = chartRef.current
+    const chartW = chartDivRef.current?.clientWidth ?? 0
+    if (!chart || !candles.length || !chartW) {
+      setSessionBands([])
+      setEventMarks([])
+      return
+    }
+    const ts = chart.timeScale()
+    const toX = (t: number): number | null => {
+      const c = ts.timeToCoordinate(t as UTCTimestamp)
+      return c == null ? null : Number(c)
+    }
+
+    if (killzones) {
+      const firstDay = Math.floor(candles[0].time / DAY_S) * DAY_S
+      const lastDay = Math.floor(candles[candles.length - 1].time / DAY_S) * DAY_S
+      const bands: SessionBand[] = []
+      for (let day = firstDay - DAY_S; day <= lastDay + DAY_S; day += DAY_S) {
+        for (const kz of KILLZONES) {
+          const startT = day + kz.startH * 3600
+          const endT = day + kz.endH * 3600
+          let x1 = toX(startT)
+          let x2 = toX(endT)
+          if (x1 == null && x2 == null) continue
+          // start/end fora da janela visivel (banda corta um dos bordos do
+          // grafico) -- start sempre < end no tempo, por isso se um dos
+          // lados nao projeta, o outro diz de que lado ele ficou de fora
+          if (x1 == null) x1 = 0
+          if (x2 == null) x2 = chartW
+          const lo = Math.max(0, Math.min(x1, x2))
+          const hi = Math.min(chartW, Math.max(x1, x2))
+          if (hi <= lo) continue
+          bands.push({ x: lo, w: hi - lo, label: kz.label, color: kz.color })
+        }
+      }
+      setSessionBands(bands)
+    } else {
+      setSessionBands([])
+    }
+
+    if (econEvents && econEvents.length) {
+      const raw: { x: number; label: string; impact: string }[] = []
+      for (const e of econEvents) {
+        const x = toX(e.time)
+        if (x == null || x < 0 || x > chartW) continue
+        raw.push({ x, label: e.label, impact: e.impact })
+      }
+      raw.sort((a, b) => a.x - b.x)
+      // etiquetas perto umas das outras (ex.: dois releases a mesma hora)
+      // ficam em linhas alternadas para nao sobrepor o texto
+      const marks: EventMark[] = []
+      let lastX = -Infinity
+      let row = 0
+      for (const r of raw) {
+        row = r.x - lastX < 70 ? row + 1 : 0
+        lastX = r.x
+        marks.push({ ...r, row })
+      }
+      setEventMarks(marks)
+    } else {
+      setEventMarks([])
+    }
+  }, [candles, killzones, econEvents])
 
   useEffect(() => {
     if (!chartDivRef.current) return
@@ -125,7 +226,10 @@ export function PriceChart({
     chartRef.current = chart
     seriesRef.current = series
 
-    const handler = () => recomputeProfile()
+    const handler = () => {
+      recomputeProfile()
+      recomputeOverlays()
+    }
     chart.timeScale().subscribeVisibleLogicalRangeChange(handler)
     window.addEventListener('resize', handler)
     return () => {
@@ -147,8 +251,15 @@ export function PriceChart({
     }))
     seriesRef.current.setData(data)
     chartRef.current?.timeScale().fitContent()
-    requestAnimationFrame(() => recomputeProfile())
-  }, [candles, recomputeProfile])
+    requestAnimationFrame(() => {
+      recomputeProfile()
+      recomputeOverlays()
+    })
+  }, [candles, recomputeProfile, recomputeOverlays])
+
+  useEffect(() => {
+    requestAnimationFrame(() => recomputeOverlays())
+  }, [recomputeOverlays])
 
   useEffect(() => {
     const series = seriesRef.current
@@ -226,6 +337,30 @@ export function PriceChart({
           ⟲
         </button>
       </div>
+      {sessionBands.map((b, i) => (
+        <div
+          key={i}
+          className="absolute inset-y-0 pointer-events-none z-30 border-l border-r border-white/[0.03]"
+          style={{ left: b.x, width: Math.max(1, b.w), background: b.color }}
+          title={b.label}
+        >
+          <span className="absolute top-0 left-0.5 text-[8px] uppercase tracking-wide text-term-muted/70">{b.label}</span>
+        </div>
+      ))}
+      {eventMarks.map((m, i) => (
+        <div
+          key={i}
+          className="absolute inset-y-0 pointer-events-none z-40 border-l border-dashed"
+          style={{ left: m.x, borderColor: m.impact === 'High' ? '#ff3b30' : '#ff9f1c' }}
+        >
+          <span
+            className="absolute left-1 text-[8px] whitespace-nowrap px-0.5 bg-black/40"
+            style={{ color: m.impact === 'High' ? '#ff3b30' : '#ff9f1c', bottom: 16 + m.row * 11 }}
+          >
+            {m.label}
+          </span>
+        </div>
+      ))}
       {volumeProfile && profileBars.length > 0 && (
         <div
           className="absolute inset-y-0 right-[58px] pointer-events-none z-50"
