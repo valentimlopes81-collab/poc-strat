@@ -1,11 +1,11 @@
 [
   {
     "asset": "NQ",
-    "as_of_utc": "2026-11-14T03:37:00Z",
+    "as_of_utc": "2026-11-14T03:43:00Z",
     "price": 27927,
     "price_ref": "QQQ 674.25",
     "price_qqq": 674.25,
-    "gex_total_b": -2.626,
+    "gex_total_b": -2.627,
     "gex_regime": "Negativo (maior volatilidade)",
     "call_wall": 28994,
     "call_wall_ref": "700.0 QQQ (~28,994 NQ)",
@@ -32,8 +32,8 @@
   },
   {
     "asset": "BTC",
-    "as_of_utc": "2026-11-14T03:37:00Z",
-    "price": 66924.15,
+    "as_of_utc": "2026-11-14T03:43:00Z",
+    "price": 66872.26,
     "price_ref": "Deribit index",
     "gex_total_b": -0.103,
     "gex_regime": "Negativo (maior volatilidade)",
@@ -41,7 +41,7 @@
     "call_wall_ref": null,
     "put_wall": 68000,
     "put_wall_ref": null,
-    "zero_gamma": 72032,
+    "zero_gamma": 72041,
     "zero_gamma_ref": null,
     "dte0_dominant": null,
     "dte0_dominant_ref": null,
