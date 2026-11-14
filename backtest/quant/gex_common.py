@@ -1,4 +1,5 @@
-"""Funcoes partilhadas para calculo de Gamma Exposure (GEX) aproximado.
+"""Funcoes partilhadas para calculo de Gamma Exposure (GEX) e Delta Exposure
+(DEX) aproximados.
 
 Metodologia publica standard (a mesma usada pela maioria das ferramentas
 gratuitas de GEX, nao e segredo proprietario):
@@ -9,6 +10,14 @@ Convencao de sinal standard: GEX total positivo => dealers tendencialmente
 long gamma => hedging amortece volatilidade (compram quedas, vendem subidas)
 => regime de "pin"/baixa vol. GEX negativo => dealers short gamma => hedging
 amplifica movimento => regime de maior volatilidade.
+
+DEX (Delta Exposure) por strike = (delta_call * OI_call + delta_put * OI_put)
+* S * multiplier -- SEM flip de sinal artificial, porque o delta ja vem com
+sinal natural (call em [0,1], put em [-1,0]). Mede se o open interest total
+pende para o lado "call" (DEX positivo) ou "put" (DEX negativo), em dolares
+equivalentes de exposicao ao subjacente -- e um proxy do skew direcional do
+OI, NAO uma certeza sobre de que lado os dealers estao (tal como o GEX, e
+so o OI, nao fluxo real).
 
 Isto e uma APROXIMACAO publica, nao o produto exato de um vendor pago
 (que tem fluxo intradiario e assunções proprietárias adicionais).
@@ -31,6 +40,34 @@ def bs_gamma(S, K, T, sigma, r=0.04):
         return 0.0
     d1 = (math.log(S / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * math.sqrt(T))
     return norm_pdf(d1) / (S * sigma * math.sqrt(T))
+
+
+def bs_delta(S, K, T, sigma, cp, r=0.04):
+    T = max(T, MIN_T_YEARS)
+    if T <= 0 or sigma <= 0 or S <= 0 or K <= 0:
+        return 0.0
+    d1 = (math.log(S / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * math.sqrt(T))
+    n_d1 = 0.5 * (1.0 + math.erf(d1 / math.sqrt(2)))
+    return n_d1 if cp == "C" else n_d1 - 1.0
+
+
+def total_dex_at_spot(rows, spot, multiplier=1.0):
+    """rows: list of dicts with keys strike, T, iv, oi, cp ('C'/'P'). Sem
+    flip de sinal -- o delta ja e positivo para calls, negativo para puts."""
+    total = 0.0
+    for r in rows:
+        d = bs_delta(spot, r["strike"], r["T"], r["iv"], r["cp"])
+        total += d * r["oi"]
+    return total * spot * multiplier
+
+
+def dex_by_strike(rows, spot, multiplier=1.0, top_n=8):
+    agg = {}
+    for r in rows:
+        d = bs_delta(spot, r["strike"], r["T"], r["iv"], r["cp"])
+        val = d * r["oi"] * spot * multiplier
+        agg[r["strike"]] = agg.get(r["strike"], 0.0) + val
+    return sorted(agg.items(), key=lambda kv: -abs(kv[1]))[:top_n]
 
 
 def total_gex_at_spot(rows, spot, multiplier=1.0):

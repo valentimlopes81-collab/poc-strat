@@ -20,11 +20,13 @@ export function GexDepthChart({
   priceVal,
   fmtStrike,
   height,
+  label = 'GEX',
 }: {
   rows: GexStrikeRow[]
   priceVal: number | null
   fmtStrike: (s: number) => string
   height?: number
+  label?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(300)
@@ -105,7 +107,7 @@ export function GexDepthChart({
         >
           <div className="font-semibold">{fmtStrike(hover.strike)}</div>
           <div className={hover.gex >= 0 ? 'text-term-green' : 'text-term-red'}>
-            GEX {hover.gex >= 0 ? '+' : ''}
+            {label} {hover.gex >= 0 ? '+' : ''}
             {fmtCompact(hover.gex)}
           </div>
         </div>

@@ -72,6 +72,7 @@ export default function App() {
 
   const levels = useJson<LevelRow[]>('/data/levels.json')
   const gexStrikes = useJson<GexStrikeRow[]>('/data/gex_strikes.json')
+  const dexStrikes = useJson<GexStrikeRow[]>('/data/dex_strikes.json')
   const cot = useJson<CotRow[]>('/data/cot.json')
   const fomc = useJson<FomcRow[]>('/data/fomc.json')
   const scorecard = useJson<ScorecardRow[]>('/data/scorecard.json')
@@ -96,6 +97,8 @@ export default function App() {
   const nqStrikes = gexStrikes.data?.filter((r) => r.asset === 'NQ') ?? []
   const tradeMarkers = buildTradeMarkers(trades.data, priceNqDaily.data)
   const btcStrikes = gexStrikes.data?.filter((r) => r.asset === 'BTC') ?? []
+  const nqDexStrikes = dexStrikes.data?.filter((r) => r.asset === 'NQ') ?? []
+  const btcDexStrikes = dexStrikes.data?.filter((r) => r.asset === 'BTC') ?? []
 
   const stats = (() => {
     if (!trades.data) return null
@@ -255,6 +258,13 @@ export default function App() {
               >
                 <StatRow label="Preço" value={nq.price_ref} />
                 <StatRow label="GEX total" value={`${nq.gex_total_b.toFixed(2)}B`} valueClass={nq.gex_total_b >= 0 ? 'text-term-green' : 'text-term-red'} />
+                {nq.dex_total_b != null && (
+                  <StatRow
+                    label="DEX total"
+                    value={`${nq.dex_total_b >= 0 ? '+' : ''}${nq.dex_total_b.toFixed(2)}B`}
+                    valueClass={nq.dex_total_b >= 0 ? 'text-term-green' : 'text-term-red'}
+                  />
+                )}
                 <StatRow label="Call Wall" value={nq.call_wall_ref ?? '—'} />
                 <StatRow label="Put Wall" value={nq.put_wall_ref ?? '—'} />
                 <StatRow label="Zero-gamma" value={nq.zero_gamma_ref ?? '—'} />
@@ -275,6 +285,13 @@ export default function App() {
                   value={`${btc.gex_total_b >= 0 ? '+' : ''}${btc.gex_total_b.toFixed(3)}B`}
                   valueClass={btc.gex_total_b >= 0 ? 'text-term-green' : 'text-term-red'}
                 />
+                {btc.dex_total_b != null && (
+                  <StatRow
+                    label="DEX total"
+                    value={`${btc.dex_total_b >= 0 ? '+' : ''}${btc.dex_total_b.toFixed(2)}B`}
+                    valueClass={btc.dex_total_b >= 0 ? 'text-term-green' : 'text-term-red'}
+                  />
+                )}
                 <StatRow label="Call Wall" value={`$${btc.call_wall.toLocaleString('en-US')}`} />
                 <StatRow label="Put Wall" value={`$${btc.put_wall.toLocaleString('en-US')}`} />
                 <StatRow label="Zero-gamma" value={`$${btc.zero_gamma.toLocaleString('en-US')}`} />
@@ -284,7 +301,23 @@ export default function App() {
               </Panel>
             )}
           </div>
-          <p className="text-[11px] text-term-muted">Níveis de contexto apenas — nunca um sinal de entrada. Atualizados manualmente a cada check.</p>
+          {(nqDexStrikes.length > 0 || btcDexStrikes.length > 0) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-term-border border border-term-border mb-px">
+              {nq && nqDexStrikes.length > 0 && (
+                <Panel title="NQ · Delta Exposure" src="skew do OI entre calls/puts, em $ equivalentes">
+                  <GexDepthChart rows={nqDexStrikes} priceVal={nq.price_qqq ?? null} fmtStrike={(s) => `${s.toFixed(0)} QQQ`} label="DEX" />
+                </Panel>
+              )}
+              {btc && btcDexStrikes.length > 0 && (
+                <Panel title="BTC · Delta Exposure" src="skew do OI entre calls/puts, em $ equivalentes">
+                  <GexDepthChart rows={btcDexStrikes} priceVal={btc.price} fmtStrike={(s) => `$${s.toLocaleString('en-US')}`} label="DEX" />
+                </Panel>
+              )}
+            </div>
+          )}
+          <p className="text-[11px] text-term-muted">
+            Níveis de contexto apenas — nunca um sinal de entrada. DEX é proxy do skew direcional do open interest, não uma certeza sobre a posição dos dealers.
+          </p>
         </>
       )}
 

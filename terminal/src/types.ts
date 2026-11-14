@@ -6,6 +6,7 @@ export interface LevelRow {
   price_qqq?: number
   gex_total_b: number
   gex_regime: string
+  dex_total_b?: number
   call_wall: number
   call_wall_ref: string | null
   call_wall_qqq?: number

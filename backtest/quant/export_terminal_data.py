@@ -2,13 +2,16 @@
 terminal, para correr tanto manualmente como via GitHub Action agendada.
 
 O que este script ATUALIZA (puramente numerico, sem opiniao):
-  - levels.json: campos numericos de GEX/niveis/VIX (preserva bias/note, que
-    sao julgamento e continuam a ser escritos manualmente na rotina diaria)
+  - levels.json: campos numericos de GEX/DEX/niveis/VIX (preserva bias/note,
+    que sao julgamento e continuam a ser escritos manualmente na rotina diaria)
+  - gex_strikes.json, dex_strikes.json: GEX/DEX por strike (ladder/depth
+    chart) -- antes de 13/11 isto era um ficheiro estatico nunca atualizado,
+    agora sai dos mesmos rows ja computados para o levels.json
   - cot.json, fomc.json: dados oficiais (CFTC / Federal Reserve via OpenBB)
   - econ_calendar.json: calendario ForexFactory
   - price_nq.json, price_nq_daily.json, price_btc.json, vix_history.json
   - gex_heatmap_nq.json, gex_heatmap_btc.json
-  - iv_term_nq.json, iv_skew_nq.json, vol_compare_nq.json
+  - iv_term_nq.json, iv_skew_nq.json, iv_surface_nq.json, vol_compare_nq.json
 
 O que este script NAO toca (journal/narrativa, continuam manuais):
   scorecard.json, account.json, trades.json, alerts.json
@@ -30,7 +33,7 @@ import gex_heatmap
 import nq_gex
 import price_history
 import vix as vix_mod
-from gex_common import call_put_walls, find_zero_gamma, strikes_by_abs_gex, total_gex_at_spot
+from gex_common import call_put_walls, dex_by_strike, find_zero_gamma, strikes_by_abs_gex, total_dex_at_spot, total_gex_at_spot
 
 OUT_DIR = "terminal/public/data"
 LEVELS_PATH = f"{OUT_DIR}/levels.json"
@@ -73,6 +76,7 @@ def build_nq_level(now_iso, vix_val, vix_chg_pct, vix_reading):
         return f"{qqq_level:,.1f} QQQ" + (f" (~{qqq_level * ratio:,.0f} NQ)" if ratio else "")
 
     gex_now = total_gex_at_spot(rows, qqq_spot, NQ_MULT)
+    dex_now = total_dex_at_spot(rows, qqq_spot, NQ_MULT)
     call_wall, put_wall = call_put_walls(rows, qqq_spot, NQ_MULT)
     flips = find_zero_gamma(rows, qqq_spot, NQ_MULT)
     zero_gamma_qqq = min(flips, key=lambda f: abs(f - qqq_spot)) if flips else None
@@ -84,8 +88,11 @@ def build_nq_level(now_iso, vix_val, vix_chg_pct, vix_reading):
             dte0_dominant = to_nq(walls_0dte[0][0])
             dte0_dominant_ref = ref(walls_0dte[0][0])
 
+    gex_strikes = [{"asset": "NQ", "strike": to_nq(s) if ratio else s, "gex": v} for s, v in strikes_by_abs_gex(rows, qqq_spot, NQ_MULT, top_n=10)]
+    dex_strikes = [{"asset": "NQ", "strike": to_nq(s) if ratio else s, "gex": v} for s, v in dex_by_strike(rows, qqq_spot, NQ_MULT, top_n=10)]
+
     gex_total_b = round(gex_now / 1e9, 3)
-    return {
+    level = {
         "asset": "NQ",
         "as_of_utc": now_iso,
         "price": to_nq(qqq_spot) if ratio else qqq_spot,
@@ -93,6 +100,7 @@ def build_nq_level(now_iso, vix_val, vix_chg_pct, vix_reading):
         "price_qqq": round(qqq_spot, 2),
         "gex_total_b": gex_total_b,
         "gex_regime": regime_label(gex_total_b),
+        "dex_total_b": round(dex_now / 1e9, 2),
         "call_wall": to_nq(call_wall[0]) if call_wall else None,
         "call_wall_ref": ref(call_wall[0]) if call_wall else None,
         "call_wall_qqq": round(call_wall[0], 1) if call_wall else None,
@@ -108,23 +116,30 @@ def build_nq_level(now_iso, vix_val, vix_chg_pct, vix_reading):
         "vix_change_pct": vix_chg_pct,
         "vix_reading": vix_reading,
     }
+    return level, gex_strikes, dex_strikes
 
 
 def build_btc_level(now_iso):
     instruments = btc_gex.fetch()
     rows, spot = btc_gex.build_rows(instruments)
     gex_now = total_gex_at_spot(rows, spot)
+    dex_now = total_dex_at_spot(rows, spot)
     call_wall, put_wall = call_put_walls(rows, spot)
     flips = find_zero_gamma(rows, spot)
     zero_gamma = min(flips, key=lambda f: abs(f - spot)) if flips else None
+
+    gex_strikes = [{"asset": "BTC", "strike": s, "gex": v} for s, v in strikes_by_abs_gex(rows, spot, top_n=10)]
+    dex_strikes = [{"asset": "BTC", "strike": s, "gex": v} for s, v in dex_by_strike(rows, spot, top_n=10)]
+
     gex_total_b = round(gex_now / 1e9, 3)
-    return {
+    level = {
         "asset": "BTC",
         "as_of_utc": now_iso,
         "price": round(spot, 2) if spot else spot,
         "price_ref": "Deribit index",
         "gex_total_b": gex_total_b,
         "gex_regime": regime_label(gex_total_b),
+        "dex_total_b": round(dex_now / 1e9, 2),
         "call_wall": round(call_wall[0]) if call_wall else None,
         "call_wall_ref": None,
         "put_wall": round(put_wall[0]) if put_wall else None,
@@ -137,6 +152,7 @@ def build_btc_level(now_iso):
         "vix_change_pct": None,
         "vix_reading": None,
     }
+    return level, gex_strikes, dex_strikes
 
 
 def update_levels():
@@ -148,8 +164,8 @@ def update_levels():
         existing = {}
 
     vix_val, vix_chg_pct, vix_reading = fetch_vix_snapshot()
-    nq = build_nq_level(now_iso, vix_val, vix_chg_pct, vix_reading)
-    btc = build_btc_level(now_iso)
+    nq, nq_gex_strikes, nq_dex_strikes = build_nq_level(now_iso, vix_val, vix_chg_pct, vix_reading)
+    btc, btc_gex_strikes, btc_dex_strikes = build_btc_level(now_iso)
 
     for row in (nq, btc):
         prev = existing.get(row["asset"], {})
@@ -162,6 +178,11 @@ def update_levels():
 
     with open(LEVELS_PATH, "w") as f:
         json.dump([nq, btc], f, indent=2, ensure_ascii=False)
+    with open(f"{OUT_DIR}/gex_strikes.json", "w") as f:
+        json.dump(nq_gex_strikes + btc_gex_strikes, f, indent=2)
+    with open(f"{OUT_DIR}/dex_strikes.json", "w") as f:
+        json.dump(nq_dex_strikes + btc_dex_strikes, f, indent=2)
+    print(f"gex_strikes.json e dex_strikes.json atualizados ({len(nq_gex_strikes)}+{len(btc_gex_strikes)} / {len(nq_dex_strikes)}+{len(btc_dex_strikes)})")
     print(f"levels.json atualizado (bias/note preservados): NQ gex={nq['gex_total_b']}B, BTC gex={btc['gex_total_b']}B")
 
 
