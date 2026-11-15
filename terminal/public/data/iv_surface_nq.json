@@ -3,4997 +3,4997 @@
   "expiries": [
     {
       "expiry": "2026-11-16",
-      "dte": 2
+      "dte": 1
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3
+      "dte": 2
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4
+      "dte": 3
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5
+      "dte": 4
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6
+      "dte": 5
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9
+      "dte": 8
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10
+      "dte": 9
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11
+      "dte": 10
     }
   ],
   "rows": [
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 621.0,
       "moneyness_pct": -7.9,
       "iv": 37.6
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 622.0,
       "moneyness_pct": -7.75,
       "iv": 36.98
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 623.0,
       "moneyness_pct": -7.6,
       "iv": 37.39
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 624.0,
       "moneyness_pct": -7.45,
       "iv": 36.76
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 625.0,
       "moneyness_pct": -7.3,
       "iv": 36.12
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 626.0,
       "moneyness_pct": -7.16,
       "iv": 35.49
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 627.0,
       "moneyness_pct": -7.01,
       "iv": 35.68
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 628.0,
       "moneyness_pct": -6.86,
       "iv": 35.04
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 629.0,
       "moneyness_pct": -6.71,
       "iv": 34.39
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 630.0,
       "moneyness_pct": -6.56,
       "iv": 34.44
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 631.0,
       "moneyness_pct": -6.41,
       "iv": 33.79
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 632.0,
       "moneyness_pct": -6.27,
       "iv": 33.74
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 633.0,
       "moneyness_pct": -6.12,
       "iv": 33.07
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 634.0,
       "moneyness_pct": -5.97,
       "iv": 32.94
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 635.0,
       "moneyness_pct": -5.82,
       "iv": 32.51
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 636.0,
       "moneyness_pct": -5.67,
       "iv": 32.06
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 637.0,
       "moneyness_pct": -5.52,
       "iv": 31.82
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 638.0,
       "moneyness_pct": -5.38,
       "iv": 31.13
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 639.0,
       "moneyness_pct": -5.23,
       "iv": 31.21
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 640.0,
       "moneyness_pct": -5.08,
       "iv": 31.02
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 641.0,
       "moneyness_pct": -4.93,
       "iv": 30.78
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 642.0,
       "moneyness_pct": -4.78,
       "iv": 30.35
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 643.0,
       "moneyness_pct": -4.63,
       "iv": 30.17
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 644.0,
       "moneyness_pct": -4.49,
       "iv": 29.93
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 645.0,
       "moneyness_pct": -4.34,
       "iv": 29.64
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 646.0,
       "moneyness_pct": -4.19,
       "iv": 29.52
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 647.0,
       "moneyness_pct": -4.04,
       "iv": 28.94
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 648.0,
       "moneyness_pct": -3.89,
       "iv": 28.72
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 649.0,
       "moneyness_pct": -3.74,
       "iv": 28.45
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 650.0,
       "moneyness_pct": -3.6,
       "iv": 28.12
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 651.0,
       "moneyness_pct": -3.45,
       "iv": 27.83
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 652.0,
       "moneyness_pct": -3.3,
       "iv": 27.55
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 653.0,
       "moneyness_pct": -3.15,
       "iv": 27.35
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 654.0,
       "moneyness_pct": -3.0,
       "iv": 27.09
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 655.0,
       "moneyness_pct": -2.86,
       "iv": 26.88
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 656.0,
       "moneyness_pct": -2.71,
       "iv": 26.49
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 657.0,
       "moneyness_pct": -2.56,
       "iv": 26.36
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 658.0,
       "moneyness_pct": -2.41,
       "iv": 26.1
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 659.0,
       "moneyness_pct": -2.26,
       "iv": 25.9
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 660.0,
       "moneyness_pct": -2.11,
       "iv": 25.62
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 661.0,
       "moneyness_pct": -1.97,
       "iv": 25.39
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 662.0,
       "moneyness_pct": -1.82,
       "iv": 25.09
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 663.0,
       "moneyness_pct": -1.67,
       "iv": 24.85
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 664.0,
       "moneyness_pct": -1.52,
       "iv": 24.6
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 665.0,
       "moneyness_pct": -1.37,
       "iv": 24.33
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 666.0,
       "moneyness_pct": -1.22,
       "iv": 24.09
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 667.0,
       "moneyness_pct": -1.08,
       "iv": 23.77
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 668.0,
       "moneyness_pct": -0.93,
       "iv": 23.47
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 669.0,
       "moneyness_pct": -0.78,
       "iv": 23.16
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 670.0,
       "moneyness_pct": -0.63,
       "iv": 22.94
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 671.0,
       "moneyness_pct": -0.48,
       "iv": 22.63
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 672.0,
       "moneyness_pct": -0.33,
       "iv": 22.33
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 673.0,
       "moneyness_pct": -0.19,
       "iv": 22.05
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 674.0,
       "moneyness_pct": -0.04,
       "iv": 21.69
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 675.0,
       "moneyness_pct": 0.11,
       "iv": 21.8
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 676.0,
       "moneyness_pct": 0.26,
       "iv": 21.45
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 677.0,
       "moneyness_pct": 0.41,
       "iv": 21.14
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 678.0,
       "moneyness_pct": 0.56,
       "iv": 20.76
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 679.0,
       "moneyness_pct": 0.7,
       "iv": 20.41
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 680.0,
       "moneyness_pct": 0.85,
       "iv": 20.04
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 681.0,
       "moneyness_pct": 1.0,
       "iv": 19.72
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 682.0,
       "moneyness_pct": 1.15,
       "iv": 19.35
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 683.0,
       "moneyness_pct": 1.3,
       "iv": 18.99
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 684.0,
       "moneyness_pct": 1.45,
       "iv": 18.65
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 685.0,
       "moneyness_pct": 1.59,
       "iv": 18.29
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 686.0,
       "moneyness_pct": 1.74,
       "iv": 18.01
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 687.0,
       "moneyness_pct": 1.89,
       "iv": 17.7
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 688.0,
       "moneyness_pct": 2.04,
       "iv": 17.47
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 689.0,
       "moneyness_pct": 2.19,
       "iv": 17.3
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 690.0,
       "moneyness_pct": 2.34,
       "iv": 17.12
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 691.0,
       "moneyness_pct": 2.48,
       "iv": 17.04
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 692.0,
       "moneyness_pct": 2.63,
       "iv": 16.96
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 693.0,
       "moneyness_pct": 2.78,
       "iv": 16.97
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 694.0,
       "moneyness_pct": 2.93,
       "iv": 17.07
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 695.0,
       "moneyness_pct": 3.08,
       "iv": 17.18
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 696.0,
       "moneyness_pct": 3.23,
       "iv": 17.33
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 697.0,
       "moneyness_pct": 3.37,
       "iv": 17.45
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 698.0,
       "moneyness_pct": 3.52,
       "iv": 17.56
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 699.0,
       "moneyness_pct": 3.67,
       "iv": 17.79
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 700.0,
       "moneyness_pct": 3.82,
       "iv": 17.79
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 701.0,
       "moneyness_pct": 3.97,
       "iv": 17.94
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 702.0,
       "moneyness_pct": 4.12,
       "iv": 18.07
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 703.0,
       "moneyness_pct": 4.26,
       "iv": 18.27
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 704.0,
       "moneyness_pct": 4.41,
       "iv": 18.38
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 705.0,
       "moneyness_pct": 4.56,
       "iv": 18.98
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 706.0,
       "moneyness_pct": 4.71,
       "iv": 18.61
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 707.0,
       "moneyness_pct": 4.86,
       "iv": 18.78
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 708.0,
       "moneyness_pct": 5.01,
       "iv": 19.33
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 709.0,
       "moneyness_pct": 5.15,
       "iv": 19.89
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 710.0,
       "moneyness_pct": 5.3,
       "iv": 20.44
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 711.0,
       "moneyness_pct": 5.45,
       "iv": 19.86
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 712.0,
       "moneyness_pct": 5.6,
       "iv": 19.58
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 713.0,
       "moneyness_pct": 5.75,
       "iv": 20.9
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 714.0,
       "moneyness_pct": 5.9,
       "iv": 21.42
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 715.0,
       "moneyness_pct": 6.04,
       "iv": 21.08
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 716.0,
       "moneyness_pct": 6.19,
       "iv": 21.58
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 717.0,
       "moneyness_pct": 6.34,
       "iv": 22.08
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 718.0,
       "moneyness_pct": 6.49,
       "iv": 23.48
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 719.0,
       "moneyness_pct": 6.64,
       "iv": 23.98
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 720.0,
       "moneyness_pct": 6.79,
       "iv": 22.15
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 721.0,
       "moneyness_pct": 6.93,
       "iv": 25.73
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 722.0,
       "moneyness_pct": 7.08,
       "iv": 26.25
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 723.0,
       "moneyness_pct": 7.23,
       "iv": 23.54
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 724.0,
       "moneyness_pct": 7.38,
       "iv": 25.5
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 725.0,
       "moneyness_pct": 7.53,
       "iv": 25.98
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 726.0,
       "moneyness_pct": 7.68,
       "iv": 26.46
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 727.0,
       "moneyness_pct": 7.82,
       "iv": 26.94
     },
     {
       "expiry": "2026-11-16",
-      "dte": 2,
+      "dte": 1,
       "strike": 728.0,
       "moneyness_pct": 7.97,
       "iv": 27.42
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 622.0,
       "moneyness_pct": -7.75,
       "iv": 38.95
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 623.0,
       "moneyness_pct": -7.6,
       "iv": 38.32
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 624.0,
       "moneyness_pct": -7.45,
       "iv": 38.02
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 625.0,
       "moneyness_pct": -7.3,
       "iv": 37.7
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 626.0,
       "moneyness_pct": -7.16,
       "iv": 37.51
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 627.0,
       "moneyness_pct": -7.01,
       "iv": 37.15
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 628.0,
       "moneyness_pct": -6.86,
       "iv": 36.94
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 629.0,
       "moneyness_pct": -6.71,
       "iv": 36.51
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 630.0,
       "moneyness_pct": -6.56,
       "iv": 36.25
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 631.0,
       "moneyness_pct": -6.41,
       "iv": 36.05
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 632.0,
       "moneyness_pct": -6.27,
       "iv": 35.71
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 633.0,
       "moneyness_pct": -6.12,
       "iv": 35.41
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 634.0,
       "moneyness_pct": -5.97,
       "iv": 35.22
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 635.0,
       "moneyness_pct": -5.82,
       "iv": 34.99
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 636.0,
       "moneyness_pct": -5.67,
       "iv": 34.55
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 637.0,
       "moneyness_pct": -5.52,
       "iv": 34.43
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 638.0,
       "moneyness_pct": -5.38,
       "iv": 34.19
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 639.0,
       "moneyness_pct": -5.23,
       "iv": 33.92
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 640.0,
       "moneyness_pct": -5.08,
       "iv": 33.95
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 641.0,
       "moneyness_pct": -4.93,
       "iv": 33.48
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 642.0,
       "moneyness_pct": -4.78,
       "iv": 33.23
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 643.0,
       "moneyness_pct": -4.63,
       "iv": 33.07
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 644.0,
       "moneyness_pct": -4.49,
       "iv": 32.87
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 645.0,
       "moneyness_pct": -4.34,
       "iv": 32.62
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 646.0,
       "moneyness_pct": -4.19,
       "iv": 32.44
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 647.0,
       "moneyness_pct": -4.04,
       "iv": 32.31
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 648.0,
       "moneyness_pct": -3.89,
       "iv": 32.08
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 649.0,
       "moneyness_pct": -3.74,
       "iv": 31.69
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 650.0,
       "moneyness_pct": -3.6,
       "iv": 31.63
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 651.0,
       "moneyness_pct": -3.45,
       "iv": 31.37
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 652.0,
       "moneyness_pct": -3.3,
       "iv": 31.17
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 653.0,
       "moneyness_pct": -3.15,
       "iv": 30.93
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 654.0,
       "moneyness_pct": -3.0,
       "iv": 30.78
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 655.0,
       "moneyness_pct": -2.86,
       "iv": 30.7
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 656.0,
       "moneyness_pct": -2.71,
       "iv": 30.35
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 657.0,
       "moneyness_pct": -2.56,
       "iv": 30.17
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 658.0,
       "moneyness_pct": -2.41,
       "iv": 29.92
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 659.0,
       "moneyness_pct": -2.26,
       "iv": 29.8
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 660.0,
       "moneyness_pct": -2.11,
       "iv": 29.52
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 661.0,
       "moneyness_pct": -1.97,
       "iv": 29.29
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 662.0,
       "moneyness_pct": -1.82,
       "iv": 29.09
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 663.0,
       "moneyness_pct": -1.67,
       "iv": 28.88
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 664.0,
       "moneyness_pct": -1.52,
       "iv": 28.63
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 665.0,
       "moneyness_pct": -1.37,
       "iv": 28.31
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 666.0,
       "moneyness_pct": -1.22,
       "iv": 28.13
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 667.0,
       "moneyness_pct": -1.08,
       "iv": 27.91
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 668.0,
       "moneyness_pct": -0.93,
       "iv": 27.69
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 669.0,
       "moneyness_pct": -0.78,
       "iv": 27.39
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 670.0,
       "moneyness_pct": -0.63,
       "iv": 27.07
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 671.0,
       "moneyness_pct": -0.48,
       "iv": 26.9
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 672.0,
       "moneyness_pct": -0.33,
       "iv": 26.66
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 673.0,
       "moneyness_pct": -0.19,
       "iv": 26.39
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 674.0,
       "moneyness_pct": -0.04,
       "iv": 26.14
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 675.0,
       "moneyness_pct": 0.11,
       "iv": 26.12
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 676.0,
       "moneyness_pct": 0.26,
       "iv": 25.9
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 677.0,
       "moneyness_pct": 0.41,
       "iv": 25.63
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 678.0,
       "moneyness_pct": 0.56,
       "iv": 25.56
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 679.0,
       "moneyness_pct": 0.7,
       "iv": 25.07
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 680.0,
       "moneyness_pct": 0.85,
       "iv": 24.9
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 681.0,
       "moneyness_pct": 1.0,
       "iv": 24.7
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 682.0,
       "moneyness_pct": 1.15,
       "iv": 24.35
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 683.0,
       "moneyness_pct": 1.3,
       "iv": 24.06
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 684.0,
       "moneyness_pct": 1.45,
       "iv": 23.92
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 685.0,
       "moneyness_pct": 1.59,
       "iv": 23.58
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 686.0,
       "moneyness_pct": 1.74,
       "iv": 23.37
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 687.0,
       "moneyness_pct": 1.89,
       "iv": 23.16
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 688.0,
       "moneyness_pct": 2.04,
       "iv": 22.92
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 689.0,
       "moneyness_pct": 2.19,
       "iv": 22.81
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 690.0,
       "moneyness_pct": 2.34,
       "iv": 22.49
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 691.0,
       "moneyness_pct": 2.48,
       "iv": 22.27
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 692.0,
       "moneyness_pct": 2.63,
       "iv": 21.93
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 693.0,
       "moneyness_pct": 2.78,
       "iv": 21.85
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 694.0,
       "moneyness_pct": 2.93,
       "iv": 21.63
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 695.0,
       "moneyness_pct": 3.08,
       "iv": 21.38
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 696.0,
       "moneyness_pct": 3.23,
       "iv": 21.34
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 697.0,
       "moneyness_pct": 3.37,
       "iv": 21.08
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 698.0,
       "moneyness_pct": 3.52,
       "iv": 21.05
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 699.0,
       "moneyness_pct": 3.67,
       "iv": 20.92
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 700.0,
       "moneyness_pct": 3.82,
       "iv": 20.87
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 701.0,
       "moneyness_pct": 3.97,
       "iv": 20.82
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 702.0,
       "moneyness_pct": 4.12,
       "iv": 20.73
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 703.0,
       "moneyness_pct": 4.26,
       "iv": 20.58
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 704.0,
       "moneyness_pct": 4.41,
       "iv": 20.61
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 705.0,
       "moneyness_pct": 4.56,
       "iv": 20.63
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 706.0,
       "moneyness_pct": 4.71,
       "iv": 20.57
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 707.0,
       "moneyness_pct": 4.86,
       "iv": 20.49
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 708.0,
       "moneyness_pct": 5.01,
       "iv": 20.57
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 709.0,
       "moneyness_pct": 5.15,
       "iv": 20.85
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 710.0,
       "moneyness_pct": 5.3,
       "iv": 20.92
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 711.0,
       "moneyness_pct": 5.45,
       "iv": 20.94
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 712.0,
       "moneyness_pct": 5.6,
       "iv": 21.32
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 713.0,
       "moneyness_pct": 5.75,
       "iv": 21.21
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 714.0,
       "moneyness_pct": 5.9,
       "iv": 21.48
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 715.0,
       "moneyness_pct": 6.04,
       "iv": 21.72
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 716.0,
       "moneyness_pct": 6.19,
       "iv": 21.93
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 717.0,
       "moneyness_pct": 6.34,
       "iv": 21.76
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 718.0,
       "moneyness_pct": 6.49,
       "iv": 22.24
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 719.0,
       "moneyness_pct": 6.64,
       "iv": 21.88
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 720.0,
       "moneyness_pct": 6.79,
       "iv": 22.78
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 721.0,
       "moneyness_pct": 6.93,
       "iv": 22.79
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 722.0,
       "moneyness_pct": 7.08,
       "iv": 22.71
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 723.0,
       "moneyness_pct": 7.23,
       "iv": 23.15
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 724.0,
       "moneyness_pct": 7.38,
       "iv": 22.93
     },
     {
       "expiry": "2026-11-17",
-      "dte": 3,
+      "dte": 2,
       "strike": 725.0,
       "moneyness_pct": 7.53,
       "iv": 24.04
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 621.0,
       "moneyness_pct": -7.9,
       "iv": 39.98
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 622.0,
       "moneyness_pct": -7.75,
       "iv": 39.86
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 623.0,
       "moneyness_pct": -7.6,
       "iv": 39.6
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 625.0,
       "moneyness_pct": -7.3,
       "iv": 38.9
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 626.0,
       "moneyness_pct": -7.16,
       "iv": 38.66
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 627.0,
       "moneyness_pct": -7.01,
       "iv": 38.51
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 628.0,
       "moneyness_pct": -6.86,
       "iv": 38.2
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 629.0,
       "moneyness_pct": -6.71,
       "iv": 38.06
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 630.0,
       "moneyness_pct": -6.56,
       "iv": 37.77
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 631.0,
       "moneyness_pct": -6.41,
       "iv": 37.49
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 632.0,
       "moneyness_pct": -6.27,
       "iv": 37.25
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 633.0,
       "moneyness_pct": -6.12,
       "iv": 37.04
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 634.0,
       "moneyness_pct": -5.97,
       "iv": 36.81
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 635.0,
       "moneyness_pct": -5.82,
       "iv": 36.65
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 636.0,
       "moneyness_pct": -5.67,
       "iv": 36.36
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 637.0,
       "moneyness_pct": -5.52,
       "iv": 36.15
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 638.0,
       "moneyness_pct": -5.38,
       "iv": 35.96
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 639.0,
       "moneyness_pct": -5.23,
       "iv": 35.78
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 640.0,
       "moneyness_pct": -5.08,
       "iv": 35.61
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 641.0,
       "moneyness_pct": -4.93,
       "iv": 35.37
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 642.0,
       "moneyness_pct": -4.78,
       "iv": 35.18
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 643.0,
       "moneyness_pct": -4.63,
       "iv": 34.96
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 644.0,
       "moneyness_pct": -4.49,
       "iv": 34.71
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 645.0,
       "moneyness_pct": -4.34,
       "iv": 34.53
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 646.0,
       "moneyness_pct": -4.19,
       "iv": 34.32
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 647.0,
       "moneyness_pct": -4.04,
       "iv": 34.15
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 648.0,
       "moneyness_pct": -3.89,
       "iv": 33.96
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 649.0,
       "moneyness_pct": -3.74,
       "iv": 33.72
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 650.0,
       "moneyness_pct": -3.6,
       "iv": 33.53
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 651.0,
       "moneyness_pct": -3.45,
       "iv": 33.3
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 652.0,
       "moneyness_pct": -3.3,
       "iv": 33.12
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 653.0,
       "moneyness_pct": -3.15,
       "iv": 32.91
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 654.0,
       "moneyness_pct": -3.0,
       "iv": 32.66
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 655.0,
       "moneyness_pct": -2.86,
       "iv": 32.52
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 656.0,
       "moneyness_pct": -2.71,
       "iv": 32.31
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 657.0,
       "moneyness_pct": -2.56,
       "iv": 32.09
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 658.0,
       "moneyness_pct": -2.41,
       "iv": 31.93
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 659.0,
       "moneyness_pct": -2.26,
       "iv": 31.7
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 660.0,
       "moneyness_pct": -2.11,
       "iv": 31.53
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 661.0,
       "moneyness_pct": -1.97,
       "iv": 31.3
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 662.0,
       "moneyness_pct": -1.82,
       "iv": 31.14
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 663.0,
       "moneyness_pct": -1.67,
       "iv": 30.92
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 664.0,
       "moneyness_pct": -1.52,
       "iv": 30.75
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 665.0,
       "moneyness_pct": -1.37,
       "iv": 30.5
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 666.0,
       "moneyness_pct": -1.22,
       "iv": 30.35
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 667.0,
       "moneyness_pct": -1.08,
       "iv": 30.11
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 668.0,
       "moneyness_pct": -0.93,
       "iv": 29.91
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 669.0,
       "moneyness_pct": -0.78,
       "iv": 29.74
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 670.0,
       "moneyness_pct": -0.63,
       "iv": 29.48
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 671.0,
       "moneyness_pct": -0.48,
       "iv": 29.29
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 672.0,
       "moneyness_pct": -0.33,
       "iv": 28.96
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 673.0,
       "moneyness_pct": -0.19,
       "iv": 28.77
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 674.0,
       "moneyness_pct": -0.04,
       "iv": 28.59
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 675.0,
       "moneyness_pct": 0.11,
       "iv": 28.64
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 676.0,
       "moneyness_pct": 0.26,
       "iv": 28.39
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 677.0,
       "moneyness_pct": 0.41,
       "iv": 28.2
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 678.0,
       "moneyness_pct": 0.56,
       "iv": 27.87
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 679.0,
       "moneyness_pct": 0.7,
       "iv": 27.49
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 680.0,
       "moneyness_pct": 0.85,
       "iv": 27.49
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 681.0,
       "moneyness_pct": 1.0,
       "iv": 27.25
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 682.0,
       "moneyness_pct": 1.15,
       "iv": 26.88
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 683.0,
       "moneyness_pct": 1.3,
       "iv": 26.75
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 684.0,
       "moneyness_pct": 1.45,
       "iv": 26.38
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 685.0,
       "moneyness_pct": 1.59,
       "iv": 26.19
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 686.0,
       "moneyness_pct": 1.74,
       "iv": 25.94
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 687.0,
       "moneyness_pct": 1.89,
       "iv": 25.74
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 688.0,
       "moneyness_pct": 2.04,
       "iv": 25.5
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 689.0,
       "moneyness_pct": 2.19,
       "iv": 25.23
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 690.0,
       "moneyness_pct": 2.34,
       "iv": 24.98
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 691.0,
       "moneyness_pct": 2.48,
       "iv": 24.78
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 692.0,
       "moneyness_pct": 2.63,
       "iv": 24.61
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 693.0,
       "moneyness_pct": 2.78,
       "iv": 24.35
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 694.0,
       "moneyness_pct": 2.93,
       "iv": 24.08
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 695.0,
       "moneyness_pct": 3.08,
       "iv": 23.87
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 696.0,
       "moneyness_pct": 3.23,
       "iv": 23.64
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 697.0,
       "moneyness_pct": 3.37,
       "iv": 23.42
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 698.0,
       "moneyness_pct": 3.52,
       "iv": 23.3
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 699.0,
       "moneyness_pct": 3.67,
       "iv": 23.0
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 700.0,
       "moneyness_pct": 3.82,
       "iv": 22.88
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 701.0,
       "moneyness_pct": 3.97,
       "iv": 22.7
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 702.0,
       "moneyness_pct": 4.12,
       "iv": 22.54
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 703.0,
       "moneyness_pct": 4.26,
       "iv": 22.4
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 704.0,
       "moneyness_pct": 4.41,
       "iv": 22.29
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 705.0,
       "moneyness_pct": 4.56,
       "iv": 22.28
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 706.0,
       "moneyness_pct": 4.71,
       "iv": 22.25
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 707.0,
       "moneyness_pct": 4.86,
       "iv": 22.15
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 708.0,
       "moneyness_pct": 5.01,
       "iv": 22.07
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 709.0,
       "moneyness_pct": 5.15,
       "iv": 22.04
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 710.0,
       "moneyness_pct": 5.3,
       "iv": 22.17
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 711.0,
       "moneyness_pct": 5.45,
       "iv": 22.08
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 712.0,
       "moneyness_pct": 5.6,
       "iv": 22.08
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 713.0,
       "moneyness_pct": 5.75,
       "iv": 22.21
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 714.0,
       "moneyness_pct": 5.9,
       "iv": 22.19
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 715.0,
       "moneyness_pct": 6.04,
       "iv": 22.18
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 716.0,
       "moneyness_pct": 6.19,
       "iv": 22.17
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 717.0,
       "moneyness_pct": 6.34,
       "iv": 22.33
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 718.0,
       "moneyness_pct": 6.49,
       "iv": 22.49
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 719.0,
       "moneyness_pct": 6.64,
       "iv": 22.62
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 720.0,
       "moneyness_pct": 6.79,
       "iv": 22.28
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 721.0,
       "moneyness_pct": 6.93,
       "iv": 22.72
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 722.0,
       "moneyness_pct": 7.08,
       "iv": 22.72
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 723.0,
       "moneyness_pct": 7.23,
       "iv": 22.89
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 724.0,
       "moneyness_pct": 7.38,
       "iv": 22.72
     },
     {
       "expiry": "2026-11-18",
-      "dte": 4,
+      "dte": 3,
       "strike": 725.0,
       "moneyness_pct": 7.53,
       "iv": 23.14
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 621.0,
       "moneyness_pct": -7.9,
       "iv": 40.02
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 622.0,
       "moneyness_pct": -7.75,
       "iv": 39.75
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 623.0,
       "moneyness_pct": -7.6,
       "iv": 39.51
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 624.0,
       "moneyness_pct": -7.45,
       "iv": 39.26
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 625.0,
       "moneyness_pct": -7.3,
       "iv": 39.0
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 626.0,
       "moneyness_pct": -7.16,
       "iv": 38.82
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 627.0,
       "moneyness_pct": -7.01,
       "iv": 38.63
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 628.0,
       "moneyness_pct": -6.86,
       "iv": 38.38
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 629.0,
       "moneyness_pct": -6.71,
       "iv": 38.14
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 630.0,
       "moneyness_pct": -6.56,
       "iv": 37.93
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 631.0,
       "moneyness_pct": -6.41,
       "iv": 37.74
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 632.0,
       "moneyness_pct": -6.27,
       "iv": 37.53
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 633.0,
       "moneyness_pct": -6.12,
       "iv": 37.3
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 634.0,
       "moneyness_pct": -5.97,
       "iv": 37.09
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 635.0,
       "moneyness_pct": -5.82,
       "iv": 36.89
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 636.0,
       "moneyness_pct": -5.67,
       "iv": 36.71
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 637.0,
       "moneyness_pct": -5.52,
       "iv": 36.54
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 638.0,
       "moneyness_pct": -5.38,
       "iv": 36.34
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 639.0,
       "moneyness_pct": -5.23,
       "iv": 36.16
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 640.0,
       "moneyness_pct": -5.08,
       "iv": 35.98
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 641.0,
       "moneyness_pct": -4.93,
       "iv": 35.77
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 642.0,
       "moneyness_pct": -4.78,
       "iv": 35.6
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 643.0,
       "moneyness_pct": -4.63,
       "iv": 35.4
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 644.0,
       "moneyness_pct": -4.49,
       "iv": 35.23
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 645.0,
       "moneyness_pct": -4.34,
       "iv": 35.01
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 646.0,
       "moneyness_pct": -4.19,
       "iv": 34.87
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 647.0,
       "moneyness_pct": -4.04,
       "iv": 34.69
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 648.0,
       "moneyness_pct": -3.89,
       "iv": 34.54
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 649.0,
       "moneyness_pct": -3.74,
       "iv": 34.41
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 650.0,
       "moneyness_pct": -3.6,
       "iv": 34.15
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 651.0,
       "moneyness_pct": -3.45,
       "iv": 33.95
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 652.0,
       "moneyness_pct": -3.3,
       "iv": 33.84
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 653.0,
       "moneyness_pct": -3.15,
       "iv": 33.67
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 654.0,
       "moneyness_pct": -3.0,
       "iv": 33.43
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 655.0,
       "moneyness_pct": -2.86,
       "iv": 33.3
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 656.0,
       "moneyness_pct": -2.71,
       "iv": 33.14
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 657.0,
       "moneyness_pct": -2.56,
       "iv": 32.94
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 658.0,
       "moneyness_pct": -2.41,
       "iv": 32.73
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 659.0,
       "moneyness_pct": -2.26,
       "iv": 32.57
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 660.0,
       "moneyness_pct": -2.11,
       "iv": 32.35
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 661.0,
       "moneyness_pct": -1.97,
       "iv": 32.15
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 662.0,
       "moneyness_pct": -1.82,
       "iv": 31.97
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 663.0,
       "moneyness_pct": -1.67,
       "iv": 31.77
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 664.0,
       "moneyness_pct": -1.52,
       "iv": 31.57
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 665.0,
       "moneyness_pct": -1.37,
       "iv": 31.39
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 666.0,
       "moneyness_pct": -1.22,
       "iv": 31.2
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 667.0,
       "moneyness_pct": -1.08,
       "iv": 31.0
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 668.0,
       "moneyness_pct": -0.93,
       "iv": 30.77
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 669.0,
       "moneyness_pct": -0.78,
       "iv": 30.59
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 670.0,
       "moneyness_pct": -0.63,
       "iv": 30.39
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 671.0,
       "moneyness_pct": -0.48,
       "iv": 30.18
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 672.0,
       "moneyness_pct": -0.33,
       "iv": 29.93
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 673.0,
       "moneyness_pct": -0.19,
       "iv": 29.72
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 674.0,
       "moneyness_pct": -0.04,
       "iv": 29.52
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 675.0,
       "moneyness_pct": 0.11,
       "iv": 29.59
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 676.0,
       "moneyness_pct": 0.26,
       "iv": 29.39
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 677.0,
       "moneyness_pct": 0.41,
       "iv": 29.19
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 678.0,
       "moneyness_pct": 0.56,
       "iv": 29.0
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 679.0,
       "moneyness_pct": 0.7,
       "iv": 28.77
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 680.0,
       "moneyness_pct": 0.85,
       "iv": 28.43
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 681.0,
       "moneyness_pct": 1.0,
       "iv": 28.31
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 682.0,
       "moneyness_pct": 1.15,
       "iv": 28.1
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 683.0,
       "moneyness_pct": 1.3,
       "iv": 27.87
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 684.0,
       "moneyness_pct": 1.45,
       "iv": 27.69
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 685.0,
       "moneyness_pct": 1.59,
       "iv": 27.48
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 686.0,
       "moneyness_pct": 1.74,
       "iv": 27.27
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 687.0,
       "moneyness_pct": 1.89,
       "iv": 27.04
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 688.0,
       "moneyness_pct": 2.04,
       "iv": 26.8
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 689.0,
       "moneyness_pct": 2.19,
       "iv": 26.6
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 690.0,
       "moneyness_pct": 2.34,
       "iv": 26.41
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 691.0,
       "moneyness_pct": 2.48,
       "iv": 26.18
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 692.0,
       "moneyness_pct": 2.63,
       "iv": 25.96
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 693.0,
       "moneyness_pct": 2.78,
       "iv": 25.72
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 694.0,
       "moneyness_pct": 2.93,
       "iv": 25.51
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 695.0,
       "moneyness_pct": 3.08,
       "iv": 25.35
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 696.0,
       "moneyness_pct": 3.23,
       "iv": 25.04
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 697.0,
       "moneyness_pct": 3.37,
       "iv": 24.85
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 698.0,
       "moneyness_pct": 3.52,
       "iv": 24.65
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 699.0,
       "moneyness_pct": 3.67,
       "iv": 24.45
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 700.0,
       "moneyness_pct": 3.82,
       "iv": 24.1
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 701.0,
       "moneyness_pct": 3.97,
       "iv": 24.12
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 702.0,
       "moneyness_pct": 4.12,
       "iv": 23.94
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 703.0,
       "moneyness_pct": 4.26,
       "iv": 23.75
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 704.0,
       "moneyness_pct": 4.41,
       "iv": 23.48
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 705.0,
       "moneyness_pct": 4.56,
       "iv": 23.42
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 706.0,
       "moneyness_pct": 4.71,
       "iv": 23.35
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 707.0,
       "moneyness_pct": 4.86,
       "iv": 23.26
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 710.0,
       "moneyness_pct": 5.3,
       "iv": 22.76
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 715.0,
       "moneyness_pct": 6.04,
       "iv": 22.75
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 720.0,
       "moneyness_pct": 6.79,
       "iv": 22.57
     },
     {
       "expiry": "2026-11-19",
-      "dte": 5,
+      "dte": 4,
       "strike": 725.0,
       "moneyness_pct": 7.53,
       "iv": 23.14
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 621.0,
       "moneyness_pct": -7.9,
       "iv": 40.4
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 622.0,
       "moneyness_pct": -7.75,
       "iv": 40.19
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 623.0,
       "moneyness_pct": -7.6,
       "iv": 39.96
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 624.0,
       "moneyness_pct": -7.45,
       "iv": 39.76
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 625.0,
       "moneyness_pct": -7.3,
       "iv": 39.38
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 626.0,
       "moneyness_pct": -7.16,
       "iv": 39.28
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 627.0,
       "moneyness_pct": -7.01,
       "iv": 39.07
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 628.0,
       "moneyness_pct": -6.86,
       "iv": 38.85
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 629.0,
       "moneyness_pct": -6.71,
       "iv": 38.68
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 630.0,
       "moneyness_pct": -6.56,
       "iv": 38.46
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 631.0,
       "moneyness_pct": -6.41,
       "iv": 38.18
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 632.0,
       "moneyness_pct": -6.27,
       "iv": 37.99
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 633.0,
       "moneyness_pct": -6.12,
       "iv": 37.82
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 634.0,
       "moneyness_pct": -5.97,
       "iv": 37.65
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 635.0,
       "moneyness_pct": -5.82,
       "iv": 37.44
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 636.0,
       "moneyness_pct": -5.67,
       "iv": 37.2
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 637.0,
       "moneyness_pct": -5.52,
       "iv": 37.03
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 638.0,
       "moneyness_pct": -5.38,
       "iv": 36.78
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 639.0,
       "moneyness_pct": -5.23,
       "iv": 36.62
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 640.0,
       "moneyness_pct": -5.08,
       "iv": 36.45
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 641.0,
       "moneyness_pct": -4.93,
       "iv": 36.22
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 642.0,
       "moneyness_pct": -4.78,
       "iv": 36.12
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 643.0,
       "moneyness_pct": -4.63,
       "iv": 35.83
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 644.0,
       "moneyness_pct": -4.49,
       "iv": 35.66
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 645.0,
       "moneyness_pct": -4.34,
       "iv": 35.51
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 646.0,
       "moneyness_pct": -4.19,
       "iv": 35.29
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 647.0,
       "moneyness_pct": -4.04,
       "iv": 35.1
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 648.0,
       "moneyness_pct": -3.89,
       "iv": 34.94
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 649.0,
       "moneyness_pct": -3.74,
       "iv": 34.74
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 650.0,
       "moneyness_pct": -3.6,
       "iv": 34.59
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 651.0,
       "moneyness_pct": -3.45,
       "iv": 34.38
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 652.0,
       "moneyness_pct": -3.3,
       "iv": 34.22
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 653.0,
       "moneyness_pct": -3.15,
       "iv": 33.99
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 654.0,
       "moneyness_pct": -3.0,
       "iv": 33.87
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 655.0,
       "moneyness_pct": -2.86,
       "iv": 33.64
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 656.0,
       "moneyness_pct": -2.71,
       "iv": 33.48
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 657.0,
       "moneyness_pct": -2.56,
       "iv": 33.29
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 658.0,
       "moneyness_pct": -2.41,
       "iv": 33.09
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 659.0,
       "moneyness_pct": -2.26,
       "iv": 33.0
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 660.0,
       "moneyness_pct": -2.11,
       "iv": 32.68
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 661.0,
       "moneyness_pct": -1.97,
       "iv": 32.51
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 662.0,
       "moneyness_pct": -1.82,
       "iv": 32.33
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 663.0,
       "moneyness_pct": -1.67,
       "iv": 32.22
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 664.0,
       "moneyness_pct": -1.52,
       "iv": 31.96
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 665.0,
       "moneyness_pct": -1.37,
       "iv": 31.74
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 666.0,
       "moneyness_pct": -1.22,
       "iv": 31.45
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 667.0,
       "moneyness_pct": -1.08,
       "iv": 31.36
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 668.0,
       "moneyness_pct": -0.93,
       "iv": 31.22
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 669.0,
       "moneyness_pct": -0.78,
       "iv": 31.02
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 670.0,
       "moneyness_pct": -0.63,
       "iv": 30.71
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 671.0,
       "moneyness_pct": -0.48,
       "iv": 30.61
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 672.0,
       "moneyness_pct": -0.33,
       "iv": 30.44
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 673.0,
       "moneyness_pct": -0.19,
       "iv": 30.23
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 674.0,
       "moneyness_pct": -0.04,
       "iv": 30.03
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 675.0,
       "moneyness_pct": 0.11,
       "iv": 29.96
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 676.0,
       "moneyness_pct": 0.26,
       "iv": 29.84
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 677.0,
       "moneyness_pct": 0.41,
       "iv": 29.66
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 678.0,
       "moneyness_pct": 0.56,
       "iv": 29.39
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 679.0,
       "moneyness_pct": 0.7,
       "iv": 29.25
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 680.0,
       "moneyness_pct": 0.85,
       "iv": 28.98
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 681.0,
       "moneyness_pct": 1.0,
       "iv": 28.77
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 682.0,
       "moneyness_pct": 1.15,
       "iv": 28.63
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 683.0,
       "moneyness_pct": 1.3,
       "iv": 28.43
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 684.0,
       "moneyness_pct": 1.45,
       "iv": 28.25
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 685.0,
       "moneyness_pct": 1.59,
       "iv": 28.05
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 686.0,
       "moneyness_pct": 1.74,
       "iv": 27.84
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 687.0,
       "moneyness_pct": 1.89,
       "iv": 27.63
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 688.0,
       "moneyness_pct": 2.04,
       "iv": 27.45
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 689.0,
       "moneyness_pct": 2.19,
       "iv": 27.26
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 690.0,
       "moneyness_pct": 2.34,
       "iv": 26.94
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 691.0,
       "moneyness_pct": 2.48,
       "iv": 26.88
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 692.0,
       "moneyness_pct": 2.63,
       "iv": 26.6
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 693.0,
       "moneyness_pct": 2.78,
       "iv": 26.41
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 694.0,
       "moneyness_pct": 2.93,
       "iv": 26.21
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 695.0,
       "moneyness_pct": 3.08,
       "iv": 26.02
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 696.0,
       "moneyness_pct": 3.23,
       "iv": 25.74
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 697.0,
       "moneyness_pct": 3.37,
       "iv": 25.59
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 698.0,
       "moneyness_pct": 3.52,
       "iv": 25.41
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 699.0,
       "moneyness_pct": 3.67,
       "iv": 25.06
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 700.0,
       "moneyness_pct": 3.82,
       "iv": 24.96
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 701.0,
       "moneyness_pct": 3.97,
       "iv": 24.65
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 702.0,
       "moneyness_pct": 4.12,
       "iv": 24.54
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 703.0,
       "moneyness_pct": 4.26,
       "iv": 24.36
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 704.0,
       "moneyness_pct": 4.41,
       "iv": 24.32
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 705.0,
       "moneyness_pct": 4.56,
       "iv": 24.13
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 706.0,
       "moneyness_pct": 4.71,
       "iv": 23.9
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 707.0,
       "moneyness_pct": 4.86,
       "iv": 23.88
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 708.0,
       "moneyness_pct": 5.01,
       "iv": 23.75
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 709.0,
       "moneyness_pct": 5.15,
       "iv": 23.65
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 710.0,
       "moneyness_pct": 5.3,
       "iv": 23.43
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 711.0,
       "moneyness_pct": 5.45,
       "iv": 23.42
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 712.0,
       "moneyness_pct": 5.6,
       "iv": 23.37
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 713.0,
       "moneyness_pct": 5.75,
       "iv": 23.3
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 714.0,
       "moneyness_pct": 5.9,
       "iv": 23.23
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 715.0,
       "moneyness_pct": 6.04,
       "iv": 23.04
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 716.0,
       "moneyness_pct": 6.19,
       "iv": 23.05
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 717.0,
       "moneyness_pct": 6.34,
       "iv": 23.06
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 718.0,
       "moneyness_pct": 6.49,
       "iv": 22.72
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 719.0,
       "moneyness_pct": 6.64,
       "iv": 22.96
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 720.0,
       "moneyness_pct": 6.79,
       "iv": 22.74
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 721.0,
       "moneyness_pct": 6.93,
       "iv": 22.66
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 722.0,
       "moneyness_pct": 7.08,
       "iv": 23.09
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 723.0,
       "moneyness_pct": 7.23,
       "iv": 22.77
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 724.0,
       "moneyness_pct": 7.38,
       "iv": 22.87
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 725.0,
       "moneyness_pct": 7.53,
       "iv": 22.86
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 726.0,
       "moneyness_pct": 7.68,
       "iv": 23.01
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 727.0,
       "moneyness_pct": 7.82,
       "iv": 22.87
     },
     {
       "expiry": "2026-11-20",
-      "dte": 6,
+      "dte": 5,
       "strike": 728.0,
       "moneyness_pct": 7.97,
       "iv": 22.92
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 625.0,
       "moneyness_pct": -7.3,
       "iv": 35.95
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 627.0,
       "moneyness_pct": -7.01,
       "iv": 35.57
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 628.0,
       "moneyness_pct": -6.86,
       "iv": 35.42
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 629.0,
       "moneyness_pct": -6.71,
       "iv": 35.25
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 630.0,
       "moneyness_pct": -6.56,
       "iv": 35.04
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 631.0,
       "moneyness_pct": -6.41,
       "iv": 34.84
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 633.0,
       "moneyness_pct": -6.12,
       "iv": 34.49
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 634.0,
       "moneyness_pct": -5.97,
       "iv": 34.32
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 635.0,
       "moneyness_pct": -5.82,
       "iv": 34.13
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 636.0,
       "moneyness_pct": -5.67,
       "iv": 33.96
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 637.0,
       "moneyness_pct": -5.52,
       "iv": 33.79
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 638.0,
       "moneyness_pct": -5.38,
       "iv": 33.58
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 639.0,
       "moneyness_pct": -5.23,
       "iv": 33.4
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 640.0,
       "moneyness_pct": -5.08,
       "iv": 33.2
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 641.0,
       "moneyness_pct": -4.93,
       "iv": 32.98
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 642.0,
       "moneyness_pct": -4.78,
       "iv": 32.83
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 643.0,
       "moneyness_pct": -4.63,
       "iv": 32.64
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 644.0,
       "moneyness_pct": -4.49,
       "iv": 32.45
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 645.0,
       "moneyness_pct": -4.34,
       "iv": 32.3
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 646.0,
       "moneyness_pct": -4.19,
       "iv": 32.08
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 647.0,
       "moneyness_pct": -4.04,
       "iv": 31.91
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 648.0,
       "moneyness_pct": -3.89,
       "iv": 31.72
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 649.0,
       "moneyness_pct": -3.74,
       "iv": 31.55
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 650.0,
       "moneyness_pct": -3.6,
       "iv": 31.36
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 651.0,
       "moneyness_pct": -3.45,
       "iv": 31.19
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 653.0,
       "moneyness_pct": -3.15,
       "iv": 30.85
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 654.0,
       "moneyness_pct": -3.0,
       "iv": 30.68
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 655.0,
       "moneyness_pct": -2.86,
       "iv": 30.51
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 656.0,
       "moneyness_pct": -2.71,
       "iv": 30.34
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 657.0,
       "moneyness_pct": -2.56,
       "iv": 30.16
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 658.0,
       "moneyness_pct": -2.41,
       "iv": 30.0
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 659.0,
       "moneyness_pct": -2.26,
       "iv": 29.83
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 660.0,
       "moneyness_pct": -2.11,
       "iv": 29.61
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 661.0,
       "moneyness_pct": -1.97,
       "iv": 29.45
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 662.0,
       "moneyness_pct": -1.82,
       "iv": 29.29
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 663.0,
       "moneyness_pct": -1.67,
       "iv": 29.12
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 664.0,
       "moneyness_pct": -1.52,
       "iv": 28.95
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 665.0,
       "moneyness_pct": -1.37,
       "iv": 28.78
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 666.0,
       "moneyness_pct": -1.22,
       "iv": 28.63
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 667.0,
       "moneyness_pct": -1.08,
       "iv": 28.42
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 668.0,
       "moneyness_pct": -0.93,
       "iv": 28.29
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 669.0,
       "moneyness_pct": -0.78,
       "iv": 28.11
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 670.0,
       "moneyness_pct": -0.63,
       "iv": 27.92
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 671.0,
       "moneyness_pct": -0.48,
       "iv": 27.76
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 673.0,
       "moneyness_pct": -0.19,
       "iv": 27.41
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 675.0,
       "moneyness_pct": 0.11,
       "iv": 27.28
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 677.0,
       "moneyness_pct": 0.41,
       "iv": 26.91
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 678.0,
       "moneyness_pct": 0.56,
       "iv": 26.72
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 679.0,
       "moneyness_pct": 0.7,
       "iv": 26.54
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 680.0,
       "moneyness_pct": 0.85,
       "iv": 26.37
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 682.0,
       "moneyness_pct": 1.15,
       "iv": 26.03
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 683.0,
       "moneyness_pct": 1.3,
       "iv": 25.85
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 684.0,
       "moneyness_pct": 1.45,
       "iv": 25.68
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 685.0,
       "moneyness_pct": 1.59,
       "iv": 25.5
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 686.0,
       "moneyness_pct": 1.74,
       "iv": 25.34
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 687.0,
       "moneyness_pct": 1.89,
       "iv": 25.14
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 688.0,
       "moneyness_pct": 2.04,
       "iv": 24.98
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 689.0,
       "moneyness_pct": 2.19,
       "iv": 24.82
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 690.0,
       "moneyness_pct": 2.34,
       "iv": 24.73
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 691.0,
       "moneyness_pct": 2.48,
       "iv": 24.48
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 692.0,
       "moneyness_pct": 2.63,
       "iv": 24.3
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 693.0,
       "moneyness_pct": 2.78,
       "iv": 24.11
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 694.0,
       "moneyness_pct": 2.93,
       "iv": 23.95
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 695.0,
       "moneyness_pct": 3.08,
       "iv": 23.83
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 696.0,
       "moneyness_pct": 3.23,
       "iv": 23.64
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 697.0,
       "moneyness_pct": 3.37,
       "iv": 23.47
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 698.0,
       "moneyness_pct": 3.52,
       "iv": 23.32
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 699.0,
       "moneyness_pct": 3.67,
       "iv": 23.16
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 700.0,
       "moneyness_pct": 3.82,
       "iv": 22.97
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 701.0,
       "moneyness_pct": 3.97,
       "iv": 22.87
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 702.0,
       "moneyness_pct": 4.12,
       "iv": 22.71
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 703.0,
       "moneyness_pct": 4.26,
       "iv": 22.46
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 704.0,
       "moneyness_pct": 4.41,
       "iv": 22.42
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 705.0,
       "moneyness_pct": 4.56,
       "iv": 22.34
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 706.0,
       "moneyness_pct": 4.71,
       "iv": 22.15
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 707.0,
       "moneyness_pct": 4.86,
       "iv": 22.02
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 710.0,
       "moneyness_pct": 5.3,
       "iv": 21.76
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 711.0,
       "moneyness_pct": 5.45,
       "iv": 21.58
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 712.0,
       "moneyness_pct": 5.6,
       "iv": 21.55
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 713.0,
       "moneyness_pct": 5.75,
       "iv": 21.47
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 714.0,
       "moneyness_pct": 5.9,
       "iv": 21.41
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 715.0,
       "moneyness_pct": 6.04,
       "iv": 21.34
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 716.0,
       "moneyness_pct": 6.19,
       "iv": 21.22
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 717.0,
       "moneyness_pct": 6.34,
       "iv": 21.16
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 718.0,
       "moneyness_pct": 6.49,
       "iv": 21.15
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 719.0,
       "moneyness_pct": 6.64,
       "iv": 21.09
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 720.0,
       "moneyness_pct": 6.79,
       "iv": 21.04
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 721.0,
       "moneyness_pct": 6.93,
       "iv": 21.06
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 722.0,
       "moneyness_pct": 7.08,
       "iv": 20.98
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 723.0,
       "moneyness_pct": 7.23,
       "iv": 21.02
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 724.0,
       "moneyness_pct": 7.38,
       "iv": 20.97
     },
     {
       "expiry": "2026-11-23",
-      "dte": 9,
+      "dte": 8,
       "strike": 725.0,
       "moneyness_pct": 7.53,
       "iv": 21.04
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 625.0,
       "moneyness_pct": -7.3,
       "iv": 36.24
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 627.0,
       "moneyness_pct": -7.01,
       "iv": 35.89
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 630.0,
       "moneyness_pct": -6.56,
       "iv": 35.24
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 631.0,
       "moneyness_pct": -6.41,
       "iv": 35.09
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 634.0,
       "moneyness_pct": -5.97,
       "iv": 34.53
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 635.0,
       "moneyness_pct": -5.82,
       "iv": 34.35
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 636.0,
       "moneyness_pct": -5.67,
       "iv": 34.14
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 638.0,
       "moneyness_pct": -5.38,
       "iv": 33.76
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 640.0,
       "moneyness_pct": -5.08,
       "iv": 33.43
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 641.0,
       "moneyness_pct": -4.93,
       "iv": 33.23
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 642.0,
       "moneyness_pct": -4.78,
       "iv": 33.03
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 643.0,
       "moneyness_pct": -4.63,
       "iv": 32.84
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 644.0,
       "moneyness_pct": -4.49,
       "iv": 32.7
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 645.0,
       "moneyness_pct": -4.34,
       "iv": 32.5
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 646.0,
       "moneyness_pct": -4.19,
       "iv": 32.35
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 648.0,
       "moneyness_pct": -3.89,
       "iv": 31.98
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 649.0,
       "moneyness_pct": -3.74,
       "iv": 31.81
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 650.0,
       "moneyness_pct": -3.6,
       "iv": 31.6
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 654.0,
       "moneyness_pct": -3.0,
       "iv": 30.97
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 655.0,
       "moneyness_pct": -2.86,
       "iv": 30.79
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 656.0,
       "moneyness_pct": -2.71,
       "iv": 30.62
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 658.0,
       "moneyness_pct": -2.41,
       "iv": 30.28
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 659.0,
       "moneyness_pct": -2.26,
       "iv": 30.1
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 660.0,
       "moneyness_pct": -2.11,
       "iv": 29.91
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 661.0,
       "moneyness_pct": -1.97,
       "iv": 29.73
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 662.0,
       "moneyness_pct": -1.82,
       "iv": 29.56
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 663.0,
       "moneyness_pct": -1.67,
       "iv": 29.38
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 664.0,
       "moneyness_pct": -1.52,
       "iv": 29.2
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 665.0,
       "moneyness_pct": -1.37,
       "iv": 29.04
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 666.0,
       "moneyness_pct": -1.22,
       "iv": 28.88
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 667.0,
       "moneyness_pct": -1.08,
       "iv": 28.7
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 668.0,
       "moneyness_pct": -0.93,
       "iv": 28.52
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 670.0,
       "moneyness_pct": -0.63,
       "iv": 28.21
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 671.0,
       "moneyness_pct": -0.48,
       "iv": 28.0
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 672.0,
       "moneyness_pct": -0.33,
       "iv": 27.85
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 673.0,
       "moneyness_pct": -0.19,
       "iv": 27.68
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 674.0,
       "moneyness_pct": -0.04,
       "iv": 27.49
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 675.0,
       "moneyness_pct": 0.11,
       "iv": 27.51
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 676.0,
       "moneyness_pct": 0.26,
       "iv": 27.35
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 680.0,
       "moneyness_pct": 0.85,
       "iv": 26.62
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 681.0,
       "moneyness_pct": 1.0,
       "iv": 26.47
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 685.0,
       "moneyness_pct": 1.59,
       "iv": 25.78
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 686.0,
       "moneyness_pct": 1.74,
       "iv": 25.63
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 687.0,
       "moneyness_pct": 1.89,
       "iv": 25.46
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 688.0,
       "moneyness_pct": 2.04,
       "iv": 25.29
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 689.0,
       "moneyness_pct": 2.19,
       "iv": 25.12
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 690.0,
       "moneyness_pct": 2.34,
       "iv": 24.97
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 692.0,
       "moneyness_pct": 2.63,
       "iv": 24.61
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 693.0,
       "moneyness_pct": 2.78,
       "iv": 24.45
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 694.0,
       "moneyness_pct": 2.93,
       "iv": 24.29
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 695.0,
       "moneyness_pct": 3.08,
       "iv": 24.17
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 696.0,
       "moneyness_pct": 3.23,
       "iv": 23.98
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 697.0,
       "moneyness_pct": 3.37,
       "iv": 23.82
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 699.0,
       "moneyness_pct": 3.67,
       "iv": 23.53
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 700.0,
       "moneyness_pct": 3.82,
       "iv": 23.4
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 701.0,
       "moneyness_pct": 3.97,
       "iv": 23.24
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 703.0,
       "moneyness_pct": 4.26,
       "iv": 22.97
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 705.0,
       "moneyness_pct": 4.56,
       "iv": 22.75
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 706.0,
       "moneyness_pct": 4.71,
       "iv": 22.56
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 707.0,
       "moneyness_pct": 4.86,
       "iv": 22.44
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 710.0,
       "moneyness_pct": 5.3,
       "iv": 22.14
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 715.0,
       "moneyness_pct": 6.04,
       "iv": 21.68
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 716.0,
       "moneyness_pct": 6.19,
       "iv": 21.58
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 718.0,
       "moneyness_pct": 6.49,
       "iv": 21.48
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 719.0,
       "moneyness_pct": 6.64,
       "iv": 21.41
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 720.0,
       "moneyness_pct": 6.79,
       "iv": 21.41
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 721.0,
       "moneyness_pct": 6.93,
       "iv": 21.33
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 723.0,
       "moneyness_pct": 7.23,
       "iv": 21.27
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 724.0,
       "moneyness_pct": 7.38,
       "iv": 21.25
     },
     {
       "expiry": "2026-11-24",
-      "dte": 10,
+      "dte": 9,
       "strike": 725.0,
       "moneyness_pct": 7.53,
       "iv": 21.26
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 625.0,
       "moneyness_pct": -7.3,
       "iv": 36.64
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 629.0,
       "moneyness_pct": -6.71,
       "iv": 35.8
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 630.0,
       "moneyness_pct": -6.56,
       "iv": 35.64
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 631.0,
       "moneyness_pct": -6.41,
       "iv": 35.46
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 634.0,
       "moneyness_pct": -5.97,
       "iv": 34.88
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 635.0,
       "moneyness_pct": -5.82,
       "iv": 34.66
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 640.0,
       "moneyness_pct": -5.08,
       "iv": 33.71
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 644.0,
       "moneyness_pct": -4.49,
       "iv": 33.01
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 645.0,
       "moneyness_pct": -4.34,
       "iv": 32.78
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 646.0,
       "moneyness_pct": -4.19,
       "iv": 32.64
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 650.0,
       "moneyness_pct": -3.6,
       "iv": 31.92
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 655.0,
       "moneyness_pct": -2.86,
       "iv": 31.03
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 660.0,
       "moneyness_pct": -2.11,
       "iv": 30.17
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 665.0,
       "moneyness_pct": -1.37,
       "iv": 29.27
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 670.0,
       "moneyness_pct": -0.63,
       "iv": 28.42
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 685.0,
       "moneyness_pct": 1.59,
       "iv": 26.04
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 690.0,
       "moneyness_pct": 2.34,
       "iv": 25.28
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 695.0,
       "moneyness_pct": 3.08,
       "iv": 24.49
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 698.0,
       "moneyness_pct": 3.52,
       "iv": 24.04
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 699.0,
       "moneyness_pct": 3.67,
       "iv": 23.87
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 700.0,
       "moneyness_pct": 3.82,
       "iv": 23.81
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 701.0,
       "moneyness_pct": 3.97,
       "iv": 23.61
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 703.0,
       "moneyness_pct": 4.26,
       "iv": 23.36
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 705.0,
       "moneyness_pct": 4.56,
       "iv": 23.11
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 708.0,
       "moneyness_pct": 5.01,
       "iv": 22.76
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 709.0,
       "moneyness_pct": 5.15,
       "iv": 22.68
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 710.0,
       "moneyness_pct": 5.3,
       "iv": 22.61
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 713.0,
       "moneyness_pct": 5.75,
       "iv": 22.32
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 715.0,
       "moneyness_pct": 6.04,
       "iv": 22.14
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 720.0,
       "moneyness_pct": 6.79,
       "iv": 21.84
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 723.0,
       "moneyness_pct": 7.23,
       "iv": 21.52
     },
     {
       "expiry": "2026-11-25",
-      "dte": 11,
+      "dte": 10,
       "strike": 725.0,
       "moneyness_pct": 7.53,
       "iv": 21.6
