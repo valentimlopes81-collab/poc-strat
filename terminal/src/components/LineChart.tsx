@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
-import { createChart, LineStyle, type IChartApi, type ISeriesApi, type UTCTimestamp } from 'lightweight-charts'
+import { createChart, LineStyle, TickMarkType, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp } from 'lightweight-charts'
 import { usePanelFullscreen } from '../lib/panelFullscreen'
+import { fmtLocalDay, fmtLocalFull, fmtLocalMonth, fmtLocalTime } from '../lib/time'
 
 export interface LineSeries {
   label: string
@@ -23,11 +24,14 @@ export function LineChart({
   refLines = [],
   height = 180,
   format = (v) => v.toFixed(2),
+  intraday = false,
 }: {
   series: LineSeries[]
   refLines?: RefLine[]
   height?: number
   format?: (v: number) => string
+  /** points carry a time of day (shown in local time), not just a date */
+  intraday?: boolean
 }) {
   const isFull = usePanelFullscreen()
   const ref = useRef<HTMLDivElement>(null)
@@ -41,7 +45,21 @@ export function LineChart({
       layout: { background: { color: '#0a0a0a' }, textColor: '#7a7a7a', fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: 10, attributionLogo: false },
       grid: { vertLines: { color: '#141414' }, horzLines: { color: '#1a1a1a' } },
       rightPriceScale: { borderColor: '#242424' },
-      timeScale: { borderColor: '#242424', timeVisible: false },
+      localization: intraday ? { timeFormatter: (t: Time) => fmtLocalFull(Number(t)) } : {},
+      timeScale: {
+        borderColor: '#242424',
+        timeVisible: intraday,
+        secondsVisible: false,
+        ...(intraday && {
+          tickMarkFormatter: (t: Time, type: TickMarkType) => {
+            const e = Number(t)
+            if (type === TickMarkType.Year) return String(new Date(e * 1000).getFullYear())
+            if (type === TickMarkType.Month) return fmtLocalMonth(e)
+            if (type === TickMarkType.DayOfMonth) return fmtLocalDay(e)
+            return fmtLocalTime(e)
+          },
+        }),
+      },
       crosshair: {
         vertLine: { color: '#7a7a7a', width: 1, style: LineStyle.Solid, labelBackgroundColor: '#3a3a3a' },
         horzLine: { color: '#7a7a7a', width: 1, style: LineStyle.Solid, labelBackgroundColor: '#3a3a3a' },

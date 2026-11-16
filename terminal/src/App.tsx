@@ -4,6 +4,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { LiveStatus } from './components/LiveStatus'
 import { NextEvent } from './components/NextEvent'
 import { TickerTape } from './components/TickerTape'
+import { useLevelHistory, type HistoryRow } from './lib/history'
 import { useJson } from './lib/useJson'
 import { useLive } from './lib/useLive'
 import { oneOf, usePersistentState } from './lib/usePersistentState'
@@ -35,6 +36,8 @@ export default function App() {
   const econ = macro.data?.calendar ?? econStatic.data
   const alerts = useJson<AlertRow[]>('/data/alerts.json')
   const trades = useJson<TradeRow[]>('/data/trades.json')
+  const savedHistory = useJson<{ rows: HistoryRow[] }>('/data/history/levels.json')
+  const history = useLevelHistory(savedHistory.data?.rows ?? null, nq.source === 'live' ? nq.data : null, btc.source === 'live' ? btc.data : null)
 
   return (
     <div className="min-h-screen bg-term-bg text-term-text font-mono text-[13px] p-3 md:p-4 max-w-[1400px] mx-auto">
@@ -71,7 +74,7 @@ export default function App() {
       <ErrorBoundary label={TABS.find((t) => t.id === tab)?.label ?? ''} key={tab}>
         <Suspense fallback={<div className="text-[11px] text-term-muted py-6">A carregar…</div>}>
           {tab === 'hoje' && <HojeTab nq={nq} btc={btc} narrative={narrative.data} alerts={alerts.data} econ={econ} trades={trades.data} />}
-          {tab === 'quant' && <QuantTab cot={cot} cotHistory={macro.data?.cot?.history ?? null} econ={econ} />}
+          {tab === 'quant' && <QuantTab cot={cot} cotHistory={macro.data?.cot?.history ?? null} econ={econ} history={history} />}
           {tab === 'perf' && <PerfTab trades={trades.data} />}
         </Suspense>
       </ErrorBoundary>

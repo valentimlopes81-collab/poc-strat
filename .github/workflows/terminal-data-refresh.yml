@@ -2,10 +2,13 @@ name: Refresh terminal data
 
 on:
   schedule:
-    # a cada 15 min, dias de semana (UTC) -- cobre pre-market/mercado/after-hours
-    - cron: "*/15 * * * 1-5"
+    # O site calcula tudo ao vivo (terminal/api); este job so guarda o snapshot
+    # de recurso e acrescenta ao historico. De 15 em 15 min nos dias de semana,
+    # fora dos minutos redondos: o GitHub atrasa/descarta agendamentos em :00,
+    # :15, :30 e :45, que e quando toda a gente agenda.
+    - cron: "7,22,37,52 * * * 1-5"
     # a cada hora ao fim de semana (so BTC/Deribit tem dados relevantes)
-    - cron: "0 * * * 0,6"
+    - cron: "17 * * * 0,6"
   workflow_dispatch: {}
 
 permissions:

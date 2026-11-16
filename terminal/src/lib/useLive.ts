@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { fetchData } from './dataSource'
 
 export interface LiveState<T> {
   data: T | null
@@ -56,7 +57,7 @@ export function useLive<T>(url: string | null, { fallback, intervalMs = 60_000 }
         if (!hasLive && fallback && !triedFallback) {
           triedFallback = true
           try {
-            const data = await getJson<T>(fallback)
+            const data = await fetchData<T>(fallback)
             if (!cancelled && !hasLive) setState({ url, data, source: 'snapshot', fetchedAt: Date.now(), error })
             return
           } catch {

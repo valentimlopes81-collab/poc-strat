@@ -6,18 +6,25 @@ const W = 600
 const H = 180
 const PAD = { top: 10, right: 10, bottom: 20, left: 34 }
 
-export function IvSkew({ data }: { data: IvSkewData }) {
+export interface SkewReference {
+  label: string
+  /** [moneyness %, iv %] */
+  points: Array<[number, number]>
+}
+
+export function IvSkew({ data, previous }: { data: IvSkewData; previous?: SkewReference | null }) {
   const isFull = usePanelFullscreen()
-  const { calls, puts, xMin, xMax, yMin, yMax } = useMemo(() => {
+  const { calls, puts, prev, xMin, xMax, yMin, yMax } = useMemo(() => {
     const calls = data.rows.filter((r) => r.cp === 'C').sort((a, b) => a.moneyness_pct - b.moneyness_pct)
     const puts = data.rows.filter((r) => r.cp === 'P').sort((a, b) => a.moneyness_pct - b.moneyness_pct)
     const all = data.rows
     const xMin = Math.min(...all.map((r) => r.moneyness_pct), 0)
     const xMax = Math.max(...all.map((r) => r.moneyness_pct), 0)
-    const yMin = Math.min(...all.map((r) => r.iv))
-    const yMax = Math.max(...all.map((r) => r.iv))
-    return { calls, puts, xMin, xMax, yMin, yMax }
-  }, [data])
+    // the reference is clipped to today's strike range so it cannot stretch the axes
+    const prev = (previous?.points ?? []).filter(([m]) => m >= xMin && m <= xMax).sort((a, b) => a[0] - b[0])
+    const ivs = [...all.map((r) => r.iv), ...prev.map((p) => p[1])]
+    return { calls, puts, prev, xMin, xMax, yMin: Math.min(...ivs), yMax: Math.max(...ivs) }
+  }, [data, previous])
 
   if (!data.rows.length) return null
 
@@ -36,6 +43,9 @@ export function IvSkew({ data }: { data: IvSkewData }) {
             {y.toFixed(0)}%
           </text>
         ))}
+        {prev.length > 1 && (
+          <path d={prev.map(([m, iv], i) => `${i === 0 ? 'M' : 'L'} ${xScale(m)} ${yScale(iv)}`).join(' ')} fill="none" stroke="#7a7a7a" strokeWidth={1.5} strokeDasharray="4,3" />
+        )}
         <path d={pathFor(puts)} fill="none" stroke="#ff3b30" strokeWidth={1.5} />
         <path d={pathFor(calls)} fill="none" stroke="#00d964" strokeWidth={1.5} />
         {puts.map((r, i) => (
@@ -48,6 +58,12 @@ export function IvSkew({ data }: { data: IvSkewData }) {
       <div className="flex items-center gap-4 text-[10px] text-term-muted mt-1">
         <span><span className="inline-block w-2 h-2 bg-term-green mr-1" />Calls</span>
         <span><span className="inline-block w-2 h-2 bg-term-red mr-1" />Puts</span>
+        {prev.length > 1 && previous && (
+          <span>
+            <span className="inline-block w-3 border-t border-dashed border-term-muted align-middle mr-1" />
+            {previous.label}
+          </span>
+        )}
         <span className="ml-auto">expiração {data.expiry.slice(5)} · eixo-x: % distância do spot</span>
       </div>
       <p className="mt-1 text-[10px] text-term-muted">

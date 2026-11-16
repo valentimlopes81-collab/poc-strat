@@ -7,11 +7,13 @@ import { FomcList } from '../components/FomcList'
 import { GammaByExpiry } from '../components/GammaByExpiry'
 import { GexHeatmap } from '../components/GexHeatmap'
 import { IvSkew } from '../components/IvSkew'
+import { LevelHistory } from '../components/LevelHistory'
 import { IvSurface3D } from '../components/IvSurface3D'
 import { IvTermStructure } from '../components/IvTermStructure'
 import { LineChart, SERIES_COLORS } from '../components/LineChart'
 import { Panel, PanelGrid, StatRow } from '../components/Panel'
 import { ScorecardTable } from '../components/ScorecardTable'
+import type { HistoryRow, VolDay } from '../lib/history'
 import { fmtInt } from '../lib/levels'
 import { useJson } from '../lib/useJson'
 import { useLive } from '../lib/useLive'
@@ -23,7 +25,37 @@ type CotHistory = NonNullable<MacroData['cot']>['history']
 const ZERO = [{ value: 0, label: 'neutro' }]
 const fmtContracts = (v: number) => `${v >= 0 ? '+' : ''}${Math.round(v / 1000)}K`
 
-export default function QuantTab({ cot, cotHistory, econ }: { cot: CotRow[] | null; cotHistory: CotHistory | null; econ: EconEvent[] | null }) {
+// The most recent saved day that is not the day of the live data.
+function previousVolDay(days: Record<string, VolDay> | undefined, liveAsOf: string | undefined) {
+  if (!days || !liveAsOf) return null
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date(liveAsOf))
+  const key = Object.keys(days)
+    .sort()
+    .filter((d) => d < today)
+    .at(-1)
+  if (!key) return null
+  const day = days[key]
+  const label = `${key.slice(8)}/${key.slice(5, 7)}`
+  const byExpiry = new Map<string, number>()
+  for (const [dte, iv] of day.term) {
+    const expiry = new Date(Date.parse(`${key}T00:00:00Z`) + dte * 86_400_000).toISOString().slice(0, 10)
+    byExpiry.set(expiry, iv)
+  }
+  return { label, byExpiry, skew: { label: `${label} (mesma maturidade)`, points: day.skew } }
+}
+
+export default function QuantTab({
+  cot,
+  cotHistory,
+  econ,
+  history,
+}: {
+  cot: CotRow[] | null
+  cotHistory: CotHistory | null
+  econ: EconEvent[] | null
+  history: HistoryRow[]
+}) {
+  const volHistory = useJson<{ days: Record<string, VolDay> }>('/data/history/vol.json')
   const cotSeries = useMemo(
     () =>
       cotHistory
@@ -43,6 +75,7 @@ export default function QuantTab({ cot, cotHistory, econ }: { cot: CotRow[] | nu
   const nv = nqVol.data
   const bv = btcVol.data
   const x = cross.data
+  const prevVol = useMemo(() => previousVolDay(volHistory.data?.days, nv?.as_of_utc), [volHistory.data, nv?.as_of_utc])
 
   return (
     <>
@@ -94,6 +127,12 @@ export default function QuantTab({ cot, cotHistory, econ }: { cot: CotRow[] | nu
         </PanelGrid>
       )}
 
+      <PanelGrid>
+        <Panel title="Histórico de GEX e níveis" src="hora local">
+          <LevelHistory rows={history} />
+        </Panel>
+      </PanelGrid>
+
       {(nv || bv) && (
         <PanelGrid cols={2}>
           {nv && (
@@ -122,12 +161,12 @@ export default function QuantTab({ cot, cotHistory, econ }: { cot: CotRow[] | nu
       <PanelGrid cols={3}>
         {nv && (
           <Panel title="NQ · IV Term Structure" src="QQQ · ATM por expiração">
-            <IvTermStructure data={nv.iv_term} />
+            <IvTermStructure data={nv.iv_term} previous={prevVol} />
           </Panel>
         )}
         {nv?.iv_skew.expiry && (
           <Panel title="NQ · IV Skew" src={`QQQ · exp. ${nv.iv_skew.expiry.slice(5)}`}>
-            <IvSkew data={{ ...nv.iv_skew, expiry: nv.iv_skew.expiry }} />
+            <IvSkew data={{ ...nv.iv_skew, expiry: nv.iv_skew.expiry }} previous={prevVol?.skew} />
           </Panel>
         )}
         {x && (

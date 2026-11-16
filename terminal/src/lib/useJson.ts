@@ -1,28 +1,35 @@
 import { useEffect, useState } from 'react'
+import { fetchData } from './dataSource'
 
 type State<T> =
   | { status: 'loading'; data: null }
   | { status: 'ok'; data: T }
   | { status: 'error'; data: null; message: string }
 
+const REFRESH_MS = 5 * 60_000
+
+/** Loads a repo data file and re-reads it every few minutes while the tab is visible. */
 export function useJson<T>(path: string): State<T> {
   const [state, setState] = useState<State<T>>({ status: 'loading', data: null })
 
   useEffect(() => {
     let cancelled = false
-    fetch(path)
-      .then((res) => {
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
-        return res.json()
-      })
-      .then((data) => {
-        if (!cancelled) setState({ status: 'ok', data })
-      })
-      .catch((err) => {
-        if (!cancelled) setState({ status: 'error', data: null, message: String(err) })
-      })
+    const load = (initial: boolean) =>
+      fetchData<T>(path)
+        .then((data) => {
+          if (!cancelled) setState({ status: 'ok', data })
+        })
+        .catch((err) => {
+          // a failed refresh keeps what is already on screen
+          if (!cancelled && initial) setState({ status: 'error', data: null, message: String(err) })
+        })
+    load(true)
+    const timer = setInterval(() => {
+      if (!document.hidden) load(false)
+    }, REFRESH_MS)
     return () => {
       cancelled = true
+      clearInterval(timer)
     }
   }, [path])
 
