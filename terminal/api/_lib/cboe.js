@@ -9,18 +9,20 @@ export const fetchIntraday = (symbol) => getJson(`${BASE}/charts/intraday/${symb
 
 const OCC = /^([A-Z]+)(\d{2})(\d{2})(\d{2})([CP])(\d{8})$/
 
-// Cboe's delayed chain -> flat rows. Keeps every contract with a usable IV
-// that has not expired; callers filter further (OI, DTE window) as needed.
+// Cboe's delayed chain -> flat rows of every contract that has not expired.
+// `rows` is the subset with a usable IV (what any greek needs); `contracts`
+// is all of them, for measures that only depend on OI/volume: the vendor
+// reports IV 0 on deep in-the-money contracts near expiry, and dropping
+// those would shift max pain and put/call ratios from one minute to the next.
 export function parseChain(json, nowMs = Date.now()) {
   const data = json?.data ?? {}
   const today = nyDateStr(nowMs)
   const closeCache = new Map()
-  const rows = []
+  const contracts = []
   for (const o of data.options ?? []) {
     const m = OCC.exec(o.option ?? '')
     if (!m) continue
-    const iv = o.iv
-    if (!(iv > 0)) continue
+    const iv = o.iv ?? 0
     const expiry = `20${m[2]}-${m[3]}-${m[4]}`
     let closeMs = closeCache.get(expiry)
     if (closeMs === undefined) {
@@ -31,7 +33,7 @@ export function parseChain(json, nowMs = Date.now()) {
     if (T <= 0) continue
     const bid = o.bid ?? 0
     const ask = o.ask ?? 0
-    rows.push({
+    contracts.push({
       strike: Number(m[6]) / 1000,
       T,
       iv,
@@ -45,7 +47,8 @@ export function parseChain(json, nowMs = Date.now()) {
     })
   }
   return {
-    rows,
+    contracts,
+    rows: contracts.filter((r) => r.iv > 0),
     spot: data.current_price ?? data.close ?? null,
     prevClose: data.prev_day_close ?? null,
     open: data.open ?? null,

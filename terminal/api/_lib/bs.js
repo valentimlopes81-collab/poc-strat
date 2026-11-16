@@ -12,12 +12,40 @@ export function normPdf(x) {
   return Math.exp(-0.5 * x * x) / SQRT_2PI
 }
 
-// Abramowitz-Stegun 7.1.26, |error| < 1.5e-7
+// Cumulative normal, double precision (G. West, "Better approximations to
+// cumulative normal functions", 2005). A cheaper approximation is not enough
+// here: its 1e-7 error shows up when prices are differenced to check greeks.
 export function normCdf(x) {
-  const t = 1 / (1 + 0.3275911 * Math.abs(x) / Math.SQRT2)
-  const poly = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))))
-  const erf = 1 - poly * Math.exp(-(x * x) / 2)
-  return x >= 0 ? 0.5 * (1 + erf) : 0.5 * (1 - erf)
+  const ax = Math.abs(x)
+  let c = 0
+  if (ax <= 37) {
+    const e = Math.exp((-ax * ax) / 2)
+    if (ax < 7.07106781186547) {
+      let b = 3.52624965998911e-2 * ax + 0.700383064443688
+      b = b * ax + 6.37396220353165
+      b = b * ax + 33.912866078383
+      b = b * ax + 112.079291497871
+      b = b * ax + 221.213596169931
+      b = b * ax + 220.206867912376
+      c = e * b
+      b = 8.83883476483184e-2 * ax + 1.75566716318264
+      b = b * ax + 16.064177579207
+      b = b * ax + 86.7807322029461
+      b = b * ax + 296.564248779674
+      b = b * ax + 637.333633378831
+      b = b * ax + 793.826512519948
+      b = b * ax + 440.413735824752
+      c /= b
+    } else {
+      let b = ax + 0.65
+      b = ax + 4 / b
+      b = ax + 3 / b
+      b = ax + 2 / b
+      b = ax + 1 / b
+      c = e / b / 2.506628274631
+    }
+  }
+  return x > 0 ? 1 - c : c
 }
 
 function d1d2(S, K, T, sigma, r) {

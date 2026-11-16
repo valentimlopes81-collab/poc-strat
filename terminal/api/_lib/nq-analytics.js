@@ -175,6 +175,7 @@ export function buildCore(chain, { nqCandles = null, nqLast = null, vix = null, 
   const spot = spotLive ?? spotDelayed
 
   const rows = exposureRows(chain.rows)
+  const all = chain.contracts ?? chain.rows
   const toNq = (qqq) => (ratio && qqq != null ? Math.round(qqq * ratio) : null)
   const ref = (qqq) => (qqq == null ? null : `${qqq.toFixed(1)} QQQ${ratio ? ` (~${Math.round(qqq * ratio).toLocaleString('en-US')} NQ)` : ''}`)
 
@@ -194,7 +195,7 @@ export function buildCore(chain, { nqCandles = null, nqLast = null, vix = null, 
     const agg = gexByStrike(zd.rows, spot, QQQ_MULT)
     const w = walls(agg)
     const wall = topStrikes(agg, 1)[0] ?? null
-    const vol = putCallRatio(zd.rows, 'volume')
+    const vol = putCallRatio(all.filter((r) => r.expiry === zd.expiry), 'volume')
     zeroDte = {
       expiry: zd.expiry,
       gex_total_b: round(totalGex(zd.rows, spot, QQQ_MULT) / 1e9, 3),
@@ -210,9 +211,10 @@ export function buildCore(chain, { nqCandles = null, nqLast = null, vix = null, 
   }
 
   const byExpiry = groupByExpiry(chain.rows)
-  const nearestExpiryRows = byExpiry[0]?.[1] ?? []
-  const pcrOi = putCallRatio(nearestExpiryRows, 'oi')
-  const pcrVol = putCallRatio(chain.rows, 'volume')
+  const nearestExpiry = groupByExpiry(all)[0]
+  const nearestExpiryAll = (nearestExpiry?.[1] ?? []).filter((r) => r.oi > 0)
+  const pcrOi = putCallRatio(nearestExpiryAll, 'oi')
+  const pcrVol = putCallRatio(all, 'volume')
 
   const level = {
     asset: 'NQ',
@@ -263,13 +265,13 @@ export function buildCore(chain, { nqCandles = null, nqLast = null, vix = null, 
     zero_gammas_qqq: flips.map((f) => round(f, 1)),
     zero_dte: zeroDte,
     expected_moves: expectedMoves(byExpiry, spot),
-    max_pain_qqq: maxPain(nearestExpiryRows.filter((r) => r.oi > 0)),
-    max_pain_expiry: byExpiry[0]?.[0] ?? null,
+    max_pain_qqq: maxPain(nearestExpiryAll),
+    max_pain_expiry: nearestExpiry?.[0] ?? null,
     pcr_oi: round(pcrOi.ratio, 2),
     pcr_volume: round(pcrVol.ratio, 2),
     volume_total: { calls: pcrVol.calls, puts: pcrVol.puts },
-    premium_traded: premiumTraded(chain.rows),
-    volume_strikes: volumeByStrike(chain.rows, spot),
+    premium_traded: premiumTraded(all),
+    volume_strikes: volumeByStrike(all, spot),
   }
 }
 

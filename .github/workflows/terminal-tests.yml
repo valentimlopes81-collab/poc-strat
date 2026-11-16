@@ -1,0 +1,27 @@
+name: Terminal tests
+
+on:
+  push:
+    paths:
+      - "terminal/**"
+      - ".github/workflows/terminal-tests.yml"
+
+jobs:
+  test:
+    # the data-refresh job commits snapshots many times a day; those need no test run
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: terminal
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: terminal/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
