@@ -10,7 +10,8 @@ import json
 import subprocess
 import sys
 
-from gex_common import total_gex_at_spot, find_zero_gamma, strikes_by_abs_gex, call_put_walls
+from gex_common import (call_put_walls, charm_flow, expiry_close_utc, find_zero_gamma, strikes_by_abs_gex,
+                        total_gex_at_spot, vanna_flow)
 from openbb_data import fetch_qqq_chain_df
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -53,8 +54,7 @@ def build_rows(max_days=21):
         iv, oi = r.implied_volatility, r.open_interest
         if not iv or iv <= 0.01 or not oi or oi <= 0:
             continue
-        expiry_dt = datetime.datetime.combine(r.expiration, datetime.time(21, 0))
-        T = (expiry_dt - now).total_seconds() / (365.25 * 24 * 3600)
+        T = (expiry_close_utc(r.expiration) - now).total_seconds() / (365.25 * 24 * 3600)
         if T <= 0:
             continue
         row = {"strike": float(r.strike), "T": T, "iv": float(iv), "oi": float(oi),
@@ -105,6 +105,14 @@ def main():
         print(f"Ponto de zero-gamma mais proximo: {fmt_level(nearest)} ({direction} do spot)")
     else:
         print("Sem cruzamento de zero-gamma na janela testada (+/-30%).")
+
+    # sem os contratos que expiram dentro de 24h: "por dia que passa" nao se
+    # aplica a eles, e o charm deles troca de sinal a cada strike que o spot cruza
+    flow_rows = [r for r in rows if r["T"] > 1 / 365.25]
+    vf, cf = vanna_flow(flow_rows, qqq_spot, MULTIPLIER), charm_flow(flow_rows, qqq_spot, MULTIPLIER)
+    lado = lambda v: "compra" if v >= 0 else "venda"
+    print(f"Vanna ex-0DTE (hedge dos dealers se a IV cair 1pt): {vf / 1e9:+.2f}B ({lado(vf)})")
+    print(f"Charm ex-0DTE (hedge dos dealers por dia que passa): {cf / 1e9:+.2f}B ({lado(cf)})")
 
     print("\nStrikes com maior |GEX| (paredes de gamma mais fortes, todas as expiracoes <=21d):")
     for strike, val in strikes_by_abs_gex(rows, qqq_spot):

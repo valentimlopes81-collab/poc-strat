@@ -10,7 +10,7 @@ import datetime
 import json
 from collections import defaultdict
 
-from gex_common import bs_gamma
+from gex_common import bs_gamma, expiry_close_utc
 from openbb_data import fetch_qqq_chain_df
 import btc_gex
 
@@ -32,8 +32,7 @@ def export_nq(max_expiries=6, pct_band=0.07):
         iv, oi = r.implied_volatility, r.open_interest
         if not iv or iv <= 0.01 or not oi or oi <= 0:
             continue
-        expiry_dt = datetime.datetime.combine(r.expiration, datetime.time(21, 0))
-        T = (expiry_dt - now).total_seconds() / (365.25 * 24 * 3600)
+        T = (expiry_close_utc(r.expiration) - now).total_seconds() / (365.25 * 24 * 3600)
         if T <= 0:
             continue
         g = bs_gamma(spot, r.strike, T, iv)

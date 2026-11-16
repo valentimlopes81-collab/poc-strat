@@ -82,6 +82,12 @@ describe('buildCore', () => {
     expect(week).toMatchObject({ expiry: '2026-11-20', straddle: 19 })
     expect(week.upper - week.lower).toBeCloseTo(2 * week.sigma_move, 1)
   })
+  it('leaves contracts expiring within the day out of vanna and charm', () => {
+    const onlyToday = buildCore(chainOf(book.filter((c) => c.expiry === '2026-11-16')), { nowMs: NOW })
+    expect(onlyToday.flows).toEqual({ vanna_per_volpt_b: 0, charm_per_day_b: 0 })
+    expect(onlyToday.vanna_strikes).toEqual([])
+    expect(core.vanna_strikes.map((s) => s.strike)).toEqual([650, 665, 680])
+  })
   it('carries VIX through with its reading', () => {
     expect(core.level.vix).toBe(21.6)
     expect(core.level.vix_reading).toBe(vixReading(21.6))

@@ -58,6 +58,12 @@ export function alignedRatio(qqqSpot, quoteTimeMs, nqCandles) {
   return ratio > 30 && ratio < 55 ? ratio : null
 }
 
+// Vanna and charm are read as "what dealers must trade as a day passes / as
+// vol moves". For a contract that expires within the day that question has
+// no answer, and its charm flips sign each time spot crosses the strike,
+// which made the totals jump by hundreds of millions from one minute to the next.
+const outlivesTheDay = (r) => r.T > DAY_YEARS
+
 function exposureRows(rows) {
   return rows.filter((r) => r.iv > 0.01 && r.oi > 0 && r.dte >= 0 && r.dte <= EXPOSURE_MAX_DTE)
 }
@@ -176,6 +182,7 @@ export function buildCore(chain, { nqCandles = null, nqLast = null, vix = null, 
 
   const rows = exposureRows(chain.rows)
   const all = chain.contracts ?? chain.rows
+  const flowRows = rows.filter(outlivesTheDay)
   const toNq = (qqq) => (ratio && qqq != null ? Math.round(qqq * ratio) : null)
   const ref = (qqq) => (qqq == null ? null : `${qqq.toFixed(1)} QQQ${ratio ? ` (~${Math.round(qqq * ratio).toLocaleString('en-US')} NQ)` : ''}`)
 
@@ -255,11 +262,11 @@ export function buildCore(chain, { nqCandles = null, nqLast = null, vix = null, 
     },
     gex_strikes: ladder(gexAgg, 14),
     dex_strikes: ladder(dexByStrike(rows, spot, QQQ_MULT), 14),
-    vanna_strikes: ladder(vannaFlowByStrike(rows, spot, QQQ_MULT), 14),
-    charm_strikes: ladder(charmFlowByStrike(rows, spot, QQQ_MULT), 14),
+    vanna_strikes: ladder(vannaFlowByStrike(flowRows, spot, QQQ_MULT), 14),
+    charm_strikes: ladder(charmFlowByStrike(flowRows, spot, QQQ_MULT), 14),
     flows: {
-      vanna_per_volpt_b: round(vannaFlow(rows, spot, QQQ_MULT) / 1e9, 3),
-      charm_per_day_b: round(charmFlow(rows, spot, QQQ_MULT) / 1e9, 3),
+      vanna_per_volpt_b: round(vannaFlow(flowRows, spot, QQQ_MULT) / 1e9, 3),
+      charm_per_day_b: round(charmFlow(flowRows, spot, QQQ_MULT) / 1e9, 3),
     },
     profile: gexProfile(rows, spot, QQQ_MULT, { loPct: 0.92, hiPct: 1.08, steps: 80 }).map((p) => [round(p.spot, 2), round(p.gex / 1e9, 4)]),
     zero_gammas_qqq: flips.map((f) => round(f, 1)),

@@ -44,6 +44,8 @@ function atmIv(rows, spot) {
 
 export function buildBtcCore(allRows, spot, { dvol = null, perp = null, nowMs = Date.now() } = {}) {
   const rows = allRows.filter((r) => r.oi > 0 && r.dte <= 60)
+  // contracts settling within the day are left out of vanna/charm (see nq-analytics.js)
+  const flowRows = rows.filter((r) => r.T > 1 / 365.25)
   const gexAgg = gexByStrike(rows, spot)
   const { call: callWall, put: putWall } = walls(gexAgg)
   const gexTotalB = round(totalGex(rows, spot) / 1e9, 3)
@@ -88,11 +90,11 @@ export function buildBtcCore(allRows, spot, { dvol = null, perp = null, nowMs = 
     },
     gex_strikes: ladder(gexAgg, 14),
     dex_strikes: ladder(dexByStrike(rows, spot), 14),
-    vanna_strikes: ladder(vannaFlowByStrike(rows, spot), 14),
-    charm_strikes: ladder(charmFlowByStrike(rows, spot), 14),
+    vanna_strikes: ladder(vannaFlowByStrike(flowRows, spot), 14),
+    charm_strikes: ladder(charmFlowByStrike(flowRows, spot), 14),
     flows: {
-      vanna_per_volpt_b: round(vannaFlow(rows, spot) / 1e9, 4),
-      charm_per_day_b: round(charmFlow(rows, spot) / 1e9, 4),
+      vanna_per_volpt_b: round(vannaFlow(flowRows, spot) / 1e9, 4),
+      charm_per_day_b: round(charmFlow(flowRows, spot) / 1e9, 4),
     },
     profile: gexProfile(rows, spot, 1, { loPct: 0.85, hiPct: 1.15, steps: 80 }).map((p) => [round(p.spot, 0), round(p.gex / 1e9, 5)]),
     zero_gammas: flips.map((f) => Math.round(f)),

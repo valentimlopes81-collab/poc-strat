@@ -27,12 +27,6 @@ export interface LevelRow {
   confirmation?: string
 }
 
-export interface GexStrikeRow {
-  asset: 'NQ' | 'BTC'
-  strike: number
-  gex: number
-}
-
 export interface CotRow {
   report_week: string
   report_date: string
@@ -127,11 +121,6 @@ export interface IvSurfaceData {
   spot: number
   expiries: Array<{ expiry: string; dte: number }>
   rows: IvSurfaceRow[]
-}
-
-export interface VolCompareData {
-  realized: Array<{ time: number; value: number }>
-  implied_atm_now: IvTermRow | null
 }
 
 export interface EconEvent {

@@ -55,13 +55,13 @@ const METRIC_INFO: Record<Metric, { label: string; pos: string; neg: string; hel
     label: 'Vanna',
     pos: 'dealers compram',
     neg: 'dealers vendem',
-    help: 'Fluxo de hedge estimado por strike se a volatilidade implícita cair 1 ponto (com vol a subir, o sinal inverte).',
+    help: 'Fluxo de hedge estimado por strike se a volatilidade implícita cair 1 ponto (com vol a subir, o sinal inverte). Sem as opções que expiram nas próximas 24h.',
   },
   charm: {
     label: 'Charm',
     pos: 'dealers compram',
     neg: 'dealers vendem',
-    help: 'Fluxo de hedge estimado por strike só pela passagem de 1 dia, com preço e vol parados.',
+    help: 'Fluxo de hedge estimado por strike só pela passagem de 1 dia, com preço e vol parados. Sem as opções que expiram nas próximas 24h.',
   },
 }
 
@@ -218,7 +218,7 @@ export function HojeTab({
       <PanelGrid>
         <Panel
           title="Alertas"
-          src="manuais + automáticos (cruzamentos, proximidade <30pts, flips de regime) enquanto o terminal está aberto"
+          src="manuais + automáticos enquanto o terminal está aberto"
           right={
             <button
               onClick={onToggleNotify}

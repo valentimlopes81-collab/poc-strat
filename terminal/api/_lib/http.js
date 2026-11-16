@@ -35,4 +35,5 @@ export function sendError(res, err, status = 502) {
   res.end(JSON.stringify({ error: String(err?.message ?? err) }))
 }
 
-export const round = (v, dp = 2) => (v == null || !Number.isFinite(v) ? null : Math.round(v * 10 ** dp) / 10 ** dp)
+// `+ 0` so a rounded tiny negative is 0 rather than -0
+export const round = (v, dp = 2) => (v == null || !Number.isFinite(v) ? null : Math.round(v * 10 ** dp) / 10 ** dp + 0)

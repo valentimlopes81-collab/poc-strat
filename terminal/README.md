@@ -1,32 +1,49 @@
-# React + TypeScript + Vite
+# NQ/BTC Terminal
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Terminal de contexto para NQ e BTC: níveis de opções (GEX, walls, zero-gamma, 0DTE), preço, volatilidade, order flow de BTC, macro e performance. Em produção em https://nq-btc-terminal.vercel.app.
 
-Currently, two official plugins are available:
+Tudo é contexto, nunca sinal de entrada.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Como os dados chegam ao ecrã
 
-## React Compiler
+| O quê | De onde | Frescura |
+|---|---|---|
+| Níveis, exposições, perfil de GEX, 0DTE, expected move, IV (NQ) | `/api/nq` · cadeia QQQ da Cboe | calculado a pedido, cache de 60 s; as cotações da Cboe têm 15 min de atraso |
+| O mesmo para BTC, mais DVOL e funding | `/api/btc` · Deribit | 60 s |
+| Velas NQ=F, VIX, DXY · velas BTC · volume de opções QQQ | `/api/candles` · Yahoo, Kraken, Cboe | 60 s (NQ=F com ~10 min de atraso) |
+| Correlações, EWMA, GARCH | `/api/cross` · Yahoo | 15 min |
+| Calendário macro, COT | `/api/macro` · ForexFactory, CFTC | 1 h |
+| Preço, livro de ordens e trades de BTC | WebSocket público da Kraken, direto do browser | tempo real |
+| Plano do dia, alertas manuais, scorecard, journal | `public/data/*.json`, escritos pelas rotinas | lidos do GitHub, visíveis em ~5 min sem deploy |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+As funções em `api/` são serverless (Vercel), em JavaScript puro e sem dependências. A matemática está em `api/_lib` e é a mesma de `backtest/quant/gex_common.py` (que as rotinas de briefing usam); os testes dos dois lados verificam os mesmos valores de referência.
 
-## Expanding the Oxlint configuration
+Se a API não responder, o site mostra o último snapshot guardado em `public/data/snap/` e o cabeçalho passa a dizer "snapshot". O workflow `terminal-data-refresh` grava esses snapshots e acrescenta ao histórico em `public/data/history/`.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+O preço usado nos cálculos do NQ é o QQQ que os futuros implicam neste momento (rácio NQ/QQQ medido no instante da última cotação da Cboe), por isso os níveis continuam a fazer sentido de madrugada, com a cadeia parada e o NQ a negociar.
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Desenvolvimento
+
+```bash
+npm install
+npm run dev        # http://localhost:5173, com as funções de api/ servidas localmente
+npm test           # vitest: greeks, exposições, parsers, regras de alerta, estatísticas
+npm run build      # type-check + bundle
+npm run levels     # imprime os níveis de NQ e BTC tal como o site os calcula
+npm run snapshot   # grava snapshots e histórico (o que o workflow faz)
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Testes do lado Python: `python -m pytest tests/test_gex_common.py` na raiz do repositório.
+
+Depois de mexer em `api/_lib`, reiniciar o `dev`/`preview`: o Node mantém os módulos importados em cache.
+
+## Deploy
+
+Push para o branch faz deploy no Vercel (root `terminal/`). O `vercel.json` salta o build quando só mudou `public/data` desde o último deploy — os commits de dados não precisam dele porque o site lê esses ficheiros do GitHub.
+
+## Limites conhecidos
+
+- GEX, vanna e charm assumem a convenção pública de posicionamento dos dealers (long calls, short puts), a partir do open interest. Não é fluxo observado.
+- Vanna e charm excluem contratos que expiram nas próximas 24 h.
+- O livro de ordens e o CVD são só da Kraken spot.
+- Os alertas automáticos e o histórico ao minuto vivem no browser onde o terminal está aberto.

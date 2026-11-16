@@ -1,22 +1,22 @@
-"""Export consolidado dos dados "mecanicos" (sem julgamento/narrativa) do
-terminal, para correr tanto manualmente como via GitHub Action agendada.
+"""Export dos dados "lentos" do terminal para ficheiros estaticos, corrido
+pelo GitHub Action agendado (e manualmente quando for preciso).
 
-O que este script ATUALIZA (puramente numerico, sem opiniao):
-  - levels.json: campos numericos de GEX/DEX/niveis/VIX (preserva bias/note,
-    que sao julgamento e continuam a ser escritos manualmente na rotina diaria)
-  - gex_strikes.json, dex_strikes.json: GEX/DEX por strike (ladder/depth
-    chart) -- antes de 13/11 isto era um ficheiro estatico nunca atualizado,
-    agora sai dos mesmos rows ja computados para o levels.json
-  - cot.json, fomc.json: dados oficiais (CFTC / Federal Reserve via OpenBB)
-  - econ_calendar.json: calendario ForexFactory
-  - price_nq.json, price_nq_daily.json, price_btc.json, vix_history.json
-  - gex_heatmap_nq.json, gex_heatmap_btc.json
-  - iv_term_nq.json, iv_skew_nq.json, iv_surface_nq.json, vol_compare_nq.json
+Desde 16/11 o site calcula niveis, GEX, precos, IV, calendario e COT ao vivo
+(terminal/api, funcoes serverless) e ja nao le os ficheiros numericos que
+este script escrevia de 15 em 15 min. O que continua a sair daqui:
+  - fomc.json: ultimos documentos da Fed (via OpenBB)
+  - cot.json, econ_calendar.json: copia de recurso para quando a API do site
+    nao responde
 
-O que este script NAO toca (journal/narrativa, continuam manuais):
-  scorecard.json, account.json, trades.json, alerts.json
+Com --all volta a escrever tambem os ficheiros antigos (levels.json numerico,
+precos, heatmaps, IV, vol) -- util so para depurar as funcoes Python, que
+continuam a ser as que as rotinas de briefing correm diretamente.
 
-Uso: python3 backtest/quant/export_terminal_data.py
+O que este script NAO toca (journal/narrativa, escritos a mao nas rotinas):
+  scorecard.json, account.json, trades.json, alerts.json, e os campos
+  bias/note/scenarios/confirmation de levels.json
+
+Uso: python3 backtest/quant/export_terminal_data.py [--all]
 """
 import datetime
 import json
@@ -269,21 +269,21 @@ def run_step(name, fn):
 
 
 if __name__ == "__main__":
-    # correm sempre (rapidos, sem rate-limit observado): precos/GEX/VIX/heatmap
-    run_step("levels", update_levels)
-    run_step("price_nq", price_history.export_qqq)
-    run_step("price_nq_daily", price_history.export_qqq_daily)
-    run_step("price_btc", price_history.export_btc)
-    run_step("vix_history", price_history.export_vix)
-    run_step("gex_heatmap_nq", gex_heatmap.export_nq)
-    run_step("gex_heatmap_btc", gex_heatmap.export_btc)
-    run_step("iv_surface_nq", iv_surface.main)
-    run_step("vol_compare_nq", vol_compare.main)
+    if "--all" in sys.argv:
+        run_step("levels", update_levels)
+        run_step("price_nq", price_history.export_qqq)
+        run_step("price_nq_daily", price_history.export_qqq_daily)
+        run_step("price_btc", price_history.export_btc)
+        run_step("vix_history", price_history.export_vix)
+        run_step("gex_heatmap_nq", gex_heatmap.export_nq)
+        run_step("gex_heatmap_btc", gex_heatmap.export_btc)
+        run_step("iv_surface_nq", iv_surface.main)
+        run_step("vol_compare_nq", vol_compare.main)
 
     # COT/FOMC/calendario mudam pouco (semanal/raro) e o feed do calendario
     # tem rate-limit agressivo -- so correm ~1x/hora mesmo que o script seja
     # chamado de 15 em 15 min, para nao gastar a quota com chamadas repetidas.
-    if "--full" in sys.argv or datetime.datetime.utcnow().minute < 15:
+    if "--all" in sys.argv or "--full" in sys.argv or datetime.datetime.utcnow().minute < 15:
         run_step("cot", update_cot)
         run_step("fomc", update_fomc)
         run_step("econ_calendar", update_econ_calendar)
