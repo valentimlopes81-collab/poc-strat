@@ -1,53 +1,58 @@
-import type { LevelRow, CotRow } from '../types'
-import { fmtAgo } from '../lib/useJson'
+import type { BtcCore, NqCore } from '../api'
+import { fmtInt, signed } from '../lib/levels'
+import type { CotRow } from '../types'
 
-function rowOf(levels: LevelRow[] | null, asset: 'NQ' | 'BTC') {
-  return levels?.find((r) => r.asset === asset) ?? null
+function Item({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <span>
+      <span className="text-term-muted mr-1.5">{label}</span>
+      {children}
+    </span>
+  )
 }
 
-export function TickerTape({ levels, cot }: { levels: LevelRow[] | null; cot: CotRow[] | null }) {
-  const nq = rowOf(levels, 'NQ')
-  const btc = rowOf(levels, 'BTC')
+const tone = (v: number) => (v >= 0 ? 'text-term-green' : 'text-term-red')
+
+export function TickerTape({ nq, btc, cot }: { nq: NqCore | null; btc: BtcCore | null; cot: CotRow[] | null }) {
   const cotRow = cot?.[0] ?? null
+  const qqq = nq?.level.price_qqq
+  const prev = nq?.meta.prev_close_qqq
+  const dayPct = qqq && prev ? (qqq / prev - 1) * 100 : null
 
   return (
-    <div className="flex flex-wrap items-center gap-5 text-[12px] tabular-nums overflow-x-auto whitespace-nowrap py-1">
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[12px] tabular-nums py-1">
       {nq && (
-        <span>
-          <span className="text-term-muted mr-1.5">NQ</span>
-          <span className="font-semibold">{nq.price_ref}</span>{' '}
-          <span className={nq.gex_total_b >= 0 ? 'text-term-green' : 'text-term-red'}>
-            GEX {nq.gex_total_b >= 0 ? '+' : ''}
-            {nq.gex_total_b.toFixed(2)}B
-          </span>
-        </span>
+        <Item label="NQ">
+          <span className="font-semibold">{fmtInt(nq.level.price)}</span>
+          {dayPct != null && <span className={`ml-1.5 ${tone(dayPct)}`}>{signed(dayPct)}%</span>}
+          <span className={`ml-1.5 ${tone(nq.level.gex_total_b)}`}>GEX {signed(nq.level.gex_total_b)}B</span>
+        </Item>
       )}
       {btc && (
-        <span>
-          <span className="text-term-muted mr-1.5">BTC</span>
-          <span className="font-semibold">${Math.round(btc.price).toLocaleString('en-US')}</span>{' '}
-          <span className={btc.gex_total_b >= 0 ? 'text-term-green' : 'text-term-red'}>
-            GEX {btc.gex_total_b >= 0 ? '+' : ''}
-            {btc.gex_total_b.toFixed(3)}B
-          </span>
-        </span>
+        <Item label="BTC">
+          <span className="font-semibold">${fmtInt(btc.level.price)}</span>
+          <span className={`ml-1.5 ${tone(btc.level.gex_total_b)}`}>GEX {signed(btc.level.gex_total_b, 3)}B</span>
+        </Item>
       )}
-      {nq?.vix != null && (
-        <span>
-          <span className="text-term-muted mr-1.5">VIX</span>
-          <span className={(nq.vix_change_pct ?? 0) >= 0 ? 'text-term-red' : 'text-term-green'}>{nq.vix.toFixed(2)}</span>
-        </span>
+      {nq?.level.vix != null && (
+        <Item label="VIX">
+          <span className="font-semibold">{nq.level.vix.toFixed(2)}</span>
+          {nq.level.vix_change_pct != null && <span className={`ml-1.5 ${nq.level.vix_change_pct >= 0 ? 'text-term-red' : 'text-term-green'}`}>{signed(nq.level.vix_change_pct, 1)}%</span>}
+        </Item>
+      )}
+      {btc?.meta.dvol != null && (
+        <Item label="DVOL">
+          <span className="font-semibold">{btc.meta.dvol.toFixed(1)}</span>
+        </Item>
       )}
       {cotRow && (
-        <span>
-          <span className="text-term-muted mr-1.5">COT NQ</span>
-          <span className={cotRow.lf_net >= 0 ? 'text-term-green' : 'text-term-red'}>
+        <Item label="COT NQ">
+          <span className={tone(cotRow.lf_net)}>
             {cotRow.lf_net >= 0 ? '+' : ''}
             {cotRow.lf_net.toLocaleString('en-US')}
           </span>
-        </span>
+        </Item>
       )}
-      {nq && <span className="text-term-muted text-[10px]">· atualizado {fmtAgo(nq.as_of_utc)}</span>}
     </div>
   )
 }

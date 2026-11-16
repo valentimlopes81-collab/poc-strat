@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { createChart, type IChartApi, type ISeriesApi, type UTCTimestamp, LineStyle } from 'lightweight-charts'
 import { usePanelFullscreen } from '../lib/panelFullscreen'
 import type { VolCompareData } from '../types'
@@ -9,7 +9,8 @@ export function VolCompare({ data }: { data: VolCompareData }) {
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Line'> | null>(null)
 
-  useEffect(() => {
+  // layout effect: teardown must run before React detaches the node, or the chart's own resize observer queues a paint on a disposed chart
+  useLayoutEffect(() => {
     if (!ref.current) return
     const chart = createChart(ref.current, {
       layout: {

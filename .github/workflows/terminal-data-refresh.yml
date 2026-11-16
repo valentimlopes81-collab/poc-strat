@@ -41,6 +41,15 @@ jobs:
       - name: Export terminal data
         run: python backtest/quant/export_terminal_data.py
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Snapshot the live API output (fallback for when the API is unreachable)
+        working-directory: terminal
+        # no npm install: the API functions have no dependencies
+        run: node scripts/snapshot.mjs
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"

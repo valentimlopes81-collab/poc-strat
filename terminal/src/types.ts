@@ -7,13 +7,13 @@ export interface LevelRow {
   gex_total_b: number
   gex_regime: string
   dex_total_b?: number
-  call_wall: number
+  call_wall: number | null
   call_wall_ref: string | null
   call_wall_qqq?: number
-  put_wall: number
+  put_wall: number | null
   put_wall_ref: string | null
   put_wall_qqq?: number
-  zero_gamma: number
+  zero_gamma: number | null
   zero_gamma_ref: string | null
   zero_gamma_qqq?: number
   dte0_dominant: number | null

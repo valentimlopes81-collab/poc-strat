@@ -8,14 +8,19 @@ interface LevelPoint {
 }
 
 function levelsFor(row: LevelRow): LevelPoint[] {
-  const points: LevelPoint[] = [
-    { label: 'Call Wall', value: row.call_wall, ref: row.call_wall_ref },
-    { label: 'Put Wall', value: row.put_wall, ref: row.put_wall_ref },
-    { label: 'Zero-gamma', value: row.zero_gamma, ref: row.zero_gamma_ref },
+  const candidates: Array<[string, number | null, string | null]> = [
+    ['Call Wall', row.call_wall, row.call_wall_ref],
+    ['Put Wall', row.put_wall, row.put_wall_ref],
+    ['Zero-gamma', row.zero_gamma, row.zero_gamma_ref],
+    ['0DTE dominante', row.dte0_dominant, row.dte0_dominant_ref],
   ]
-  if (row.dte0_dominant != null) points.push({ label: '0DTE dominante', value: row.dte0_dominant, ref: row.dte0_dominant_ref })
-  return points.filter((p) => p.value != null).sort((a, b) => Math.abs(a.value - row.price) - Math.abs(b.value - row.price))
+  const points: LevelPoint[] = []
+  for (const [label, value, ref] of candidates) if (value != null) points.push({ label, value, ref })
+  return points.sort((a, b) => Math.abs(a.value - row.price) - Math.abs(b.value - row.price))
 }
+
+const priceLabel = (row: LevelRow) =>
+  row.asset === 'NQ' ? `NQ ${Math.round(row.price).toLocaleString('en-US')} · ${row.price_ref}` : `$${Math.round(row.price).toLocaleString('en-US')}`
 
 function fmtDist(d: number, asset: string) {
   const abs = Math.round(Math.abs(d))
@@ -37,7 +42,7 @@ function AssetPlanStructured({ row }: { row: LevelRow }) {
 
       <div className="mb-2">
         <div className="text-[10px] uppercase tracking-wide text-term-muted">Preço agora</div>
-        <div className="text-[14px] font-bold tabular-nums">{row.price_ref}</div>
+        <div className="text-[14px] font-bold tabular-nums">{priceLabel(row)}</div>
       </div>
 
       <div className="mb-2">

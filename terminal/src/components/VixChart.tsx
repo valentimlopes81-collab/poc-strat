@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { createChart, type IChartApi, type ISeriesApi, type UTCTimestamp, LineStyle } from 'lightweight-charts'
 import { usePanelFullscreen } from '../lib/panelFullscreen'
 
@@ -8,7 +8,8 @@ export function VixChart({ data, height }: { data: Array<{ time: number; value: 
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Line'> | null>(null)
 
-  useEffect(() => {
+  // layout effect: teardown must run before React detaches the node, or the chart's own resize observer queues a paint on a disposed chart
+  useLayoutEffect(() => {
     if (!ref.current) return
     const chart = createChart(ref.current, {
       layout: {

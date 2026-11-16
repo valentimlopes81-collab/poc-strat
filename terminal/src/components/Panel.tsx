@@ -88,3 +88,25 @@ export function Badge({ children, tone }: { children: ReactNode; tone: 'ok' | 'b
   }[tone]
   return <span className={`inline-block px-1.5 py-0.5 rounded-[2px] text-[10px] font-bold tracking-wide ${cls}`}>{children}</span>
 }
+
+/** Compact button group for picking one of a few options (timeframe, metric). */
+export function Segmented<T extends string>({ options, value, onChange }: { options: Array<{ value: T; label: string }>; value: T; onChange: (v: T) => void }) {
+  return (
+    <div className="flex border border-term-border text-[10px]">
+      {options.map((o, i) => (
+        <button
+          key={o.value}
+          onClick={() => onChange(o.value)}
+          className={`px-2 py-0.5 ${i ? 'border-l border-term-border' : ''} ${value === o.value ? 'bg-term-amber text-black font-bold' : 'text-term-muted hover:text-term-text'}`}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+export function PanelGrid({ cols = 1, children }: { cols?: 1 | 2 | 3; children: ReactNode }) {
+  const cls = { 1: 'grid-cols-1', 2: 'grid-cols-1 md:grid-cols-2', 3: 'grid-cols-1 md:grid-cols-3' }[cols]
+  return <div className={`grid ${cls} gap-px bg-term-border border border-term-border mb-px`}>{children}</div>
+}
