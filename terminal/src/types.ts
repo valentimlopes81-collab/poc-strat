@@ -87,6 +87,8 @@ export interface AlertRow {
   severity: 'info' | 'notable' | 'critical' | 'system'
   title: string
   detail: string
+  /** raised by the in-browser rules, not written by hand */
+  auto?: boolean
 }
 
 export interface IvTermRow {

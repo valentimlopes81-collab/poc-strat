@@ -1,9 +1,10 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useMemo } from 'react'
 import type { BtcCore, MacroData, NqCore } from './api'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { LiveStatus } from './components/LiveStatus'
 import { NextEvent } from './components/NextEvent'
 import { TickerTape } from './components/TickerTape'
+import { useAutoAlerts } from './lib/autoAlerts'
 import { useLevelHistory, type HistoryRow } from './lib/history'
 import { useJson } from './lib/useJson'
 import { useLive } from './lib/useLive'
@@ -37,7 +38,30 @@ export default function App() {
   const alerts = useJson<AlertRow[]>('/data/alerts.json')
   const trades = useJson<TradeRow[]>('/data/trades.json')
   const savedHistory = useJson<{ rows: HistoryRow[] }>('/data/history/levels.json')
-  const history = useLevelHistory(savedHistory.data?.rows ?? null, nq.source === 'live' ? nq.data : null, btc.source === 'live' ? btc.data : null)
+  const [notify, setNotify] = usePersistentState<boolean>('notify', false)
+  const liveNq = nq.source === 'live' ? nq.data : null
+  const liveBtc = btc.source === 'live' ? btc.data : null
+  const autoAlerts = useAutoAlerts(liveNq, liveBtc, notify)
+  const allAlerts = useMemo(() => [...autoAlerts, ...(alerts.data ?? [])], [autoAlerts, alerts.data])
+
+  const toggleNotify = () => {
+    // the permission prompt has to come from a click
+    if (!notify && typeof Notification !== 'undefined' && Notification.permission === 'default') Notification.requestPermission()
+    setNotify(!notify)
+  }
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null
+      if (e.ctrlKey || e.metaKey || e.altKey || el?.closest('input, textarea, select')) return
+      const hit = TABS[Number(e.key) - 1]
+      if (hit) setTab(hit.id)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [setTab])
+
+  const history = useLevelHistory(savedHistory.data?.rows ?? null, liveNq, liveBtc)
 
   return (
     <div className="min-h-screen bg-term-bg text-term-text font-mono text-[13px] p-3 md:p-4 max-w-[1400px] mx-auto">
@@ -50,10 +74,11 @@ export default function App() {
 
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <nav className="inline-flex border border-term-border">
-          {TABS.map((t) => (
+          {TABS.map((t, i) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
+              title={`Atalho: tecla ${i + 1}`}
               className={`px-4 py-1.5 text-[11px] uppercase tracking-wider font-semibold border-r border-term-border last:border-r-0 ${
                 tab === t.id ? 'bg-term-amber text-black' : 'bg-term-panel text-term-muted hover:text-term-text'
               }`}
@@ -73,7 +98,7 @@ export default function App() {
 
       <ErrorBoundary label={TABS.find((t) => t.id === tab)?.label ?? ''} key={tab}>
         <Suspense fallback={<div className="text-[11px] text-term-muted py-6">A carregar…</div>}>
-          {tab === 'hoje' && <HojeTab nq={nq} btc={btc} narrative={narrative.data} alerts={alerts.data} econ={econ} trades={trades.data} />}
+          {tab === 'hoje' && <HojeTab nq={nq} btc={btc} narrative={narrative.data} alerts={allAlerts} notify={notify} onToggleNotify={toggleNotify} econ={econ} trades={trades.data} />}
           {tab === 'quant' && <QuantTab cot={cot} cotHistory={macro.data?.cot?.history ?? null} econ={econ} history={history} />}
           {tab === 'perf' && <PerfTab trades={trades.data} />}
         </Suspense>

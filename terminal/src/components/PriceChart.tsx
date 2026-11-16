@@ -53,6 +53,8 @@ interface EventMark {
   label: string
   impact: string
   row: number
+  /** label goes to the left of its line because there is no room on the right */
+  flip: boolean
 }
 
 // Killzones ICT, em hora de Nova Iorque (acompanham a mudança de hora dos
@@ -159,7 +161,7 @@ export function PriceChart({
       for (const r of raw) {
         row = r.x - lastX < 70 ? row + 1 : 0
         lastX = r.x
-        marks.push({ ...r, row })
+        marks.push({ ...r, row, flip: r.x > chartW - AXIS_WIDTH - 130 })
       }
       setEventMarks(marks)
     } else {
@@ -347,7 +349,7 @@ export function PriceChart({
     'w-5 h-5 flex items-center justify-center bg-term-panel2 border border-term-border text-term-muted hover:text-term-amber hover:border-term-amber leading-none'
 
   return (
-    <div className="relative w-full" style={{ height: effectiveHeight }}>
+    <div className="relative w-full overflow-hidden" style={{ height: effectiveHeight }}>
       <div ref={chartDivRef} className="absolute inset-0" />
       <div className="absolute top-0 left-0 z-[60] flex gap-0.5">
         <button onClick={() => zoom(0.7)} className={`${btn} text-[11px]`} title="Aproximar">
@@ -377,7 +379,7 @@ export function PriceChart({
           style={{ left: m.x, borderColor: m.impact === 'High' ? '#ff3b30' : '#ff9f1c' }}
         >
           <span
-            className="absolute left-1 text-[8px] whitespace-nowrap px-0.5 bg-black/40"
+            className={`absolute text-[8px] whitespace-nowrap px-0.5 bg-black/40 ${m.flip ? 'right-1' : 'left-1'}`}
             style={{ color: m.impact === 'High' ? '#ff3b30' : '#ff9f1c', bottom: 16 + m.row * 11 }}
           >
             {m.label}

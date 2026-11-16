@@ -120,13 +120,17 @@ export function HojeTab({
   btc,
   narrative,
   alerts,
+  notify,
+  onToggleNotify,
   econ,
   trades,
 }: {
   nq: LiveState<NqCore>
   btc: LiveState<BtcCore>
   narrative: LevelRow[] | null
-  alerts: AlertRow[] | null
+  alerts: AlertRow[]
+  notify: boolean
+  onToggleNotify: () => void
   econ: EconEvent[] | null
   trades: TradeRow[] | null
 }) {
@@ -211,13 +215,23 @@ export function HojeTab({
           </Panel>
         </PanelGrid>
       )}
-      {alerts && (
-        <PanelGrid>
-          <Panel title="Alertas · Killzone" src="GEX/níveis — notável quando muda estrutura ou preço se aproxima">
-            <AlertsFeed alerts={alerts} />
-          </Panel>
-        </PanelGrid>
-      )}
+      <PanelGrid>
+        <Panel
+          title="Alertas"
+          src="manuais + automáticos (cruzamentos, proximidade <30pts, flips de regime) enquanto o terminal está aberto"
+          right={
+            <button
+              onClick={onToggleNotify}
+              className={`px-2 py-0.5 border text-[10px] whitespace-nowrap ${notify ? 'border-term-amber text-term-amber' : 'border-term-border text-term-muted hover:text-term-text'}`}
+              title="Notificação do sistema e som a cada alerta automático"
+            >
+              {notify ? '🔔 Notificações ligadas' : '🔕 Notificações desligadas'}
+            </button>
+          }
+        >
+          <AlertsFeed alerts={alerts} />
+        </Panel>
+      </PanelGrid>
 
       <PanelGrid cols={2}>
         <Panel
