@@ -13,14 +13,14 @@ import { HojeTab } from './tabs/HojeTab'
 import type { AlertRow, CotRow, EconEvent, LevelRow, TradeRow } from './types'
 
 const QuantTab = lazy(() => import('./tabs/QuantTab'))
-const PerfTab = lazy(() => import('./tabs/PerfTab'))
+// Performance tab removida (06/11, conta encerrada) -- volta quando houver
+// uma conta nova para mostrar. PerfTab.tsx e os dados de trades ficam intactos.
 
-type Tab = 'hoje' | 'quant' | 'perf'
-const isTab = oneOf<Tab>('hoje', 'quant', 'perf')
+type Tab = 'hoje' | 'quant'
+const isTab = oneOf<Tab>('hoje', 'quant')
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'hoje', label: 'Hoje' },
   { id: 'quant', label: 'Quant' },
-  { id: 'perf', label: 'Performance' },
 ]
 
 export default function App() {
@@ -100,7 +100,6 @@ export default function App() {
         <Suspense fallback={<div className="text-[11px] text-term-muted py-6">A carregar…</div>}>
           {tab === 'hoje' && <HojeTab nq={nq} btc={btc} narrative={narrative.data} alerts={allAlerts} notify={notify} onToggleNotify={toggleNotify} econ={econ} trades={trades.data} />}
           {tab === 'quant' && <QuantTab cot={cot} cotHistory={macro.data?.cot?.history ?? null} econ={econ} history={history} />}
-          {tab === 'perf' && <PerfTab trades={trades.data} />}
         </Suspense>
       </ErrorBoundary>
 
