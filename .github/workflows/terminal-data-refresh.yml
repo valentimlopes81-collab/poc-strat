@@ -3,10 +3,12 @@ name: Refresh terminal data
 on:
   schedule:
     # O site calcula tudo ao vivo (terminal/api); este job so guarda o snapshot
-    # de recurso e acrescenta ao historico. De 15 em 15 min nos dias de semana,
-    # fora dos minutos redondos: o GitHub atrasa/descarta agendamentos em :00,
-    # :15, :30 e :45, que e quando toda a gente agenda.
-    - cron: "7,22,37,52 * * * 1-5"
+    # de recurso e acrescenta ao historico. De 30 em 30 min nos dias de semana,
+    # fora dos minutos redondos (o GitHub atrasa/descarta agendamentos em :00 e
+    # :30, que e quando toda a gente agenda). Nao mais frequente: cada commit
+    # de dados cria um deployment no Vercel (cancelado pelo ignoreCommand, mas
+    # pode contar para o limite diario do plano gratuito).
+    - cron: "7,37 * * * 1-5"
     # a cada hora ao fim de semana (so BTC/Deribit tem dados relevantes)
     - cron: "17 * * * 0,6"
   workflow_dispatch: {}
