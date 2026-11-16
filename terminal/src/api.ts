@@ -121,3 +121,30 @@ export interface CandlesResp {
 }
 
 export type Timeframe = '5m' | '15m' | '1h' | '1d'
+
+export interface CrossData {
+  as_of_utc: string
+  assets: Array<{ key: string; label: string; last: number | null; chg_1d: number | null; chg_5d: number | null; chg_20d: number | null }>
+  labels: string[]
+  keys: string[]
+  corr_20d: Array<Array<number | null>>
+  corr_60d: Array<Array<number | null>>
+  roll_window: number
+  rolling: Record<string, Array<{ time: number; value: number }>>
+  vol: {
+    ewma: Array<{ time: number; value: number }>
+    garch: Array<{ time: number; value: number }>
+    garch_params: { alpha: number; beta: number; persistence: number; long_run_vol: number } | null
+    garch_forecast: Array<{ days: number; vol: number }>
+    implied_30d: number | null
+  } | null
+}
+
+export interface MacroData {
+  as_of_utc: string
+  calendar: import('./types').EconEvent[] | null
+  cot: {
+    latest: import('./types').CotRow
+    history: Array<{ time: number; lf_net: number; am_net: number }>
+  } | null
+}

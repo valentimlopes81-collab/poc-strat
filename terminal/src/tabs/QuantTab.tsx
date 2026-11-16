@@ -1,5 +1,7 @@
-import type { VolView } from '../api'
+import { useMemo } from 'react'
+import type { CrossData, MacroData, VolView } from '../api'
 import { CotBar } from '../components/CotBar'
+import { AssetPerformance, CorrMatrix, RollingCorrelation, VolModels } from '../components/CrossAsset'
 import { EconCalendar } from '../components/EconCalendar'
 import { FomcList } from '../components/FomcList'
 import { GammaByExpiry } from '../components/GammaByExpiry'
@@ -7,25 +9,40 @@ import { GexHeatmap } from '../components/GexHeatmap'
 import { IvSkew } from '../components/IvSkew'
 import { IvSurface3D } from '../components/IvSurface3D'
 import { IvTermStructure } from '../components/IvTermStructure'
+import { LineChart, SERIES_COLORS } from '../components/LineChart'
 import { Panel, PanelGrid, StatRow } from '../components/Panel'
 import { ScorecardTable } from '../components/ScorecardTable'
-import { VolCompare } from '../components/VolCompare'
 import { fmtInt } from '../lib/levels'
 import { useJson } from '../lib/useJson'
 import { useLive } from '../lib/useLive'
-import type { CotRow, EconEvent, FomcRow, ScorecardRow, VolCompareData } from '../types'
+import type { CotRow, EconEvent, FomcRow, ScorecardRow } from '../types'
 
 const VOL_POLL_MS = 5 * 60_000
 
-export default function QuantTab({ cot, econ }: { cot: CotRow[] | null; econ: EconEvent[] | null }) {
+type CotHistory = NonNullable<MacroData['cot']>['history']
+const ZERO = [{ value: 0, label: 'neutro' }]
+const fmtContracts = (v: number) => `${v >= 0 ? '+' : ''}${Math.round(v / 1000)}K`
+
+export default function QuantTab({ cot, cotHistory, econ }: { cot: CotRow[] | null; cotHistory: CotHistory | null; econ: EconEvent[] | null }) {
+  const cotSeries = useMemo(
+    () =>
+      cotHistory
+        ? [
+            { label: 'Leveraged funds (especulativo)', color: SERIES_COLORS[0], data: cotHistory.map((h) => ({ time: h.time, value: h.lf_net })) },
+            { label: 'Asset managers (institucional)', color: SERIES_COLORS[1], data: cotHistory.map((h) => ({ time: h.time, value: h.am_net })) },
+          ]
+        : [],
+    [cotHistory],
+  )
   const fomc = useJson<FomcRow[]>('/data/fomc.json')
   const scorecard = useJson<ScorecardRow[]>('/data/scorecard.json')
-  const volCompare = useJson<VolCompareData>('/data/vol_compare_nq.json')
+  const cross = useLive<CrossData>('/api/cross', { fallback: '/data/snap/cross.json', intervalMs: 15 * 60_000 })
   const nqVol = useLive<VolView>('/api/nq?view=vol', { fallback: '/data/snap/nq_vol.json', intervalMs: VOL_POLL_MS })
   const btcVol = useLive<VolView>('/api/btc?view=vol', { fallback: '/data/snap/btc_vol.json', intervalMs: VOL_POLL_MS })
   const c = cot?.[0]
   const nv = nqVol.data
   const bv = btcVol.data
+  const x = cross.data
 
   return (
     <>
@@ -35,6 +52,9 @@ export default function QuantTab({ cot, econ }: { cot: CotRow[] | null; econ: Ec
             <StatRow label="Report week" value={c.report_date} />
             <CotBar cot={c} />
             <StatRow label="Net" value={`${c.lf_net >= 0 ? '+' : ''}${c.lf_net.toLocaleString('en-US')}`} valueClass={c.lf_net >= 0 ? 'text-term-green' : 'text-term-red'} />
+            {c.lf_net_prev != null && (
+              <StatRow label="Variação vs semana anterior" value={`${c.lf_net - c.lf_net_prev >= 0 ? '+' : ''}${(c.lf_net - c.lf_net_prev).toLocaleString('en-US')}`} />
+            )}
             <p className="mt-2 text-[12px] leading-relaxed">{c.reading}</p>
           </Panel>
         )}
@@ -53,7 +73,26 @@ export default function QuantTab({ cot, econ }: { cot: CotRow[] | null; econ: Ec
             <ScorecardTable rows={scorecard.data} />
           </Panel>
         )}
+        {cotSeries.length > 0 && (
+          <Panel title="COT · Posição líquida" src="contratos · 60 semanas">
+            <LineChart series={cotSeries} refLines={ZERO} format={fmtContracts} height={200} />
+          </Panel>
+        )}
       </PanelGrid>
+
+      {x && (
+        <PanelGrid cols={3}>
+          <Panel title="Cross-asset · Desempenho" src="fechos diários · Yahoo">
+            <AssetPerformance data={x} />
+          </Panel>
+          <Panel title="Cross-asset · Matriz de correlação">
+            <CorrMatrix data={x} />
+          </Panel>
+          <Panel title="NQ · Correlação móvel" src={`${x.roll_window} dias`}>
+            <RollingCorrelation data={x} />
+          </Panel>
+        </PanelGrid>
+      )}
 
       {(nv || bv) && (
         <PanelGrid cols={2}>
@@ -91,9 +130,9 @@ export default function QuantTab({ cot, econ }: { cot: CotRow[] | null; econ: Ec
             <IvSkew data={{ ...nv.iv_skew, expiry: nv.iv_skew.expiry }} />
           </Panel>
         )}
-        {volCompare.data && (
-          <Panel title="NQ · Realized vs Implied Vol" src="QQQ">
-            <VolCompare data={volCompare.data} />
+        {x && (
+          <Panel title="NQ · Vol realizada vs prevista vs implícita" src="NQ=F diário · IV30 QQQ">
+            <VolModels data={x} />
           </Panel>
         )}
       </PanelGrid>

@@ -18,6 +18,8 @@ const TARGETS = [
   ['btc', '/api/btc?view=vol', 'btc_vol.json'],
   ['candles', '/api/candles?symbol=nq&tf=5m', 'candles_nq_5m.json'],
   ['candles', '/api/candles?symbol=btc&tf=1h', 'candles_btc_1h.json'],
+  ['cross', '/api/cross', 'cross.json'],
+  ['macro', '/api/macro', 'macro.json'],
 ]
 
 function call(handler, url) {

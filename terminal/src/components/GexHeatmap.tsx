@@ -1,12 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { fmtCompact } from '../lib/useJson'
 import { usePanelFullscreen } from '../lib/panelFullscreen'
 
-export interface HeatmapData {
-  spot: number
-  expiries: string[]
-  rows: Array<{ expiry: string; strike: number; gex: number }>
-}
+import type { HeatmapData } from '../api'
 
 export function GexHeatmap({ data, fmtStrike }: { data: HeatmapData; fmtStrike: (s: number) => string }) {
   const isFull = usePanelFullscreen()
@@ -35,10 +31,22 @@ export function GexHeatmap({ data, fmtStrike }: { data: HeatmapData; fmtStrike: 
   // nearest strike row to spot, for a highlight marker
   const nearestStrike = strikes.reduce((best, s) => (Math.abs(s - data.spot) < Math.abs(best - data.spot) ? s : best), strikes[0] ?? 0)
 
+  // open with the spot row in the middle of the scroll area instead of the highest strike
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const spotRowRef = useRef<HTMLTableRowElement>(null)
+  useEffect(() => {
+    const box = scrollRef.current
+    const row = spotRowRef.current
+    if (box && row) box.scrollTop = row.offsetTop - box.clientHeight / 2
+  }, [nearestStrike, isFull])
+
   return (
     <div className="relative">
-      <div className="overflow-auto" style={{ maxHeight: isFull ? '75vh' : 440 }}>
-        <table className="border-collapse text-[10px] w-full">
+      <div ref={scrollRef} className="overflow-auto relative" style={{ maxHeight: isFull ? '75vh' : 440 }}>
+        <table className="border-collapse text-[10px] w-full table-fixed">
+          <colgroup>
+            <col className="w-[84px]" />
+          </colgroup>
           <thead>
             <tr>
               <th className="sticky top-0 left-0 z-20 bg-term-panel text-term-muted text-right pr-2 py-1 font-normal">strike</th>
@@ -51,7 +59,7 @@ export function GexHeatmap({ data, fmtStrike }: { data: HeatmapData; fmtStrike: 
           </thead>
           <tbody>
             {strikes.map((s) => (
-              <tr key={s} className={s === nearestStrike ? 'outline outline-1 outline-term-amber' : ''}>
+              <tr key={s} ref={s === nearestStrike ? spotRowRef : undefined} className={s === nearestStrike ? 'outline outline-1 outline-term-amber' : ''}>
                 <td
                   className={`sticky left-0 z-10 bg-term-panel text-right pr-2 tabular-nums whitespace-nowrap ${
                     s === nearestStrike ? 'text-term-amber font-bold' : 'text-term-muted'
@@ -65,7 +73,7 @@ export function GexHeatmap({ data, fmtStrike }: { data: HeatmapData; fmtStrike: 
                   return (
                     <td
                       key={e}
-                      className="w-8 h-[15px] cursor-default"
+                      className="h-[15px] cursor-default"
                       style={{ background: colorFor(v) }}
                       onMouseEnter={() => v !== undefined && setHover({ expiry: e, strike: s, gex: v })}
                       onMouseLeave={() => setHover(null)}

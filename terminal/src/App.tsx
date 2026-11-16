@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react'
-import type { BtcCore, NqCore } from './api'
+import type { BtcCore, MacroData, NqCore } from './api'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { LiveStatus } from './components/LiveStatus'
+import { NextEvent } from './components/NextEvent'
 import { TickerTape } from './components/TickerTape'
 import { useJson } from './lib/useJson'
 import { useLive } from './lib/useLive'
@@ -26,8 +27,12 @@ export default function App() {
   const nq = useLive<NqCore>('/api/nq', { fallback: '/data/snap/nq.json' })
   const btc = useLive<BtcCore>('/api/btc', { fallback: '/data/snap/btc.json' })
   const narrative = useJson<LevelRow[]>('/data/levels.json')
-  const cot = useJson<CotRow[]>('/data/cot.json')
-  const econ = useJson<EconEvent[]>('/data/econ_calendar.json')
+  const macro = useLive<MacroData>('/api/macro', { fallback: '/data/snap/macro.json', intervalMs: 30 * 60_000 })
+  // last export of the slower Python job, shown until (or if) the live copy arrives
+  const cotStatic = useJson<CotRow[]>('/data/cot.json')
+  const econStatic = useJson<EconEvent[]>('/data/econ_calendar.json')
+  const cot = macro.data?.cot ? [macro.data.cot.latest] : cotStatic.data
+  const econ = macro.data?.calendar ?? econStatic.data
   const alerts = useJson<AlertRow[]>('/data/alerts.json')
   const trades = useJson<TradeRow[]>('/data/trades.json')
 
@@ -37,7 +42,7 @@ export default function App() {
         <div className="text-base font-bold tracking-wide">
           <span className="text-term-amber">NQ</span>/<span className="text-term-amber">BTC</span> TERMINAL
         </div>
-        <TickerTape nq={nq.data} btc={btc.data} cot={cot.data} />
+        <TickerTape nq={nq.data} btc={btc.data} cot={cot} />
       </header>
 
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -54,6 +59,7 @@ export default function App() {
             </button>
           ))}
         </nav>
+        <NextEvent events={econ} />
         <LiveStatus
           feeds={[
             { label: 'NQ', source: nq.source, asOf: nq.data?.level.as_of_utc, error: nq.error },
@@ -64,8 +70,8 @@ export default function App() {
 
       <ErrorBoundary label={TABS.find((t) => t.id === tab)?.label ?? ''} key={tab}>
         <Suspense fallback={<div className="text-[11px] text-term-muted py-6">A carregar…</div>}>
-          {tab === 'hoje' && <HojeTab nq={nq} btc={btc} narrative={narrative.data} alerts={alerts.data} econ={econ.data} trades={trades.data} />}
-          {tab === 'quant' && <QuantTab cot={cot.data} econ={econ.data} />}
+          {tab === 'hoje' && <HojeTab nq={nq} btc={btc} narrative={narrative.data} alerts={alerts.data} econ={econ} trades={trades.data} />}
+          {tab === 'quant' && <QuantTab cot={cot} cotHistory={macro.data?.cot?.history ?? null} econ={econ} />}
           {tab === 'perf' && <PerfTab trades={trades.data} />}
         </Suspense>
       </ErrorBoundary>

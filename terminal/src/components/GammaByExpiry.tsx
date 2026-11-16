@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { fmtCompact } from '../lib/useJson'
-import type { HeatmapData } from './GexHeatmap'
+import type { HeatmapData } from '../api'
 
 export function GammaByExpiry({ data }: { data: HeatmapData }) {
   const byExpiry = useMemo(() => {
