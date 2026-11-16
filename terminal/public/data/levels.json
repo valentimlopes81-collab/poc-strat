@@ -22,14 +22,14 @@
     "vix": 20.71,
     "vix_change_pct": 7.3,
     "vix_reading": "Elevado/Cauteloso",
-    "bias": "Depois de 4 reversões de regime ontem, hoje estabilizou em negativo contido (-756M, bem menos extremo que o -3,03B do briefing de ontem). Preço entre o Put Wall (685) e o zero-gamma (692), sem teste imediato de nenhum dos dois",
-    "note": "PPI de outubro saiu hoje às 13:30 UTC mas não consegui confirmar o resultado real via pesquisa (ainda não indexado) — os níveis de GEX já refletem o mercado pós-release, mesmo sem saber a magnitude exata da surpresa. Fed: sem atualização nova desde ontem, mercado continua a precificar hike ~85-88% em dezembro (fonte secundária)",
+    "bias": "GEX profundamente negativo (-3,3B no briefing, a piorar durante a sessão) e o preço nunca reconquistou o Put Wall (680) perdido na sexta — esse nível passou a ser resistência por cima. VIX subiu para a zona de 20-21, primeira leitura 'elevado/cauteloso' em vários dias",
+    "note": "Briefing de 16/11 (14:33 UTC). NVDA reporta amanhã após o fecho, primeira call com a Colette Kress como CEO interina — maior catalisador da semana para o Nasdaq. COT (report 03/11): leveraged funds net long +10.417. Fed: mercado continua a precificar hike em dezembro (fonte secundária, sem atualização nova hoje).",
     "scenarios": [
-      "Fecho de 5m confirmado acima do zero-gamma (692 QQQ) → regime volta a positivo, reforça pin",
-      "Perda do Put Wall (685) com fecho abaixo → reabre vulnerabilidade, próximo nível real é o 650 QQQ",
-      "Lateralização entre o Put Wall e o zero-gamma sem direção clara — consistente com os 4 flips de regime de ontem"
+      "Perda do 670 QQQ (Put Support 0DTE) com fecho de 5m abaixo → sem suporte imediato até ao 650 QQQ",
+      "Recuperação de volta acima do 680 QQQ (antigo Put Wall) → reabre caminho para o zero-gamma",
+      "Lateralização entre 670 e 680 à espera do earnings da NVDA de amanhã (17/11, after-close)"
     ],
-    "confirmation": "Fecho de 5m claramente de um dos lados do zero-gamma (692 QQQ) ou do Put Wall (685 QQQ) — nunca sinal de entrada isolado."
+    "confirmation": "Fecho de 5m claro de um dos lados (670 ou 680 QQQ) — nunca sinal de entrada isolado, e cuidado redobrado com gaps dado o NVDA amanhã."
   },
   {
     "asset": "BTC",
@@ -50,7 +50,7 @@
     "vix": null,
     "vix_change_pct": null,
     "vix_reading": null,
-    "bias": "Caiu mais desde ontem (72.000 → 69.240, ~-3,8%) e perdeu o Put Wall que testava — Put Wall estrutural desceu para 70.000, agora ACIMA do preço. Perda de suporte estrutural, não apenas teste",
-    "note": "Confiança mantida Baixa-Média, nunca Alta só com GEX — lição do erro de 05/11 (cascata de liquidação não vista pelo GEX). Max pain (expiração 14/11) 72.500, Put/Call OI ratio 0,91 (quase equilibrado)"
+    "bias": "Sem mudança de carácter: GEX negativo mas pequeno (~-0,1B), preço na mesma zona frágil entre o Put Wall (64-65k) e o zero-gamma (~70,5k), sem teste imediato de nenhum dos dois",
+    "note": "Briefing de 16/11. Max pain (expiração 17/11) 65.500, Put/Call OI ratio 1,54 (lean put). Confiança Média — nunca Alta só com GEX (lição de 05/11)."
   }
 ]

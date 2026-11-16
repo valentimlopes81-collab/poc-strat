@@ -1,5 +1,26 @@
 [
   {
+    "time": "2026-11-16T16:34:00Z",
+    "asset": "NQ",
+    "severity": "notable",
+    "title": "Put Wall estrutural desceu de 680 para 670, convergiu com o 0DTE",
+    "detail": "Preço NQ ~27.594,75 (QQQ 668,22), recuperou ~193pts desde o check anterior mas continua ~73pts abaixo da zona convergida (670 QQQ, ~27.668 NQ). GEX total -4,26B, continuou a piorar (era -4,11B há 1h). O 680 QQQ passa a ser a segunda maior parede, acima do preço."
+  },
+  {
+    "time": "2026-11-16T15:34:00Z",
+    "asset": "NQ",
+    "severity": "critical",
+    "title": "Rompeu o Put Support 0DTE (670), GEX piorou para -4,11B",
+    "detail": "Preço NQ ~27.401,75 (QQQ 665,2), caiu ~286pts desde o briefing (27.690,5). Rompeu o Put Support/Gamma Wall 0DTE (670 QQQ, ~27.599 NQ) que estava ~70pts abaixo — agora ~197pts acima do preço. GEX total -4,11B (era -3,30B). Próximo nível estrutural real: 650 QQQ (~26.776 NQ), ~626pts abaixo."
+  },
+  {
+    "time": "2026-11-16T14:33:00Z",
+    "asset": "NQ",
+    "severity": "info",
+    "title": "Briefing: NQ ainda abaixo do Put Wall perdido na sexta, VIX elevado",
+    "detail": "Preço NQ ~27.690,5 (QQQ 671,7). GEX total -3,30B. Put Support 0DTE 670 QQQ (~27.620 NQ) ~70pts abaixo; antigo Put Wall 680 QQQ (~28.032 NQ) agora resistência; zero-gamma 686,6 QQQ. VIX 20,36 (+5,5%). NVDA earnings amanhã após o fecho."
+  },
+  {
     "time": "2026-11-13T15:34:00Z",
     "asset": "NQ",
     "severity": "critical",
