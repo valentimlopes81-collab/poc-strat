@@ -1,4 +1,5 @@
 import type { BtcCore, NqCore } from '../api'
+import { useKraken } from '../lib/kraken'
 import { fmtInt, signed } from '../lib/levels'
 import type { CotRow } from '../types'
 
@@ -18,6 +19,7 @@ export function TickerTape({ nq, btc, cot }: { nq: NqCore | null; btc: BtcCore |
   const qqq = nq?.level.price_qqq
   const prev = nq?.meta.prev_close_qqq
   const dayPct = qqq && prev ? (qqq / prev - 1) * 100 : null
+  const { ticker } = useKraken()
 
   return (
     <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[12px] tabular-nums py-1">
@@ -30,7 +32,8 @@ export function TickerTape({ nq, btc, cot }: { nq: NqCore | null; btc: BtcCore |
       )}
       {btc && (
         <Item label="BTC">
-          <span className="font-semibold">${fmtInt(btc.level.price)}</span>
+          <span className="font-semibold">${fmtInt(ticker?.last ?? btc.level.price)}</span>
+          {ticker && <span className={`ml-1.5 ${tone(ticker.changePct)}`}>{signed(ticker.changePct)}%</span>}
           <span className={`ml-1.5 ${tone(btc.level.gex_total_b)}`}>GEX {signed(btc.level.gex_total_b, 3)}B</span>
         </Item>
       )}

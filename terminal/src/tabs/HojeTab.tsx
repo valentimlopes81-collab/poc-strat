@@ -5,12 +5,15 @@ import { AlertsFeed } from '../components/AlertsFeed'
 import { ExpectedMove } from '../components/ExpectedMove'
 import { GexDepthChart } from '../components/GexDepthChart'
 import { GexProfile } from '../components/GexProfile'
+import { OrderBookDepth } from '../components/OrderBookDepth'
 import { Badge, Panel, PanelGrid, Segmented, StatRow } from '../components/Panel'
 import { PlanoDoDia } from '../components/PlanoDoDia'
+import { TradeFlow } from '../components/TradeFlow'
 import { PriceChart, type EconMarker, type PriceLevel, type TradeMarker } from '../components/PriceChart'
 import { VixChart } from '../components/VixChart'
 import { VolumeByStrike } from '../components/VolumeByStrike'
 import { VolumeChart, type VolumeBar } from '../components/VolumeChart'
+import { useKraken } from '../lib/kraken'
 import { fmtInt, qqqStrikeLabel, signed, withNarrative } from '../lib/levels'
 import { fmtCompact } from '../lib/useJson'
 import { useLive, type LiveState } from '../lib/useLive'
@@ -25,6 +28,7 @@ const TF_OPTIONS: Array<{ value: Timeframe; label: string }> = [
 ]
 const isTf = oneOf<Timeframe>('5m', '15m', '1h', '1d')
 const DEFAULT_BARS: Record<Timeframe, number> = { '5m': 190, '15m': 200, '1h': 240, '1d': 130 }
+const TF_SECONDS: Record<Timeframe, number> = { '5m': 300, '15m': 900, '1h': 3600, '1d': 86400 }
 
 type Metric = 'gex' | 'dex' | 'vanna' | 'charm'
 const isMetric = oneOf<Metric>('gex', 'dex', 'vanna', 'charm')
@@ -138,6 +142,9 @@ export function HojeTab({
   const flow = useLive<CandlesResp>(nqTf === '5m' ? '/api/candles?symbol=qqqflow' : null)
   const vix = useLive<CandlesResp>('/api/candles?symbol=vix&tf=1d', { intervalMs: 15 * 60_000 })
 
+  const kraken = useKraken()
+  const btcLive = useMemo(() => (kraken.ticker ? { price: kraken.ticker.last, barSeconds: TF_SECONDS[btcTf] } : undefined), [kraken.ticker, btcTf])
+
   const n = nq.data
   const b = btc.data
   const ratio = n?.meta.ratio ?? null
@@ -243,10 +250,10 @@ export function HojeTab({
             <ChartLoading state={nqCandles} />
           )}
         </Panel>
-        <Panel title="BTC · Preço + Confluências" src={`Kraken · ${btcTf === '1d' ? 'diário' : 'hora local'}`} right={<Segmented options={TF_OPTIONS} value={btcTf} onChange={setBtcTf} />}>
+        <Panel title="BTC · Preço + Confluências" src={`Kraken · ${btcTf === '1d' ? 'diário' : 'hora local'}${kraken.status === 'live' ? ' · tick a tick' : ''}`} right={<Segmented options={TF_OPTIONS} value={btcTf} onChange={setBtcTf} />}>
           {btcBars?.length ? (
             <>
-              <PriceChart candles={btcBars} levels={btcLevels} viewKey={`btc-${btcTf}`} defaultBars={DEFAULT_BARS[btcTf]} precision={1} onChartApi={setBtcChart} />
+              <PriceChart candles={btcBars} levels={btcLevels} viewKey={`btc-${btcTf}`} defaultBars={DEFAULT_BARS[btcTf]} precision={1} live={btcLive} onChartApi={setBtcChart} />
               <div className="mt-1 text-[9px] text-term-muted uppercase tracking-wide">Volume</div>
               <VolumeChart data={btcVolume} syncWith={btcChart} />
             </>
@@ -378,6 +385,18 @@ export function HojeTab({
           </Panel>
         </PanelGrid>
       )}
+
+      <PanelGrid cols={2}>
+        <Panel title="BTC · Livro de ordens" src={`Kraken spot · ${kraken.status === 'live' ? 'ao vivo' : kraken.status === 'down' ? 'sem ligação' : 'a ligar'}`}>
+          <OrderBookDepth bids={kraken.bids} asks={kraken.asks} />
+        </Panel>
+        <Panel title="BTC · Fluxo de trades (CVD)" src="Kraken spot · compras − vendas a mercado, acumulado">
+          <TradeFlow trades={kraken.trades} />
+        </Panel>
+      </PanelGrid>
+      <p className="text-[10px] text-term-muted mb-2">
+        Livro e fluxo são só da Kraken (spot), uma fatia do mercado de BTC — servem para ler pressão de curto prazo, não o mercado todo.
+      </p>
 
       <PanelGrid cols={2}>
         {vix.data && (

@@ -80,6 +80,7 @@ export function PriceChart({
   killzones = false,
   econEvents,
   precision = 2,
+  live,
   onChartApi,
 }: {
   candles: Candle[]
@@ -93,6 +94,8 @@ export function PriceChart({
   killzones?: boolean
   econEvents?: EconMarker[]
   precision?: number
+  /** latest traded price from a streaming feed; moves the last bar between refreshes of `candles` */
+  live?: { price: number; barSeconds: number }
   onChartApi?: (chart: IChartApi) => void
 }) {
   const isFull = usePanelFullscreen()
@@ -266,6 +269,29 @@ export function PriceChart({
     }
     requestAnimationFrame(() => recomputeRef.current())
   }, [candles, viewKey, resetView])
+
+  const liveBar = useRef<{ time: number; open: number; high: number; low: number } | null>(null)
+  useEffect(() => {
+    liveBar.current = null
+  }, [candles])
+
+  const livePrice = live?.price
+  const barSeconds = live?.barSeconds
+  useEffect(() => {
+    const series = seriesRef.current
+    const last = candles[candles.length - 1]
+    if (!series || !last || livePrice == null || !barSeconds) return
+    const bucket = Math.floor(Date.now() / 1000 / barSeconds) * barSeconds
+    let bar = liveBar.current
+    if (!bar || bar.time < bucket) {
+      // continue the last bar from the server, or open the next one if its interval has ended
+      bar = bucket > last.time ? { time: bucket, open: livePrice, high: livePrice, low: livePrice } : { time: last.time, open: last.open, high: last.high, low: last.low }
+    }
+    bar.high = Math.max(bar.high, livePrice)
+    bar.low = Math.min(bar.low, livePrice)
+    liveBar.current = bar
+    series.update({ time: bar.time as UTCTimestamp, open: bar.open, high: bar.high, low: bar.low, close: livePrice })
+  }, [livePrice, barSeconds, candles])
 
   useEffect(() => {
     const series = seriesRef.current
