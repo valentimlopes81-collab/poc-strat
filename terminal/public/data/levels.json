@@ -19,38 +19,38 @@
     "zero_gamma_qqq": 666.7,
     "dte0_dominant": null,
     "dte0_dominant_ref": null,
-    "vix": 28.44,
-    "vix_change_pct": 15.8,
+    "vix": 29.68,
+    "vix_change_pct": 4.4,
     "vix_reading": "Elevado/Cauteloso",
-    "bias": "Dia de reversão violenta: o beat+raise da NVDA (confirmado: receita $115,8B vs $109B esp., EPS $2,68 vs $2,47-2,48 esp.) levou o GEX a abrir positivo (+410M) pela primeira vez na semana, mas inverteu por completo ao longo do dia — GEX fechou em -3,2B, o 0DTE flipou de sinal pelo menos 3 vezes, e o preço perdeu o Put Support 0DTE, depois o Put Wall estrutural de ontem, sucessivamente. VIX disparou para 28,44 (+36% vs média 20d), o valor mais alto da semana. O IPO da ANT (Anthropic) — a maior IPO de sempre, $81B levantados, abriu +34% e já rejeitou os highs em 30min (-13% desde a abertura) — não conseguiu reacender o apetite por tech; o Nasdaq já estava >10% abaixo do máximo de há 6 semanas antes de hoje, e esta sessão aprofunda essa correção.",
-    "note": "Atualizado às 22:09 UTC (fecho/after-hours) — mercado sem expiração 0DTE disponível a esta hora. Fed: hike em dezembro (8-9/12) com >90% de probabilidade implícita segundo fontes de 17-19/11, confirma o regime hawkish já referido em briefings anteriores. COT (report 03/11, desatualizado): leveraged funds net long +10.417 — se ainda válido, é posicionamento vulnerável a um unwind. Fundamentais das mega-caps (NVDA em particular) não pioraram — isto lê-se mais como compressão de múltiplo/re-rating ligado à Fed do que deterioração do negócio.",
+    "bias": "⚠️ Sem dados frescos de GEX/walls hoje (20/11) — a Cboe devolveu erro 403 duas vezes seguidas (bloqueio/rate-limit do lado deles, proxy local confirmado saudável). Os níveis abaixo (preço, GEX, walls) são o último fecho conhecido, de ontem (19/11) às 22:09 UTC — NÃO tratar como atuais. O pano de fundo macro piorou: VIX subiu mais (29,68, novo máximo da semana), e juntou-se um catalisador novo — as midterms (Democratas venceram) estão a ser citadas como fonte de receio sobre maior escrutínio regulatório a IA e possíveis restrições a data centers, nocivo para a tese de capex das mega-caps.",
+    "note": "Última atualização de dados reais: 19/11 22:09 UTC (fecho/after-hours de ontem). Hoje (20/11) só foi possível atualizar VIX e contexto macro/COT/Fed — tentactiva recalcular nos próximos checks horários assim que a Cboe voltar a responder. Fed: odds de hike em dezembro (8-9/12) amoleceram para ~70-78% (eram >90% há 2 dias) mas por medo de crescimento, não alívio de inflação — regime 'bad news is bad news'. COT (report 03/11, desatualizado): leveraged funds net long +10.417.",
     "scenarios": [
-      "Continuação abaixo do Put Wall estrutural (640 QQQ / ~26.413 NQ) → sem suporte claro até zonas bem mais baixas, regime de aceleração mantém-se",
-      "Estabilização/bounce técnico perto do Put Wall após a queda acentuada de hoje — Hurst 90d tem estado mean-reverting leve a semana toda",
-      "Reversão mais lenta nos próximos dias se o mercado digerir a IPO da ANT e o VIX normalizar — vigiar se o GEX volta a flipar positivo como aconteceu brevemente hoje de manhã"
+      "Assim que os dados da Cboe voltarem: confirmar se o GEX se mantém muito negativo (continuação do regime de aceleração de ontem) ou se há sinais de estabilização",
+      "Catalisador regulatório pós-midterms pode pesar nos próximos dias nas mega-caps de IA, independente do que o GEX mostrar tecnicamente",
+      "Vigiar se o VIX continua a subir (está no valor mais alto da semana) — normalmente precede ou acompanha mais queda, não o contrário"
     ],
-    "confirmation": "Fecho de 5m claro de um dos lados do Put Wall (640 QQQ) — nunca sinal de entrada isolado. Dado o quanto o 0DTE oscilou hoje, redobrar a cautela com falsos sinais nos primeiros minutos de qualquer rotura."
+    "confirmation": "Sem níveis frescos hoje — evitar qualquer leitura técnica forte até ao próximo recálculo bem-sucedido do GEX. Fecho de 5m continua a ser o critério de confirmação de referência quando os níveis voltarem."
   },
   {
     "asset": "BTC",
-    "as_of_utc": "2026-11-19T22:09:00Z",
-    "price": 61658.53,
+    "as_of_utc": "2026-11-20T14:40:00Z",
+    "price": 61951.0,
     "price_ref": "Deribit index",
-    "gex_total_b": -0.122,
+    "gex_total_b": -0.104,
     "gex_regime": "Negativo (maior volatilidade)",
     "dex_total_b": null,
     "call_wall": 80000,
     "call_wall_ref": null,
     "put_wall": 60000,
     "put_wall_ref": null,
-    "zero_gamma": 70295,
+    "zero_gamma": 70661,
     "zero_gamma_ref": null,
     "dte0_dominant": null,
     "dte0_dominant_ref": null,
     "vix": null,
     "vix_change_pct": null,
     "vix_reading": null,
-    "bias": "Durante a maior parte do dia o BTC não acompanhou a queda do NQ (chegou a subir enquanto o NQ caía com força) — mas ao fim do dia também cedeu, de ~63.800 de manhã para ~61.660 agora, e o Put Wall desceu de 64.000 para 60.000. Não há correlação confirmada com o NQ nem com a reação ao IPO da ANT; a queda tardia pode ser risk-off genérico de fecho de sessão ou apenas movimento próprio do BTC — sem confirmação direta no orderflow.",
-    "note": "Atualizado às 22:09 UTC. Put Wall (60.000) agora ~2,7% abaixo do spot — zona a vigiar. Sem key levels da ANT definidos ainda (IPO novo); o utilizador está a formar isso ao vivo nos próximos dias."
+    "bias": "GEX pequeno e negativo, ordem de grandeza igual aos últimos dias — sem mudança de regime. O que mudou é a distância ao Put Wall: desceu para 60.000 e o spot está agora só ~1,6% acima, a zona mais próxima de toda a semana. Put/Call OI ratio subiu para 1,64 (lean put mais forte da semana) — mais procura por proteção. Continua sem confirmar o risk-off do NQ (sem correlação assumida pelo utilizador) — mas a aproximação ao Put Wall é relevante por si só, independente do NQ.",
+    "note": "Atualizado às 14:40 UTC. Max pain (expiração 21NOV26) 63.500, acima do spot. Regime (Hurst 90d) continua neutro/random walk (0,45), 30d praticamente zero — sem direccionalidade este mês. Sem key levels da ANT definidos ainda; segundo dia pós-IPO, sem confirmação de como está a negociar hoje."
   }
 ]
