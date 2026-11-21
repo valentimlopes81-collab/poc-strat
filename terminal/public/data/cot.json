@@ -1,16 +1,16 @@
 [
   {
-    "report_week": "2026 Report Week 45",
-    "report_date": "2026-11-10",
-    "open_interest_all": 338428,
-    "lf_long": 57344,
-    "lf_short": 43483,
-    "lf_net": 13861,
-    "lf_net_pct_oi": 4.1,
-    "lf_net_prev": 10417,
-    "am_long": 109029,
-    "am_short": 35164,
-    "am_net": 73865,
-    "reading": "Leveraged funds net LONG — posicionamento especulativo favorece alta"
+    "report_week": "2026 Report Week 46",
+    "report_date": "2026-11-17",
+    "open_interest_all": 354502,
+    "lf_long": 52540,
+    "lf_short": 63520,
+    "lf_net": -10980,
+    "lf_net_pct_oi": -3.1,
+    "lf_net_prev": 13861,
+    "am_long": 113994,
+    "am_short": 29427,
+    "am_net": 84567,
+    "reading": "Leveraged funds net SHORT — posicionamento especulativo favorece baixa"
   }
 ]
