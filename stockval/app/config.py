@@ -16,5 +16,10 @@ class Assumptions:
     cost_of_debt: float = 0.05      # custo da dívida (fallback 5%)
     margin_of_safety: float = 0.30  # margem de segurança desejada (30%)
     # Limites de sanidade para o crescimento auto-derivado do histórico.
-    growth_cap: float = 0.15
+    # (REVISTO 21/11: 15% esmagava o valor intrínseco de hiper-crescimento
+    # genuíno -- ver nota em valuation.two_stage_dcf. Agora este é só o
+    # crescimento do ANO 1, que desvanece linearmente até terminal_growth
+    # ao longo do horizonte -- 40% no ano 1 a desvanecer para 2.5% em 5 anos
+    # já é uma trajetória exigente, não um crescimento sustentado "para sempre".)
+    growth_cap: float = 0.40
     growth_floor: float = 0.0

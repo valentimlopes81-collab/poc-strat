@@ -18,9 +18,11 @@ def test_cagr():
 
 
 def test_two_stage_dcf_value():
+    # Crescimento desvanece linearmente de 8% (ano 1) até 2.5% (ano 10, = g
+    # terminal) -- não 8% fixo nos 10 anos (ver nota em two_stage_dcf, 21/11).
     ev = two_stage_dcf(100.0, 0.08, 10, 0.025, 0.09)
     assert ev is not None
-    assert abs(ev - 2389.0) < 15  # confere com o cálculo manual (~2389)
+    assert abs(ev - 1979.5) < 1  # confere com o cálculo manual (~1979.5)
 
 
 def test_two_stage_dcf_invalid_when_wacc_le_terminal():
@@ -142,8 +144,12 @@ def test_opportunity_forte_for_cheap_quality():
 
 def test_conflict_downgrades_cheap_dcf_but_expensive_multiples():
     # DCF barato (crescimento alto) mas múltiplos caros -> não pode ser 'forte'.
+    # Preço subido p/ 150 (era 100): com o growth_cap maior (40%, era 15%) o
+    # PEG a 100 passava a aprovar (crescimento mais realista barateia o PEG
+    # do mesmo P/E) -- a 150 o P/E fica alto o suficiente para o PEG voltar
+    # a reprovar, mantendo o cenário de conflito que o teste quer exercitar.
     a = Assumptions()
-    f = Fundamentals(price=100, shares=10, fcf=100, net_income=20, equity=100,
+    f = Fundamentals(price=150, shares=10, fcf=100, net_income=20, equity=100,
                      total_debt=50, cash=50, revenue=200, ebitda=30,
                      fcf_history=[50, 70, 100], revenue_history=[150, 175, 200])
     r = value_company(f, a)
@@ -251,9 +257,10 @@ def test_deep_metrics_absent_when_no_data():
 
 def test_growth_from_history_is_capped():
     a = Assumptions()
-    # histórico com CAGR ~30% deve ser limitado ao growth_cap (15%)
+    # histórico com CAGR de 100% (duplica todos os anos) deve ser limitado
+    # ao growth_cap (40%) -- 30% (o exemplo antigo) já não excede o cap novo.
     f = Fundamentals(price=50, shares=10, fcf=100, net_income=80, equity=400,
-                     total_debt=200, cash=50, fcf_history=[50, 65, 84.5, 109.8])
+                     total_debt=200, cash=50, fcf_history=[50, 100, 200, 400])
     r = value_company(f, a)
     assert abs(r["growth_used"] - a.growth_cap) < 1e-9
     assert r["growth_source"] == "histórico"

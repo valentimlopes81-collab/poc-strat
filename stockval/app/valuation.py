@@ -52,23 +52,39 @@ def wacc(equity_mktcap: float, debt: float, re: float, rd: float, tax: float) ->
 
 
 def two_stage_dcf(fcf0: float, growth: float, years: int, terminal_growth: float, disc: float) -> float | None:
-    """Valor da empresa (enterprise value) pelo DCF a 2 fases.
+    """Valor da empresa (enterprise value) pelo DCF a 2 fases, com o crescimento
+    da 1ª fase a desvanecer linearmente de `growth` (ano 1) até `terminal_growth`
+    (último ano do horizonte explícito), não um crescimento fixo até à aba
+    do valor terminal.
+
+    REVISTO (21/11, a pedido do utilizador): o modelo anterior mantinha `growth`
+    fixo durante TODOS os anos da 1ª fase e só depois caía de repente para
+    `terminal_growth` no valor terminal -- um penhasco artificial. Combinado com
+    um growth_cap de 15% (ver config.py), isto esmagava o valor intrínseco de
+    qualquer empresa de hiper-crescimento genuíno (ex.: NVDA, com FCF a crescer
+    ~89%/ano nos últimos 2 anos, ficava limitada a 15%/ano fixos -- bem abaixo
+    até do crescimento que o próprio mercado está a pagar, ~32%, segundo o
+    implied_growth desta mesma ferramenta). Desvanecer linearmente é a prática
+    padrão (modelo em H / Damodaran) para não escolher entre "otimista demais"
+    (manter o crescimento histórico extremo por 5-10 anos seguidos) e
+    "pessimista demais" (cortar para um número arbitrário baixo já no ano 1).
     Devolve None se os pressupostos forem incoerentes (WACC <= g terminal)."""
     if disc <= terminal_growth or years <= 0:
         return None
     pv_stage1 = 0.0
     fcf_t = fcf0
     for t in range(1, years + 1):
-        fcf_t = fcf0 * (1.0 + growth) ** t
+        frac = (t - 1) / (years - 1) if years > 1 else 1.0
+        g_t = growth + (terminal_growth - growth) * frac
+        fcf_t = fcf_t * (1.0 + g_t)
         pv_stage1 += fcf_t / (1.0 + disc) ** t
-    fcf_n = fcf0 * (1.0 + growth) ** years
-    tv = fcf_n * (1.0 + terminal_growth) / (disc - terminal_growth)
+    tv = fcf_t * (1.0 + terminal_growth) / (disc - terminal_growth)
     pv_tv = tv / (1.0 + disc) ** years
     return pv_stage1 + pv_tv
 
 
 def implied_growth(fcf0: float, target_ev: float, years: int, terminal_growth: float,
-                   disc: float, lo: float = -0.30, hi: float = 0.60) -> float | None:
+                   disc: float, lo: float = -0.30, hi: float = 1.50) -> float | None:
     """Reverse-DCF: crescimento de FCF (1ª fase) que o mercado está a pagar,
     i.e. o g para o qual o DCF iguala o enterprise value de mercado.
     Resolve por bisseção (o DCF é monótono crescente em g)."""
@@ -285,6 +301,8 @@ def value_company(f: Fundamentals, a: Assumptions, ticker: str = "") -> dict:
         "cost_of_equity": re,
         "growth_used": growth,
         "growth_source": "histórico" if hist_cagr is not None else "default",
+        "years": a.years,
+        "terminal_growth": a.terminal_growth,
         "implied_growth": implied_g,
         "net_debt": net_debt,
         "market_cap": mktcap,
