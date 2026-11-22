@@ -138,13 +138,23 @@ def value_company(f: Fundamentals, a: Assumptions, ticker: str = "") -> dict:
     re = cost_of_equity(a.risk_free, a.beta, a.erp)
     w = wacc(mktcap, f.total_debt, re, rd, tax)
 
-    # Base de FCF normalizada: média dos anos com FCF POSITIVO nos últimos 4
-    # (evita depender de 1 ano só e evita que anos de capex pesado/FCF negativo
-    # afundem a base). Se não houver anos positivos, fica o FCF mais recente.
+    # Base de FCF: o ano mais recente é o ponto de partida padrão de um DCF.
+    # SÓ se suaviza com a média dos anos POSITIVOS dos últimos 4 quando o ano
+    # mais recente NÃO é o melhor da janela -- ou seja, quando há uma
+    # depressão pontual a proteger (capex pesado, ciclo, etc.).
+    # BUG REAL (encontrado via NVDA, 21/11 -- o utilizador achou o valor
+    # intrínseco baixo demais face aos resultados fortes): a versão anterior
+    # fazia esta média SEMPRE que havia histórico, mesmo quando a tendência
+    # era de aceleração limpa sem depressão nenhuma (NVDA: 27B -> 61B -> 97B,
+    # sempre a subir). Isso diluía o FCF mais recente (97B) com anos mais
+    # antigos e mais fracos, dando uma base de 61,5B -- quase metade do FCF
+    # real do último ano -- antes sequer de aplicar o crescimento. Para uma
+    # empresa a acelerar, isso é o oposto do que "normalizar" devia fazer.
     base_fcf = f.fcf
     if f.fcf_history:
-        pos = [x for x in f.fcf_history[-4:] if x > 0]
-        if pos:
+        window = f.fcf_history[-4:]
+        pos = [x for x in window if x > 0]
+        if pos and window[-1] < max(pos):
             base_fcf = sum(pos) / len(pos)
 
     ev = two_stage_dcf(base_fcf, growth, a.years, a.terminal_growth, w) if base_fcf > 0 else None
