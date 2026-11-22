@@ -249,10 +249,23 @@ def fetch(ticker: str) -> dict:
     eps = _latest(epsd_m)
     net_income = _latest(ni_m)
     shares = _latest(sh_m)
+    # BUG REAL (encontrado via NVDA, 21/11): "implied = net_income / eps" confiava
+    # cegamente no EPS mais recente sem comparar com o nº de ações da própria tag
+    # (sh_m) -- um EPS corrompido/fora de escala (ex.: XBRL com erro de decimal,
+    # ou um facto dimensional que escapou ao filtro "framed", já que epsd_m é
+    # buscado com is_flow=False e por isso não tem a proteção de duração >=330
+    # dias usada para flows) inflava "implied" por 2-3 ordens de grandeza,
+    # dando um nº de ações absurdo e um valor intrínseco/ação ~0 (NVDA chegou
+    # a mostrar $0,29/ação no screener). Só aceitar o nº implícito se bater
+    # perto (dentro de 3x) do nº de ações da tag -- quando há os dois e divergem
+    # mais do que isso, o EPS é que está corrompido, não a tag de ações.
     if eps and net_income is not None and eps != 0:
         implied = net_income / eps
         if implied > 0:
-            shares = implied  # base diluída correta, sem o problema das classes
+            if not shares or (shares / 3.0 <= implied <= shares * 3.0):
+                shares = implied  # base diluída correta, sem o problema das classes
+            # senão: mantém o shares da tag (sh_m) -- o implied diverge demasiado
+            # para ser de confiança, provável corrupção do EPS, não das classes.
 
     missing = [k for k, v in {
         "FCF": fcf, "net_income": net_income, "equity": _latest(eq_m), "shares": shares,
