@@ -157,12 +157,34 @@ def value_company(f: Fundamentals, a: Assumptions, ticker: str = "") -> dict:
         if pos and window[-1] < max(pos):
             base_fcf = sum(pos) / len(pos)
 
+    # BUG REAL (encontrado via SNDK, 22/11): empresa recém-separada (spin-off
+    # da Western Digital em 2025) com só 2 anos de histórico próprio, FCF
+    # saltou de -120M para +11,49 mil milhões -- quase de certeza um ganho
+    # não recorrente (contabilidade da cisão) ou, na melhor hipótese, um pico
+    # de ciclo numa commodity (memória NAND) que não se mantém. Usar esse
+    # valor como base de um DCF (que assume que se repete e ainda por cima
+    # cresce) dava um valor intrínseco de 17x o preço, "FORTE" com 100/100.
+    # Sem tags XBRL para distinguir "item não recorrente" de forma fiável,
+    # a opção honesta é bloquear o valor em vez de o apresentar com a mesma
+    # confiança de uma empresa com crescimento continuado e explicável.
+    fcf_discontinuity = False
+    if f.fcf_history and len(f.fcf_history) >= 2:
+        prior_max = max(f.fcf_history[:-1])
+        latest = f.fcf_history[-1]
+        if latest > 0 and (prior_max <= 0 or latest > 4.0 * prior_max):
+            fcf_discontinuity = True
+
     ev = two_stage_dcf(base_fcf, growth, a.years, a.terminal_growth, w) if base_fcf > 0 else None
     intrinsic_ps = None
     equity_value = None
     dcf_note = None
     if base_fcf <= 0:
         dcf_note = "FCF médio negativo — DCF não aplicável a esta empresa."
+    elif fcf_discontinuity:
+        dcf_note = ("FCF do último ano é uma descontinuidade extrema face ao histórico "
+                     "(salto súbito ou nunca antes positivo) — típico de ganho não recorrente "
+                     "(cisão/reestruturação) ou pico de ciclo numa commodity. DCF não é fiável "
+                     "sobre este valor; confirma as contas antes de confiar neste número.")
     elif ev is not None and f.shares > 0:
         equity_value = ev - net_debt
         _ips = equity_value / f.shares
