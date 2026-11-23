@@ -19,38 +19,38 @@
     "zero_gamma_qqq": 666.7,
     "dte0_dominant": null,
     "dte0_dominant_ref": null,
-    "vix": 29.68,
-    "vix_change_pct": 4.4,
+    "vix": 26.86,
+    "vix_change_pct": -25.2,
     "vix_reading": "Elevado/Cauteloso",
-    "bias": "⚠️ Sem dados frescos de GEX/walls hoje (20/11) — a Cboe devolveu erro 403 duas vezes seguidas (bloqueio/rate-limit do lado deles, proxy local confirmado saudável). Os níveis abaixo (preço, GEX, walls) são o último fecho conhecido, de ontem (19/11) às 22:09 UTC — NÃO tratar como atuais. O pano de fundo macro piorou: VIX subiu mais (29,68, novo máximo da semana), e juntou-se um catalisador novo — as midterms (Democratas venceram) estão a ser citadas como fonte de receio sobre maior escrutínio regulatório a IA e possíveis restrições a data centers, nocivo para a tese de capex das mega-caps.",
-    "note": "Última atualização de dados reais: 19/11 22:09 UTC (fecho/after-hours de ontem). Hoje (20/11) só foi possível atualizar VIX e contexto macro/COT/Fed — tentactiva recalcular nos próximos checks horários assim que a Cboe voltar a responder. Fed: odds de hike em dezembro (8-9/12) amoleceram para ~70-78% (eram >90% há 2 dias) mas por medo de crescimento, não alívio de inflação — regime 'bad news is bad news'. COT (report 03/11, desatualizado): leveraged funds net long +10.417.",
+    "bias": "⚠️ Sem dados frescos de GEX/walls há 4 sessões seguidas (20, 21-fds, 23/11) — a Cboe bloqueia o pedido com uma página da Cloudflare (confirmado via curl direto, com e sem User-Agent de browser — não é rate-limit nem falha de rede, é bloqueio de IP). Os níveis abaixo são o último fecho conhecido, de 19/11 às 22:09 UTC — NÃO tratar como atuais. O contexto geral melhorou desde então: VIX caiu de 29,68 (pico de sexta) para 26,86 hoje, ainda elevado mas a normalizar.",
+    "note": "Última atualização de dados reais: 19/11 22:09 UTC. Bloqueio da Cboe parece persistente, não transitório — se continuar, os scripts (nq_gex.py, nq_options_levels.py) correndo a partir de outra rede (ex.: o PC do utilizador) provavelmente não têm este problema, já que é um bloqueio ao IP da sessão cloud, não à API em si. Fed: chair agora é Kevin Warsh; odds de hike em dezembro (8-9/12) estáveis em ~87,5% (Polymarket, sincronizado 16/11). Semana de Ação de Graças — mercados fechados quinta-feira 26/11.",
     "scenarios": [
-      "Assim que os dados da Cboe voltarem: confirmar se o GEX se mantém muito negativo (continuação do regime de aceleração de ontem) ou se há sinais de estabilização",
-      "Catalisador regulatório pós-midterms pode pesar nos próximos dias nas mega-caps de IA, independente do que o GEX mostrar tecnicamente",
-      "Vigiar se o VIX continua a subir (está no valor mais alto da semana) — normalmente precede ou acompanha mais queda, não o contrário"
+      "Assim que os dados da Cboe voltarem (ou forem obtidos de outra rede): confirmar se o regime de aceleração de 19-20/11 persiste ou se já estabilizou",
+      "Semana encurtada pelo feriado de quinta — liquidez mais fina, cuidado redobrado com falsos sinais de rotura",
+      "Fed sem mudança de regime (~87,5% hike em 8-9/12) — próximo catalisador de calendário relevante só nessa reunião"
     ],
-    "confirmation": "Sem níveis frescos hoje — evitar qualquer leitura técnica forte até ao próximo recálculo bem-sucedido do GEX. Fecho de 5m continua a ser o critério de confirmação de referência quando os níveis voltarem."
+    "confirmation": "Sem níveis frescos — evitar qualquer leitura técnica forte até ao próximo recálculo bem-sucedido do GEX. Fecho de 5m continua a ser o critério de confirmação de referência quando os níveis voltarem."
   },
   {
     "asset": "BTC",
-    "as_of_utc": "2026-11-20T14:40:00Z",
-    "price": 61951.0,
+    "as_of_utc": "2026-11-23T14:33:00Z",
+    "price": 63731.35,
     "price_ref": "Deribit index",
-    "gex_total_b": -0.104,
+    "gex_total_b": -0.051,
     "gex_regime": "Negativo (maior volatilidade)",
     "dex_total_b": null,
-    "call_wall": 80000,
+    "call_wall": 66000,
     "call_wall_ref": null,
     "put_wall": 60000,
     "put_wall_ref": null,
-    "zero_gamma": 70661,
+    "zero_gamma": 68794,
     "zero_gamma_ref": null,
     "dte0_dominant": null,
     "dte0_dominant_ref": null,
     "vix": null,
     "vix_change_pct": null,
     "vix_reading": null,
-    "bias": "GEX pequeno e negativo, ordem de grandeza igual aos últimos dias — sem mudança de regime. O que mudou é a distância ao Put Wall: desceu para 60.000 e o spot está agora só ~1,6% acima, a zona mais próxima de toda a semana. Put/Call OI ratio subiu para 1,64 (lean put mais forte da semana) — mais procura por proteção. Continua sem confirmar o risk-off do NQ (sem correlação assumida pelo utilizador) — mas a aproximação ao Put Wall é relevante por si só, independente do NQ.",
-    "note": "Atualizado às 14:40 UTC. Max pain (expiração 21NOV26) 63.500, acima do spot. Regime (Hurst 90d) continua neutro/random walk (0,45), 30d praticamente zero — sem direccionalidade este mês. Sem key levels da ANT definidos ainda; segundo dia pós-IPO, sem confirmação de como está a negociar hoje."
+    "bias": "GEX mais fraco que a semana passada (-51,1M vs -100 a -140M nos últimos briefings) — regime a acalmar. Put Wall mantém-se em 60.000, mas a folga até ao spot aumentou para ~7,4% (chegou a ser testado e rompido intraday na semana passada). Put/Call OI ratio subiu para 1,80 — o lean put mais forte registado nesta série de briefings, mais procura por proteção mesmo com o preço mais calmo.",
+    "note": "Atualizado às 14:33 UTC. Max pain (expiração 24NOV26) 60.500, perto do Put Wall. Regime (Hurst 90d) continua neutro/random walk (0,48). Semana de Ação de Graças — mercados de ações fechados quinta-feira 26/11 (BTC negoceia sempre, sem fecho)."
   }
 ]
