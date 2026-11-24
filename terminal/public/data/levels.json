@@ -22,35 +22,35 @@
     "vix": 26.86,
     "vix_change_pct": -25.2,
     "vix_reading": "Elevado/Cauteloso",
-    "bias": "⚠️ Sem dados frescos de GEX/walls há 4 sessões seguidas (20, 21-fds, 23/11) — a Cboe bloqueia o pedido com uma página da Cloudflare (confirmado via curl direto, com e sem User-Agent de browser — não é rate-limit nem falha de rede, é bloqueio de IP). Os níveis abaixo são o último fecho conhecido, de 19/11 às 22:09 UTC — NÃO tratar como atuais. O contexto geral melhorou desde então: VIX caiu de 29,68 (pico de sexta) para 26,86 hoje, ainda elevado mas a normalizar.",
-    "note": "Última atualização de dados reais: 19/11 22:09 UTC. Bloqueio da Cboe parece persistente, não transitório — se continuar, os scripts (nq_gex.py, nq_options_levels.py) correndo a partir de outra rede (ex.: o PC do utilizador) provavelmente não têm este problema, já que é um bloqueio ao IP da sessão cloud, não à API em si. Fed: chair agora é Kevin Warsh; odds de hike em dezembro (8-9/12) estáveis em ~87,5% (Polymarket, sincronizado 16/11). Semana de Ação de Graças — mercados fechados quinta-feira 26/11.",
+    "bias": "⚠️ Sem dados frescos de GEX/walls há 5 sessões seguidas (20, 21-fds, 23, 24/11) — Cboe continua bloqueada pela Cloudflare (bloqueio de IP confirmado, não transitório). Níveis abaixo continuam a ser o último fecho conhecido, de 19/11 às 22:09 UTC — NÃO tratar como atuais. Contexto macro hoje é mais cauteloso que ontem: VIX subiu de 26,86 para 29,12 (+9,4%), e o BTC mostra GEX a reaquecer (quase dobrou de negativo) — sinal de regime a ficar mais tenso, não mais calmo.",
+    "note": "Última atualização de dados reais: 19/11 22:09 UTC. Bloqueio da Cboe é persistente (Cloudflare) — correr os scripts a partir de outra rede (ex. PC do utilizador) provavelmente resolve. Fed: chair Kevin Warsh; odds de hike em 9/12 muito dispersas entre fontes hoje (71-88%, nenhuma sincronizada), FOMC de outubro manteve taxas 10-2 com 2 dissidências a favor de subida. Semana de Ação de Graças — mercados de ações fechados quinta-feira 26/11 (BTC negoceia sempre).",
     "scenarios": [
-      "Assim que os dados da Cboe voltarem (ou forem obtidos de outra rede): confirmar se o regime de aceleração de 19-20/11 persiste ou se já estabilizou",
+      "Assim que os dados da Cboe voltarem (ou forem obtidos de outra rede): confirmar se o NQ está a acompanhar o reaquecimento de risco visto hoje no BTC (GEX, VIX, net premium flow todos mais cautelosos que ontem)",
       "Semana encurtada pelo feriado de quinta — liquidez mais fina, cuidado redobrado com falsos sinais de rotura",
-      "Fed sem mudança de regime (~87,5% hike em 8-9/12) — próximo catalisador de calendário relevante só nessa reunião"
+      "Fed sem leitura clara hoje (odds dispersas 71-88% para 9/12) — próximo catalisador de calendário relevante só nessa reunião"
     ],
     "confirmation": "Sem níveis frescos — evitar qualquer leitura técnica forte até ao próximo recálculo bem-sucedido do GEX. Fecho de 5m continua a ser o critério de confirmação de referência quando os níveis voltarem."
   },
   {
     "asset": "BTC",
-    "as_of_utc": "2026-11-23T14:33:00Z",
-    "price": 63731.35,
+    "as_of_utc": "2026-11-24T14:40:00Z",
+    "price": 61050.51,
     "price_ref": "Deribit index",
-    "gex_total_b": -0.051,
+    "gex_total_b": -0.091,
     "gex_regime": "Negativo (maior volatilidade)",
     "dex_total_b": null,
     "call_wall": 66000,
     "call_wall_ref": null,
-    "put_wall": 60000,
+    "put_wall": 58000,
     "put_wall_ref": null,
-    "zero_gamma": 68794,
+    "zero_gamma": 68288,
     "zero_gamma_ref": null,
     "dte0_dominant": null,
     "dte0_dominant_ref": null,
-    "vix": null,
-    "vix_change_pct": null,
-    "vix_reading": null,
-    "bias": "GEX mais fraco que a semana passada (-51,1M vs -100 a -140M nos últimos briefings) — regime a acalmar. Put Wall mantém-se em 60.000, mas a folga até ao spot aumentou para ~7,4% (chegou a ser testado e rompido intraday na semana passada). Put/Call OI ratio subiu para 1,80 — o lean put mais forte registado nesta série de briefings, mais procura por proteção mesmo com o preço mais calmo.",
-    "note": "Atualizado às 14:33 UTC. Max pain (expiração 24NOV26) 60.500, perto do Put Wall. Regime (Hurst 90d) continua neutro/random walk (0,48). Semana de Ação de Graças — mercados de ações fechados quinta-feira 26/11 (BTC negoceia sempre, sem fecho)."
+    "vix": 29.12,
+    "vix_change_pct": 9.4,
+    "vix_reading": "Elevado/Cauteloso",
+    "bias": "GEX reverteu para bem mais negativo (-91,3M vs -51,1M ontem, quase o dobro) — regime a reaquecer depois de ter acalmado ontem. Put Wall desceu para 58.000 (era 60.000 desde 20/11), agora só ~3,5% abaixo do spot — mais perto do que em qualquer dia desde a rotura de 20/11. Net premium flow proxy inverteu para fortemente a favor de puts (-$103,6M vs +$86,6M a favor de calls ontem).",
+    "note": "Atualizado às 14:40 UTC. Max pain (expiração 25NOV26) 61.000. VIX subiu para 29,12 (+9,4% no dia, +28,3% vs média 20d), perto do pico da semana (29,68 em 21/11). Regime (Hurst 90d) continua neutro/random walk (0,48). Semana de Ação de Graças — mercados de ações fechados quinta-feira 26/11 (BTC negoceia sempre, sem fecho)."
   }
 ]
