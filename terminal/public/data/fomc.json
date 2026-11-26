@@ -1,5 +1,11 @@
 [
   {
+    "date": "2026-11-25",
+    "doc_type": "beige_book",
+    "label": "Beige Book",
+    "url": "https://www.federalreserve.gov/monetarypolicy/files/BeigeBook_20261125.pdf"
+  },
+  {
     "date": "2026-10-28",
     "doc_type": "monetary_policy",
     "label": "Ultimo comunicado de politica monetaria",
@@ -16,11 +22,5 @@
     "doc_type": "minutes",
     "label": "Ultimas minutas publicadas",
     "url": "https://www.federalreserve.gov/monetarypolicy/files/fomcminutes20261028.pdf"
-  },
-  {
-    "date": "2026-10-14",
-    "doc_type": "beige_book",
-    "label": "Beige Book",
-    "url": "https://www.federalreserve.gov/monetarypolicy/files/BeigeBook_20261014.pdf"
   }
 ]
